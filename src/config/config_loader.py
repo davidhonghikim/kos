@@ -61,6 +61,11 @@ class ConfigLoader:
         else:
             raise FileNotFoundError("No .env file found in project root. Please copy .env.example to .env and configure.")
         
+        # Load user.env file for user-specific overrides
+        user_env_file = Path("user.env")
+        if user_env_file.exists():
+            load_dotenv(user_env_file, override=True)
+        
         # Load centralized config
         config_file = Path(self.config_path)
         if config_file.exists():
