@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "kOS Agent Documentation System",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T09:15:00Z",
+    "purpose": "Agent documentation and handoff system for kOS project"
+  },
+  "directory_structure": {
+    "LATEST/": {
+      "description": "Current active handoff documents and project status",
+      "files": [
+        "LATEST_HANDOFF.json - Current agent handoff document",
+        "project_standards.json - Coding and documentation standards",
+        "implementation_status.json - Current implementation progress",
+        "technical_specifications.json - Technical requirements and architecture"
+      ]
+    },
+    "ARCHIVE/": {
+      "description": "Archived handoff documents organized by date",
+      "structure": "YYYY/MM/YYYY-MM-DDTHH-MM-SSZ_document_name.json",
+      "example": "2025/07/2025-07-10T09-15-00Z_LATEST_HANDOFF.json"
+    },
+    "blueprint/": {
+      "description": "Core documentation that changes infrequently",
+      "files": [
+        "project_architecture.json - System architecture overview",
+        "development_workflow.json - Development process and standards",
+        "deployment_guide.json - Deployment and infrastructure guide"
+      ]
+    }
+  },
+  "handoff_protocol": {
+    "documentation_format": "JSON only (no Markdown unless required)",
+    "timestamp_format": "ISO 8601 (YYYY-MM-DDTHH-MM-SSZ)",
+    "archiving_rule": "Always archive current handoff before creating new one",
+    "required_content": [
+      "Complete status of current work",
+      "Next steps and priorities",
+      "Technical decisions and context",
+      "Files modified and their purposes",
+      "Any issues or blockers encountered"
+    ]
+  },
+  "agent_workflow": {
+    "on_start": [
+      "Read LATEST_HANDOFF.json for current status",
+      "Review project_standards.json for requirements",
+      "Check implementation_status.json for progress",
+      "Understand technical_specifications.json for architecture"
+    ],
+    "during_work": [
+      "Follow modular, single-responsibility code principles",
+      "Keep files under 150 lines",
+      "Use JSON for all documentation",
+      "Maintain comprehensive test coverage",
+      "Update handoff document after major milestones"
+    ],
+    "on_completion": [
+      "Archive current LATEST_HANDOFF.json with timestamp",
+      "Create new LATEST_HANDOFF.json with updated status",
+      "Update implementation_status.json with progress",
+      "Ensure all changes are documented and tested"
+    ]
+  },
+  "quality_standards": {
+    "code_quality": {
+      "file_size": "Under 150 lines per file",
+      "single_responsibility": "One task per file",
+      "modular_architecture": "Reusable, generic components",
+      "testing": "90% coverage required"
+    },
+    "documentation_quality": {
+      "format": "JSON for all documentation",
+      "completeness": "All changes must be documented",
+      "clarity": "Clear, actionable information",
+      "context": "Sufficient context for next agent"
+    }
+  },
+  "file_naming_conventions": {
+    "handoff_documents": "YYYY-MM-DDTHH-MM-SSZ_document_name.json",
+    "archive_structure": "agents/ARCHIVE/YYYY/MM/",
+    "blueprint_documents": "descriptive_name.json",
+    "status_documents": "status_type.json"
+  },
+  "important_reminders": [
+    "Always archive before creating new handoff documents",
+    "Use proper ISO timestamps in filenames and content",
+    "Maintain single source of truth in LATEST/ directory",
+    "Follow established project standards without exception",
+    "Document all technical decisions and their rationale"
+  ]
+} 

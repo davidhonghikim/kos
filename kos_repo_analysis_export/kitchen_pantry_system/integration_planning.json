@@ -1,0 +1,151 @@
+{
+  "extraction_metadata": {
+    "title": "Kitchen/Pantry System Integration Planning",
+    "version": "1.0.0",
+    "extracted_from": "agents/LATEST/jobs/kos_repo_analysis.md",
+    "extraction_timestamp": "2025-07-09T22:00:00Z",
+    "content_type": "Kitchen/pantry system integration planning",
+    "line_range": "Scattered throughout conversation"
+  },
+  "kitchen_pantry_context": {
+    "origin": "Developed to address agent coding difficulties without proper KLF",
+    "purpose": "Provide structured approach to agent-guided development",
+    "integration_need": "Integrate with kOS ecosystem for recipe creation and execution"
+  },
+  "system_integration_requirements": {
+    "ai_q_ownership": {
+      "knowledge_rag_layer": "AI-Q owns (canonical source)",
+      "kitchen_pantry": "Shared/TBD - AI-Q owns original designs, Griot executes",
+      "agent_architecture": "AI-Q owns (all roles, behaviors, persona specs)",
+      "plugin_registry": "Shared/TBD - AI-Q defines specs, Griot handles runtime"
+    },
+    "rag_system_ownership": {
+      "decision": "Hybrid approach - AI-Q defines structure and source-of-truth, Griot runs RAG engine",
+      "rationale": "Matches industry standards and allows for local/remote RAG execution",
+      "implementation": "AI-Q = RAG Spec (structure, source list, template logic), Griot = RAG Executor (index builder, retriever, chunker, database interface)"
+    }
+  },
+  "recipe_creation_prompts_categories": {
+    "repository_integration": {
+      "description": "Prompts for integrating the 6 analyzed repositories",
+      "subcategories": [
+        "cross_repository_code_consolidation",
+        "module_boundary_definition",
+        "integration_challenge_resolution",
+        "historical_evolution_mapping"
+      ]
+    },
+    "kos_architecture": {
+      "description": "Prompts for implementing kOS architecture components",
+      "subcategories": [
+        "klf_framework_setup",
+        "node_class_configuration",
+        "plugin_system_development",
+        "container_orchestration"
+      ]
+    },
+    "kitchen_pantry_system": {
+      "description": "Prompts for kitchen/pantry system integration",
+      "subcategories": [
+        "ingredient_management",
+        "context_optimization",
+        "operation_registry",
+        "recipe_validation"
+      ]
+    },
+    "ai_agent_orchestration": {
+      "description": "Prompts for AI agent coordination and workflows",
+      "subcategories": [
+        "rag_system_implementation",
+        "agent_coordination",
+        "multi_agent_workflows",
+        "identity_management"
+      ]
+    },
+    "infrastructure_deployment": {
+      "description": "Prompts for infrastructure and deployment automation",
+      "subcategories": [
+        "container_setup",
+        "database_configuration",
+        "monitoring_implementation",
+        "security_hardening"
+      ]
+    }
+  },
+  "integration_challenges": {
+    "frontend_systems": {
+      "need": "Unified backend admin management system tied to user frontend",
+      "requirements": [
+        "Multi-user abilities for enterprise use",
+        "Single user as both user and admin option",
+        "Deployment-dependent configuration"
+      ]
+    },
+    "backend_frontend_ui_ux": {
+      "approach": "Base systems with ability to add or disable components",
+      "capabilities": [
+        "Create entire new UI via themes or plugins",
+        "Modular component architecture",
+        "Plugin-based extensibility"
+      ]
+    },
+    "klf_integration": {
+      "challenge": "Without proper KLF, difficult to get agents to code correctly",
+      "solution": "Kitchen/pantry system provides structured approach",
+      "benefit": "Addresses agent coding difficulties and provides recipe framework"
+    }
+  },
+  "user_experience_requirements": {
+    "extension_concept": {
+      "preference": "All-in-one interface with easy install for user",
+      "flexibility": "User can choose options for leveling up as they gain experience",
+      "upgrade_path": "From simple to advanced functionality"
+    },
+    "deployment_options": {
+      "light_client": "Accesses Griot node with AI-Q library",
+      "self_hosted": "Connect to self-hosted server and LLMs/models",
+      "commercial": "Connect to commercial hosted services",
+      "local": "Run everything local via lightweight services",
+      "device_dependent": "Some services like A1111 and ComfyUI require GPU and Windows"
+    },
+    "frontend_implementation": {
+      "kai_cd_strength": "Best frontend UI implementation",
+      "current_issues": [
+        "Completely broken as far as actual working properly",
+        "Lots of broken links and placeholder debt"
+      ],
+      "positive_aspects": [
+        "General concept and execution of design is much more aligned",
+        "Chat abilities and media generation concepts present"
+      ]
+    }
+  },
+  "strategic_recommendations": {
+    "base_repository": "Use AI-Q as base reference repo",
+    "rationale": [
+      "Most modern system with lots of working base systems",
+      "Better and more recent documentation",
+      "Kitchen/pantry system already implemented",
+      "More unified Docker system that mostly works"
+    ],
+    "integration_strategy": {
+      "griot_integration": "Integrate best of Griot (ecosystem parts, working Docker system)",
+      "kai_cd_integration": "Fix and integrate Kai-CD frontend (don't throw out)",
+      "openpass_influence": "Incorporate OpenPass-inspired system via frontend, not backend"
+    }
+  },
+  "development_approach": {
+    "methodology": "Clean new monorepo with selective imports (A + C hybrid)",
+    "benefits": [
+      "Clean architecture with intentional boundaries",
+      "Ability to reuse functional pieces selectively",
+      "Allows test-driven, modular growth"
+    ],
+    "implementation": [
+      "Create clean monorepo scaffold",
+      "Incrementally port verified modules from existing repos",
+      "Rewrite or upgrade each component as needed",
+      "Maintain disciplined triage of legacy code"
+    ]
+  }
+} 

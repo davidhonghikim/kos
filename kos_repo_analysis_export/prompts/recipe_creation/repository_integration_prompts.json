@@ -1,0 +1,51 @@
+{
+  "extraction_metadata": {
+    "title": "Repository Integration Recipe Creation Prompts",
+    "version": "1.0.0",
+    "extracted_from": "agents/LATEST/jobs/kos_repo_analysis.md",
+    "extraction_timestamp": "2025-07-09T22:05:00Z",
+    "content_type": "Recipe creation prompts for repository integration",
+    "category": "repository_integration"
+  },
+  "cross_repository_code_consolidation": {
+    "prompt": "Create a recipe for consolidating duplicate utilities, shared functions, and similar models across the 6 kOS repositories (OpenPass, demon-chat, kai-cd, griot, ai-Q, ai-q-old). Identify migration candidates for consolidation into a /shared/ or /core/ library. Focus on AI service integration logic, message routing, state management, utility functions, and agent protocols.",
+    "expected_output": "Detailed consolidation plan with specific files to merge, shared library structure, and migration steps",
+    "key_considerations": [
+      "Different runtime environments (Browser vs. Node vs. Python)",
+      "Version mismatches and dependency conflicts",
+      "Preservation of working functionality",
+      "Clear module boundaries"
+    ]
+  },
+  "module_boundary_definition": {
+    "prompt": "Define clear module boundaries for the kOS monorepo based on the analysis of existing repositories. Establish ownership of core functions like RAG knowledge store, service definitions, plugin registry, and agent orchestration. Create a module boundary map that prevents overlapping responsibilities.",
+    "expected_output": "Module boundary specification with clear ownership definitions and interface contracts",
+    "key_considerations": [
+      "AI-Q vs. Griot responsibility split",
+      "Frontend vs. backend module ownership",
+      "Plugin system boundaries",
+      "Data flow and API contracts"
+    ]
+  },
+  "integration_challenge_resolution": {
+    "prompt": "Develop a recipe for resolving integration challenges between the kOS repositories. Address runtime environment differences, dependency mismatches, security gaps, and orphaned legacy files. Create a systematic approach to eliminate redundancy and define clear contracts.",
+    "expected_output": "Integration challenge resolution plan with specific solutions and implementation steps",
+    "key_considerations": [
+      "Browser extension to backend communication",
+      "Authentication and CORS handling",
+      "Containerization strategy",
+      "Security and credential management"
+    ]
+  },
+  "historical_evolution_mapping": {
+    "prompt": "Create a recipe for mapping the historical evolution from OpenPass through demon-chat, kai-cd, griot, and ai-Q. Identify preserved elements and architectural patterns that should be carried forward into the unified kOS system. Document the evolution timeline and key decision points.",
+    "expected_output": "Historical evolution map with preserved elements and architectural patterns",
+    "key_considerations": [
+      "Security consciousness from OpenPass",
+      "Routing semantics from demon-chat",
+      "Modular design from kai-cd",
+      "Agent-first philosophy from griot",
+      "Knowledge integration from ai-Q"
+    ]
+  }
+} 

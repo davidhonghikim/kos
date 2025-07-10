@@ -1,0 +1,54 @@
+{
+  "extraction_metadata": {
+    "title": "Infrastructure Deployment Recipe Creation Prompts",
+    "version": "1.0.0",
+    "extracted_from": "agents/LATEST/jobs/kos_repo_analysis.md",
+    "extraction_timestamp": "2025-07-09T22:30:00Z",
+    "content_type": "Recipe creation prompts for infrastructure deployment",
+    "category": "infrastructure_deployment"
+  },
+  "container_setup": {
+    "prompt": "Create a recipe for container setup and orchestration in kOS. Define Docker Compose configurations for different deployment modes (local, self-hosted, commercial). Include service definitions, networking, and resource allocation for GPU-dependent services.",
+    "expected_output": "Complete container setup with Docker Compose configurations and deployment modes",
+    "key_considerations": [
+      "Docker Compose for local development",
+      "Service definitions and networking",
+      "GPU-dependent services (A1111, ComfyUI)",
+      "Resource allocation and monitoring",
+      "Multi-deployment mode support"
+    ]
+  },
+  "database_configuration": {
+    "prompt": "Develop a recipe for database configuration in kOS, including vector databases (Chroma, Qdrant), relational databases, and caching systems. Address data persistence, backup strategies, and performance optimization.",
+    "expected_output": "Database configuration with vector stores, persistence, and optimization",
+    "key_considerations": [
+      "Vector database setup (Chroma, Qdrant)",
+      "Relational database configuration",
+      "Caching and performance optimization",
+      "Data persistence and backup strategies",
+      "Database integration with RAG system"
+    ]
+  },
+  "monitoring_implementation": {
+    "prompt": "Create a recipe for monitoring and observability in kOS. Include system monitoring, agent performance tracking, and debugging tools. Address logging, metrics collection, and alerting systems.",
+    "expected_output": "Monitoring system with observability, logging, and alerting",
+    "key_considerations": [
+      "System monitoring and health checks",
+      "Agent performance tracking",
+      "Logging and metrics collection",
+      "Alerting and notification systems",
+      "Debugging and troubleshooting tools"
+    ]
+  },
+  "security_hardening": {
+    "prompt": "Develop a recipe for security hardening in kOS. Implement secure communication, authentication, and access controls. Address API security, data encryption, and vulnerability management.",
+    "expected_output": "Security hardening with authentication, encryption, and access controls",
+    "key_considerations": [
+      "Secure communication protocols",
+      "Authentication and authorization",
+      "Data encryption and protection",
+      "API security and rate limiting",
+      "Vulnerability management and updates"
+    ]
+  }
+} 

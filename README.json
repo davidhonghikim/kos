@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "title": "kOS Knowledge Library Framework",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T09:00:00Z",
+    "purpose": "Self-contained kOS implementation project with complete documentation and structure"
+  },
+  "project_overview": {
+    "name": "kOS Knowledge Library Framework",
+    "description": "A comprehensive knowledge management and agent orchestration system built on the Knowledge Library Framework (KLF)",
+    "architecture": "Modular, microservices-based system with TypeScript frontend and Python backend",
+    "technology_stack": {
+      "frontend": "TypeScript, React, WebSocket",
+      "backend": "Python, FastAPI, gRPC",
+      "database": "PostgreSQL, Redis, Neo4j",
+      "containerization": "Docker Compose",
+      "testing": "Jest, Pytest, 90% coverage requirement"
+    }
+  },
+  "directory_structure": {
+    "agents/": "Agent documentation and handoff system",
+    "src/": "Source code implementation",
+    "tests/": "Comprehensive test suite",
+    "docs/": "Project documentation and specifications",
+    "config/": "Configuration files and environment setup",
+    "scripts/": "Build, deployment, and utility scripts",
+    "docker/": "Containerization and orchestration",
+    "data/": "Data files and sample content",
+    "logs/": "Application and test logs"
+  },
+  "quick_start": {
+    "prerequisites": [
+      "Node.js 18+",
+      "Python 3.10+",
+      "Docker and Docker Compose",
+      "PostgreSQL, Redis, Neo4j (or Docker containers)"
+    ],
+    "setup_steps": [
+      "Clone this repository",
+      "Run `npm install` for frontend dependencies",
+      "Run `pip install -r requirements.txt` for backend dependencies",
+      "Copy `config/env.example` to `config/.env` and configure",
+      "Run `docker-compose up -d` for databases",
+      "Run `npm run test` to verify setup"
+    ]
+  },
+  "development_workflow": {
+    "code_standards": {
+      "file_size": "Under 150 lines per file",
+      "documentation": "JSON format for all docs",
+      "testing": "90% coverage required",
+      "architecture": "Modular, single-responsibility"
+    },
+    "git_workflow": {
+      "branching": "Feature branches from main",
+      "commits": "Conventional commit messages",
+      "reviews": "Required for all changes",
+      "deployment": "Automated via CI/CD"
+    }
+  },
+  "project_status": {
+    "phase": "Implementation Ready",
+    "completion": "25%",
+    "next_milestone": "Core KLF Implementation",
+    "estimated_timeline": "20 weeks total"
+  },
+  "contact": {
+    "team": "kOS Development Team",
+    "repository": "https://github.com/kos-team/kos-framework",
+    "documentation": "docs/README.json"
+  }
+} 

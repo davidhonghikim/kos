@@ -1,0 +1,54 @@
+{
+  "extraction_metadata": {
+    "title": "kOS Architecture Recipe Creation Prompts",
+    "version": "1.0.0",
+    "extracted_from": "agents/LATEST/jobs/kos_repo_analysis.md",
+    "extraction_timestamp": "2025-07-09T22:20:00Z",
+    "content_type": "Recipe creation prompts for kOS architecture",
+    "category": "kos_architecture"
+  },
+  "klf_framework_setup": {
+    "prompt": "Create a recipe for setting up the Kind Link Framework (KLF) as the core messaging and routing system for kOS. Define the envelope structure, intent routing, and plugin interface standards. Include frontend SDK components, admin UI integration, and agent devtools for debugging KLF communication.",
+    "expected_output": "Complete KLF framework implementation with messaging protocol, routing system, and development tools",
+    "key_considerations": [
+      "Envelope structure with from/to/intent/payload/meta fields",
+      "Frontend SDK for React integration",
+      "Admin UI for monitoring and debugging",
+      "Agent devtools for inspection and testing",
+      "Plugin interface standards"
+    ]
+  },
+  "node_class_configuration": {
+    "prompt": "Develop a recipe for configuring the 13 node classes (Griot, Tohunga, Ronin, Musa, Hakim, Skald, Oracle, Junzi, Yachay, Sachem, Archon, Amauta, Mzee) within the kOS architecture. Define their roles, responsibilities, and interaction patterns. Include module boundaries and communication protocols.",
+    "expected_output": "Node class configuration with role definitions, interaction patterns, and module boundaries",
+    "key_considerations": [
+      "13 distinct node classes with specialized roles",
+      "Module boundaries and responsibility separation",
+      "Communication protocols between nodes",
+      "Integration with KLF messaging system",
+      "Plugin system for node extensions"
+    ]
+  },
+  "plugin_system_development": {
+    "prompt": "Create a recipe for developing the plugin system architecture for kOS. Include plugin marketplace, installation mechanisms, event system, and integration with the core KLF framework. Define plugin types, metadata standards, and development tools.",
+    "expected_output": "Complete plugin system with marketplace, installation, and development tools",
+    "key_considerations": [
+      "Plugin marketplace for discovery and installation",
+      "Plugin metadata and type definitions",
+      "Event system for plugin communication",
+      "Integration with KLF framework",
+      "Development tools and debugging support"
+    ]
+  },
+  "container_orchestration": {
+    "prompt": "Develop a recipe for container orchestration in kOS, including Docker Compose setup, service management, and deployment strategies. Address the different deployment modes (local, self-hosted, commercial) and resource requirements for GPU-dependent services.",
+    "expected_output": "Container orchestration system with deployment strategies and resource management",
+    "key_considerations": [
+      "Docker Compose for local development",
+      "Service management and lifecycle",
+      "GPU-dependent services (A1111, ComfyUI)",
+      "Multi-deployment mode support",
+      "Resource allocation and monitoring"
+    ]
+  }
+} 

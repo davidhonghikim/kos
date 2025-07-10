@@ -1,0 +1,116 @@
+{
+  "analysis_metadata": {
+    "title": "Key Architectural Decisions",
+    "version": "1.0.0",
+    "analysis_date": "2025-01-27T20:00:00Z",
+    "source": "ChatGPT Deep Research Analysis - Q&A Conversations",
+    "purpose": "Document critical architectural decisions made during analysis"
+  },
+  "ai_q_ownership_decisions": {
+    "knowledge_rag_layer": {
+      "decision": "✅ AI-Q owns (canonical source)",
+      "rationale": "Original docs, specs, prompts, recipes. Treated like a living constitutional archive.",
+      "implementation": "AI-Q defines what exists, Griot decides how it runs"
+    },
+    "kitchen_pantry": {
+      "decision": "⚠️ Shared/TBD - AI-Q owns original designs, Griot executes",
+      "rationale": "AI-Q owns original designs, workflows, and definitions. Griot executes real-time jobs.",
+      "proposed_split": {
+        "ai_q_responsibility": [
+          "Original recipes",
+          "Tool templates", 
+          "Task flows"
+        ],
+        "griot_responsibility": [
+          "Executes recipes",
+          "Spawns agents",
+          "Manages failures"
+        ]
+      }
+    },
+    "agent_architecture": {
+      "decision": "✅ AI-Q owns (all roles, behaviors, persona specs)",
+      "rationale": "All roles, behaviors, persona specs come from AI-Q. Execution happens in Griot.",
+      "implementation": "AI-Q defines agent behavior, Griot executes agent workflows"
+    },
+    "plugin_registry": {
+      "decision": "⚠️ Shared/TBD - AI-Q defines specs, Griot handles runtime",
+      "rationale": "AI-Q defines specs + metadata. Actual runtime plugin lifecycle may be handled by Griot.",
+      "proposed_split": {
+        "ai_q_responsibility": [
+          "Defines plugin types",
+          "Capabilities",
+          "Dependencies"
+        ],
+        "griot_responsibility": [
+          "Resolves versions",
+          "Mounts or launches containers"
+        ]
+      }
+    }
+  },
+  "rag_system_ownership": {
+    "final_decision": "Hybrid approach - AI-Q defines structure and source-of-truth, Griot runs RAG engine",
+    "rationale": "Matches industry standards and allows for local/remote RAG execution",
+    "implementation": {
+      "ai_q_role": "RAG Spec (structure, source list, template logic)",
+      "griot_role": "RAG Executor (index builder, retriever, chunker, database interface)"
+    },
+    "user_insight": "AI-Q is really mostly docs for human use, RAG and vectorization is supposed to take all the docs and make it easier for agents to work with and help with memory. Humans modify docs/specs and agents ingest, process and can output work and also reprocess and refactor AI-Q with those updates to upgrade library."
+  },
+  "identity_permissions": {
+    "baseline": "Option B - Simple Role-Based ACL (admin, user, guest)",
+    "upgrade_path": "Option C - Full Identity + Policy via feature flags",
+    "security_model": "Design like enterprise OS from day one, run like solo dev box until needed"
+  },
+  "node_modularity": {
+    "recommended": "Hybrid approach (Option 3) - Plugin type determines execution",
+    "types": ["python", "container", "wasm", "remote"],
+    "benefit": "Best flexibility and control, works across all device classes"
+  },
+  "system_architecture_principles": {
+    "separation_of_essence_and_execution": {
+      "description": "AI-Q provides the conceptual universe, while Griot brings it to life",
+      "analogy": "AI-Q is like a Home Depot rental or a Library of Things",
+      "implementation": "AI-Q houses the conceptual universe, while Griot brings it to life"
+    },
+    "knowledge_workflow": {
+      "human_role": "Modify docs/specs",
+      "agent_role": "Ingest, process, output work",
+      "feedback_loop": "Reprocess and refactor AI-Q with updates to upgrade library"
+    }
+  },
+  "integration_strategy": {
+    "approach": "Use AI-Q as the base repository",
+    "rationale": "AI-Q is the source of all knowledge and tools, components and libraries",
+    "integration_plan": [
+      "Integrate best components from Griot and Kai-CD",
+      "Follow strategic architectural decisions",
+      "Maintain modular, plug-and-play architecture"
+    ]
+  },
+  "development_priorities": {
+    "immediate": [
+      "Core KLF runtime system",
+      "Frontend SDK integration", 
+      "Backend gateway setup"
+    ],
+    "short_term": [
+      "Admin UI implementation",
+      "Plugin system development",
+      "Agent orchestration"
+    ],
+    "long_term": [
+      "Advanced security features",
+      "Multi-user support",
+      "Enterprise features"
+    ]
+  },
+  "quality_standards": {
+    "code_quality": "Production-grade TypeScript/Python",
+    "file_organization": "Modular, single-responsibility files under 150 lines",
+    "documentation": "JSON format for all documentation",
+    "testing": "Unit tests for each module",
+    "architecture": "Generic, modular, plug-and-play components"
+  }
+} 

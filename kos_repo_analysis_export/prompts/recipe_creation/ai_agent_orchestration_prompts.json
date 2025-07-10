@@ -1,0 +1,54 @@
+{
+  "extraction_metadata": {
+    "title": "AI Agent Orchestration Recipe Creation Prompts",
+    "version": "1.0.0",
+    "extracted_from": "agents/LATEST/jobs/kos_repo_analysis.md",
+    "extraction_timestamp": "2025-07-09T22:25:00Z",
+    "content_type": "Recipe creation prompts for AI agent orchestration",
+    "category": "ai_agent_orchestration"
+  },
+  "rag_system_implementation": {
+    "prompt": "Create a recipe for implementing the RAG (Retrieval-Augmented Generation) system in kOS. Define the hybrid approach where AI-Q owns the structure and source-of-truth while Griot runs the RAG engine. Include vector database setup, document ingestion, and agent integration.",
+    "expected_output": "Complete RAG system implementation with AI-Q/Griot ownership split and agent integration",
+    "key_considerations": [
+      "AI-Q owns RAG Spec (structure, source list, template logic)",
+      "Griot runs RAG Executor (index builder, retriever, chunker, database interface)",
+      "Vector database setup (Chroma, Qdrant)",
+      "Document ingestion and indexing",
+      "Agent integration and memory management"
+    ]
+  },
+  "agent_coordination": {
+    "prompt": "Develop a recipe for agent coordination and workflow management in kOS. Include agent state management, task tracing, memory visualization, and debugging tools. Address the agent-first philosophy and RAG-based agent workflows.",
+    "expected_output": "Agent coordination system with state management, debugging, and workflow tools",
+    "key_considerations": [
+      "Agent state management and inspection",
+      "Task tracing and execution monitoring",
+      "Memory visualization and management",
+      "Debug console and command interface",
+      "Agent-first philosophy implementation"
+    ]
+  },
+  "multi_agent_workflows": {
+    "prompt": "Create a recipe for multi-agent workflows and collaboration in kOS. Define how agents can work together, share context, and coordinate tasks. Include agent handoff mechanisms, shared memory, and workflow orchestration.",
+    "expected_output": "Multi-agent workflow system with collaboration, handoffs, and orchestration",
+    "key_considerations": [
+      "Agent collaboration and task sharing",
+      "Context sharing and memory management",
+      "Agent handoff mechanisms",
+      "Workflow orchestration and coordination",
+      "Multi-agent debugging and monitoring"
+    ]
+  },
+  "identity_management": {
+    "prompt": "Develop a recipe for identity management and permissions in kOS. Implement the role-based ACL system (admin, user, guest) with upgrade path to full identity and policy management. Include user authentication, agent identity, and permission controls.",
+    "expected_output": "Identity management system with role-based access and permission controls",
+    "key_considerations": [
+      "Role-based ACL (admin, user, guest)",
+      "User authentication and session management",
+      "Agent identity and permissions",
+      "Upgrade path to full identity system",
+      "Permission controls and access management"
+    ]
+  }
+} 

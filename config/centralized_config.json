@@ -1,0 +1,250 @@
+{
+  "metadata": {
+    "title": "kOS Centralized Configuration System",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T09:20:00Z",
+    "purpose": "Centralized configuration management for all kOS environment variables and settings"
+  },
+  "configuration_structure": {
+    "app": {
+      "name": "kOS Knowledge Library Framework",
+      "version": "1.0.0",
+      "environment": "${KOS_ENVIRONMENT}",
+      "debug": "${KOS_DEBUG}",
+      "log_level": "${KOS_LOG_LEVEL}"
+    },
+    "docker_images": {
+      "postgres": {
+        "enabled": "${KOS_ENABLE_POSTGRES}",
+        "image": "${KOS_POSTGRES_IMAGE}",
+        "version": "${KOS_POSTGRES_VERSION}"
+      },
+      "redis": {
+        "enabled": "${KOS_ENABLE_REDIS}",
+        "image": "${KOS_REDIS_IMAGE}",
+        "version": "${KOS_REDIS_VERSION}"
+      },
+      "neo4j": {
+        "enabled": "${KOS_ENABLE_NEO4J}",
+        "image": "${KOS_NEO4J_IMAGE}",
+        "version": "${KOS_NEO4J_VERSION}"
+      },
+      "elasticsearch": {
+        "enabled": "${KOS_ENABLE_ELASTICSEARCH}",
+        "image": "${KOS_ELASTICSEARCH_IMAGE}",
+        "version": "${KOS_ELASTICSEARCH_VERSION}"
+      },
+      "weaviate": {
+        "enabled": "${KOS_ENABLE_WEAVIATE}",
+        "image": "${KOS_WEAVIATE_IMAGE}",
+        "version": "${KOS_WEAVIATE_VERSION}"
+      },
+      "minio": {
+        "enabled": "${KOS_ENABLE_MINIO}",
+        "image": "${KOS_MINIO_IMAGE}",
+        "version": "${KOS_MINIO_VERSION}"
+      },
+      "prometheus": {
+        "enabled": "${KOS_ENABLE_PROMETHEUS}",
+        "image": "${KOS_PROMETHEUS_IMAGE}",
+        "version": "${KOS_PROMETHEUS_VERSION}"
+      },
+      "grafana": {
+        "enabled": "${KOS_ENABLE_GRAFANA}",
+        "image": "${KOS_GRAFANA_IMAGE}",
+        "version": "${KOS_GRAFANA_VERSION}"
+      }
+    },
+    "server": {
+      "host": "${KOS_API_HOST}",
+      "port": "${KOS_API_PORT}",
+      "container_port": "${KOS_API_CONTAINER_PORT}",
+      "api_port": "${KOS_API_PORT}",
+      "frontend_host": "${KOS_FRONTEND_HOST}",
+      "frontend_port": "${KOS_FRONTEND_PORT}",
+      "frontend_container_port": "${KOS_FRONTEND_CONTAINER_PORT}",
+      "cors_origins": "${KOS_CORS_ORIGINS}"
+    },
+    "databases": {
+      "postgres": {
+        "enabled": "${KOS_ENABLE_POSTGRES}",
+        "host": "${KOS_POSTGRES_HOST}",
+        "port": "${KOS_POSTGRES_PORT}",
+        "container_port": "${KOS_POSTGRES_CONTAINER_PORT}",
+        "database": "${KOS_POSTGRES_DB}",
+        "username": "${KOS_POSTGRES_USER}",
+        "password": "${KOS_POSTGRES_PASSWORD}",
+        "url": "${KOS_POSTGRES_URL}"
+      },
+      "redis": {
+        "enabled": "${KOS_ENABLE_REDIS}",
+        "host": "${KOS_REDIS_HOST}",
+        "port": "${KOS_REDIS_PORT}",
+        "container_port": "${KOS_REDIS_CONTAINER_PORT}",
+        "password": "${KOS_REDIS_PASSWORD}",
+        "database": "${KOS_REDIS_DB}",
+        "url": "${KOS_REDIS_URL}"
+      },
+      "neo4j": {
+        "enabled": "${KOS_ENABLE_NEO4J}",
+        "host": "${KOS_NEO4J_HOST}",
+        "http_port": "${KOS_NEO4J_HTTP_PORT}",
+        "http_container_port": "${KOS_NEO4J_HTTP_CONTAINER_PORT}",
+        "port": "${KOS_NEO4J_PORT}",
+        "container_port": "${KOS_NEO4J_CONTAINER_PORT}",
+        "username": "${KOS_NEO4J_USER}",
+        "password": "${KOS_NEO4J_PASSWORD}",
+        "url": "${KOS_NEO4J_URL}"
+      }
+    },
+    "search": {
+      "elasticsearch": {
+        "enabled": "${KOS_ENABLE_ELASTICSEARCH}",
+        "host": "${KOS_ELASTICSEARCH_HOST}",
+        "port": "${KOS_ELASTICSEARCH_PORT}",
+        "container_port": "${KOS_ELASTICSEARCH_CONTAINER_PORT}",
+        "url": "${KOS_ELASTICSEARCH_URL}"
+      }
+    },
+    "vector": {
+      "weaviate": {
+        "enabled": "${KOS_ENABLE_WEAVIATE}",
+        "host": "${KOS_WEAVIATE_HOST}",
+        "port": "${KOS_WEAVIATE_PORT}",
+        "container_port": "${KOS_WEAVIATE_CONTAINER_PORT}",
+        "url": "${KOS_WEAVIATE_URL}"
+      }
+    },
+    "storage": {
+      "minio": {
+        "enabled": "${KOS_ENABLE_MINIO}",
+        "host": "${KOS_MINIO_HOST}",
+        "port": "${KOS_MINIO_PORT}",
+        "container_port": "${KOS_MINIO_CONTAINER_PORT}",
+        "console_port": "${KOS_MINIO_CONSOLE_PORT}",
+        "console_container_port": "${KOS_MINIO_CONSOLE_CONTAINER_PORT}",
+        "root_user": "${KOS_MINIO_ROOT_USER}",
+        "root_password": "${KOS_MINIO_ROOT_PASSWORD}",
+        "url": "${KOS_MINIO_URL}"
+      },
+      "file": {
+        "type": "${KOS_STORAGE_TYPE}",
+        "path": "${KOS_STORAGE_PATH}",
+        "max_file_size": "${KOS_MAX_FILE_SIZE}",
+        "allowed_types": "${KOS_ALLOWED_FILE_TYPES}"
+      }
+    },
+    "monitoring": {
+      "prometheus": {
+        "enabled": "${KOS_ENABLE_PROMETHEUS}",
+        "port": "${KOS_PROMETHEUS_PORT}",
+        "container_port": "${KOS_PROMETHEUS_CONTAINER_PORT}"
+      },
+      "grafana": {
+        "enabled": "${KOS_ENABLE_GRAFANA}",
+        "port": "${KOS_GRAFANA_PORT}",
+        "container_port": "${KOS_GRAFANA_CONTAINER_PORT}",
+        "admin_password": "${KOS_GRAFANA_ADMIN_PASSWORD}"
+      }
+    },
+    "security": {
+      "jwt_secret": "${KOS_JWT_SECRET}",
+      "jwt_algorithm": "${KOS_JWT_ALGORITHM}",
+      "jwt_expiration": "${KOS_JWT_EXPIRATION}",
+      "jwt_refresh_expiration": "${KOS_JWT_REFRESH_EXPIRATION}",
+      "bcrypt_rounds": "${KOS_BCRYPT_ROUNDS}"
+    },
+    "external_services": {
+      "openai": {
+        "api_key": "${KOS_OPENAI_API_KEY}",
+        "model": "gpt-4",
+        "max_tokens": 4096
+      },
+      "anthropic": {
+        "api_key": "${KOS_ANTHROPIC_API_KEY}",
+        "model": "claude-3-sonnet-20240229"
+      },
+      "google": {
+        "api_key": "${KOS_GOOGLE_API_KEY}"
+      }
+    },
+    "websocket": {
+      "port": "${KOS_WS_PORT}",
+      "path": "${KOS_WS_PATH}",
+      "heartbeat_interval": "${KOS_WS_HEARTBEAT_INTERVAL}"
+    },
+    "plugins": {
+      "directory": "${KOS_PLUGIN_DIRECTORY}",
+      "registry_url": "${KOS_PLUGIN_REGISTRY_URL}",
+      "sandbox": "${KOS_PLUGIN_SANDBOX}"
+    },
+    "backup": {
+      "enabled": "${KOS_BACKUP_ENABLED}",
+      "schedule": "${KOS_BACKUP_SCHEDULE}",
+      "retention_days": "${KOS_BACKUP_RETENTION_DAYS}",
+      "path": "${KOS_BACKUP_PATH}"
+    },
+    "email": {
+      "smtp_host": "${KOS_SMTP_HOST}",
+      "smtp_port": "${KOS_SMTP_PORT}",
+      "smtp_user": "${KOS_SMTP_USER}",
+      "smtp_password": "${KOS_SMTP_PASSWORD}",
+      "from": "${KOS_EMAIL_FROM}"
+    }
+  },
+  "environment_mapping": {
+    "development": {
+      "debug": true,
+      "reload": true,
+      "testing": false,
+      "mock_external_services": true
+    },
+    "staging": {
+      "debug": false,
+      "reload": false,
+      "testing": false,
+      "mock_external_services": false
+    },
+    "production": {
+      "debug": false,
+      "reload": false,
+      "testing": false,
+      "mock_external_services": false
+    }
+  },
+  "validation_rules": {
+    "required_variables": [
+      "KOS_JWT_SECRET",
+      "KOS_POSTGRES_URL",
+      "KOS_REDIS_URL",
+      "KOS_NEO4J_URL",
+      "KOS_API_PORT",
+      "KOS_FRONTEND_PORT"
+    ],
+    "optional_variables": [
+      "KOS_OPENAI_API_KEY",
+      "KOS_ANTHROPIC_API_KEY",
+      "KOS_ENABLE_ELASTICSEARCH",
+      "KOS_ENABLE_WEAVIATE",
+      "KOS_ENABLE_MINIO",
+      "KOS_ENABLE_PROMETHEUS",
+      "KOS_ENABLE_GRAFANA"
+    ],
+    "format_requirements": {
+      "urls": "Must be valid URL format",
+      "ports": "Must be integers between 1-65535",
+      "booleans": "Must be true/false strings",
+      "integers": "Must be valid integers"
+    }
+  },
+  "loading_strategy": {
+    "priority_order": [
+      "Environment variables (highest priority)",
+      "Config files (.env)",
+      "Default values (lowest priority)"
+    ],
+    "validation": "Validate all required variables on startup",
+    "fallback": "Use sensible defaults for optional variables"
+  }
+} 

@@ -1,0 +1,550 @@
+{
+  "metadata": {
+    "title": "kOS KLF Core Setup Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - kOS Implementation Specialist",
+    "created_timestamp": "2025-01-28T00:05:00Z",
+    "purpose": "Core KLF system setup for kOS implementation",
+    "status": "READY_TO_EXECUTE",
+    "recipe_type": "foundation_setup",
+    "estimated_duration": "3-4 days",
+    "difficulty": "medium",
+    "priority": "critical",
+    "category": "kos_system"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "node_version": ">=18.0.0",
+      "python_version": ">=3.11.0",
+      "git": "installed",
+      "code_editor": "VS Code recommended"
+    },
+    "dependencies": {
+      "required_packages": [
+        "typescript",
+        "zod",
+        "uuid",
+        "fastapi",
+        "pydantic",
+        "sqlalchemy"
+      ],
+      "required_directories": [
+        "kos_implementation/ingredients/klf/",
+        "kos_implementation/operations/klf/",
+        "kos_implementation/configs/"
+      ]
+    },
+    "knowledge_requirements": [
+      "Griot KLF protocol understanding",
+      "TypeScript and Python fundamentals",
+      "Modular architecture principles",
+      "Kitchen/pantry system patterns"
+    ]
+  },
+  "ingredients": {
+    "klf_types": {
+      "file": "kos_implementation/ingredients/klf/klf_types.json",
+      "description": "KLF type definitions and interfaces",
+      "usage": "Core type system for KLF protocol",
+      "category": "types"
+    },
+    "klf_envelope": {
+      "file": "kos_implementation/ingredients/klf/klf_envelope.json",
+      "description": "KLF envelope implementation",
+      "usage": "Message envelope handling and validation",
+      "category": "modules"
+    },
+    "klf_router": {
+      "file": "kos_implementation/ingredients/klf/klf_router.json",
+      "description": "KLF router implementation",
+      "usage": "Message routing and dispatch system",
+      "category": "modules"
+    },
+    "klf_registry": {
+      "file": "kos_implementation/ingredients/klf/klf_registry.json",
+      "description": "KLF intent registry",
+      "usage": "Intent registration and handler management",
+      "category": "modules"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "title": "Create kOS Implementation Directory Structure",
+      "description": "Set up the directory structure for kOS implementation",
+      "command": "mkdir -p kos_implementation/ingredients/klf kos_implementation/operations/klf kos_implementation/configs kos_implementation/docs",
+      "expected_output": "kOS implementation directory structure created successfully",
+      "validation": "Verify directories exist with ls -la kos_implementation/",
+      "error_handling": "If directories exist, continue; if permission error, check permissions",
+      "estimated_time": "5 minutes"
+    },
+    {
+      "step_id": "STEP-02",
+      "title": "Create KLF Types Ingredient",
+      "description": "Create KLF type definitions ingredient",
+      "file_creation": {
+        "target_file": "kos_implementation/ingredients/klf/klf_types.json",
+        "content": {
+          "metadata": {
+            "title": "KLF Types Ingredient",
+            "version": "1.0.0",
+            "created_by": "Claude Sonnet 4 - kOS Implementation Specialist",
+            "created_timestamp": "2025-01-28T00:05:00Z",
+            "purpose": "Core type definitions for KLF protocol",
+            "status": "ACTIVE",
+            "ingredient_type": "types",
+            "category": "klf_core"
+          },
+          "type_definitions": {
+            "message_types": {
+              "INTENT": {
+                "description": "Intent-based message for requesting actions",
+                "usage": "Primary message type for agent interactions",
+                "schema": "KLFIntentSchema"
+              },
+              "PAYLOAD": {
+                "description": "Data payload message",
+                "usage": "Carrying data between components",
+                "schema": "KLFPayloadSchema"
+              },
+              "RESPONSE": {
+                "description": "Response to a request",
+                "usage": "Returning results from operations",
+                "schema": "KLFResponseSchema"
+              },
+              "ERROR": {
+                "description": "Error message",
+                "usage": "Error reporting and handling",
+                "schema": "KLFErrorSchema"
+              },
+              "HEARTBEAT": {
+                "description": "System heartbeat",
+                "usage": "Health monitoring and connection keepalive",
+                "schema": "KLFHeartbeatSchema"
+              },
+              "AUTHENTICATION": {
+                "description": "Authentication message",
+                "usage": "User authentication and session management",
+                "schema": "KLFAuthSchema"
+              },
+              "AUTHORIZATION": {
+                "description": "Authorization message",
+                "usage": "Permission checking and access control",
+                "schema": "KLFAuthorizationSchema"
+              },
+              "SUBSCRIPTION": {
+                "description": "Event subscription",
+                "usage": "Subscribing to events and notifications",
+                "schema": "KLFSubscriptionSchema"
+              },
+              "PUBLICATION": {
+                "description": "Event publication",
+                "usage": "Publishing events to subscribers",
+                "schema": "KLFPublicationSchema"
+              },
+              "QUERY": {
+                "description": "Data query",
+                "usage": "Requesting data from systems",
+                "schema": "KLFQuerySchema"
+              },
+              "COMMAND": {
+                "description": "System command",
+                "usage": "Executing system commands",
+                "schema": "KLFCommandSchema"
+              },
+              "EVENT": {
+                "description": "System event",
+                "usage": "System event notifications",
+                "schema": "KLFEventSchema"
+              },
+              "NOTIFICATION": {
+                "description": "User notification",
+                "usage": "User-facing notifications",
+                "schema": "KLFNotificationSchema"
+              },
+              "SYNC": {
+                "description": "Synchronization message",
+                "usage": "Data synchronization between systems",
+                "schema": "KLFSyncSchema"
+              },
+              "ACK": {
+                "description": "Acknowledgment message",
+                "usage": "Confirming message receipt",
+                "schema": "KLFAckSchema"
+              }
+            },
+            "envelope_structure": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique message identifier",
+                "required": true
+              },
+              "type": {
+                "type": "KLFMessageType",
+                "description": "Message type from enum",
+                "required": true
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "datetime",
+                "description": "Message creation timestamp",
+                "required": true
+              },
+              "source": {
+                "type": "string",
+                "description": "Message source identifier",
+                "required": true
+              },
+              "destination": {
+                "type": "string",
+                "description": "Message destination identifier",
+                "required": false
+              },
+              "payload": {
+                "type": "any",
+                "description": "Message payload data",
+                "required": true
+              },
+              "metadata": {
+                "type": "object",
+                "description": "Additional message metadata",
+                "required": false
+              },
+              "signature": {
+                "type": "string",
+                "description": "Digital signature for message integrity",
+                "required": false
+              },
+              "encryption": {
+                "type": "object",
+                "description": "Encryption information",
+                "required": false,
+                "properties": {
+                  "algorithm": "string",
+                  "key_id": "string"
+                }
+              }
+            }
+          },
+          "validation_schemas": {
+            "envelope": "KLFEnvelopeSchema",
+            "intent": "KLFIntentSchema",
+            "response": "KLFResponseSchema",
+            "error": "KLFErrorSchema",
+            "auth": "KLFAuthSchema"
+          },
+          "dependencies": {
+            "required": [
+              "zod",
+              "uuid"
+            ],
+            "optional": [
+              "crypto",
+              "jsonwebtoken"
+            ]
+          },
+          "implementation_notes": {
+            "type_safety": "All types use TypeScript with strict mode",
+            "validation": "Runtime validation using Zod schemas",
+            "extensibility": "Easy to add new message types",
+            "compatibility": "Compatible with existing Griot KLF"
+          }
+        }
+      },
+      "expected_output": "KLF types ingredient created successfully",
+      "validation": "Verify klf_types.json exists and follows ingredient format",
+      "error_handling": "If JSON syntax error, fix and retry",
+      "estimated_time": "15 minutes"
+    },
+    {
+      "step_id": "STEP-03",
+      "title": "Create KLF Envelope Ingredient",
+      "description": "Create KLF envelope ingredient for message handling",
+      "file_creation": {
+        "target_file": "kos_implementation/ingredients/klf/klf_envelope.json",
+        "content": {
+          "metadata": {
+            "title": "KLF Envelope Ingredient",
+            "version": "1.0.0",
+            "created_by": "Claude Sonnet 4 - kOS Implementation Specialist",
+            "created_timestamp": "2025-01-28T00:05:00Z",
+            "purpose": "KLF envelope handling and validation",
+            "status": "ACTIVE",
+            "ingredient_type": "modules",
+            "category": "klf_core"
+          },
+          "module_info": {
+            "name": "KLFEnvelopeHandler",
+            "description": "Handles message envelope creation, validation, and processing",
+            "file_path": "kos_implementation/operations/klf/envelope_handler.py",
+            "dependencies": ["klf_types"]
+          },
+          "operations": {
+            "create_envelope": {
+              "description": "Create a new KLF envelope",
+              "parameters": {
+                "type": "KLFMessageType",
+                "payload": "any",
+                "source": "string",
+                "destination": "string (optional)",
+                "metadata": "object (optional)"
+              },
+              "returns": "KLFEnvelope"
+            },
+            "validate_envelope": {
+              "description": "Validate KLF envelope",
+              "parameters": {
+                "envelope": "any"
+              },
+              "returns": "KLFEnvelope"
+            },
+            "sign_envelope": {
+              "description": "Sign envelope with digital signature",
+              "parameters": {
+                "envelope": "KLFEnvelope",
+                "private_key": "string"
+              },
+              "returns": "KLFEnvelope"
+            },
+            "verify_signature": {
+              "description": "Verify envelope signature",
+              "parameters": {
+                "envelope": "KLFEnvelope",
+                "public_key": "string"
+              },
+              "returns": "boolean"
+            }
+          },
+          "dependencies": {
+            "required": [
+              "klf_types"
+            ],
+            "optional": [
+              "crypto_utils"
+            ]
+          },
+          "implementation_notes": {
+            "security": "Implements digital signatures and encryption",
+            "validation": "Uses Zod schemas for runtime validation",
+            "error_handling": "Comprehensive error handling with custom error types",
+            "performance": "Optimized for high-throughput message processing"
+          }
+        }
+      },
+      "expected_output": "KLF envelope ingredient created successfully",
+      "validation": "Verify klf_envelope.json exists and follows ingredient format",
+      "error_handling": "If JSON syntax error, fix and retry",
+      "estimated_time": "15 minutes"
+    },
+    {
+      "step_id": "STEP-04",
+      "title": "Create KLF Router Ingredient",
+      "description": "Create KLF router ingredient for message routing",
+      "file_creation": {
+        "target_file": "kos_implementation/ingredients/klf/klf_router.json",
+        "content": {
+          "metadata": {
+            "title": "KLF Router Ingredient",
+            "version": "1.0.0",
+            "created_by": "Claude Sonnet 4 - kOS Implementation Specialist",
+            "created_timestamp": "2025-01-28T00:05:00Z",
+            "purpose": "KLF message routing and dispatch system",
+            "status": "ACTIVE",
+            "ingredient_type": "modules",
+            "category": "klf_core"
+          },
+          "module_info": {
+            "name": "KLFRouter",
+            "description": "Routes messages to appropriate handlers with middleware support",
+            "file_path": "kos_implementation/operations/klf/router.py",
+            "dependencies": ["klf_types", "klf_envelope"]
+          },
+          "operations": {
+            "register_route": {
+              "description": "Register a route handler",
+              "parameters": {
+                "type": "KLFMessageType",
+                "handler": "RouteHandler",
+                "middleware": "Middleware[] (optional)",
+                "priority": "number (optional)"
+              },
+              "returns": "void"
+            },
+            "route": {
+              "description": "Route a message",
+              "parameters": {
+                "envelope": "KLFEnvelope"
+              },
+              "returns": "KLFEnvelope"
+            },
+            "use": {
+              "description": "Add global middleware",
+              "parameters": {
+                "middleware": "Middleware"
+              },
+              "returns": "void"
+            },
+            "set_error_handler": {
+              "description": "Set error handler",
+              "parameters": {
+                "handler": "ErrorHandler"
+              },
+              "returns": "void"
+            }
+          },
+          "dependencies": {
+            "required": [
+              "klf_types",
+              "klf_envelope"
+            ],
+            "optional": [
+              "middleware_utils"
+            ]
+          },
+          "implementation_notes": {
+            "middleware": "Supports global and route-specific middleware",
+            "priority": "Route handlers can have priority levels",
+            "error_handling": "Comprehensive error handling with custom error types",
+            "performance": "Optimized routing with priority-based execution"
+          }
+        }
+      },
+      "expected_output": "KLF router ingredient created successfully",
+      "validation": "Verify klf_router.json exists and follows ingredient format",
+      "error_handling": "If JSON syntax error, fix and retry",
+      "estimated_time": "15 minutes"
+    },
+    {
+      "step_id": "STEP-05",
+      "title": "Create KLF Registry Ingredient",
+      "description": "Create KLF intent registry ingredient",
+      "file_creation": {
+        "target_file": "kos_implementation/ingredients/klf/klf_registry.json",
+        "content": {
+          "metadata": {
+            "title": "KLF Registry Ingredient",
+            "version": "1.0.0",
+            "created_by": "Claude Sonnet 4 - kOS Implementation Specialist",
+            "created_timestamp": "2025-01-28T00:05:00Z",
+            "purpose": "KLF intent registry and handler management",
+            "status": "ACTIVE",
+            "ingredient_type": "modules",
+            "category": "klf_core"
+          },
+          "module_info": {
+            "name": "KLFRegistry",
+            "description": "Manages intent registration and handler discovery",
+            "file_path": "kos_implementation/operations/klf/registry.py",
+            "dependencies": ["klf_types", "klf_router"]
+          },
+          "operations": {
+            "register_intent": {
+              "description": "Register an intent handler",
+              "parameters": {
+                "intent": "string",
+                "handler": "IntentHandler",
+                "metadata": "object (optional)"
+              },
+              "returns": "void"
+            },
+            "unregister_intent": {
+              "description": "Unregister an intent handler",
+              "parameters": {
+                "intent": "string"
+              },
+              "returns": "boolean"
+            },
+            "get_handler": {
+              "description": "Get handler for intent",
+              "parameters": {
+                "intent": "string"
+              },
+              "returns": "IntentHandler"
+            },
+            "list_intents": {
+              "description": "List all registered intents",
+              "parameters": {},
+              "returns": "string[]"
+            }
+          },
+          "dependencies": {
+            "required": [
+              "klf_types",
+              "klf_router"
+            ],
+            "optional": [
+              "persistence_layer"
+            ]
+          },
+          "implementation_notes": {
+            "persistence": "Supports persistent intent storage",
+            "discovery": "Automatic intent discovery from modules",
+            "validation": "Intent validation and conflict resolution",
+            "performance": "Fast intent lookup with caching"
+          }
+        }
+      },
+      "expected_output": "KLF registry ingredient created successfully",
+      "validation": "Verify klf_registry.json exists and follows ingredient format",
+      "error_handling": "If JSON syntax error, fix and retry",
+      "estimated_time": "15 minutes"
+    },
+    {
+      "step_id": "STEP-06",
+      "title": "Validate kOS KLF Core Setup",
+      "description": "Validate that kOS KLF core is properly set up",
+      "command": "ls -la kos_implementation/ingredients/klf/",
+      "expected_output": "All KLF ingredients listed in directory",
+      "validation": "Verify all KLF ingredients exist and follow correct format",
+      "error_handling": "If validation fails, check ingredient files and retry",
+      "estimated_time": "10 minutes"
+    }
+  ],
+  "outputs": {
+    "kos_implementation_structure": {
+      "type": "directory",
+      "description": "kOS implementation directory structure",
+      "location": "kos_implementation/",
+      "files": [
+        "ingredients/klf/klf_types.json",
+        "ingredients/klf/klf_envelope.json",
+        "ingredients/klf/klf_router.json",
+        "ingredients/klf/klf_registry.json"
+      ]
+    },
+    "klf_core_ingredients": {
+      "type": "ingredients",
+      "description": "KLF core ingredients created",
+      "location": "kos_implementation/ingredients/klf/",
+      "status": "created"
+    }
+  },
+  "validation": {
+    "ingredient_format": "All ingredients follow proper JSON format",
+    "dependencies": "All dependencies properly specified",
+    "structure": "Directory structure properly created",
+    "metadata": "All metadata fields properly populated"
+  },
+  "next_steps": {
+    "immediate": "Proceed to recipe 02-backend-gateway",
+    "dependencies": "KLF core must be complete before backend gateway",
+    "validation": "Verify all ingredients are properly formatted"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Directory creation fails",
+        "solution": "Check permissions and ensure parent directories exist"
+      },
+      {
+        "issue": "JSON syntax error",
+        "solution": "Validate JSON format and fix syntax errors"
+      },
+      {
+        "issue": "Ingredient format error",
+        "solution": "Verify ingredient follows proper metadata structure"
+      }
+    ]
+  }
+} 

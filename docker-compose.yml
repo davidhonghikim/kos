@@ -1,0 +1,217 @@
+version: '3.8'
+
+services:
+  # Core kOS Backend API
+  kos-backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: kos-backend
+    ports:
+      - "${KOS_API_PORT}:${KOS_API_CONTAINER_PORT}"
+    environment:
+      - NODE_ENV=${KOS_ENVIRONMENT}
+      - DEBUG=${KOS_DEBUG}
+      - LOG_LEVEL=${KOS_LOG_LEVEL}
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+    depends_on:
+      - kos-postgres
+      - kos-redis
+      - kos-neo4j
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - core
+
+  # Core kOS Frontend
+  kos-frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: kos-frontend
+    ports:
+      - "${KOS_FRONTEND_PORT}:${KOS_FRONTEND_CONTAINER_PORT}"
+    environment:
+      - NODE_ENV=${KOS_ENVIRONMENT}
+      - REACT_APP_API_URL=http://${KOS_API_HOST}:${KOS_API_PORT}
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    depends_on:
+      - kos-backend
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - core
+
+  # PostgreSQL Database (Core)
+  kos-postgres:
+    image: ${KOS_POSTGRES_IMAGE}
+    container_name: kos-postgres
+    environment:
+      POSTGRES_DB: ${KOS_POSTGRES_DB}
+      POSTGRES_USER: ${KOS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${KOS_POSTGRES_PASSWORD}
+    ports:
+      - "${KOS_POSTGRES_PORT}:${KOS_POSTGRES_CONTAINER_PORT}"
+    volumes:
+      - kos_postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - core
+
+  # Redis Cache (Core)
+  kos-redis:
+    image: ${KOS_REDIS_IMAGE}
+    container_name: kos-redis
+    ports:
+      - "${KOS_REDIS_PORT}:${KOS_REDIS_CONTAINER_PORT}"
+    volumes:
+      - kos_redis_data:/data
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - core
+
+  # Neo4j Graph Database (Core)
+  kos-neo4j:
+    image: ${KOS_NEO4J_IMAGE}
+    container_name: kos-neo4j
+    environment:
+      NEO4J_AUTH: ${KOS_NEO4J_USER}/${KOS_NEO4J_PASSWORD}
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "${KOS_NEO4J_HTTP_PORT}:${KOS_NEO4J_HTTP_CONTAINER_PORT}"
+      - "${KOS_NEO4J_PORT}:${KOS_NEO4J_CONTAINER_PORT}"
+    volumes:
+      - kos_neo4j_data:/data
+      - kos_neo4j_logs:/logs
+      - kos_neo4j_import:/var/lib/neo4j/import
+      - kos_neo4j_plugins:/plugins
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - core
+
+  # Elasticsearch (Optional - Search)
+  kos-elasticsearch:
+    image: ${KOS_ELASTICSEARCH_IMAGE}
+    container_name: kos-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "${KOS_ELASTICSEARCH_PORT}:${KOS_ELASTICSEARCH_CONTAINER_PORT}"
+    volumes:
+      - kos_elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - search
+
+  # Weaviate Vector Database (Optional - Vector)
+  kos-weaviate:
+    image: ${KOS_WEAVIATE_IMAGE}
+    container_name: kos-weaviate
+    ports:
+      - "${KOS_WEAVIATE_PORT}:${KOS_WEAVIATE_CONTAINER_PORT}"
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'none'
+      ENABLE_MODULES: 'text2vec-openai,text2vec-cohere,text2vec-huggingface,ref2vec-centroid,generative-openai,qna-openai'
+      CLUSTER_HOSTNAME: 'node1'
+    volumes:
+      - kos_weaviate_data:/var/lib/weaviate
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - vector
+
+  # MinIO Object Storage (Optional - Storage)
+  kos-minio:
+    image: ${KOS_MINIO_IMAGE}
+    container_name: kos-minio
+    ports:
+      - "${KOS_MINIO_PORT}:${KOS_MINIO_CONTAINER_PORT}"
+      - "${KOS_MINIO_CONSOLE_PORT}:${KOS_MINIO_CONSOLE_CONTAINER_PORT}"
+    environment:
+      MINIO_ROOT_USER: ${KOS_MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${KOS_MINIO_ROOT_PASSWORD}
+    volumes:
+      - kos_minio_data:/data
+    command: server /data --console-address ":${KOS_MINIO_CONSOLE_CONTAINER_PORT}"
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - storage
+
+  # Prometheus Monitoring (Optional - Monitoring)
+  kos-prometheus:
+    image: ${KOS_PROMETHEUS_IMAGE}
+    container_name: kos-prometheus
+    ports:
+      - "${KOS_PROMETHEUS_PORT}:${KOS_PROMETHEUS_CONTAINER_PORT}"
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - kos_prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+  # Grafana Dashboard (Optional - Monitoring)
+  kos-grafana:
+    image: ${KOS_GRAFANA_IMAGE}
+    container_name: kos-grafana
+    ports:
+      - "${KOS_GRAFANA_PORT}:${KOS_GRAFANA_CONTAINER_PORT}"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${KOS_GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - kos_grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - kos-network
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+volumes:
+  kos_postgres_data:
+  kos_redis_data:
+  kos_neo4j_data:
+  kos_neo4j_logs:
+  kos_neo4j_import:
+  kos_neo4j_plugins:
+  kos_elasticsearch_data:
+  kos_weaviate_data:
+  kos_minio_data:
+  kos_prometheus_data:
+  kos_grafana_data:
+
+networks:
+  kos-network:
+    driver: bridge 

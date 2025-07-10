@@ -1,0 +1,14 @@
+[
+  {
+    "id": "com.kos.gpt-chat-enhancer",
+    "name": "GPT Chat Enhancer",
+    "description": "Improves chat UIs with memory and emoji rendering",
+    "url": "https://plugins.kos.dev/gpt-chat-enhancer"
+  },
+  {
+    "id": "com.kos.image-captioner",
+    "name": "Image Captioner",
+    "description": "Automatically generates alt text and captions for uploaded images",
+    "url": "https://plugins.kos.dev/image-captioner"
+  }
+] 
