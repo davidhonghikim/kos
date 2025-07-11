@@ -1,0 +1,17 @@
+{
+  "title": "kOS Deployment Blueprint",
+  "description": "Blueprint for deploying kOS system in various environments (local, cloud, hybrid).",
+  "version": "1.0.0",
+  "environments": [
+    "local",
+    "docker",
+    "kubernetes",
+    "cloud"
+  ],
+  "steps": [
+    { "step": 1, "action": "select_environment" },
+    { "step": 2, "action": "provision_resources" },
+    { "step": 3, "action": "deploy_services" },
+    { "step": 4, "action": "run_entrypoint" }
+  ]
+} 

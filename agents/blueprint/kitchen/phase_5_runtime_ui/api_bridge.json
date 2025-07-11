@@ -1,0 +1,26 @@
+{
+  "title": "kOS WebSocket & REST Bridge",
+  "description": "Bidirectional agent connection layer using WebSocket and REST API for event-driven and fallback communication.",
+  "version": "1.0.0",
+  "websocket": {
+    "enabled": true,
+    "port": 3111,
+    "path": "/ws",
+    "auth_required": true
+  },
+  "rest": {
+    "base_path": "/api",
+    "endpoints": {
+      "/run": "POST",
+      "/status": "GET",
+      "/upload": "POST",
+      "/memory": "GET",
+      "/agent": "GET"
+    }
+  },
+  "security": {
+    "jwt_required": true,
+    "rate_limit_per_min": 60,
+    "cors_allowed": ["*"]
+  }
+} 

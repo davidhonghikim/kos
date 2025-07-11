@@ -1,0 +1,15 @@
+{
+  "title": "kOS Autoinstaller",
+  "description": "Automated installer for kOS system, services, and dependencies.",
+  "version": "1.0.0",
+  "steps": [
+    { "step": 1, "action": "check_prerequisites", "target": "docker_spec.json" },
+    { "step": 2, "action": "install_services", "target": "docker_spec.json" },
+    { "step": 3, "action": "configure_env", "target": ".env" },
+    { "step": 4, "action": "initialize_vault", "target": "vault_config.json" },
+    { "step": 5, "action": "run_entrypoint", "target": "kos_main.py" }
+  ],
+  "rollback": {
+    "on_failure": "revert_all"
+  }
+} 

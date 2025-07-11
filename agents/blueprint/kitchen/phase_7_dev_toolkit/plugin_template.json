@@ -1,0 +1,13 @@
+{
+  "title": "kOS Plugin Template",
+  "description": "Template for developing plugins and extensions for the kOS system.",
+  "version": "1.0.0",
+  "fields": {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "entrypoint": "string",
+    "version": "string",
+    "dependencies": ["string"]
+  }
+} 

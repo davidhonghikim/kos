@@ -1,0 +1,17 @@
+{
+  "title": "kOS Folder Layout",
+  "description": "Canonical folder structure for kOS system, recipes, agents, and runtime files.",
+  "version": "1.0.0",
+  "folders": [
+    "/agents",
+    "/blueprint",
+    "/kitchen",
+    "/pantry",
+    "/recipes",
+    "/runtime",
+    "/logs",
+    "/tests",
+    "/ui",
+    "/vault"
+  ]
+} 

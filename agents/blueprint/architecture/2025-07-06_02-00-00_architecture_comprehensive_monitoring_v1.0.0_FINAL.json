@@ -1,0 +1,288 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-27T10:39:00Z",
+    "created_by": "Claude Sonnet 4 - Claude Sonnet 4",
+    "purpose": "Comprehensive monitoring and observability documentation for AI-Q Knowledge Library System"
+  },
+  "monitoring_overview": {
+    "philosophy": "Zero-blind-spot observability with proactive alerting",
+    "objectives": [
+      "Real-time system health monitoring",
+      "Proactive issue detection and alerting",
+      "Performance optimization insights",
+      "Security threat detection",
+      "Business metrics tracking"
+    ]
+  },
+  "monitoring_stack": {
+    "logging": {
+      "technology": "Winston + Morgan",
+      "format": "Structured JSON",
+      "features": [
+        "Correlation IDs for request tracing",
+        "Log levels (error, warn, info, debug)",
+        "Centralized log aggregation",
+        "Log retention and rotation"
+      ]
+    },
+    "metrics": {
+      "technology": "Prometheus + Grafana",
+      "collection": "Custom metrics with prom-client",
+      "features": [
+        "Application metrics",
+        "System metrics",
+        "Business metrics",
+        "Custom dashboards"
+      ]
+    },
+    "tracing": {
+      "technology": "Jaeger",
+      "features": [
+        "Distributed request tracing",
+        "Performance bottleneck identification",
+        "Service dependency mapping",
+        "Latency analysis"
+      ]
+    },
+    "alerting": {
+      "technology": "Grafana Alerting + PagerDuty",
+      "features": [
+        "Proactive alerting",
+        "Escalation policies",
+        "Alert correlation",
+        "Incident management"
+      ]
+    }
+  },
+  "monitoring_endpoints": {
+    "health_checks": {
+      "basic_health": {
+        "endpoint": "GET /health",
+        "purpose": "Basic application health status",
+        "response": {
+          "status": "healthy|unhealthy",
+          "timestamp": "ISO timestamp",
+          "version": "application version",
+          "uptime": "uptime in seconds"
+        }
+      },
+      "detailed_health": {
+        "endpoint": "GET /api/system/health",
+        "purpose": "Detailed system health with component status",
+        "response": {
+          "status": "healthy|degraded|unhealthy",
+          "components": {
+            "api": "healthy|unhealthy",
+            "database": "healthy|unhealthy",
+            "search": "healthy|unhealthy",
+            "vector_db": "healthy|unhealthy",
+            "object_storage": "healthy|unhealthy"
+          },
+          "memory_usage": "percentage",
+          "cpu_usage": "percentage"
+        }
+      }
+    },
+    "metrics": {
+      "system_metrics": {
+        "endpoint": "GET /api/system/metrics",
+        "purpose": "Comprehensive system metrics",
+        "metrics": [
+          "Process metrics (CPU, memory, uptime)",
+          "System metrics (platform, architecture)",
+          "Feature flags status",
+          "Performance metrics"
+        ]
+      },
+      "prometheus_metrics": {
+        "endpoint": "GET /metrics",
+        "purpose": "Prometheus-compatible metrics",
+        "format": "Prometheus text format"
+      }
+    },
+    "logs": {
+      "system_logs": {
+        "endpoint": "GET /api/system/logs",
+        "purpose": "Retrieve system logs",
+        "parameters": {
+          "level": "log level filter",
+          "limit": "number of log entries",
+          "page": "pagination page number"
+        }
+      }
+    }
+  },
+  "key_metrics": {
+    "performance_metrics": {
+      "response_time": {
+        "target": "< 200ms for 95% of requests",
+        "measurement": "Average response time per endpoint",
+        "alert_threshold": "> 500ms for 5% of requests"
+      },
+      "throughput": {
+        "target": "> 1000 requests per second",
+        "measurement": "Requests per second",
+        "alert_threshold": "< 100 requests per second"
+      },
+      "error_rate": {
+        "target": "< 1% error rate",
+        "measurement": "Percentage of failed requests",
+        "alert_threshold": "> 5% error rate"
+      }
+    },
+    "business_metrics": {
+      "content_processing": {
+        "documents_processed": "Number of documents processed per hour",
+        "processing_time": "Average time to process a document",
+        "success_rate": "Percentage of successful document processing"
+      },
+      "search_performance": {
+        "search_queries": "Number of search queries per minute",
+        "search_latency": "Average search response time",
+        "search_accuracy": "Search result relevance score"
+      },
+      "user_activity": {
+        "active_users": "Number of active users per hour",
+        "api_usage": "API calls per user per hour",
+        "feature_usage": "Usage of different features"
+      }
+    },
+    "infrastructure_metrics": {
+      "database": {
+        "connection_pool": "Database connection pool utilization",
+        "query_performance": "Average query execution time",
+        "disk_usage": "Database disk space usage"
+      },
+      "cache": {
+        "hit_rate": "Cache hit rate percentage",
+        "memory_usage": "Cache memory utilization",
+        "eviction_rate": "Cache eviction rate"
+      },
+      "storage": {
+        "disk_usage": "Storage disk space usage",
+        "iops": "Input/output operations per second",
+        "latency": "Storage access latency"
+      }
+    }
+  },
+  "alerting_rules": {
+    "critical_alerts": {
+      "service_down": {
+        "condition": "Service health check fails for 2 consecutive checks",
+        "severity": "Critical",
+        "action": "Immediate notification to on-call engineer"
+      },
+      "high_error_rate": {
+        "condition": "Error rate > 10% for 5 minutes",
+        "severity": "Critical",
+        "action": "Immediate notification and auto-scaling"
+      },
+      "database_connection_failure": {
+        "condition": "Database connection fails for 3 consecutive attempts",
+        "severity": "Critical",
+        "action": "Immediate notification and failover"
+      }
+    },
+    "warning_alerts": {
+      "high_response_time": {
+        "condition": "Average response time > 500ms for 10 minutes",
+        "severity": "Warning",
+        "action": "Notification to development team"
+      },
+      "high_memory_usage": {
+        "condition": "Memory usage > 80% for 15 minutes",
+        "severity": "Warning",
+        "action": "Notification and memory optimization"
+      },
+      "low_disk_space": {
+        "condition": "Disk usage > 85%",
+        "severity": "Warning",
+        "action": "Notification and cleanup procedures"
+      }
+    }
+  },
+  "dashboards": {
+    "overview_dashboard": {
+      "purpose": "High-level system overview",
+      "panels": [
+        "System health status",
+        "Response time trends",
+        "Error rate trends",
+        "Active users",
+        "Resource utilization"
+      ]
+    },
+    "performance_dashboard": {
+      "purpose": "Detailed performance analysis",
+      "panels": [
+        "Endpoint response times",
+        "Database query performance",
+        "Cache hit rates",
+        "Search performance metrics",
+        "Content processing metrics"
+      ]
+    },
+    "business_dashboard": {
+      "purpose": "Business metrics and insights",
+      "panels": [
+        "User activity trends",
+        "Content processing volume",
+        "Search query patterns",
+        "Feature usage statistics",
+        "System adoption metrics"
+      ]
+    }
+  },
+  "incident_response": {
+    "escalation_policy": {
+      "level_1": {
+        "duration": "5 minutes",
+        "action": "Automated notification to on-call engineer"
+      },
+      "level_2": {
+        "duration": "15 minutes",
+        "action": "Escalation to senior engineer"
+      },
+      "level_3": {
+        "duration": "30 minutes",
+        "action": "Escalation to engineering manager"
+      }
+    },
+    "response_procedures": {
+      "service_outage": [
+        "Immediate health check verification",
+        "Database connectivity test",
+        "Service restart if necessary",
+        "Rollback to previous version if needed",
+        "Post-incident analysis and documentation"
+      ],
+      "performance_degradation": [
+        "Performance metrics analysis",
+        "Resource utilization review",
+        "Database query optimization",
+        "Cache optimization",
+        "Auto-scaling activation"
+      ]
+    }
+  },
+  "maintenance": {
+    "scheduled_maintenance": {
+      "frequency": "Weekly",
+      "duration": "2 hours",
+      "activities": [
+        "Log rotation and cleanup",
+        "Database maintenance",
+        "Performance optimization",
+        "Security updates",
+        "Backup verification"
+      ]
+    },
+    "backup_procedures": {
+      "frequency": "Daily",
+      "retention": "30 days",
+      "verification": "Weekly backup restoration test",
+      "storage": "Encrypted cloud storage"
+    }
+  }
+} 

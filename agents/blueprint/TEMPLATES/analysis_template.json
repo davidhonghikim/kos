@@ -1,0 +1,88 @@
+{
+  "analysis_metadata": {
+    "agent_id": "",
+    "timestamp": "",
+    "version": "1.0.0",
+    "status": "DRAFT",
+    "priority": "medium",
+    "analysis_type": "",
+    "context_window_status": ""
+  },
+  "executive_summary": {
+    "overall_assessment": "",
+    "critical_issues_count": 0,
+    "high_priority_issues_count": 0,
+    "medium_priority_issues_count": 0,
+    "estimated_completion_time": "",
+    "risk_level": ""
+  },
+  "unfinished_work_analysis": {
+    "documentation_system_migration": {
+      "status": "",
+      "completion_percentage": 0,
+      "completed_work": [],
+      "unfinished_work": [],
+      "blocking_issues": []
+    },
+    "recipe_library_enhancement": {
+      "status": "",
+      "completion_percentage": 0,
+      "completed_work": [],
+      "unfinished_work": [],
+      "priority_order": []
+    },
+    "automation_implementation": {
+      "status": "",
+      "completion_percentage": 0,
+      "missing_components": []
+    }
+  },
+  "critical_errors_analysis": {
+    "environment_issues": {},
+    "documentation_duplication": {},
+    "naming_convention_violations": {},
+    "missing_single_source_of_truth": {},
+    "recipe_quality_issues": {},
+    "automation_gaps": {}
+  },
+  "file_structure_analysis": {
+    "documentation_organization": {
+      "current_structure": {},
+      "proposed_structure": {}
+    },
+    "recipe_organization": {
+      "current_structure": {}
+    }
+  },
+  "immediate_action_plan": {
+    "phase_1": {
+      "duration": "",
+      "priority": "",
+      "status": "",
+      "dependencies": [],
+      "tasks": []
+    }
+  },
+  "quality_standards": {
+    "documentation_standards": [],
+    "recipe_standards": [],
+    "agent_standards": []
+  },
+  "success_criteria": {
+    "environment": [],
+    "documentation_system": [],
+    "recipe_library": [],
+    "automation": []
+  },
+  "risk_mitigation": {
+    "environment_risks": [],
+    "documentation_risks": [],
+    "recipe_risks": [],
+    "automation_risks": []
+  },
+  "next_steps": {
+    "immediate_actions": [],
+    "validation_checkpoints": [],
+    "completion_criteria": []
+  }
+} 

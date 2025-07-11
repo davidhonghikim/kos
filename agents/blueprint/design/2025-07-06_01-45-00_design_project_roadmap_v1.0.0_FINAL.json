@@ -1,0 +1,388 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-07-03T00:00:00Z",
+  "created_by": "Claude Sonnet 4 - Sonnet 4",
+  "converted_from": "E:\\kos\\ai-Q\\agents\\blueprint\\roadmap.yml",
+  "conversion_timestamp": "2025-01-27T22:30:00Z",
+  "converter": "RobustYAMLToJSONConverter v1.0",
+  "purpose": "Strategic phases and key initiatives required to achieve the full vision of the AI-Q Knowledge Library System, assuming a clear path forward without implementation discrepancies.\n",
+  "phase_1_foundational_core": {
+    "goal": "Establish a stable, cross-platform foundation with robust data ingestion and core RAG capabilities",
+    "duration": "Months 1-3",
+    "key_initiatives": {
+      "cross_platform_environment": {
+        "description": "Ensure Dockerized services and Python scripts are fully OS-agnostic",
+        "requirements": [
+          "Use pathlib and relative paths",
+          "Standardize docker-compose orchestration",
+          "Ensure cross-platform compatibility"
+        ]
+      },
+      "core_docker_services": {
+        "description": "Fully enable and configure all backend services",
+        "services": [
+          "PostgreSQL",
+          "Redis",
+          "Elasticsearch",
+          "Neo4j",
+          "Weaviate",
+          "MinIO"
+        ],
+        "configuration": "Utilized by application via system_config.yml"
+      },
+      "content_processing_system_mvp": {
+        "description": "Implement core service for content processing",
+        "features": [
+          "Scan designated read-only source directories",
+          "Perform initial content analysis and metadata extraction",
+          "Generate and store vector embeddings using sentence-transformers",
+          "Index content for keyword search in Elasticsearch",
+          "Implement robust incremental processing",
+          "Ensure data persistence via Docker volumes"
+        ],
+        "source_directories": [
+          "griot-main/ai-q",
+          "griot-main/docs",
+          "griot-main/upload",
+          "griot-main/packages"
+        ],
+        "supported_formats": [
+          "Markdown",
+          "YAML",
+          "Python/JS/TS code"
+        ]
+      },
+      "basic_rag_implementation": {
+        "description": "Develop initial RAG pipeline",
+        "components": [
+          "Elasticsearch for keyword search",
+          "Weaviate for semantic search",
+          "Integration between search systems"
+        ]
+      },
+      "api_server_core_endpoints": {
+        "description": "Implement essential API endpoints",
+        "endpoints": [
+          "System status",
+          "Content summary",
+          "RAG query",
+          "Content refresh"
+        ],
+        "requirement": "Interact with newly enabled Docker services"
+      },
+      "centralized_configuration": {
+        "description": "Validate all system_config.yml parameters",
+        "requirements": [
+          "Correctly linked to environment variables",
+          "Utilized by application",
+          "Comprehensive configuration management"
+        ]
+      },
+      "initial_logging_monitoring": {
+        "description": "Ensure comprehensive logging and monitoring",
+        "components": [
+          "Centralized logging location",
+          "Basic health checks",
+          "Prometheus/Grafana configuration",
+          "Initial metrics collection"
+        ]
+      },
+      "data_vault_minio_basic": {
+        "description": "Implement basic artifact storage in MinIO",
+        "focus": "Processed content and indexes"
+      },
+      "core_documentation": {
+        "description": "Create comprehensive documentation",
+        "deliverables": [
+          "Initial user guides",
+          "API documentation",
+          "Detailed developer guides",
+          "Core component documentation"
+        ]
+      }
+    }
+  },
+  "phase_2_knowledge_graph": {
+    "goal": "Integrate the Knowledge Graph, enhance RAG capabilities with graph context, and begin building advanced content management",
+    "duration": "Months 4-6",
+    "key_initiatives": {
+      "knowledge_graph_integration": {
+        "description": "Fully integrate Neo4j (or ArangoDB) to model relationships between AKUs",
+        "features": [
+          "Model relationships between Atomic Knowledge Units",
+          "Develop tools for automated relationship discovery",
+          "Graph-based knowledge representation"
+        ]
+      },
+      "advanced_rag_pipeline": {
+        "description": "Evolve RAG to leverage graph traversal",
+        "capabilities": [
+          "Multi-hop reasoning",
+          "Richer context retrieval",
+          "Fine-grained context selection",
+          "Graph-enhanced search"
+        ]
+      },
+      "atomic_knowledge_units": {
+        "description": "Define and enforce AKU schema",
+        "features": [
+          "AKU schema definition",
+          "Tools for creating and updating AKUs",
+          "Versioning system for AKUs",
+          "Lifecycle management"
+        ]
+      },
+      "universal_document_converter": {
+        "description": "Expand content processing service",
+        "new_formats": [
+          "PDF",
+          "Various image formats",
+          "Basic OCR integration"
+        ]
+      },
+      "doc_viewer_basic": {
+        "description": "Develop in-browser viewer",
+        "supported_formats": [
+          "Markdown",
+          "YAML",
+          "Text-based documents"
+        ]
+      },
+      "ai_assisted_editor_conceptual": {
+        "description": "Begin conceptual design for AI-assisted editor",
+        "components": [
+          "Required AI models",
+          "UI components",
+          "Resume builder integration"
+        ]
+      },
+      "frontend_dashboard_core": {
+        "description": "Develop core sections of web dashboard",
+        "sections": [
+          "Glance Dashboard tab",
+          "System status",
+          "Content summary views"
+        ]
+      },
+      "authentication_authorization_basic": {
+        "description": "Implement initial authentication and authorization",
+        "mechanisms": [
+          "None (default for development)",
+          "JWT-based",
+          "API key"
+        ],
+        "purpose": "Basic system access control"
+      },
+      "self_hosted_git_server": {
+        "description": "Deploy self-hosted Git server",
+        "implementation": "Gitea or similar",
+        "purpose": "Foundational step for advanced Git tooling"
+      }
+    }
+  },
+  "phase_3_ai_powered_media": {
+    "goal": "Introduce specialized AI capabilities for media, enhance user interfaces, and develop advanced interaction paradigms",
+    "duration": "Months 7-9",
+    "key_initiatives": {
+      "ai_media_librarian": {
+        "description": "Develop services for intelligent media organization",
+        "capabilities": [
+          "Intelligent organization of audio, video, and image files",
+          "AI-powered tagging and categorization",
+          "Automatic metadata extraction"
+        ]
+      },
+      "full_featured_media_player": {
+        "description": "Implement robust media player",
+        "features": [
+          "Auto-hide controls",
+          "Playlists",
+          "Fullscreen support",
+          "Speed control",
+          "Volume control",
+          "Initial subtitle support"
+        ]
+      },
+      "ai_audio_features": {
+        "description": "Develop core audio processing capabilities",
+        "features": [
+          "Speech-to-text transcription",
+          "AI-assisted audio metadata editing",
+          "Audio analysis and enhancement"
+        ]
+      },
+      "ai_photo_visual_features": {
+        "description": "Implement AI-assisted photo features",
+        "capabilities": [
+          "Basic AI-assisted photo editing",
+          "Auto-fix and filters",
+          "AI-powered photo album sorting",
+          "Automatic captioning"
+        ]
+      },
+      "advanced_web_scraping_ocr": {
+        "description": "Enhance web scraping and OCR capabilities",
+        "improvements": [
+          "Web scraping for dynamic content",
+          "Improved OCR accuracy",
+          "Multi-language OCR support"
+        ]
+      },
+      "prompt_saving_reuse_mvp": {
+        "description": "Implement prompt management system",
+        "features": [
+          "UI and CLI for saving prompts",
+          "Prompt categorization",
+          "Prompt reuse functionality"
+        ]
+      },
+      "mobile_client_conceptual": {
+        "description": "Begin conceptual design for Android client app",
+        "components": [
+          "Remote control interfaces",
+          "Notification strategies",
+          "Mobile-specific features"
+        ]
+      },
+      "cicd_pipeline_initial": {
+        "description": "Set up basic CI/CD pipelines",
+        "features": [
+          "Automated testing",
+          "Automated deployment",
+          "Core services deployment"
+        ]
+      }
+    }
+  },
+  "phase_4_integration_optimization": {
+    "goal": "Refine existing features, integrate advanced functionalities, and explore future capabilities",
+    "duration": "Months 10-12+",
+    "key_initiatives": {
+      "ai_streaming_media_server": {
+        "description": "Develop streaming server with AI recommendations",
+        "features": [
+          "AI VJ capabilities",
+          "AI-powered playlists",
+          "Dynamic content curation"
+        ]
+      },
+      "ai_dj_advanced_audio": {
+        "description": "Implement AI-powered music curation",
+        "capabilities": [
+          "AI-powered music curation",
+          "Text-to-song capabilities",
+          "Audio-to-song capabilities"
+        ]
+      },
+      "custom_diffusion_ai": {
+        "description": "Fully integrate custom diffusion models",
+        "integration": [
+          "A1111/ComfyUI integration",
+          "Photo editor integration",
+          "Custom image/video generation"
+        ]
+      },
+      "resume_builder_full": {
+        "description": "Complete AI-assisted resume builder",
+        "features": [
+          "Advanced options",
+          "AI-readable format optimization",
+          "Template system"
+        ]
+      },
+      "zsh_like_terminal": {
+        "description": "Develop interactive terminal within web dashboard",
+        "features": [
+          "Command-line interface",
+          "Script execution",
+          "System administration"
+        ]
+      },
+      "education_learning_platform": {
+        "description": "Begin implementing education platform",
+        "features": [
+          "Tech education courses",
+          "Guided learning paths",
+          "Progress tracking"
+        ]
+      },
+      "external_service_integration": {
+        "description": "Integrate external services",
+        "services": [
+          "Google Translate",
+          "OpenWeatherMap",
+          "Pokemon API",
+          "Government open data sources"
+        ]
+      },
+      "homelab_explorer_conceptual": {
+        "description": "Begin conceptualizing homelab explorer",
+        "purpose": "Future expansion area"
+      },
+      "smart_home_manager_conceptual": {
+        "description": "Begin conceptualizing smart home manager",
+        "purpose": "Future expansion area"
+      },
+      "comprehensive_security_review": {
+        "description": "Conduct full security audit",
+        "measures": [
+          "Role-based access control",
+          "Hardened Docker configurations",
+          "Advanced security measures"
+        ]
+      },
+      "performance_optimization": {
+        "description": "Continuous performance optimization",
+        "focus": [
+          "Profiling across all services",
+          "Peak performance optimization",
+          "Resource utilization optimization"
+        ]
+      },
+      "final_documentation_handoff": {
+        "description": "Complete comprehensive documentation",
+        "deliverables": [
+          "Detailed user guides",
+          "Deployment instructions",
+          "Comprehensive final handoff",
+          "Documentation for new agents"
+        ]
+      }
+    }
+  },
+  "ongoing_activities": [
+    "Code Review & Refinement - Adherence to style guide and modularity principles",
+    "Testing - Unit, integration, performance, and user acceptance testing",
+    "Security Audits - Regular security assessments",
+    "Accessibility Compliance - Continuous adherence to WCAG standards",
+    "User Feedback Integration - Iterative development based on user feedback",
+    "Resource Monitoring - Continuous monitoring of system health and performance"
+  ],
+  "success_metrics": {
+    "phase_1": [
+      "Stable cross-platform foundation established",
+      "Core RAG capabilities functional",
+      "Data ingestion pipeline operational",
+      "Basic API endpoints working"
+    ],
+    "phase_2": [
+      "Knowledge graph integration complete",
+      "Enhanced RAG with graph context",
+      "Advanced content management functional",
+      "Basic frontend dashboard operational"
+    ],
+    "phase_3": [
+      "AI-powered media features implemented",
+      "Advanced user interfaces developed",
+      "Mobile client conceptual design complete",
+      "CI/CD pipeline operational"
+    ],
+    "phase_4": [
+      "All integrations complete",
+      "Performance optimized",
+      "Security hardened",
+      "Documentation comprehensive"
+    ]
+  },
+  "conclusion": "This roadmap provides a structured approach to building the AI-Q Knowledge Library System, balancing foundational stability with ambitious AI-powered features. It is a living document, subject to adjustments based on progress, emergent requirements, and technological advancements. "
+}

@@ -1,0 +1,15 @@
+{
+  "title": "kOS ENV Loader & Verifier",
+  "description": "Validates, loads, and initializes environment configs into runtime state at boot.",
+  "version": "1.0.0",
+  "steps": [
+    { "step": 1, "action": "scan for .env, system vars, CLI args", "result": "composite env bundle" },
+    { "step": 2, "action": "validate against env_variables.json", "fail_on_missing_required": true },
+    { "step": 3, "action": "inject into global session scope" },
+    { "step": 4, "action": "initialize vault unlock attempt", "method": "env[KOS_MASTER_KEY]" }
+  ],
+  "fallback": {
+    "on_missing_env": "abort",
+    "on_invalid_key": "halt_vault"
+  }
+} 

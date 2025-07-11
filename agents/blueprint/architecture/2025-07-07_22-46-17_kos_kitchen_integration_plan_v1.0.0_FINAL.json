@@ -1,0 +1,285 @@
+{
+  "metadata": {
+    "title": "kOS Kitchen System Integration Plan - Final Handoff",
+    "version": "1.0.0",
+    "created_by": "Q-Assist (GPT-4.1)",
+    "handoff_timestamp": "2025-07-07T22:46:17Z",
+    "status": "FINAL",
+    "purpose": "Complete integration plan for kOS kitchen system with proper node specifications and recipe architecture"
+  },
+  "summary": {
+    "kOS_system_analysis": "COMPLETE",
+    "recipe_integration_plan": "COMPLETE",
+    "node_specifications": "CORRECTED",
+    "implementation_phases": "DEFINED",
+    "next_agent_ready": true
+  },
+  "kOS_system_overview": {
+    "architecture": "Modular, deterministic, agent-driven execution framework",
+    "metaphor": "Kitchen + Game Engine + Runtime OS for AI",
+    "core_components": [
+      "kOS Kernel - Agent loop controller",
+      "kOS Registry - Canonical spec index & enforcement", 
+      "Kitchen Runtime - Recipe execution environment",
+      "Pantry System - Ingredients/tools/models/keys/apis",
+      "Memory & RAG - Multi-layer memory with vector search",
+      "Agent Framework - Deterministic executors with personas"
+    ],
+    "design_principles": [
+      "Security-First: Vault-based secrets, no in-recipe creds",
+      "Deterministic Execution: Tasks produce consistent results",
+      "Atomic Modularity: Each task/spec ≤ 300 lines",
+      "Full Self-Hosting: No cloud reliance; Docker-native"
+    ]
+  },
+  "corrected_node_specifications": {
+    "proper_node_classes": [
+      "Griot - Primal Starseed: Lifecycle & Bootstrapping",
+      "Tohunga - Sensory Organ: Data Acquisition", 
+      "Ronin - Pathfinder: Network Discovery",
+      "Musa - Guardian: Security & Auth",
+      "Hakim - Healer: System Health & Maintenance",
+      "Skald - Herald: Pub/Sub & Eventing",
+      "Oracle - Seer: Reasoning & Data Fusion",
+      "Junzi - Scholar: Knowledge & Learning",
+      "Yachay - Sage: Andean Wisdom",
+      "Sachem - Chief: Algonquian Consensus",
+      "Amauta - Teacher: Incan Teaching",
+      "Mzee - Elder: Swahili Awareness",
+      "Archon - Coordinator: Byzantine Coordination"
+    ],
+    "current_implementation_status": "Node roles not yet implemented - use generic agent framework for now",
+    "agent_framework": {
+      "roles": ["griot", "oracle", "runner", "monitor", "auditor"],
+      "capabilities": ["storytelling", "narrative_memory", "semantic_query", "rag_dispatch"],
+      "constraints": {
+        "max_tokens": 28000,
+        "max_steps": 6,
+        "context_window": 28000
+      }
+    }
+  },
+  "recipe_integration_plan": {
+    "phases": [
+      {
+        "phase": "01-05",
+        "name": "Core System Foundation",
+        "duration": "2-3 weeks",
+        "recipes": [
+          "kos.recipe.setup.environment",
+          "kos.recipe.deploy.kernel", 
+          "kos.recipe.setup.agents",
+          "kos.recipe.deploy.kitchen",
+          "kos.recipe.deploy.memory"
+        ]
+      },
+      {
+        "phase": "06-10", 
+        "name": "Core Services & LLM",
+        "duration": "3-4 weeks",
+        "recipes": [
+          "kos.recipe.deploy.ollama",
+          "kos.recipe.deploy.weaviate",
+          "kos.recipe.deploy.mongodb",
+          "kos.recipe.deploy.vault",
+          "kos.recipe.deploy.n8n"
+        ]
+      },
+      {
+        "phase": "11-13",
+        "name": "Frontend & UI", 
+        "duration": "2-3 weeks",
+        "recipes": [
+          "kos.recipe.deploy.frontend",
+          "kos.recipe.deploy.ui",
+          "kos.recipe.integrate.browser"
+        ]
+      },
+      {
+        "phase": "14-17",
+        "name": "Advanced Features",
+        "duration": "3-4 weeks", 
+        "recipes": [
+          "kos.recipe.deploy.recipe_manager",
+          "kos.recipe.enhance.agents",
+          "kos.recipe.integrate.griot",
+          "kos.recipe.deploy.production"
+        ]
+      }
+    ],
+    "total_timeline": "10-14 weeks",
+    "success_criteria": [
+      "Self-Hosting: Complete LLM and intelligence capabilities",
+      "Modularity: All components are atomic and reusable", 
+      "Scalability: System can grow with additional nodes",
+      "Security: Vault-based secrets and role-based access",
+      "Usability: Browser extension provides intuitive interface",
+      "Integration: Seamless connection with Griot node ecosystem"
+    ]
+  },
+  "detailed_recipe_specifications": {
+    "01_environment_setup": {
+      "recipe_id": "kos.recipe.setup.environment",
+      "ingredients": ["env_validator", "docker_installer", "system_checker"],
+      "steps": [
+        "System Validation (2h) - OS compatibility, Docker, network, resources",
+        "Environment Configuration (1h) - .env template, KOS_MASTER_KEY, service URLs",
+        "Base Infrastructure (3h) - Docker Compose, volumes, network isolation"
+      ],
+      "output": "Validated environment ready for kOS deployment",
+      "dependencies": "None (foundation recipe)"
+    },
+    "02_kernel_boot": {
+      "recipe_id": "kos.recipe.deploy.kernel", 
+      "ingredients": ["kernel_loader", "boot_validator", "registry_mounter"],
+      "steps": [
+        "Kernel Installation (1h) - kos_kernel.json, modes, signals, controls",
+        "Boot Loop Configuration (2h) - 8-step sequence, failure handling, rollback",
+        "Registry Integration (1h) - kos_registry.json, validation, version control"
+      ],
+      "output": "Functional kOS kernel with boot system",
+      "dependencies": "01 (Environment Setup)"
+    },
+    "03_agent_framework": {
+      "recipe_id": "kos.recipe.setup.agents",
+      "ingredients": ["agent_loader", "persona_manager", "trait_validator"],
+      "steps": [
+        "Agent Specification Loading (1h) - agent_spec.json, constraints, execution modes",
+        "Persona Manifest Setup (2h) - agent_manifest.json, capabilities, traits",
+        "Agent Runtime Integration (2h) - kernel connection, communication, coordination"
+      ],
+      "output": "Functional agent framework with personas",
+      "dependencies": "02 (Kernel & Boot System)"
+    },
+    "04_kitchen_pantry": {
+      "recipe_id": "kos.recipe.deploy.kitchen",
+      "ingredients": ["kitchen_loader", "pantry_manager", "ingredient_validator"],
+      "steps": [
+        "Kitchen Loader Setup (1h) - kitchen_loader.json, initialization sequence",
+        "Pantry Configuration (2h) - pantry_config.json, storage, vault integration",
+        "Recipe Schema Integration (2h) - recipe_schema.json, validation, constraints"
+      ],
+      "output": "Functional kitchen runtime with pantry system",
+      "dependencies": "03 (Agent Framework)"
+    },
+    "05_memory_rag": {
+      "recipe_id": "kos.recipe.deploy.memory",
+      "ingredients": ["memory_mounter", "rag_engine", "vector_store"],
+      "steps": [
+        "Memory Layer Setup (2h) - memory_config.json, multi-layer, Weaviate integration",
+        "RAG Engine Configuration (2h) - rag_engine.json, Ollama, semantic search",
+        "Vector Schema Implementation (1h) - kos_vector_schema.json, embeddings"
+      ],
+      "output": "Functional memory and RAG system",
+      "dependencies": "04 (Kitchen Runtime)"
+    }
+  },
+  "reusable_ingredients": {
+    "generic_components": [
+      "env_validator - Environment validation for any recipe",
+      "docker_installer - Docker service deployment",
+      "api_validator - API connectivity testing", 
+      "schema_manager - Database schema management",
+      "backup_manager - Backup and restore operations",
+      "monitoring_setup - System monitoring configuration",
+      "auth_integrator - Authentication system integration",
+      "performance_optimizer - Performance tuning and optimization"
+    ],
+    "dynamic_import_pattern": {
+      "ingredient": "docker_installer",
+      "overrides": {
+        "service_name": "ollama",
+        "port": 11434,
+        "volumes": ["/models:/models"],
+        "environment": {
+          "OLLAMA_HOST": "0.0.0.0"
+        }
+      }
+    }
+  },
+  "griot_node_integration": {
+    "foundation_system": "Griot node houses and deploys the ai-Q library",
+    "kOS_ecosystem": "kOS system runs on top of Griot node foundation",
+    "integration_approach": [
+      "Deploy Griot node as foundation system",
+      "Configure KLF protocol and communication",
+      "Integrate kOS system with Griot architecture",
+      "Enable ecosystem expansion and federation"
+    ],
+    "browser_extension": {
+      "prototype": "kai-cd browser extension as initial frontend",
+      "integration": "Connect extension to kOS API bridge",
+      "features": "Recipe execution, agent monitoring, system management"
+    }
+  },
+  "next_agent_instructions": {
+    "immediate_priorities": [
+      "Review and validate all kOS kitchen system specifications",
+      "Begin Phase 1 implementation (01-05: Core System Foundation)",
+      "Focus on environment setup and kernel deployment first",
+      "Use proper node specifications (Griot, Tohunga, Ronin, etc.)",
+      "Implement generic agent framework before specific node roles"
+    ],
+    "implementation_guidelines": [
+      "Follow atomic recipe structure (≤300 lines, ≤30k tokens)",
+      "Use kOS kitchen system as execution framework",
+      "Create reusable ingredients for common tasks",
+      "Maintain deterministic execution and security-first approach",
+      "Document all changes and progress in agent changelog"
+    ],
+    "quality_standards": [
+      "TypeScript strict mode with full type safety",
+      "Complete API documentation and specifications",
+      "Comprehensive testing and validation",
+      "Security audit and vault integration",
+      "Performance optimization and monitoring"
+    ]
+  },
+  "references": {
+    "kOS_design_docs": "agents/blueprint/kitchen/",
+    "griot_node_specs": "https://github.com/davidhonghikim/griot",
+    "browser_extension": "https://github.com/davidhonghikim/kai-cd",
+    "current_recipe_system": "recipes/",
+    "agent_workflow": "agents/LATEST/2025-07-07_22-46-17_agent_workflow.json"
+  },
+  "technical_notes": {
+    "naming_conventions": {
+      "system_specs": "kOS (e.g., kOS Engine, kOS Kernel)",
+      "filenames_paths": "kos (e.g., kos_kernel.json, kos_registry.json)"
+    },
+    "architecture_principles": [
+      "Modular plug-and-play architecture",
+      "Registry-based component management", 
+      "Vault-based security and secrets",
+      "Deterministic execution and reproducibility",
+      "Self-hosting and cloud independence"
+    ],
+    "integration_strategy": "Use kOS as execution engine for all recipe tasks, convert existing recipes to kOS-compatible atomic recipes, create meal plans for complex workflows, build pantry ingredients from reusable components"
+  },
+  "success_criteria": {
+    "phase_1": [
+      "Functional kOS kernel with boot system",
+      "Working agent framework with personas",
+      "Kitchen runtime with pantry system",
+      "Memory and RAG integration"
+    ],
+    "phase_2": [
+      "Self-hosted LLM service (Ollama)",
+      "Vector database (Weaviate)",
+      "State store (MongoDB)",
+      "Secure vault system",
+      "Workflow orchestration (n8n)"
+    ],
+    "phase_3": [
+      "API bridge with REST/WebSocket",
+      "UI runtime with components",
+      "Browser extension integration"
+    ],
+    "phase_4": [
+      "Advanced recipe management",
+      "Enhanced agent capabilities",
+      "Griot node integration",
+      "Production deployment"
+    ]
+  }
+} 

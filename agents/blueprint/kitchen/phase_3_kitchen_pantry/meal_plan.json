@@ -1,0 +1,24 @@
+{
+  "title": "kOS Meal Plan Execution Bundle",
+  "description": "Composite structure that links multiple recipes into a coordinated plan, like a multi-course execution pipeline.",
+  "version": "1.0.0",
+  "plan_id": "meal.kos.v1.launch.kitchen_mode",
+  "recipes": [
+    "kos.recipe.setup.env",
+    "kos.recipe.deploy.rag",
+    "kos.recipe.generate.api_gateway",
+    "kos.recipe.link.frontend_runtime"
+  ],
+  "sequence": [
+    { "id": "kos.recipe.setup.env", "when": "start" },
+    { "id": "kos.recipe.deploy.rag", "when": "after kos.recipe.setup.env" },
+    { "id": "kos.recipe.generate.api_gateway", "when": "after kos.recipe.deploy.rag" },
+    { "id": "kos.recipe.link.frontend_runtime", "when": "parallel kos.recipe.generate.api_gateway" }
+  ],
+  "constraints": {
+    "max_total_tokens": 100000,
+    "max_recipes": 10,
+    "allow_branching": true,
+    "fallback_behavior": "notify_user"
+  }
+} 

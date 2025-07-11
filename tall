@@ -1,0 +1,5 @@
+[33m9bf52f5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m fix: resolve .gitignore merge conflict and complete initial GitHub sync
+[33m6061dd1[m Initial commit
+[33mddf6f7f[m feat: Complete ai-Q foundation integration and implementation analysis
+[33m6417241[m Add user.env support for user-specific overrides; update config_loader.py to load user.env with override=True; add user.env to .gitignore
+[33m4879034[m Centralize all ports, container ports, and Docker image tags using KOS_ env variables; add feature flags for all services; update .env.example for full environment-driven config. Ready for multi-service container management and easy upgrades/downgrades.

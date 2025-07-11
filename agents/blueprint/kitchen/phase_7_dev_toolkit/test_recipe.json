@@ -1,0 +1,15 @@
+{
+  "title": "kOS Test Recipe",
+  "description": "Sample atomic recipe for validating agent execution and kitchen runtime.",
+  "version": "1.0.0",
+  "id": "kos.test.recipe.001",
+  "ingredients": ["echo", "file_writer"],
+  "steps": [
+    { "description": "Echo a test message", "action": "call", "target": "echo", "validation": "output == 'test'" },
+    { "description": "Write output to file", "action": "call", "target": "file_writer", "validation": "file_exists" }
+  ],
+  "outputs": {
+    "format": "json",
+    "description": "Test output file"
+  }
+} 

@@ -1,0 +1,106 @@
+{
+  "execution_plan_metadata": {
+    "agent_id": "",
+    "timestamp": "",
+    "version": "1.0.0",
+    "status": "DRAFT",
+    "priority": "medium",
+    "plan_type": "",
+    "estimated_duration": "",
+    "context_window_status": ""
+  },
+  "plan_overview": {
+    "objective": "",
+    "approach": "",
+    "success_criteria": "",
+    "risk_mitigation": ""
+  },
+  "phase_1": {
+    "duration": "",
+    "priority": "",
+    "status": "NOT_STARTED",
+    "dependencies": [],
+    "tasks": [
+      {
+        "task_id": "",
+        "task_name": "",
+        "description": "",
+        "commands": [],
+        "validation": [],
+        "estimated_time": "",
+        "risk_level": ""
+      }
+    ],
+    "success_criteria": []
+  },
+  "phase_2": {
+    "duration": "",
+    "priority": "",
+    "status": "NOT_STARTED",
+    "dependencies": [],
+    "tasks": [
+      {
+        "task_id": "",
+        "task_name": "",
+        "description": "",
+        "commands": [],
+        "validation": [],
+        "estimated_time": "",
+        "risk_level": ""
+      }
+    ],
+    "success_criteria": []
+  },
+  "phase_3": {
+    "duration": "",
+    "priority": "",
+    "status": "NOT_STARTED",
+    "dependencies": [],
+    "tasks": [
+      {
+        "task_id": "",
+        "task_name": "",
+        "description": "",
+        "commands": [],
+        "validation": [],
+        "estimated_time": "",
+        "risk_level": ""
+      }
+    ],
+    "success_criteria": []
+  },
+  "validation_checkpoints": {
+    "checkpoint_1": {
+      "trigger": "",
+      "validation_tests": [],
+      "success_criteria": ""
+    },
+    "checkpoint_2": {
+      "trigger": "",
+      "validation_tests": [],
+      "success_criteria": ""
+    },
+    "checkpoint_3": {
+      "trigger": "",
+      "validation_tests": [],
+      "success_criteria": ""
+    }
+  },
+  "risk_mitigation": {
+    "environment_risks": [],
+    "documentation_risks": [],
+    "recipe_risks": [],
+    "automation_risks": []
+  },
+  "completion_criteria": {
+    "environment": [],
+    "documentation_system": [],
+    "recipe_library": [],
+    "automation": []
+  },
+  "next_agent_instructions": {
+    "immediate_start": [],
+    "critical_reminders": [],
+    "handoff_completion": []
+  }
+} 

@@ -1,0 +1,45 @@
+{
+  "title": "kOS Agent Specification",
+  "description": "Defines the structure, inputs, constraints, and execution boundaries for any agent operating in the kOS Engine.",
+  "version": "1.0.0",
+  "schema": {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "role": "enum: ['chef', 'griot', 'oracle', 'runner', 'monitor', 'auditor', 'junzi', 'musa', 'tohunga', 'ronin', 'hakim']",
+    "capabilities": ["string"],
+    "traits": ["string"],
+    "constraints": {
+      "max_tokens": "integer",
+      "max_steps": "integer",
+      "context_window": "integer"
+    },
+    "execution": {
+      "mode": "enum: ['sync', 'async', 'audit', 'dry_run']",
+      "logging": "boolean",
+      "retry_policy": {
+        "max_retries": "integer",
+        "backoff": "exponential | fixed"
+      }
+    },
+    "integration": {
+      "uses_memory": "boolean",
+      "uses_rag": "boolean",
+      "calls_functions": "boolean",
+      "writes_files": "boolean"
+    },
+    "security": {
+      "requires_vault": "boolean",
+      "access_level": "enum: ['public', 'protected', 'admin']"
+    }
+  },
+  "defaults": {
+    "context_window": 28000,
+    "max_tokens": 2048,
+    "max_steps": 6,
+    "execution.mode": "sync",
+    "execution.logging": true,
+    "execution.retry_policy.max_retries": 1,
+    "execution.retry_policy.backoff": "exponential"
+  }
+} 

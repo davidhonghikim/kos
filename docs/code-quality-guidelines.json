@@ -1,0 +1,196 @@
+{
+  "metadata": {
+    "title": "kOS Code Quality Guidelines",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T23:55:00Z",
+    "purpose": "Specific guidelines for maintaining high code quality in kOS project",
+    "audience": "AI agents and development team"
+  },
+  "file_size_management": {
+    "line_limits": {
+      "ideal": "150-250 lines",
+      "maximum": "300 lines",
+      "exceptions": "Only with clear justification and approval"
+    },
+    "refactoring_triggers": [
+      "File exceeds 300 lines",
+      "Multiple responsibilities detected",
+      "High cyclomatic complexity",
+      "Difficult to test or maintain"
+    ],
+    "refactoring_strategies": {
+      "extract_functions": "Break large functions into smaller, focused ones",
+      "extract_classes": "Separate concerns into different classes",
+      "extract_modules": "Move related functionality to separate files",
+      "use_composition": "Prefer composition over inheritance"
+    }
+  },
+  "naming_conventions": {
+    "files": {
+      "pattern": "kebab-case",
+      "examples": [
+        "user-authentication.ts",
+        "api-client.ts",
+        "database-connection.ts",
+        "error-handler.ts"
+      ],
+      "avoid": [
+        "UserAuthentication.ts",
+        "user_authentication.ts",
+        "userauthentication.ts"
+      ]
+    },
+    "functions": {
+      "pattern": "camelCase",
+      "examples": [
+        "getUserById()",
+        "validateEmailAddress()",
+        "processUserRequest()",
+        "handleAuthenticationError()"
+      ],
+      "avoid": [
+        "get_user_by_id()",
+        "GetUserById()",
+        "getuserbyid()"
+      ]
+    },
+    "variables": {
+      "pattern": "camelCase",
+      "examples": [
+        "userData",
+        "apiResponse",
+        "isAuthenticated",
+        "maxRetryAttempts"
+      ]
+    },
+    "constants": {
+      "pattern": "UPPER_SNAKE_CASE",
+      "examples": [
+        "API_BASE_URL",
+        "MAX_RETRY_ATTEMPTS",
+        "DEFAULT_TIMEOUT_MS",
+        "SUPPORTED_FILE_TYPES"
+      ]
+    }
+  },
+  "environment_variables": {
+    "naming": {
+      "prefix": "KOS_",
+      "pattern": "UPPER_SNAKE_CASE",
+      "examples": [
+        "KOS_API_URL",
+        "KOS_DATABASE_HOST",
+        "KOS_REDIS_PORT",
+        "KOS_JWT_SECRET"
+      ]
+    },
+    "validation": {
+      "required": "All environment variables must be validated at startup",
+      "defaults": "Provide sensible defaults where appropriate",
+      "documentation": "All variables must be documented in env/*.env.example"
+    },
+    "security": {
+      "secrets": "Never log or expose sensitive environment variables",
+      "validation": "Validate secret strength and format",
+      "rotation": "Support for secret rotation"
+    }
+  },
+  "error_handling": {
+    "principles": [
+      "Fail fast and explicitly",
+      "Provide meaningful error messages",
+      "Log errors with appropriate context",
+      "Handle errors at the appropriate level"
+    ],
+    "patterns": {
+      "typescript": {
+        "try_catch": "Use try-catch for async operations",
+        "error_types": "Define custom error types for different scenarios",
+        "validation": "Validate inputs early and explicitly"
+      },
+      "python": {
+        "exceptions": "Use specific exception types",
+        "context": "Include context in error messages",
+        "logging": "Use structured logging for errors"
+      }
+    }
+  },
+  "testing_standards": {
+    "coverage_requirements": {
+      "minimum": "90%",
+      "target": "95%",
+      "critical_paths": "100% coverage for critical business logic"
+    },
+    "test_organization": {
+      "structure": "Mirror source file structure",
+      "naming": "Clear, descriptive test names",
+      "isolation": "Each test should be independent"
+    },
+    "test_types": {
+      "unit": "Test individual functions and methods",
+      "integration": "Test module interactions",
+      "e2e": "Test complete user workflows"
+    }
+  },
+  "performance_guidelines": {
+    "response_times": {
+      "api_calls": "Under 200ms for most operations",
+      "database_queries": "Under 100ms for simple queries",
+      "file_operations": "Under 500ms for file processing"
+    },
+    "memory_usage": {
+      "monitoring": "Monitor memory usage in production",
+      "cleanup": "Properly dispose of resources",
+      "caching": "Use appropriate caching strategies"
+    },
+    "optimization": {
+      "profiling": "Profile before optimizing",
+      "bottlenecks": "Identify and address performance bottlenecks",
+      "scalability": "Design for horizontal scaling"
+    }
+  },
+  "security_guidelines": {
+    "input_validation": {
+      "all_inputs": "Validate all user inputs",
+      "sanitization": "Sanitize data before processing",
+      "type_checking": "Use strong typing to prevent injection"
+    },
+    "authentication": {
+      "secure_storage": "Store credentials securely",
+      "session_management": "Implement secure session handling",
+      "password_policy": "Enforce strong password requirements"
+    },
+    "authorization": {
+      "principle_of_least_privilege": "Grant minimum necessary permissions",
+      "role_based_access": "Implement RBAC where appropriate",
+      "audit_logging": "Log all authorization decisions"
+    }
+  },
+  "code_review_checklist": {
+    "functionality": [
+      "Does the code work as intended?",
+      "Are edge cases handled?",
+      "Is error handling appropriate?",
+      "Are performance implications considered?"
+    ],
+    "quality": [
+      "Is the code readable and maintainable?",
+      "Are naming conventions followed?",
+      "Is the code properly documented?",
+      "Are there any code smells?"
+    ],
+    "standards": [
+      "Does the code follow project standards?",
+      "Are all tests passing?",
+      "Is coverage maintained?",
+      "Are there any hardcoded values?"
+    ],
+    "security": [
+      "Are inputs properly validated?",
+      "Are there any security vulnerabilities?",
+      "Is sensitive data handled securely?",
+      "Are permissions appropriate?"
+    ]
+  }
+} 

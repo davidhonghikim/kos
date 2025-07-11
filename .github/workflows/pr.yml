@@ -1,0 +1,60 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  pr-checks:
+    name: PR Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Check file sizes
+      run: |
+        echo "Checking for files over 150 lines..."
+        find src/ -name "*.ts" -o -name "*.tsx" -o -name "*.py" | xargs wc -l | awk '$1 > 150 {print $2 ": " $1 " lines"}'
+        
+    - name: Check for hardcoded values
+      run: |
+        echo "Checking for potential hardcoded values..."
+        grep -r "localhost\|127.0.0.1\|8080\|3000\|5432" src/ || echo "No obvious hardcoded values found"
+        
+    - name: Validate JSON files
+      run: |
+        echo "Validating JSON files..."
+        find . -name "*.json" -not -path "./node_modules/*" -not -path "./.git/*" | xargs -I {} sh -c 'echo "Validating {}"; python -m json.tool {} > /dev/null'
+        
+    - name: Check documentation
+      run: |
+        echo "Checking documentation completeness..."
+        if [ ! -f "README.md" ] || [ ! -f "README.json" ]; then
+          echo "Missing required documentation files"
+          exit 1
+        fi
+        
+    - name: Run quick tests
+      run: |
+        npm run type-check
+        npm run lint
+        npm run format:check 

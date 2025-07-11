@@ -1,0 +1,44 @@
+{
+  "title": "kOS Engine Registry",
+  "description": "Master registry of schema files, recipes, runtime validators, and known agent traits.",
+  "version": "1.0.0",
+  "registered": {
+    "schemas": [
+      "recipe_schema.json",
+      "meal_plan.json",
+      "agent_spec.json",
+      "agent_manifest.json",
+      "memory_config.json",
+      "kos_vector_schema.json",
+      "kitchen_loader.json",
+      "docker_spec.json",
+      "runtime_enforcer.json"
+    ],
+    "recipes": [
+      "test_recipe.json",
+      "alignment_recipe.json"
+    ],
+    "layers": {
+      "core_kernel": "kos_kernel.json",
+      "runtime_loop": "boot_loop.json",
+      "frontend_runtime": "frontend_bridge.json",
+      "vault_interface": "vault_config.json",
+      "rag_backend": "rag_engine.json",
+      "deployment": "deployment_blueprint.json"
+    },
+    "vault_keys": {
+      "secrets": true,
+      "env_vars": true,
+      "auth_tokens": true,
+      "model_paths": true
+    },
+    "version_control": {
+      "frozen_versions": [
+        "1.0.0"
+      ],
+      "in_development": [
+        "2.0.0-beta"
+      ]
+    }
+  }
+} 

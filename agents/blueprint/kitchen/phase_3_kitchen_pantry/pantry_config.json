@@ -1,0 +1,34 @@
+{
+  "title": "kOS Pantry Inventory",
+  "description": "Stores all ingredients, tools, libraries, and functions used in recipe execution.",
+  "version": "1.0.0",
+  "ingredients": [
+    "prompt_engineering_toolkit",
+    "model_selector",
+    "token_counter",
+    "file_writer",
+    "api_requester",
+    "function_router",
+    "date_parser",
+    "regex_validator"
+  ],
+  "tools": {
+    "python_exec": {
+      "type": "script_engine",
+      "sandboxed": true
+    },
+    "markdown_parser": {
+      "type": "text",
+      "format": "md"
+    },
+    "json_cleaner": {
+      "type": "linter",
+      "language": "json"
+    }
+  },
+  "storage": {
+    "local_temp_dir": "/runtime/kitchen/tmp/",
+    "cache_expiry_seconds": 900,
+    "vault_required": true
+  }
+} 

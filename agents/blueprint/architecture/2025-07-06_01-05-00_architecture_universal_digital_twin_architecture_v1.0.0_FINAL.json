@@ -1,0 +1,597 @@
+{
+  "metadata": {
+    "title": "Universal Digital Twin Architecture - AI-Q Knowledge Library System",
+    "version": "2.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-01-30T00:00:00Z",
+    "token_count": 3500,
+    "purpose": "Complete architecture for universal digital twin with multi-modal AI support, agent-proof task system, and enterprise-grade scalability"
+  },
+  "executive_summary": {
+    "vision": "Transform AI-Q into a universal digital twin that ingests, processes, and intelligently organizes ALL user data types (text, images, video, audio, documents, code) with advanced AI understanding and relationship mapping",
+    "current_gaps": [
+      "Multi-modal processing capabilities missing",
+      "Object storage (Minio) not implemented",
+      "Vector database (Weaviate) not configured", 
+      "Graph database (Neo4j) not integrated",
+      "Agent tasks not atomic enough",
+      "Universal ingestion pipeline missing"
+    ],
+    "key_outcomes": [
+      "Single system for all data types",
+      "AI-powered content understanding",
+      "Intelligent relationship mapping",
+      "Agent-proof atomic task system",
+      "Production-ready scalability"
+    ]
+  },
+  "tech_stack_recommendations": {
+    "storage_layer": {
+      "object_storage": "Minio (S3-compatible) for all file types",
+      "vector_database": "Weaviate for multi-modal semantic search", 
+      "graph_database": "Neo4j for relationship mapping",
+      "sql_database": "PostgreSQL for metadata and audit"
+    },
+    "ai_processing": {
+      "text": ["Ollama", "llama.cpp", "transformers"],
+      "images": ["CLIP", "BLIP-2", "OCR engines"],
+      "video": ["FFmpeg", "Whisper", "scene detection"],
+      "audio": ["Whisper", "speaker identification"]
+    },
+    "api_framework": {
+      "backend": "FastAPI (Python) + Express.js (Node.js)",
+      "frontend": "React 18 + Material-UI + Vite",
+      "api_standards": "REST + GraphQL + WebSocket",
+      "authentication": "OAuth2 + JWT + RBAC"
+    }
+  },
+  "universal_ingestion_pipeline": {
+    "supported_formats": {
+      "text": [".txt", ".md", ".rtf", ".csv", ".json", ".xml", ".yaml"],
+      "images": [".jpg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".svg", ".heic"],
+      "video": [".mp4", ".mov", ".avi", ".mkv", ".webm", ".flv", ".wmv"],
+      "audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma"],
+      "documents": [".pdf", ".docx", ".xlsx", ".pptx", ".odt", ".ods", ".odp"],
+      "code": [".py", ".js", ".ts", ".java", ".cpp", ".go", ".rs", ".php", ".rb"],
+      "archives": [".zip", ".tar", ".gz", ".7z", ".rar", ".bz2"]
+    },
+    "upload_methods": [
+      "Web UI drag-and-drop",
+      "REST API multipart upload",
+      "Mobile app upload",
+      "Email ingestion",
+      "Folder sync",
+      "Cloud storage connectors"
+    ],
+    "processing_pipeline": [
+      {
+        "step": 1,
+        "name": "File Reception",
+        "actions": ["virus scan", "format validation", "size check", "metadata extraction"]
+      },
+      {
+        "step": 2,
+        "name": "Storage",
+        "actions": ["store in Minio", "generate UUID", "create metadata record", "audit log"]
+      },
+      {
+        "step": 3,
+        "name": "AI Processing",
+        "actions": ["content extraction", "embedding generation", "relationship detection", "classification"]
+      },
+      {
+        "step": 4,
+        "name": "Indexing",
+        "actions": ["update Weaviate", "update Neo4j", "update search indexes", "generate thumbnails"]
+      },
+      {
+        "step": 5,
+        "name": "Notification",
+        "actions": ["user notification", "webhook triggers", "analytics update", "completion log"]
+      }
+    ]
+  },
+  "agent_proof_task_system": {
+    "principles": {
+      "atomicity": "Each task modifies exactly one file or implements one endpoint",
+      "context_size": "Every task 1500-2000 tokens, full recipe 80k-90k tokens (fills context window)",
+      "dependencies": "Explicit dependency chains",
+      "testability": "Specific acceptance criteria and test commands",
+      "documentation": "Every task updates relevant documentation"
+    },
+    "task_template": {
+      "id": "string (format: module-category-###)",
+      "title": "string (max 80 chars)",
+      "description": "string (max 500 chars)",
+      "category": "enum [implementation, testing, documentation, integration, validation]",
+      "estimated_tokens": "number (target: 1500-2000)",
+      "inputs": ["array of file paths that will be read"],
+      "outputs": ["array of file paths that will be created/modified"],
+      "dependencies": ["array of task IDs that must complete first"],
+      "acceptance_criteria": ["array of specific, testable conditions"],
+      "test_commands": ["array of exact commands to validate completion"],
+      "agent_instructions": "string (step-by-step instructions)",
+      "context_files": ["array of files agent should read for context"],
+      "validation_script": "string (path to automated validation script)"
+    },
+    "recipe_structure": {
+      "format": "One JSON file per recipe in /recipes/[module]/",
+      "naming": "[module]-[category]-recipe.json",
+      "size_target": "40-50 tasks per recipe (80k-90k tokens total)",
+      "organization": "Sequential with explicit merge points",
+      "execution_model": "Agent loads complete recipe, executes all tasks, validates, and hands off",
+      "context_optimization": "Fills 80-90% of context window, leaves 20k tokens for execution"
+    }
+  },
+  "core_features_breakdown": {
+    "universal_storage": {
+      "description": "Multi-modal object storage with metadata management",
+      "estimated_tasks": 45,
+      "key_components": [
+        "Minio S3 integration",
+        "Bucket management",
+        "File upload/download APIs",
+        "Metadata extraction",
+        "Thumbnail generation",
+        "Duplicate detection"
+      ]
+    },
+    "ai_processing_engine": {
+      "description": "Multi-modal AI processing for all content types",
+      "estimated_tasks": 80,
+      "key_components": [
+        "Text processing (LLM integration)",
+        "Image processing (CLIP, OCR, object detection)",
+        "Video processing (scene detection, transcription)",
+        "Audio processing (speech-to-text, speaker ID)",
+        "Document processing (PDF parsing, extraction)",
+        "Code processing (syntax analysis, documentation)"
+      ]
+    },
+    "semantic_search": {
+      "description": "Advanced multi-modal search and discovery",
+      "estimated_tasks": 35,
+      "key_components": [
+        "Weaviate integration",
+        "Embedding generation",
+        "Hybrid search (vector + keyword)",
+        "Multi-modal queries",
+        "Result ranking",
+        "Search analytics"
+      ]
+    },
+    "knowledge_graph": {
+      "description": "Relationship mapping and context understanding",
+      "estimated_tasks": 40,
+      "key_components": [
+        "Neo4j integration",
+        "Relationship detection",
+        "Graph visualization",
+        "Context queries",
+        "Recommendation engine",
+        "Impact analysis"
+      ]
+    },
+    "unified_api": {
+      "description": "Comprehensive REST/GraphQL API layer",
+      "estimated_tasks": 60,
+      "key_components": [
+        "Upload endpoints",
+        "Search endpoints",
+        "Graph query endpoints",
+        "Analytics endpoints",
+        "Admin endpoints",
+        "WebSocket real-time"
+      ]
+    },
+    "web_dashboard": {
+      "description": "Modern, responsive web interface",
+      "estimated_tasks": 75,
+      "key_components": [
+        "File management interface",
+        "Search and discovery",
+        "Relationship visualization",
+        "Analytics dashboard",
+        "User management",
+        "System administration"
+      ]
+    },
+    "security_compliance": {
+      "description": "Enterprise security and audit capabilities",
+      "estimated_tasks": 30,
+      "key_components": [
+        "Authentication/authorization",
+        "Encryption at rest/transit",
+        "Audit logging",
+        "Access control",
+        "Compliance reporting",
+        "Backup/recovery"
+      ]
+    }
+  },
+  "implementation_priorities": {
+    "phase_1_foundation": {
+      "duration": "2-3 weeks",
+      "recipes": [
+        "core-infrastructure-recipe.json",
+        "storage-integration-recipe.json",
+        "basic-api-recipe.json"
+      ],
+      "deliverables": [
+        "Minio object storage operational",
+        "PostgreSQL with schemas",
+        "Basic file upload/download",
+        "Authentication system"
+      ]
+    },
+    "phase_2_ai_integration": {
+      "duration": "3-4 weeks", 
+      "recipes": [
+        "text-processing-recipe.json",
+        "image-processing-recipe.json",
+        "vector-search-recipe.json"
+      ],
+      "deliverables": [
+        "Weaviate integration",
+        "Multi-modal embeddings",
+        "Basic AI processing",
+        "Semantic search"
+      ]
+    },
+    "phase_3_advanced_features": {
+      "duration": "2-3 weeks",
+      "recipes": [
+        "knowledge-graph-recipe.json",
+        "video-audio-recipe.json",
+        "web-dashboard-recipe.json"
+      ],
+      "deliverables": [
+        "Neo4j relationship mapping",
+        "Video/audio processing",
+        "Complete web interface",
+        "Analytics dashboard"
+      ]
+    },
+    "phase_4_production": {
+      "duration": "1-2 weeks",
+      "recipes": [
+        "security-hardening-recipe.json",
+        "performance-optimization-recipe.json",
+        "deployment-automation-recipe.json"
+      ],
+      "deliverables": [
+        "Production security",
+        "Performance optimization",
+        "Automated deployment",
+        "Monitoring/alerting"
+      ]
+    }
+  },
+  "comprehensive_user_scenarios": {
+    "individual_user_stories": {
+      "photographer_sarah": {
+        "profile": "Professional photographer with 50TB of RAW images spanning 15 years",
+        "use_cases": [
+          "Upload entire photo library (100,000+ images) via drag-and-drop interface",
+          "Automatic face recognition to organize photos by person",
+          "Location-based clustering using EXIF GPS data",
+          "Style analysis to group photos by lighting, composition, color palette",
+          "AI-generated captions and keywords for each photo",
+          "Duplicate detection across different file formats (RAW, JPEG, TIFF)",
+          "Search by visual similarity: 'Find photos like this sunset'",
+          "Time-based organization with automatic event detection",
+          "Integration with Adobe Lightroom catalogs and metadata",
+          "Client gallery generation with watermarking and access controls"
+        ],
+        "technical_requirements": [
+          "Support for RAW formats: .CR2, .NEF, .ARW, .DNG, .ORF",
+          "EXIF metadata extraction and preservation",
+          "Color profile management and ICC support", 
+          "Thumbnail generation with multiple sizes (150px, 300px, 1200px)",
+          "Parallel upload with resume capability for interrupted transfers",
+          "Storage optimization with intelligent compression",
+          "Backup redundancy across multiple cloud providers",
+          "Performance: Process 1000 images per hour on standard hardware"
+        ]
+      },
+      "researcher_dr_chen": {
+        "profile": "Academic researcher with mixed data: papers, datasets, code, presentations",
+        "use_cases": [
+          "Upload research papers (PDF) with automatic citation extraction",
+          "Code repository integration with Git history preservation",
+          "Dataset upload with automatic schema detection",
+          "Cross-reference detection between papers, code, and datasets",
+          "Collaborative annotation and commenting system",
+          "Research timeline visualization showing project evolution",
+          "AI-powered literature review suggestions",
+          "Automatic bibliography generation",
+          "Version control for all research artifacts",
+          "Export citations in multiple formats (BibTeX, APA, MLA)"
+        ],
+        "technical_requirements": [
+          "PDF text extraction with OCR fallback for scanned documents",
+          "Git integration for code repositories",
+          "Support for scientific data formats: .csv, .xlsx, .json, .hdf5, .nc",
+          "Citation parsing and DOI resolution",
+          "LaTeX document processing",
+          "Jupyter notebook rendering and execution",
+          "Integration with reference managers (Zotero, Mendeley)",
+          "Collaborative editing with conflict resolution"
+        ]
+      },
+      "content_creator_alex": {
+        "profile": "YouTube content creator with videos, audio, thumbnails, scripts",
+        "use_cases": [
+          "Video upload with automatic scene detection and chapter generation",
+          "Audio extraction and transcription for searchability",
+          "Thumbnail A/B testing with performance analytics",
+          "Script versioning with change tracking",
+          "Automatic highlight reel generation from long-form content",
+          "Music and sound effect library with copyright detection",
+          "Social media clip generation with platform-specific formatting",
+          "Collaboration tools for editors and thumbnail designers",
+          "Analytics integration showing content performance",
+          "Automated backup to multiple cloud storage providers"
+        ],
+        "technical_requirements": [
+          "Video processing: .mp4, .mov, .avi, .mkv with 4K support",
+          "Audio formats: .wav, .mp3, .aac with multi-channel support",
+          "Subtitle generation and SRT file support",
+          "GPU-accelerated video transcoding",
+          "Content ID matching for copyright compliance",
+          "Social media API integration (YouTube, TikTok, Instagram)",
+          "Real-time collaboration features",
+          "Automated quality assessment and optimization suggestions"
+        ]
+      },
+      "family_archivist_maria": {
+        "profile": "Family historian digitizing 3 generations of photos, documents, videos",
+        "use_cases": [
+          "Scan and upload physical photos with automatic date detection",
+          "Digitize home videos from multiple formats (VHS, DVD, MiniDV)",
+          "Create family tree with photo associations",
+          "OCR on handwritten letters and documents",
+          "Audio recording transcription for oral histories",
+          "Geographic mapping of family history",
+          "Timeline creation showing family milestones", 
+          "Sharing controls for different family members",
+          "Memory preservation with stories and context",
+          "Legacy planning with access inheritance"
+        ],
+        "technical_requirements": [
+          "High-resolution scanning support up to 4800 DPI",
+          "Legacy video format support: .avi, .wmv, .mov, .vob",
+          "Handwriting recognition and OCR",
+          "Multi-language support for international families",
+          "Privacy controls with granular sharing permissions",
+          "Long-term storage with format migration planning",
+          "Optical character recognition for old documents",
+          "Audio enhancement for degraded recordings"
+        ]
+      },
+      "business_analyst_robert": {
+        "profile": "Corporate analyst with reports, spreadsheets, presentations, meeting recordings",
+        "use_cases": [
+          "Upload quarterly reports with automatic data extraction",
+          "Meeting recording transcription with speaker identification",
+          "Presentation slide analysis and content indexing",
+          "Excel/CSV data analysis with automatic chart generation",
+          "Cross-document insights and trend analysis",
+          "Compliance document management with retention policies",
+          "Team collaboration with role-based access controls",
+          "Automated report generation from multiple data sources",
+          "Integration with business intelligence tools",
+          "Audit trail for all document access and changes"
+        ],
+        "technical_requirements": [
+          "Office document formats: .docx, .xlsx, .pptx with macro support",
+          "Enterprise security with SSO integration",
+          "Advanced analytics and business intelligence features",
+          "Compliance with SOX, GDPR, HIPAA regulations",
+          "Integration with Salesforce, SharePoint, Slack",
+          "Advanced search with business-specific taxonomies",
+          "Automated workflow triggers and notifications",
+          "Data lineage tracking and impact analysis"
+        ]
+      }
+    },
+    "edge_case_scenarios": {
+      "massive_scale_operations": {
+        "scenario": "Enterprise with 10PB of data across 50 locations",
+        "challenges": [
+          "Distributed ingestion from multiple geographic locations",
+          "Network bandwidth optimization for large file transfers",
+          "Storage tiering with hot/warm/cold data classification",
+          "Cross-region data replication and synchronization",
+          "Regulatory compliance across different jurisdictions",
+          "Disaster recovery with RTO < 4 hours, RPO < 1 hour",
+          "Performance optimization for concurrent users (10,000+)",
+          "Cost optimization with intelligent data lifecycle management"
+        ],
+        "solutions": [
+          "Edge nodes with local processing and deduplication",
+          "Intelligent transfer protocols with resumption and compression",
+          "Automated tiering based on access patterns and age",
+          "Event-driven replication with conflict resolution",
+          "Jurisdiction-aware data residency controls",
+          "Multi-region active-active architecture",
+          "Caching layers with predictive prefetching",
+          "ML-driven cost optimization and resource allocation"
+        ]
+      },
+      "security_sensitive_environments": {
+        "scenario": "Government agency with classified document management",
+        "challenges": [
+          "Air-gapped network deployment requirements",
+          "Multi-level security with classification handling",
+          "Audit trails meeting federal standards",
+          "Encryption at all layers (rest, transit, processing)",
+          "User authentication with multi-factor requirements",
+          "Data sanitization and secure deletion",
+          "Compliance with FedRAMP, FISMA, NIST standards",
+          "Insider threat detection and prevention"
+        ],
+        "solutions": [
+          "Offline deployment packages with local installation",
+          "Classification-aware processing with mandatory access controls",
+          "Immutable audit logs with cryptographic verification",
+          "FIPS 140-2 Level 3 encryption modules",
+          "PKI integration with CAC/PIV card support",
+          "Secure multi-party computation for sensitive processing",
+          "Zero-trust architecture with continuous verification",
+          "Behavioral analytics for anomaly detection"
+        ]
+      },
+      "resource_constrained_environments": {
+        "scenario": "Remote research station with limited connectivity and power",
+        "challenges": [
+          "Intermittent internet connectivity (satellite, hours per day)",
+          "Limited computational resources (single laptop)",
+          "Power constraints requiring efficiency optimization",
+          "Harsh environmental conditions affecting hardware",
+          "Solo operation with minimal IT support",
+          "Critical data that cannot be lost",
+          "Real-time processing needs despite limitations",
+          "Equipment failure scenarios in remote locations"
+        ],
+        "solutions": [
+          "Offline-first architecture with intelligent synchronization",
+          "Progressive processing with priority queuing",
+          "Power-aware algorithms with sleep/wake optimization",
+          "Ruggedized deployment options with temperature tolerance",
+          "Self-healing systems with automatic error recovery",
+          "Multiple backup strategies including physical media",
+          "Edge AI processing with minimal resource requirements",
+          "Redundant systems with hot-swappable components"
+        ]
+      }
+    }
+  },
+  "comprehensive_technical_specifications": {
+    "minio_configuration": {
+      "deployment_modes": {
+        "standalone": "Single server for development, 1-4 drives",
+        "distributed": "4-32 servers for production, automatic healing",
+        "gateway": "Proxy to existing storage (AWS S3, GCS, Azure)"
+      },
+      "bucket_strategies": {
+        "by_content_type": {
+          "buckets": ["images", "videos", "audio", "documents", "code"],
+          "benefits": ["Type-specific policies", "Easy lifecycle management"],
+          "lifecycle_rules": {
+            "images": "Hot 30 days, warm 90 days, cold 1 year, delete 7 years",
+            "videos": "Hot 60 days, warm 180 days, cold 2 years, archive 10 years",
+            "documents": "Hot 90 days, warm 1 year, cold 3 years, retain 20 years"
+          }
+        }
+      },
+      "performance_settings": {
+        "read_quorum": "N/2",
+        "write_quorum": "(N/2)+1", 
+        "healing_interval": "24h",
+        "scanner_speed": "default",
+        "api_requests_max": "1000",
+        "api_requests_deadline": "30s"
+      }
+    },
+    "postgresql_optimization": {
+      "memory_settings": {
+        "shared_buffers": "25% of RAM",
+        "effective_cache_size": "75% of RAM",
+        "work_mem": "RAM/max_connections/4",
+        "maintenance_work_mem": "RAM/16"
+      },
+      "connection_settings": {
+        "max_connections": "200",
+        "superuser_reserved_connections": "3",
+        "tcp_keepalives_idle": "600",
+        "tcp_keepalives_interval": "30"
+      },
+      "query_optimization": {
+        "random_page_cost": "1.1",
+        "seq_page_cost": "1.0",
+        "cpu_tuple_cost": "0.01",
+        "cpu_index_tuple_cost": "0.005"
+      }
+    },
+    "api_rate_limiting": {
+      "global_limits": {
+        "requests_per_second": 1000,
+        "requests_per_minute": 60000,
+        "requests_per_hour": 3600000
+      },
+      "user_limits": {
+        "free_tier": {
+          "uploads_per_day": 100,
+          "storage_limit_gb": 5,
+          "processing_minutes": 60
+        },
+        "premium_tier": {
+          "uploads_per_day": 10000,
+          "storage_limit_gb": 1000,
+          "processing_minutes": 1440
+        },
+        "enterprise_tier": {
+          "uploads_per_day": "unlimited",
+          "storage_limit_gb": "unlimited",
+          "processing_minutes": "unlimited"
+        }
+      },
+      "endpoint_specific": {
+        "POST /upload": "5 requests/minute per user",
+        "GET /search": "100 requests/minute per user",
+        "POST /process": "10 requests/minute per user"
+      }
+    }
+  },
+  "critical_failure_scenarios": {
+    "data_corruption": {
+      "detection_methods": [
+        "Continuous checksum validation",
+        "Periodic integrity scans",
+        "User-reported corruption alerts",
+        "Automated anomaly detection"
+      ],
+      "recovery_procedures": [
+        "Automatic failover to replica",
+        "Point-in-time recovery from backups",
+        "Partial reconstruction from multiple sources",
+        "User notification and manual intervention"
+      ]
+    },
+    "cascade_failures": {
+      "prevention_strategies": [
+        "Circuit breaker patterns",
+        "Bulkhead isolation",
+        "Timeout and retry policies",
+        "Graceful degradation modes"
+      ],
+      "recovery_automation": [
+        "Health check monitoring",
+        "Automatic service restart",
+        "Load balancer failover",
+        "Emergency maintenance mode"
+      ]
+    },
+    "security_breaches": {
+      "immediate_response": [
+        "Isolate affected systems",
+        "Revoke all active sessions",
+        "Enable emergency access controls",
+        "Begin forensic data collection"
+      ],
+      "investigation_procedures": [
+        "Preserve evidence integrity",
+        "Analyze attack vectors",
+        "Assess data compromise scope",
+        "Coordinate with security teams"
+      ],
+      "recovery_steps": [
+        "Patch security vulnerabilities",
+        "Reset all authentication credentials",
+        "Restore from clean backups",
+        "Implement additional security measures"
+      ]
+    }
+  }
+} 

@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${KOS_POSTGRES_EXTERNAL_PORT:-5432}:${KOS_POSTGRES_INTERNAL_PORT:-5432}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${KOS_REDIS_EXTERNAL_PORT:-6379}:${KOS_REDIS_INTERNAL_PORT:-6379}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -51,8 +51,8 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     ports:
-      - "${ELASTICSEARCH_PORT:-9200}:9200"
-      - "${ELASTICSEARCH_CLUSTER_PORT:-9300}:9300"
+      - "${KOS_ELASTICSEARCH_EXTERNAL_PORT:-9200}:${KOS_ELASTICSEARCH_INTERNAL_PORT:-9200}"
+      - "${KOS_ELASTICSEARCH_CLUSTER_EXTERNAL_PORT:-9300}:${KOS_ELASTICSEARCH_CLUSTER_INTERNAL_PORT:-9300}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -78,8 +78,8 @@ services:
       - neo4j_import:/var/lib/neo4j/import
       - neo4j_plugins:/plugins
     ports:
-      - "${NEO4J_BROWSER_PORT:-7474}:7474"
-      - "${NEO4J_BOLT_PORT:-7687}:7687"
+      - "${KOS_NEO4J_HTTP_EXTERNAL_PORT:-7474}:${KOS_NEO4J_HTTP_INTERNAL_PORT:-7474}"
+      - "${KOS_NEO4J_EXTERNAL_PORT:-7687}:${KOS_NEO4J_INTERNAL_PORT:-7687}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -103,7 +103,7 @@ services:
     volumes:
       - weaviate_data:/var/lib/weaviate
     ports:
-      - "${WEAVIATE_PORT:-8080}:8080"
+      - "${KOS_WEAVIATE_EXTERNAL_PORT:-8080}:${KOS_WEAVIATE_INTERNAL_PORT:-8080}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -122,12 +122,12 @@ services:
     volumes:
       - minio_data:/data
     ports:
-      - "${MINIO_API_PORT:-9000}:9000"
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+      - "${KOS_MINIO_EXTERNAL_PORT:-9000}:${KOS_MINIO_INTERNAL_PORT:-9000}"
+      - "${KOS_MINIO_CONSOLE_EXTERNAL_PORT:-9001}:${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
     networks:
       - ai-q-network
     restart: unless-stopped
-    command: server /data --console-address ":${MINIO_CONSOLE_PORT:-9001}"
+    command: server /data --console-address ":${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -143,7 +143,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
     ports:
-      - "${GRAFANA_PORT:-3001}:3000"
+      - "${KOS_GRAFANA_EXTERNAL_PORT:-3001}:${KOS_GRAFANA_INTERNAL_PORT:-3000}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -167,7 +167,7 @@ services:
       - prometheus_data:/prometheus
       - ./config/prometheus:/etc/prometheus
     ports:
-      - "${PROMETHEUS_PORT:-9090}:9090"
+      - "${KOS_PROMETHEUS_EXTERNAL_PORT:-9090}:${KOS_PROMETHEUS_INTERNAL_PORT:-9090}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -190,7 +190,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
     ports:
-      - "${CADVISOR_PORT:-8080}:8080"
+      - "${KOS_CADVISOR_EXTERNAL_PORT:-8080}:${KOS_CADVISOR_INTERNAL_PORT:-8080}"
     networks:
       - ai-q-network
     restart: unless-stopped

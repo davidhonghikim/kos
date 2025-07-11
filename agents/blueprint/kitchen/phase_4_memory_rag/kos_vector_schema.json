@@ -1,0 +1,18 @@
+{
+  "title": "kOS Vector Schema",
+  "description": "Defines the structure for all vector memory embeddings used by the kOS Engine.",
+  "version": "1.0.0",
+  "classes": [
+    {
+      "name": "AgentKnowledge",
+      "vectorizer": "text2vec-transformers",
+      "properties": [
+        { "name": "title", "dataType": ["text"] },
+        { "name": "content", "dataType": ["text"] },
+        { "name": "author", "dataType": ["text"] },
+        { "name": "timestamp", "dataType": ["date"] },
+        { "name": "phase", "dataType": ["string"] }
+      ]
+    }
+  ]
+} 

@@ -1,0 +1,34 @@
+# Global owners
+* @davidhonghikim
+
+# Documentation
+docs/ @davidhonghikim
+*.md @davidhonghikim
+*.json @davidhonghikim
+
+# CI/CD and development tools
+.github/ @davidhonghikim
+.husky/ @davidhonghikim
+.editorconfig @davidhonghikim
+.eslintrc.js @davidhonghikim
+.prettierrc @davidhonghikim
+jest.setup.js @davidhonghikim
+pytest.ini @davidhonghikim
+
+# Configuration files
+config/ @davidhonghikim
+env/ @davidhonghikim
+docker/ @davidhonghikim
+docker-compose.yml @davidhonghikim
+
+# Package management
+package.json @davidhonghikim
+requirements.txt @davidhonghikim
+tsconfig.json @davidhonghikim
+
+# Source code
+src/ @davidhonghikim
+tests/ @davidhonghikim
+
+# Agent documentation
+agents/ @davidhonghikim 

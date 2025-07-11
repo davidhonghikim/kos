@@ -1,0 +1,13 @@
+{
+  "title": "kOS Manual",
+  "description": "Comprehensive manual for kOS system, agent operation, and recipe authoring.",
+  "version": "1.0.0",
+  "sections": [
+    "System Overview",
+    "Agent Classes",
+    "Recipe Authoring",
+    "Runtime Operations",
+    "Security & Vaults",
+    "Troubleshooting"
+  ]
+} 

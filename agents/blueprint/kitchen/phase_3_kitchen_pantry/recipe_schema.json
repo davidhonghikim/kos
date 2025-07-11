@@ -1,0 +1,33 @@
+{
+  "title": "kOS Recipe Schema",
+  "description": "The atomic unit of execution within the kOS Kitchen system — a deterministic, structured task for agents.",
+  "version": "1.0.0",
+  "fields": {
+    "id": "string",
+    "title": "string",
+    "description": "string",
+    "ingredients": ["string"],
+    "tools": ["string"],
+    "steps": [
+      {
+        "description": "string",
+        "action": "function | call | plan | write | read",
+        "target": "optional string",
+        "validation": "optional regex or schema ref"
+      }
+    ],
+    "constraints": {
+      "max_tokens": 30000,
+      "max_lines": 350,
+      "retries": 1
+    },
+    "outputs": {
+      "format": "json | file | plan",
+      "description": "string"
+    },
+    "linked_recipes": ["string"],
+    "phase_tag": "optional enum of kOS phases"
+  },
+  "default_output_format": "json",
+  "example_id": "kos.recipe.generation.langchain_transformer"
+} 

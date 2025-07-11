@@ -46,40 +46,40 @@
   "services": {
     "core": {
       "kos-backend": {
-        "external_port": 8000,
-        "internal_port": 8000,
-        "host": "localhost",
-        "container_host": "kos-backend",
+        "external_port": "${KOS_BACKEND_EXTERNAL_PORT}",
+        "internal_port": "${KOS_BACKEND_INTERNAL_PORT}",
+        "host": "${KOS_BACKEND_HOST}",
+        "container_host": "${KOS_BACKEND_CONTAINER_HOST}",
         "description": "kOS Backend API",
-        "protocol": "http",
-        "health_check": "/health",
+        "protocol": "${KOS_BACKEND_PROTOCOL}",
+        "health_check": "${KOS_BACKEND_HEALTH_CHECK}",
         "dependencies": ["kos-postgres", "kos-redis", "kos-neo4j"]
       },
       "kos-frontend": {
-        "external_port": 3000,
-        "internal_port": 3000,
-        "host": "localhost",
-        "container_host": "kos-frontend",
+        "external_port": "${KOS_FRONTEND_EXTERNAL_PORT}",
+        "internal_port": "${KOS_FRONTEND_INTERNAL_PORT}",
+        "host": "${KOS_FRONTEND_HOST}",
+        "container_host": "${KOS_FRONTEND_CONTAINER_HOST}",
         "description": "kOS Frontend",
-        "protocol": "http",
+        "protocol": "${KOS_FRONTEND_PROTOCOL}",
         "dependencies": ["kos-backend"]
       },
       "kos-nginx": {
-        "external_port": 80,
-        "internal_port": 80,
-        "host": "localhost",
-        "container_host": "kos-nginx",
+        "external_port": "${KOS_NGINX_EXTERNAL_PORT}",
+        "internal_port": "${KOS_NGINX_INTERNAL_PORT}",
+        "host": "${KOS_NGINX_HOST}",
+        "container_host": "${KOS_NGINX_CONTAINER_HOST}",
         "description": "Nginx Reverse Proxy",
-        "protocol": "http",
+        "protocol": "${KOS_NGINX_PROTOCOL}",
         "dependencies": ["kos-backend", "kos-frontend"]
       }
     },
     "databases": {
       "kos-postgres": {
-        "external_port": 5432,
-        "internal_port": 5432,
-        "host": "localhost",
-        "container_host": "kos-postgres",
+        "external_port": "${KOS_POSTGRES_EXTERNAL_PORT}",
+        "internal_port": "${KOS_POSTGRES_INTERNAL_PORT}",
+        "host": "${KOS_POSTGRES_HOST}",
+        "container_host": "${KOS_POSTGRES_CONTAINER_HOST}",
         "description": "PostgreSQL Database",
         "protocol": "postgresql",
         "default_db": "kos_db",
@@ -87,20 +87,20 @@
         "default_password": "admin123"
       },
       "kos-redis": {
-        "external_port": 6379,
-        "internal_port": 6379,
-        "host": "localhost",
-        "container_host": "kos-redis",
+        "external_port": "${KOS_REDIS_EXTERNAL_PORT}",
+        "internal_port": "${KOS_REDIS_INTERNAL_PORT}",
+        "host": "${KOS_REDIS_HOST}",
+        "container_host": "${KOS_REDIS_CONTAINER_HOST}",
         "description": "Redis Cache",
         "protocol": "redis",
         "default_password": "admin123",
         "default_db": 0
       },
       "kos-neo4j": {
-        "external_port": 7687,
-        "internal_port": 7687,
-        "host": "localhost",
-        "container_host": "kos-neo4j",
+        "external_port": "${KOS_NEO4J_EXTERNAL_PORT}",
+        "internal_port": "${KOS_NEO4J_INTERNAL_PORT}",
+        "host": "${KOS_NEO4J_HOST}",
+        "container_host": "${KOS_NEO4J_CONTAINER_HOST}",
         "description": "Neo4j Graph Database",
         "protocol": "bolt",
         "http_port": 7474,
@@ -111,10 +111,10 @@
     },
     "development": {
       "kos-gitea": {
-        "external_port": 3002,
-        "internal_port": 3000,
-        "host": "localhost",
-        "container_host": "kos-gitea",
+        "external_port": "${KOS_GITEA_EXTERNAL_PORT}",
+        "internal_port": "${KOS_GITEA_INTERNAL_PORT}",
+        "host": "${KOS_GITEA_HOST}",
+        "container_host": "${KOS_GITEA_CONTAINER_HOST}",
         "description": "Gitea Git Hosting",
         "protocol": "http",
         "ssh_port": 2222,
@@ -122,71 +122,71 @@
         "dependencies": ["kos-postgres"]
       },
       "kos-openwebui": {
-        "external_port": 3001,
-        "internal_port": 8080,
-        "host": "localhost",
-        "container_host": "kos-openwebui",
+        "external_port": "${KOS_OPENWEBUI_EXTERNAL_PORT}",
+        "internal_port": "${KOS_OPENWEBUI_INTERNAL_PORT}",
+        "host": "${KOS_OPENWEBUI_HOST}",
+        "container_host": "${KOS_OPENWEBUI_CONTAINER_HOST}",
         "description": "OpenWebUI LLM Interface",
         "protocol": "http",
         "dependencies": ["kos-ollama"]
       },
       "kos-ollama": {
-        "external_port": 11434,
-        "internal_port": 11434,
-        "host": "localhost",
-        "container_host": "kos-ollama",
+        "external_port": "${KOS_OLLAMA_EXTERNAL_PORT}",
+        "internal_port": "${KOS_OLLAMA_INTERNAL_PORT}",
+        "host": "${KOS_OLLAMA_HOST}",
+        "container_host": "${KOS_OLLAMA_CONTAINER_HOST}",
         "description": "Ollama Local LLMs",
         "protocol": "http"
       },
       "kos-supabase": {
-        "external_port": 54321,
-        "internal_port": 5432,
-        "host": "localhost",
-        "container_host": "kos-supabase",
+        "external_port": "${KOS_SUPABASE_EXTERNAL_PORT}",
+        "internal_port": "${KOS_SUPABASE_INTERNAL_PORT}",
+        "host": "${KOS_SUPABASE_HOST}",
+        "container_host": "${KOS_SUPABASE_CONTAINER_HOST}",
         "description": "Supabase Local",
         "protocol": "postgresql",
         "studio_port": 3003,
         "studio_internal_port": 3000
       },
       "kos-browseruse": {
-        "external_port": 3004,
-        "internal_port": 3000,
-        "host": "localhost",
-        "container_host": "kos-browseruse",
+        "external_port": "${KOS_BROWSERUSE_EXTERNAL_PORT}",
+        "internal_port": "${KOS_BROWSERUSE_INTERNAL_PORT}",
+        "host": "${KOS_BROWSERUSE_HOST}",
+        "container_host": "${KOS_BROWSERUSE_CONTAINER_HOST}",
         "description": "Browseruse",
         "protocol": "http"
       },
       "kos-context7": {
-        "external_port": 3005,
-        "internal_port": 3000,
-        "host": "localhost",
-        "container_host": "kos-context7",
+        "external_port": "${KOS_CONTEXT7_EXTERNAL_PORT}",
+        "internal_port": "${KOS_CONTEXT7_INTERNAL_PORT}",
+        "host": "${KOS_CONTEXT7_HOST}",
+        "container_host": "${KOS_CONTEXT7_CONTAINER_HOST}",
         "description": "Context7",
         "protocol": "http"
       },
       "kos-codium": {
-        "external_port": 3006,
-        "internal_port": 8080,
-        "host": "localhost",
-        "container_host": "kos-codium",
+        "external_port": "${KOS_CODIUM_EXTERNAL_PORT}",
+        "internal_port": "${KOS_CODIUM_INTERNAL_PORT}",
+        "host": "${KOS_CODIUM_HOST}",
+        "container_host": "${KOS_CODIUM_CONTAINER_HOST}",
         "description": "Codium with Copilot Local",
         "protocol": "http"
       }
     },
     "monitoring": {
       "kos-prometheus": {
-        "external_port": 9090,
-        "internal_port": 9090,
-        "host": "localhost",
-        "container_host": "kos-prometheus",
+        "external_port": "${KOS_PROMETHEUS_EXTERNAL_PORT}",
+        "internal_port": "${KOS_PROMETHEUS_INTERNAL_PORT}",
+        "host": "${KOS_PROMETHEUS_HOST}",
+        "container_host": "${KOS_PROMETHEUS_CONTAINER_HOST}",
         "description": "Prometheus Monitoring",
         "protocol": "http"
       },
       "kos-grafana": {
-        "external_port": 3007,
-        "internal_port": 3000,
-        "host": "localhost",
-        "container_host": "kos-grafana",
+        "external_port": "${KOS_GRAFANA_EXTERNAL_PORT}",
+        "internal_port": "${KOS_GRAFANA_INTERNAL_PORT}",
+        "host": "${KOS_GRAFANA_HOST}",
+        "container_host": "${KOS_GRAFANA_CONTAINER_HOST}",
         "description": "Grafana Dashboard",
         "protocol": "http",
         "dependencies": ["kos-prometheus"]
@@ -194,26 +194,26 @@
     },
     "storage": {
       "kos-elasticsearch": {
-        "external_port": 9200,
-        "internal_port": 9200,
-        "host": "localhost",
-        "container_host": "kos-elasticsearch",
+        "external_port": "${KOS_ELASTICSEARCH_EXTERNAL_PORT}",
+        "internal_port": "${KOS_ELASTICSEARCH_INTERNAL_PORT}",
+        "host": "${KOS_ELASTICSEARCH_HOST}",
+        "container_host": "${KOS_ELASTICSEARCH_CONTAINER_HOST}",
         "description": "Elasticsearch Search Engine",
         "protocol": "http"
       },
       "kos-weaviate": {
-        "external_port": 8080,
-        "internal_port": 8080,
-        "host": "localhost",
-        "container_host": "kos-weaviate",
+        "external_port": "${KOS_WEAVIATE_EXTERNAL_PORT}",
+        "internal_port": "${KOS_WEAVIATE_INTERNAL_PORT}",
+        "host": "${KOS_WEAVIATE_HOST}",
+        "container_host": "${KOS_WEAVIATE_CONTAINER_HOST}",
         "description": "Weaviate Vector Database",
         "protocol": "http"
       },
       "kos-minio": {
-        "external_port": 9000,
-        "internal_port": 9000,
-        "host": "localhost",
-        "container_host": "kos-minio",
+        "external_port": "${KOS_MINIO_EXTERNAL_PORT}",
+        "internal_port": "${KOS_MINIO_INTERNAL_PORT}",
+        "host": "${KOS_MINIO_HOST}",
+        "container_host": "${KOS_MINIO_CONTAINER_HOST}",
         "description": "MinIO Object Storage",
         "protocol": "http",
         "console_port": 9001,
@@ -222,28 +222,28 @@
     },
     "security": {
       "kos-vault": {
-        "external_port": 8200,
-        "internal_port": 8200,
-        "host": "localhost",
-        "container_host": "kos-vault",
+        "external_port": "${KOS_VAULT_EXTERNAL_PORT}",
+        "internal_port": "${KOS_VAULT_INTERNAL_PORT}",
+        "host": "${KOS_VAULT_HOST}",
+        "container_host": "${KOS_VAULT_CONTAINER_HOST}",
         "description": "HashiCorp Vault",
         "protocol": "http"
       }
     },
     "managers": {
       "kos-prompt-manager": {
-        "external_port": 3008,
-        "internal_port": 8000,
-        "host": "localhost",
-        "container_host": "kos-prompt-manager",
+        "external_port": "${KOS_PROMPT_MANAGER_EXTERNAL_PORT}",
+        "internal_port": "${KOS_PROMPT_MANAGER_INTERNAL_PORT}",
+        "host": "${KOS_PROMPT_MANAGER_HOST}",
+        "container_host": "${KOS_PROMPT_MANAGER_CONTAINER_HOST}",
         "description": "Prompt Manager",
         "protocol": "http"
       },
       "kos-artifact-manager": {
-        "external_port": 3009,
-        "internal_port": 8000,
-        "host": "localhost",
-        "container_host": "kos-artifact-manager",
+        "external_port": "${KOS_ARTIFACT_MANAGER_EXTERNAL_PORT}",
+        "internal_port": "${KOS_ARTIFACT_MANAGER_INTERNAL_PORT}",
+        "host": "${KOS_ARTIFACT_MANAGER_HOST}",
+        "container_host": "${KOS_ARTIFACT_MANAGER_CONTAINER_HOST}",
         "description": "Artifact Manager",
         "protocol": "http"
       }

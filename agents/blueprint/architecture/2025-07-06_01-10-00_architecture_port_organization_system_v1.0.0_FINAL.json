@@ -1,0 +1,198 @@
+{
+  "port_organization_system": {
+    "system_id": "AI-Q-PORT-ORGANIZATION-001",
+    "title": "AI-Q Port Organization System",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T11:00:00Z",
+    "description": "Organized port system with clear ranges for different service types"
+  },
+  "port_ranges": {
+    "frontend_services": {
+      "range": "3000-3099",
+      "description": "User-facing web interfaces and dashboards",
+      "services": {
+        "3000": "OpenWebUI (AI chat interface)",
+        "3001": "Grafana (monitoring dashboard)",
+        "3002": "Gitea (Git web interface)",
+        "3003": "NextCloud (file storage web interface)",
+        "3004": "Admin Panel (system management)",
+        "3005": "AI-Q Web Dashboard (main interface)",
+        "3006": "AnythingLLM (document Q&A interface)",
+        "3007": "ComfyUI (AI image generation interface)",
+        "3008": "Automatic1111 (Stable Diffusion interface)",
+        "3009": "Reserved for future frontend",
+        "3010-3099": "Additional frontend services"
+      }
+    },
+    "backend_services": {
+      "range": "8000-8099",
+      "description": "API services, databases, and core backend systems",
+      "services": {
+        "8000": "AI-Q API (knowledge library)",
+        "8001": "AI-Q API Backup (load balancing)",
+        "8002": "User Management API",
+        "8003": "Content Processing API",
+        "8004": "Search API",
+        "8005": "Analytics API",
+        "8006": "Notification API",
+        "8007": "File Processing API",
+        "8008": "AI Agent API",
+        "8009": "Reserved for future backend",
+        "8010-8099": "Additional backend services"
+      }
+    },
+    "middleware_services": {
+      "range": "5000-5099",
+      "description": "Infrastructure, messaging, and integration services",
+      "services": {
+        "5000": "Docker Registry (container registry)",
+        "5001": "Message Queue (RabbitMQ)",
+        "5002": "Service Discovery (Consul)",
+        "5003": "API Gateway",
+        "5004": "Load Balancer",
+        "5005": "Reverse Proxy",
+        "5006": "Service Mesh",
+        "5007": "Event Bus",
+        "5008": "Configuration Service",
+        "5009": "Reserved for future middleware",
+        "5010-5099": "Additional middleware services"
+      }
+    },
+    "ai_ml_services": {
+      "range": "11000-11099",
+      "description": "AI/ML inference and model serving",
+      "services": {
+        "11000": "Ollama (LLM API)",
+        "11001": "vLLM (high-performance LLM)",
+        "11002": "Llama.cpp (local LLM)",
+        "11003": "Hugging Face Inference",
+        "11004": "TensorFlow Serving",
+        "11005": "PyTorch Serving",
+        "11006": "ONNX Runtime",
+        "11007": "Model Registry",
+        "11008": "AI Pipeline Orchestrator",
+        "11009": "Reserved for future AI/ML",
+        "11010-11099": "Additional AI/ML services"
+      }
+    },
+    "monitoring_services": {
+      "range": "9000-9099",
+      "description": "Observability, logging, and monitoring",
+      "services": {
+        "9000": "Prometheus (metrics collection)",
+        "9001": "AlertManager (alerting)",
+        "9002": "Jaeger (distributed tracing)",
+        "9003": "Zipkin (tracing)",
+        "9004": "Elasticsearch (log storage)",
+        "9005": "Kibana (log visualization)",
+        "9006": "Fluentd (log aggregation)",
+        "9007": "Health Check Service",
+        "9008": "Metrics Aggregator",
+        "9009": "Reserved for future monitoring",
+        "9010-9099": "Additional monitoring services"
+      }
+    },
+    "storage_services": {
+      "range": "7000-7099",
+      "description": "Databases, caches, and storage systems",
+      "services": {
+        "7000": "PostgreSQL (primary database)",
+        "7001": "PostgreSQL (read replica)",
+        "7002": "Redis (cache)",
+        "7003": "MongoDB (document store)",
+        "7004": "Elasticsearch (search)",
+        "7005": "Weaviate (vector database)",
+        "7006": "Neo4j (graph database)",
+        "7007": "MinIO (object storage)",
+        "7008": "InfluxDB (time series)",
+        "7009": "Reserved for future storage",
+        "7010-7099": "Additional storage services"
+      }
+    },
+    "development_services": {
+      "range": "4000-4099",
+      "description": "Development tools and utilities",
+      "services": {
+        "4000": "Development Server",
+        "4001": "Hot Reload Server",
+        "4002": "Test Runner",
+        "4003": "Code Quality Tools",
+        "4004": "Documentation Server",
+        "4005": "API Documentation",
+        "4006": "Development Database",
+        "4007": "Mock Services",
+        "4008": "Development Tools",
+        "4009": "Reserved for future development",
+        "4010-4099": "Additional development services"
+      }
+    }
+  },
+  "current_port_assignments": {
+    "frontend_services": {
+      "3000": "OpenWebUI (AI chat interface)",
+      "3001": "Grafana (monitoring dashboard)",
+      "3002": "Gitea (Git web interface)",
+      "3003": "NextCloud (file storage web interface)",
+      "3004": "Admin Panel (system management)"
+    },
+    "backend_services": {
+      "8000": "AI-Q API (knowledge library)"
+    },
+    "middleware_services": {
+      "5000": "Docker Registry (container registry)"
+    },
+    "ai_ml_services": {
+      "11000": "Ollama (LLM API)"
+    },
+    "monitoring_services": {
+      "9000": "Prometheus (metrics collection)"
+    },
+    "storage_services": {
+      "7000": "PostgreSQL (primary database)",
+      "7002": "Redis (cache)",
+      "7004": "Elasticsearch (search)",
+      "7005": "Weaviate (vector database)"
+    }
+  },
+  "migration_plan": {
+    "phase_1": {
+      "title": "Update Docker Compose Files",
+      "tasks": [
+        "Update docker-compose-self-hosted.yml with new port assignments",
+        "Update ollama.yml with port 11000",
+        "Create openwebui.yml with port 3000",
+        "Update all service configurations"
+      ]
+    },
+    "phase_2": {
+      "title": "Update Scripts and Configurations",
+      "tasks": [
+        "Update all setup scripts with new ports",
+        "Update admin panel with new service URLs",
+        "Update health check endpoints",
+        "Update documentation"
+      ]
+    },
+    "phase_3": {
+      "title": "Update Recipes and Documentation",
+      "tasks": [
+        "Update all recipe files with new port assignments",
+        "Create port organization documentation",
+        "Update execution plans",
+        "Create port conflict prevention guidelines"
+      ]
+    }
+  },
+  "port_conflict_prevention": {
+    "rules": [
+      "Always check port availability before assignment",
+      "Use port ranges to avoid conflicts",
+      "Document all port assignments",
+      "Use environment variables for port configuration",
+      "Implement port validation in setup scripts"
+    ],
+    "validation_script": "scripts/validate-ports.sh",
+    "port_checker": "scripts/check-port-conflicts.sh"
+  }
+} 

@@ -1,0 +1,65 @@
+{
+  "handoff_metadata": {
+    "agent_id": "",
+    "timestamp": "",
+    "version": "1.0.0",
+    "status": "DRAFT",
+    "priority": "medium",
+    "estimated_completion_time": "",
+    "context_window_status": ""
+  },
+  "execution_summary": {
+    "completed_work": [],
+    "work_in_progress": [],
+    "blocked_items": []
+  },
+  "critical_context": {
+    "project_state": {
+      "current_phase": "",
+      "documentation_system_state": "",
+      "recipe_library_state": "",
+      "automation_state": ""
+    },
+    "key_decisions": [],
+    "technical_debt": [],
+    "performance_notes": []
+  },
+  "immediate_actions_required": {
+    "phase_1": {
+      "duration": "",
+      "tasks": []
+    },
+    "phase_2": {
+      "duration": "",
+      "tasks": []
+    },
+    "phase_3": {
+      "duration": "",
+      "tasks": []
+    }
+  },
+  "quality_standards": {
+    "documentation_standards": [],
+    "recipe_standards": [],
+    "agent_standards": []
+  },
+  "file_locations": {
+    "critical_files": {},
+    "recipe_library": {},
+    "documentation": {}
+  },
+  "success_criteria": {
+    "immediate": [],
+    "long_term": []
+  },
+  "next_agent_instructions": {
+    "immediate_start": [],
+    "critical_reminders": [],
+    "handoff_completion": []
+  },
+  "risk_mitigation": {
+    "technical_risks": [],
+    "timeline_risks": [],
+    "quality_risks": []
+  }
+} 

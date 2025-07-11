@@ -1,0 +1,34 @@
+{
+  "title": "kOS Vault Configuration",
+  "description": "Central secure vault for storing and accessing API keys, secrets, credentials, tokens, and sensitive configs.",
+  "version": "1.0.0",
+  "engine": {
+    "type": "local_encrypted_store",
+    "path": "/vault/secure",
+    "encryption": "aes-256-gcm",
+    "key_source": "ENV['KOS_MASTER_KEY']"
+  },
+  "policies": {
+    "default": {
+      "read_only": false,
+      "access_roles": ["chef", "oracle", "junzi"],
+      "log_access": true
+    },
+    "public": {
+      "read_only": true,
+      "access_roles": ["runner"],
+      "log_access": false
+    }
+  },
+  "access_methods": {
+    "agent_init_hook": "true",
+    "function_call_runtime": "true",
+    "http_api": {
+      "enabled": true,
+      "port": 8100,
+      "auth": "bearer or master token"
+    }
+  },
+  "autolock_timeout_seconds": 600,
+  "fail_safe": "deny_all"
+} 

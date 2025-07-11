@@ -1,0 +1,29 @@
+{
+  "title": "kOS Retrieval-Augmented Generation (RAG) Engine",
+  "description": "Manages vector embedding, semantic retrieval, and agent-accessible knowledge queries.",
+  "version": "1.0.0",
+  "components": {
+    "embedder": "ollama",
+    "store": "weaviate",
+    "semantic_ranker": "bm25",
+    "context_packer": "rag_context_builder"
+  },
+  "query_pipeline": [
+    { "step": 1, "action": "receive_prompt", "format": "string" },
+    { "step": 2, "action": "vectorize", "engine": "embedder" },
+    { "step": 3, "action": "semantic_search", "top_k": 10, "rank": "bm25" },
+    { "step": 4, "action": "context_merge", "filter": "relevance > 0.7" },
+    { "step": 5, "action": "response_pack", "delivery": "injection to runtime" }
+  ],
+  "config": {
+    "embedding_model": "nomic-embed-text",
+    "chunk_strategy": "sentence_split",
+    "chunk_max_tokens": 512,
+    "index_refresh_rate_seconds": 600
+  },
+  "access": {
+    "public_query": false,
+    "agent_query": true,
+    "audit_log_enabled": true
+  }
+} 

@@ -1,0 +1,15 @@
+{
+  "title": "kOS Alignment Recipe",
+  "description": "Recipe for aligning agent behavior, context, and output to system standards.",
+  "version": "1.0.0",
+  "id": "kos.alignment.recipe.001",
+  "ingredients": ["context_normalizer", "validator"],
+  "steps": [
+    { "description": "Normalize agent context", "action": "call", "target": "context_normalizer", "validation": "context_aligned" },
+    { "description": "Validate output against standards", "action": "call", "target": "validator", "validation": "output_compliant" }
+  ],
+  "outputs": {
+    "format": "json",
+    "description": "Alignment validation report"
+  }
+} 

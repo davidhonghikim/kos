@@ -1,0 +1,124 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-27T10:37:00Z",
+    "created_by": "Claude Sonnet 4 - Claude Sonnet 4",
+    "purpose": "Quick reference guide for AI-Q Knowledge Library System"
+  },
+  "project_overview": {
+    "name": "AI-Q Knowledge Library System",
+    "version": "1.0.0",
+    "technology_stack": "TypeScript + Node.js + Docker",
+    "architecture": "Modular Microservices",
+    "status": "Development Phase"
+  },
+  "quick_commands": {
+    "development_setup": {
+      "install_dependencies": "npm install",
+      "start_development": "npm run dev",
+      "build_project": "npm run build",
+      "run_tests": "npm test",
+      "start_docker": "docker-compose up -d"
+    },
+    "docker_operations": {
+      "build_containers": "docker-compose build",
+      "start_services": "docker-compose up -d",
+      "stop_services": "docker-compose down",
+      "view_logs": "docker-compose logs -f",
+      "restart_services": "docker-compose restart"
+    },
+    "database_operations": {
+      "connect_postgres": "docker exec -it aiq-postgres psql -U aiq_user -d aiq_db",
+      "connect_redis": "docker exec -it aiq-redis redis-cli",
+      "connect_neo4j": "docker exec -it aiq-neo4j cypher-shell -u neo4j -p password",
+      "backup_database": "docker exec aiq-postgres pg_dump -U aiq_user aiq_db > backup.sql"
+    }
+  },
+  "api_endpoints": {
+    "base_url": "http://localhost:8000",
+    "health_check": "GET /health",
+    "api_status": "GET /api/status",
+    "knowledge": {
+      "list": "GET /api/knowledge",
+      "get": "GET /api/knowledge/:id",
+      "create": "POST /api/knowledge",
+      "update": "PUT /api/knowledge/:id",
+      "delete": "DELETE /api/knowledge/:id",
+      "search": "GET /api/knowledge/search"
+    },
+    "rag": {
+      "query": "POST /api/rag/query",
+      "search": "POST /api/rag/search",
+      "generate": "POST /api/rag/generate",
+      "models": "GET /api/rag/models",
+      "index": "POST /api/rag/index"
+    },
+    "system": {
+      "metrics": "GET /api/system/metrics",
+      "health": "GET /api/system/health",
+      "logs": "GET /api/system/logs",
+      "config": "GET /api/system/config",
+      "status": "GET /api/system/status"
+    }
+  },
+  "configuration": {
+    "environment_variables": {
+      "NODE_ENV": "development|production",
+      "PORT": "8000",
+      "DATABASE_URL": "postgresql://aiq_user:password@localhost:5432/aiq_db",
+      "REDIS_URL": "redis://localhost:6379",
+      "JWT_SECRET": "your-secret-key",
+      "LOG_LEVEL": "info|debug|warn|error"
+    },
+    "feature_flags": {
+      "ENABLE_RAG": "true|false",
+      "ENABLE_KNOWLEDGE_GRAPH": "true|false",
+      "ENABLE_VECTOR_SEARCH": "true|false",
+      "ENABLE_OBJECT_STORAGE": "true|false",
+      "ENABLE_API_DOCUMENTATION": "true|false"
+    }
+  },
+  "file_structure": {
+    "src": {
+      "api": "API routes and middleware",
+      "config": "Configuration management",
+      "services": "Business logic services",
+      "models": "Data models and schemas",
+      "utils": "Utility functions",
+      "validation": "Input validation"
+    },
+    "tests": "Test files",
+    "docs": "Documentation",
+    "scripts": "Build and deployment scripts",
+    "docker": "Docker configuration files"
+  },
+  "development_workflow": {
+    "1_setup": "Clone repository and install dependencies",
+    "2_configure": "Set up environment variables and configuration",
+    "3_start_services": "Start Docker services with docker-compose",
+    "4_develop": "Make changes and test locally",
+    "5_test": "Run comprehensive tests",
+    "6_deploy": "Build and deploy to target environment"
+  },
+  "troubleshooting": {
+    "common_issues": {
+      "port_conflicts": "Check if ports 8000, 5432, 6379, 7474 are available",
+      "docker_issues": "Restart Docker service and rebuild containers",
+      "database_connection": "Verify database credentials and network connectivity",
+      "permission_errors": "Check file permissions and Docker volume mounts"
+    },
+    "logs_location": {
+      "application": "logs/app.log",
+      "docker": "docker-compose logs [service-name]",
+      "system": "journalctl -u docker"
+    }
+  },
+  "monitoring": {
+    "health_endpoints": [
+      "http://localhost:8000/health",
+      "http://localhost:8000/api/system/health"
+    ],
+    "metrics_endpoint": "http://localhost:8000/api/system/metrics",
+    "logs_endpoint": "http://localhost:8000/api/system/logs"
+  }
+} 

@@ -1,0 +1,83 @@
+{
+  "title": "kOS Engine Project Index",
+  "description": "Top-level index of all phases and JSON specification files for the kOS Engine system.",
+  "version": "1.0.0",
+  "phases": [
+    {
+      "id": "phase_0",
+      "name": "System Index & Registry",
+      "files": [
+        "00_index.json",
+        "kos_registry.json"
+      ]
+    },
+    {
+      "id": "phase_1",
+      "name": "Kernel & Boot Loop",
+      "files": [
+        "kos_kernel.json",
+        "boot_loop.json"
+      ]
+    },
+    {
+      "id": "phase_2",
+      "name": "Agent Spec & Trait Manifest",
+      "files": [
+        "agent_spec.json",
+        "agent_manifest.json"
+      ]
+    },
+    {
+      "id": "phase_3",
+      "name": "Kitchen & Recipe Runtime",
+      "files": [
+        "kitchen_loader.json",
+        "pantry_config.json",
+        "recipe_schema.json",
+        "meal_plan.json"
+      ]
+    },
+    {
+      "id": "phase_4",
+      "name": "Memory & RAG Integration",
+      "files": [
+        "memory_config.json",
+        "rag_engine.json",
+        "kos_vector_schema.json"
+      ]
+    },
+    {
+      "id": "phase_5",
+      "name": "Runtime & UI System",
+      "files": [
+        "frontend_bridge.json",
+        "ui_manifest.json",
+        "api_bridge.json"
+      ]
+    },
+    {
+      "id": "phase_6",
+      "name": "Deployment & System Enforcement",
+      "files": [
+        "docker_spec.json",
+        "autoinstaller.json",
+        "env_loader.json",
+        "runtime_enforcer.json"
+      ]
+    },
+    {
+      "id": "phase_7",
+      "name": "Developer Toolkit & IDE",
+      "files": [
+        "folder_layout.json",
+        "test_recipe.json",
+        "cli_toolkit.json",
+        "kos_manual.json",
+        "plugin_template.json",
+        "alignment_recipe.json",
+        "deployment_blueprint.json",
+        "ide_integration.json"
+      ]
+    }
+  ]
+} 

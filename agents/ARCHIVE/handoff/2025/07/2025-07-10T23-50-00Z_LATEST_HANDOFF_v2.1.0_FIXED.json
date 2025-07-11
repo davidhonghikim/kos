@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "kOS Project Handoff for Next Agent - CI/CD Verification Complete, Dependencies Need Resolution",
+    "version": "2.1.0",
+    "created_by": "Claude Sonnet 4 - kOS CI/CD Verification Specialist",
+    "handoff_timestamp": "2025-07-10T23:50:00Z",
+    "archived_timestamp": "2025-07-10T23:50:00Z",
+    "status": "ARCHIVED",
+    "purpose": "Complete CI/CD verification and resolve missing dependencies for full pipeline functionality"
+  },
+  "project_context": {
+    "project": "kOS (Kind-AI Operating System)",
+    "foundation": "ai-Q kitchen/pantry system, Griot KLF protocol, kai-cd frontend, chatdemon chat concepts",
+    "documentation": "JSON-only, ISO 8601 timestamps, comprehensive handoff system",
+    "current_phase": "CI/CD_VERIFICATION_AND_DEPENDENCY_RESOLUTION"
+  },
+  "completed_work": {
+    "ci_cd_verification": [
+      "Verified CI/CD pipeline structure (.github/workflows/ci.yml, pr.yml, sync-to-gitea.yml)",
+      "Confirmed issue templates and PR template presence",
+      "Validated pre-commit hooks setup (.husky/pre-commit)",
+      "Verified all documentation is in JSON format (no stray Markdown)",
+      "Validated centralized config files (config/centralized_config.json, centralized_ports.json)",
+      "Confirmed environment variable management structure (env/ directory)",
+      "Validated JSON documentation files are properly formatted",
+      "Set up portable Node.js environment for local testing",
+      "Identified missing dependencies in node_modules"
+    ],
+    "environment_system": [
+      "Centralized port management (env/ports.env.example - 118 lines)",
+      "Local service configuration (env/local.env.example - 251 lines)",
+      "Cloud service configuration (env/cloud.env.example - 66 lines)",
+      "External API keys (env/api-keys.env.example - 69 lines)",
+      "Per-service advanced settings (env/settings/)"
+    ]
+  },
+  "blocked_items": [
+    "Jest testing framework not found in node_modules/.bin",
+    "Next.js build process requires complete dependency installation",
+    "Some npm scripts may need dependency resolution"
+  ],
+  "immediate_actions_required": {
+    "phase_1": {
+      "duration": "30 minutes",
+      "tasks": [
+        {
+          "task": "Complete dependency installation",
+          "description": "Run 'npm install' to install all missing dependencies including Jest, Next.js, and other testing tools",
+          "location": "Project root",
+          "template": "Use portable Node.js: nodejs-portable/node-v20.11.0-win-x64/npm.cmd install"
+        },
+        {
+          "task": "Verify Jest installation",
+          "description": "Confirm Jest is available in node_modules/.bin for running tests",
+          "location": "node_modules/.bin",
+          "template": "Check for jest.cmd and jest files"
+        }
+      ]
+    },
+    "phase_2": {
+      "duration": "1 hour",
+      "tasks": [
+        {
+          "task": "Run complete CI/CD verification",
+          "description": "Execute all npm scripts: test, lint, type-check, build to verify pipeline works",
+          "location": "Project root",
+          "template": "Use portable Node.js for all commands"
+        },
+        {
+          "task": "Validate GitHub Actions locally",
+          "description": "Test that all CI workflow steps can run successfully",
+          "location": ".github/workflows/",
+          "template": "Verify YAML syntax and script availability"
+        }
+      ]
+    }
+  },
+  "next_agent_instructions": [
+    "Complete dependency installation for full CI/CD testing",
+    "Final verification of all npm scripts (test, lint, build, type-check)",
+    "Address the 2,500+ hardcoded values issue in Docker files",
+    "Begin systematic implementation following established roadmap",
+    "Maintain zero technical debt policies throughout implementation"
+  ],
+  "critical_standards": {
+    "environment_variables": "NO HARDCODED VALUES - Use environment variables for all configuration",
+    "modular_code": "One task per file - keep files under 150 lines",
+    "centralized_systems": "Use centralized configuration and management",
+    "documentation": "JSON format for all documentation (no Markdown unless required)",
+    "testing": "90%+ test coverage required",
+    "performance": "Sub-200ms response times for API calls"
+  }
+} 

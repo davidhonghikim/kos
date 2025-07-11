@@ -1,0 +1,213 @@
+{
+  "metadata": {
+    "title": "kOS Contributing Guidelines",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T23:45:00Z",
+    "purpose": "Comprehensive guidelines for contributors to kOS project",
+    "audience": "AI agents and human developers"
+  },
+  "project_overview": {
+    "name": "kOS (Kind-AI Operating System)",
+    "description": "Comprehensive knowledge management and agent orchestration system",
+    "foundation": "Knowledge Library Framework (KLF)",
+    "key_principles": [
+      "No hardcoded values - use environment variables only",
+      "Modular architecture - 150-250 lines ideal, 300 max per file",
+      "Single responsibility - one task per file",
+      "JSON documentation for agents, Markdown for humans",
+      "90% test coverage required"
+    ]
+  },
+  "development_standards": {
+    "file_organization": {
+      "max_lines": {
+        "ideal": "150-250 lines",
+        "maximum": "300 lines",
+        "justification_required": "If over 300 lines, must be justified in comments"
+      },
+      "single_responsibility": "One clear purpose per file",
+      "naming_conventions": {
+        "files": "kebab-case (e.g., user-service.ts)",
+        "functions": "camelCase (e.g., getUserData)",
+        "classes": "PascalCase (e.g., UserService)",
+        "constants": "UPPER_SNAKE_CASE (e.g., API_BASE_URL)"
+      },
+      "modular_architecture": {
+        "principle": "Break large functionality into smaller, focused modules",
+        "benefits": [
+          "Easier testing and maintenance",
+          "Better code reusability",
+          "Clearer responsibility boundaries",
+          "Reduced cognitive load"
+        ]
+      }
+    },
+    "code_quality": {
+      "typescript": {
+        "strict_mode": "Required",
+        "type_hints": "Required for all functions",
+        "linting": "ESLint with TypeScript rules",
+        "formatting": "Prettier with project config"
+      },
+      "python": {
+        "type_hints": "Required for all functions",
+        "formatting": "Black with 100 character line length",
+        "linting": "Flake8 with project config",
+        "type_checking": "MyPy with strict mode"
+      },
+      "environment_variables": {
+        "rule": "NO HARDCODED VALUES",
+        "pattern": "Use KOS_ prefix for all variables",
+        "examples": {
+          "correct": "process.env.KOS_API_URL",
+          "incorrect": "'http://localhost:8000'"
+        }
+      }
+    },
+    "documentation_standards": {
+      "agent_documentation": {
+        "format": "JSON only",
+        "location": "docs/ directory",
+        "metadata": "Required with title, version, timestamp, purpose",
+        "structure": "Modular with clear sections"
+      },
+      "human_documentation": {
+        "format": "Markdown only",
+        "files": ["README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md"],
+        "purpose": "Human-readable guides and overviews"
+      },
+      "code_documentation": {
+        "inline_comments": "Required for complex logic",
+        "function_docs": "JSDoc for TypeScript, docstrings for Python",
+        "api_documentation": "OpenAPI 3.0 specifications in JSON"
+      }
+    }
+  },
+  "git_workflow": {
+    "branch_naming": {
+      "feature": "feature/description (e.g., feature/user-authentication)",
+      "fix": "fix/description (e.g., fix/login-bug)",
+      "docs": "docs/description (e.g., docs/api-documentation)",
+      "refactor": "refactor/description (e.g., refactor/user-service)"
+    },
+    "commit_messages": {
+      "format": "conventional commits",
+      "structure": "type(scope): description",
+      "types": [
+        "feat: New feature",
+        "fix: Bug fix",
+        "docs: Documentation",
+        "style: Formatting",
+        "refactor: Code refactoring",
+        "test: Adding tests",
+        "chore: Maintenance"
+      ],
+      "examples": [
+        "feat(auth): add JWT authentication system",
+        "fix(api): resolve user data loading issue",
+        "docs(readme): update installation instructions"
+      ]
+    },
+    "pull_request_process": {
+      "steps": [
+        "Create feature branch from main",
+        "Make changes following standards",
+        "Add tests for new functionality",
+        "Update documentation",
+        "Create PR with template",
+        "Ensure CI checks pass",
+        "Get code review approval",
+        "Merge to main"
+      ],
+      "requirements": [
+        "All tests passing",
+        "90% code coverage",
+        "No hardcoded values",
+        "Files under 300 lines",
+        "Documentation updated"
+      ]
+    }
+  },
+  "testing_requirements": {
+    "coverage": {
+      "minimum": "90%",
+      "target": "95%",
+      "exclusions": ["test files", "configuration files"]
+    },
+    "test_types": {
+      "unit_tests": "Required for all functions",
+      "integration_tests": "Required for APIs and services",
+      "end_to_end_tests": "Required for critical user flows"
+    },
+    "test_structure": {
+      "unit": "tests/unit/ - Individual function tests",
+      "integration": "tests/integration/ - Service integration tests",
+      "e2e": "tests/e2e/ - End-to-end workflow tests",
+      "fixtures": "tests/fixtures/ - Test data and mocks"
+    },
+    "running_tests": {
+      "all_tests": "npm test && pytest",
+      "coverage": "npm run test:coverage && pytest --cov=src",
+      "specific": "npm test -- --testPathPattern=user && pytest tests/test_user.py"
+    }
+  },
+  "development_setup": {
+    "prerequisites": [
+      "Node.js 18+",
+      "Python 3.10+",
+      "Docker and Docker Compose",
+      "Git"
+    ],
+    "initial_setup": [
+      "Clone repository",
+      "Install dependencies (npm install && pip install -r requirements.txt)",
+      "Copy environment files",
+      "Start development environment (docker-compose up -d)",
+      "Run tests to verify setup"
+    ],
+    "environment_files": {
+      "local": "env/local.env.example -> env/local.env",
+      "ports": "env/ports.env.example -> env/ports.env",
+      "api_keys": "env/api-keys.env.example -> env/api-keys.env"
+    }
+  },
+  "code_review_checklist": {
+    "before_submitting": [
+      "Code follows project standards",
+      "Tests pass with 90% coverage",
+      "No hardcoded values",
+      "Documentation updated",
+      "Environment variables documented",
+      "All files under 300 lines"
+    ],
+    "pull_request_checklist": [
+      "Clear description of changes",
+      "Tests added for new functionality",
+      "Documentation updated",
+      "No breaking changes (or clearly documented)",
+      "CI/CD pipeline passes",
+      "Code review completed"
+    ]
+  },
+  "getting_help": {
+    "resources": {
+      "issues": "GitHub issues for bugs and feature requests",
+      "discussions": "GitHub Discussions for questions",
+      "documentation": "docs/ directory for detailed guides",
+      "examples": "examples/ directory for usage examples"
+    },
+    "contact": {
+      "team": "kOS Development Team",
+      "repository": "GitHub repository issues and discussions"
+    }
+  },
+  "recognition": {
+    "contributor_recognition": [
+      "Project README",
+      "Release notes",
+      "Contributor hall of fame",
+      "GitHub contributors page"
+    ]
+  }
+} 

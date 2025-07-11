@@ -1,0 +1,32 @@
+{
+  "title": "kOS UI Runtime Manifest",
+  "description": "UI components and control hooks for rendering dynamic experiences driven by agent state.",
+  "version": "1.0.0",
+  "components": {
+    "chat_window": {
+      "binding": "chat",
+      "styling": "tailwind-compatible"
+    },
+    "log_console": {
+      "binding": "task_dispatch",
+      "display": "toggle-able panel"
+    },
+    "media_embed": {
+      "binding": "media_viewer",
+      "fullscreen": true
+    },
+    "input_area": {
+      "modes": ["text", "voice", "file"],
+      "auto_resize": true
+    },
+    "status_lights": {
+      "agent_state": "connected / working / failed",
+      "heartbeat_interval_ms": 2500
+    }
+  },
+  "events": {
+    "on_new_message": "scroll to bottom",
+    "on_error": "flash warning",
+    "on_agent_ready": "animate badge"
+  }
+} 

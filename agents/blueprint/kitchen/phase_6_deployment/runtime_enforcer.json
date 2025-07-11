@@ -1,0 +1,21 @@
+{
+  "title": "kOS Runtime Enforcer",
+  "description": "Ensures all runtime constraints, security policies, and system invariants are enforced during execution.",
+  "version": "1.0.0",
+  "constraints": {
+    "max_context_tokens": 30000,
+    "max_lines_per_task": 300,
+    "fail_fast": true,
+    "retry_limit": 2,
+    "enforce_json_output": true
+  },
+  "security": {
+    "vault_required": true,
+    "env_validation": true,
+    "audit_logging": true
+  },
+  "fallback": {
+    "on_constraint_violation": "halt_execution",
+    "on_security_breach": "lockdown"
+  }
+} 

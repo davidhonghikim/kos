@@ -1,0 +1,458 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-07-03T00:00:00Z",
+  "created_by": "Claude Sonnet 4 - Sonnet 4",
+  "converted_from": "E:\\kos\\ai-Q\\agents\\blueprint\\schemas\\project_configuration_schema.yml",
+  "conversion_timestamp": "2025-01-27T22:30:00Z",
+  "converter": "RobustYAMLToJSONConverter v1.0",
+  "purpose": "Defines the schema for all project configurations, ensuring compliance with zero-debt policies and enterprise standards.\n",
+  "configuration_schema": {
+    "project": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "pattern": "^[A-Za-z0-9_-]+$",
+        "description": "Project name (alphanumeric, hyphens, underscores only)"
+      },
+      "version": {
+        "type": "string",
+        "required": true,
+        "pattern": "^\\d+\\.\\d+\\.\\d+$",
+        "description": "Semantic version (x.y.z format)"
+      },
+      "description": {
+        "type": "string",
+        "required": true,
+        "min_length": 10,
+        "description": "Project description (minimum 10 characters)"
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "production": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "database_url": {
+              "type": "string",
+              "required": true,
+              "pattern": "^[a-zA-Z]+://.*$",
+              "description": "Production database connection string"
+            },
+            "api_endpoints": {
+              "type": "object",
+              "required": true,
+              "properties": {
+                "rag_service": {
+                  "type": "string",
+                  "required": true,
+                  "pattern": "^https?://.*$",
+                  "description": "RAG service endpoint"
+                },
+                "knowledge_graph": {
+                  "type": "string",
+                  "required": true,
+                  "pattern": "^https?://.*$",
+                  "description": "Knowledge graph service endpoint"
+                }
+              }
+            },
+            "security": {
+              "type": "object",
+              "required": true,
+              "properties": {
+                "encryption_key": {
+                  "type": "string",
+                  "required": true,
+                  "min_length": 32,
+                  "description": "Encryption key (minimum 32 characters)"
+                },
+                "jwt_secret": {
+                  "type": "string",
+                  "required": true,
+                  "min_length": 32,
+                  "description": "JWT secret (minimum 32 characters)"
+                }
+              }
+            }
+          }
+        },
+        "development": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "database_url": {
+              "type": "string",
+              "required": true,
+              "pattern": "^[a-zA-Z]+://.*$",
+              "description": "Development database connection string"
+            },
+            "api_endpoints": {
+              "type": "object",
+              "required": true,
+              "properties": {
+                "rag_service": {
+                  "type": "string",
+                  "required": true,
+                  "pattern": "^https?://.*$",
+                  "description": "RAG service endpoint"
+                },
+                "knowledge_graph": {
+                  "type": "string",
+                  "required": true,
+                  "pattern": "^https?://.*$",
+                  "description": "Knowledge graph service endpoint"
+                }
+              }
+            },
+            "security": {
+              "type": "object",
+              "required": true,
+              "properties": {
+                "encryption_key": {
+                  "type": "string",
+                  "required": true,
+                  "min_length": 32,
+                  "description": "Encryption key (minimum 32 characters)"
+                },
+                "jwt_secret": {
+                  "type": "string",
+                  "required": true,
+                  "min_length": 32,
+                  "description": "JWT secret (minimum 32 characters)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "feature_flags": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "system": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "rag_engine": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable RAG engine functionality"
+            },
+            "knowledge_graph": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable knowledge graph functionality"
+            },
+            "ai_agents": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable AI agents functionality"
+            },
+            "mobile_access": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable mobile access"
+            },
+            "home_automation": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable home automation features"
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "encryption_at_rest": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable encryption at rest"
+            },
+            "encryption_in_transit": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable encryption in transit"
+            },
+            "audit_logging": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable audit logging"
+            },
+            "access_control": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable access control"
+            }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "caching": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable caching"
+            },
+            "compression": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable compression"
+            },
+            "load_balancing": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable load balancing"
+            },
+            "auto_scaling": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable auto scaling"
+            }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "logging": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "level": {
+              "type": "string",
+              "required": true,
+              "enum": [
+                "DEBUG",
+                "INFO",
+                "WARN",
+                "ERROR"
+              ],
+              "description": "Logging level"
+            },
+            "format": {
+              "type": "string",
+              "required": true,
+              "enum": [
+                "JSON",
+                "TEXT"
+              ],
+              "description": "Log format"
+            },
+            "retention_days": {
+              "type": "integer",
+              "required": true,
+              "minimum": 30,
+              "maximum": 365,
+              "description": "Log retention period in days"
+            }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "collection_interval": {
+              "type": "integer",
+              "required": true,
+              "minimum": 1,
+              "maximum": 300,
+              "description": "Metrics collection interval in seconds"
+            },
+            "retention_days": {
+              "type": "integer",
+              "required": true,
+              "minimum": 7,
+              "maximum": 90,
+              "description": "Metrics retention period in days"
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable alerting"
+            },
+            "channels": {
+              "type": "array",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "EMAIL",
+                      "SLACK",
+                      "WEBHOOK"
+                    ],
+                    "description": "Alert channel type"
+                  },
+                  "endpoint": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Alert endpoint"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "production_only": {
+          "type": "boolean",
+          "required": true,
+          "description": "All tests must use production data and services"
+        },
+        "coverage_threshold": {
+          "type": "integer",
+          "required": true,
+          "minimum": 90,
+          "maximum": 100,
+          "description": "Minimum code coverage percentage"
+        },
+        "performance_benchmarks": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "response_time_ms": {
+              "type": "integer",
+              "required": true,
+              "maximum": 200,
+              "description": "Maximum response time in milliseconds"
+            },
+            "throughput_rps": {
+              "type": "integer",
+              "required": true,
+              "minimum": 1000,
+              "description": "Minimum throughput in requests per second"
+            }
+          }
+        },
+        "security_scanning": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable security scanning"
+            },
+            "scan_frequency": {
+              "type": "string",
+              "required": true,
+              "enum": [
+                "DAILY",
+                "WEEKLY",
+                "MONTHLY"
+              ],
+              "description": "Security scan frequency"
+            }
+          }
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "automation": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "ci_cd": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable CI/CD automation"
+            },
+            "rollback": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable automated rollback"
+            },
+            "blue_green": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable blue-green deployment"
+            }
+          }
+        },
+        "infrastructure": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "as_code": {
+              "type": "boolean",
+              "required": true,
+              "description": "Infrastructure defined as code"
+            },
+            "version_control": {
+              "type": "boolean",
+              "required": true,
+              "description": "Infrastructure in version control"
+            },
+            "environment_parity": {
+              "type": "boolean",
+              "required": true,
+              "description": "All environments identical"
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "health_checks": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable health checks"
+            },
+            "performance_monitoring": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable performance monitoring"
+            },
+            "security_monitoring": {
+              "type": "boolean",
+              "required": true,
+              "description": "Enable security monitoring"
+            }
+          }
+        }
+      }
+    }
+  },
+  "validation_rules": [
+    "All configurations must be version-controlled",
+    "No hardcoded secrets in configuration files",
+    "All sensitive data must be encrypted",
+    "All configurations must be validated against this schema",
+    "All changes must be peer-reviewed",
+    "All configurations must be documented"
+  ],
+  "compliance_requirements": [
+    "All configurations must follow zero-debt policies",
+    "All configurations must support production-only testing",
+    "All configurations must enable full observability",
+    "All configurations must support automated rollback",
+    "All configurations must include security controls"
+  ],
+  "conclusion": "This schema ensures all project configurations comply with zero-debt policies and enterprise standards. All configurations must be validated against this schema before deployment. "
+}

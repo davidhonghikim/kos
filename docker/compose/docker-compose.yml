@@ -2,64 +2,64 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
-    container_name: ai-q-postgres
+    image: ${KOS_POSTGRES_IMAGE:-postgres}:${KOS_POSTGRES_VERSION:-15-alpine}
+    container_name: ${KOS_POSTGRES_CONTAINER_NAME:-kos-postgres}
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-aiq_knowledge}
-      POSTGRES_USER: ${POSTGRES_USER:-aiq_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aiq_password}
-      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS:---auth-host=scram-sha-256}
+      POSTGRES_DB: ${KOS_POSTGRES_DB:-kos_knowledge}
+      POSTGRES_USER: ${KOS_POSTGRES_USER:-kos_user}
+      POSTGRES_PASSWORD: ${KOS_POSTGRES_PASSWORD:-kos_password}
+      POSTGRES_INITDB_ARGS: ${KOS_POSTGRES_INITDB_ARGS:---auth-host=scram-sha-256}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ${KOS_POSTGRES_VOLUME:-kos-postgres-data}:/var/lib/postgresql/data
+      - ${KOS_INIT_SCRIPTS_PATH:-../../init-scripts}:/docker-entrypoint-initdb.d
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${KOS_POSTGRES_EXTERNAL_PORT:-5432}:${KOS_POSTGRES_INTERNAL_PORT:-5432}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK:-kos-network}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aiq_user} -d ${POSTGRES_DB:-aiq_knowledge}"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "pg_isready -U ${KOS_POSTGRES_USER:-kos_user} -d ${KOS_POSTGRES_DB:-kos_knowledge}"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL:-30s}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT:-10s}
+      retries: ${KOS_HEALTH_CHECK_RETRIES:-3}
 
   redis:
-    image: redis:7-alpine
-    container_name: ai-q-redis
-    command: redis-server --appendonly yes
+    image: ${KOS_REDIS_IMAGE:-redis}:${KOS_REDIS_VERSION:-7-alpine}
+    container_name: ${KOS_REDIS_CONTAINER_NAME:-kos-redis}
+    command: ${KOS_REDIS_COMMAND:-redis-server --appendonly yes}
     volumes:
-      - redis_data:/data
+      - ${KOS_REDIS_VOLUME:-kos-redis-data}:/data
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${KOS_REDIS_EXTERNAL_PORT:-6379}:${KOS_REDIS_INTERNAL_PORT:-6379}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK:-kos-network}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: ${KOS_HEALTH_CHECK_INTERVAL:-30s}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT:-10s}
+      retries: ${KOS_HEALTH_CHECK_RETRIES:-3}
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: ai-q-elasticsearch
+    image: ${KOS_ELASTICSEARCH_IMAGE:-docker.elastic.co/elasticsearch/elasticsearch}:${KOS_ELASTICSEARCH_VERSION:-8.11.0}
+    container_name: ${KOS_ELASTICSEARCH_CONTAINER_NAME:-kos-elasticsearch}
     environment:
-      - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE:-single-node}
-      - xpack.security.enabled=${ELASTICSEARCH_XPACK_SECURITY_ENABLED:-true}
-      - ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD:-elastic}
+      - discovery.type=${KOS_ELASTICSEARCH_DISCOVERY_TYPE:-single-node}
+      - xpack.security.enabled=${KOS_ELASTICSEARCH_XPACK_SECURITY_ENABLED:-true}
+      - ES_JAVA_OPTS=${KOS_ELASTICSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
+      - ELASTIC_PASSWORD=${KOS_ELASTICSEARCH_PASSWORD:-elastic}
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
+      - ${KOS_ELASTICSEARCH_VOLUME:-kos-elasticsearch-data}:/usr/share/elasticsearch/data
     ports:
-      - "${ELASTICSEARCH_PORT:-9200}:9200"
-      - "${ELASTICSEARCH_CLUSTER_PORT:-9300}:9300"
+      - "${KOS_ELASTICSEARCH_EXTERNAL_PORT:-9200}:${KOS_ELASTICSEARCH_INTERNAL_PORT:-9200}"
+      - "${KOS_ELASTICSEARCH_CLUSTER_EXTERNAL_PORT:-9300}:${KOS_ELASTICSEARCH_CLUSTER_INTERNAL_PORT:-9300}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK:-kos-network}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD-SHELL", "curl -f http://${KOS_ELASTICSEARCH_HOST:-elasticsearch}:${KOS_ELASTICSEARCH_PORT:-9200}/_cluster/health || exit 1"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL:-30s}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT:-10s}
       retries: 5
 
   neo4j:
@@ -78,8 +78,8 @@ services:
       - neo4j_import:/var/lib/neo4j/import
       - neo4j_plugins:/plugins
     ports:
-      - "${NEO4J_BROWSER_PORT:-7474}:7474"
-      - "${NEO4J_BOLT_PORT:-7687}:7687"
+      - "${KOS_NEO4J_HTTP_EXTERNAL_PORT:-7474}:${KOS_NEO4J_HTTP_INTERNAL_PORT:-7474}"
+      - "${KOS_NEO4J_EXTERNAL_PORT:-7687}:${KOS_NEO4J_INTERNAL_PORT:-7687}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -102,7 +102,7 @@ services:
     volumes:
       - weaviate_data:/var/lib/weaviate
     ports:
-      - "${WEAVIATE_PORT:-8080}:8080"
+      - "${KOS_WEAVIATE_EXTERNAL_PORT:-8080}:${KOS_WEAVIATE_INTERNAL_PORT:-8080}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -121,12 +121,12 @@ services:
     volumes:
       - minio_data:/data
     ports:
-      - "${MINIO_API_PORT:-9000}:9000"
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+      - "${KOS_MINIO_EXTERNAL_PORT:-9000}:${KOS_MINIO_INTERNAL_PORT:-9000}"
+      - "${KOS_MINIO_CONSOLE_EXTERNAL_PORT:-9001}:${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
     networks:
       - ai-q-network
     restart: unless-stopped
-    command: server /data --console-address ":${MINIO_CONSOLE_PORT:-9001}"
+    command: server /data --console-address ":${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -144,7 +144,7 @@ services:
       - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
       - ENVIRONMENT=${ENVIRONMENT:-development}
     ports:
-      - "${API_PORT:-8000}:8000"
+      - "${KOS_API_EXTERNAL_PORT:-8000}:${KOS_API_INTERNAL_PORT:-8000}"
     volumes:
       - ./src:/app/src
       - ./config:/app/config
@@ -173,7 +173,7 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://api-server:8000}
       - NODE_ENV=${NODE_ENV:-development}
     ports:
-      - "${WEB_PORT:-3000}:3000"
+      - "${KOS_FRONTEND_EXTERNAL_PORT:-3000}:${KOS_FRONTEND_INTERNAL_PORT:-3000}"
     volumes:
       - ./src:/app/src
       - ./public:/app/public
@@ -197,7 +197,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
     ports:
-      - "${GRAFANA_PORT:-3001}:3000"
+      - "${KOS_GRAFANA_EXTERNAL_PORT:-3001}:${KOS_GRAFANA_INTERNAL_PORT:-3000}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -221,7 +221,7 @@ services:
       - prometheus_data:/prometheus
       - ./config/prometheus:/etc/prometheus
     ports:
-      - "${PROMETHEUS_PORT:-9090}:9090"
+      - "${KOS_PROMETHEUS_EXTERNAL_PORT:-9090}:${KOS_PROMETHEUS_INTERNAL_PORT:-9090}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -244,7 +244,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
     ports:
-      - "${CADVISOR_PORT:-8081}:8080"
+      - "${KOS_CADVISOR_EXTERNAL_PORT:-8081}:${KOS_CADVISOR_INTERNAL_PORT:-8080}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -259,14 +259,14 @@ services:
     image: automatic1111/stable-diffusion-webui:latest
     container_name: ai-q-automatic1111
     environment:
-      - COMMANDLINE_ARGS=--api --listen --port 7860 --enable-insecure-extension-access
+      - COMMANDLINE_ARGS=--api --listen --port ${KOS_AUTOMATIC1111_EXTERNAL_PORT:-7860} --enable-insecure-extension-access
       - REQS_FILE=requirements.txt
     volumes:
       - automatic1111_models:/app/models
       - automatic1111_outputs:/app/outputs
       - automatic1111_extensions:/app/extensions
     ports:
-      - "${AUTOMATIC1111_PORT:-7860}:7860"
+      - "${KOS_AUTOMATIC1111_EXTERNAL_PORT:-7860}:${KOS_AUTOMATIC1111_EXTERNAL_PORT:-7860}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -288,13 +288,13 @@ services:
     image: comfyanonymous/comfyui:latest
     container_name: ai-q-comfyui
     environment:
-      - COMFYUI_PORT=8188
+      - COMFYUI_PORT=${KOS_COMFYUI_EXTERNAL_PORT:-8188}
     volumes:
       - comfyui_models:/app/models
       - comfyui_outputs:/app/output
       - comfyui_custom_nodes:/app/custom_nodes
     ports:
-      - "${COMFYUI_PORT:-8188}:8188"
+      - "${KOS_COMFYUI_EXTERNAL_PORT:-8188}:${KOS_COMFYUI_EXTERNAL_PORT:-8188}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -329,7 +329,7 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
     ports:
-      - "${N8N_PORT:-5678}:5678"
+      - "${KOS_N8N_EXTERNAL_PORT:-5678}:${KOS_N8N_INTERNAL_PORT:-5678}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -344,14 +344,14 @@ services:
     image: penpot/penpot:latest
     container_name: ai-q-penpot
     environment:
-      - PENPOT_DATABASE_URI=${PENPOT_DATABASE_URI:-postgresql://penpot:penpot@postgres:5432/penpot}
-      - PENPOT_REDIS_URI=${PENPOT_REDIS_URI:-redis://redis:6379/0}
+      - PENPOT_DATABASE_URI=${PENPOT_DATABASE_URI:-postgresql://penpot:penpot@postgres:${KOS_POSTGRES_INTERNAL_PORT:-5432}/penpot}
+      - PENPOT_REDIS_URI=${PENPOT_REDIS_URI:-redis://redis:${KOS_REDIS_INTERNAL_PORT:-6379}/0}
       - PENPOT_SECRET_KEY=${PENPOT_SECRET_KEY:-your-secret-key}
       - PENPOT_PUBLIC_URI=${PENPOT_PUBLIC_URI:-http://localhost:9001}
     volumes:
       - penpot_data:/app/data
     ports:
-      - "${PENPOT_PORT:-9001}:80"
+      - "${KOS_PENPOT_EXTERNAL_PORT:-9001}:${KOS_PENPOT_INTERNAL_PORT:-80}"
     networks:
       - ai-q-network
     depends_on:
@@ -383,7 +383,7 @@ services:
       sh -c "pip install -r requirements.txt &&
              python -m uvicorn main:app --host 0.0.0.0 --port 8080"
     ports:
-      - "${HUGGINGFACE_PORT:-8082}:8080"
+      - "${KOS_HUGGINGFACE_EXTERNAL_PORT:-8082}:${KOS_HUGGINGFACE_INTERNAL_PORT:-8080}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -410,7 +410,7 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     ports:
-      - "11434:11434"
+      - "${KOS_OLLAMA_EXTERNAL_PORT:-11434}:${KOS_OLLAMA_INTERNAL_PORT:-11434}"
     networks:
       - ai-q-network
     restart: unless-stopped
@@ -452,8 +452,8 @@ services:
       - gitea_repos:/data/git/repositories
       - gitea_ssh:/data/git/.ssh
     ports:
-      - "${GITEA_PORT:-3002}:3000"
-      - "${GITEA_SSH_PORT:-222}:22"
+      - "${KOS_GITEA_EXTERNAL_PORT:-3002}:${KOS_GITEA_INTERNAL_PORT:-3000}"
+      - "${KOS_GITEA_SSH_EXTERNAL_PORT:-222}:${KOS_GITEA_SSH_INTERNAL_PORT:-22}"
     networks:
       - ai-q-network
     restart: unless-stopped

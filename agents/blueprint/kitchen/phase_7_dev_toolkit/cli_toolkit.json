@@ -1,0 +1,11 @@
+{
+  "title": "kOS CLI Toolkit",
+  "description": "Command-line interface toolkit for interacting with kOS agents, recipes, and runtime.",
+  "version": "1.0.0",
+  "commands": [
+    { "name": "run-recipe", "description": "Execute a recipe by ID", "args": ["recipe_id"] },
+    { "name": "list-agents", "description": "List all registered agents" },
+    { "name": "show-logs", "description": "Display recent runtime logs" },
+    { "name": "validate-recipe", "description": "Validate recipe structure and schema", "args": ["recipe_id"] }
+  ]
+} 

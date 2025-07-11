@@ -1,0 +1,22 @@
+{
+  "title": "kOS Docker Spec",
+  "description": "Docker container system specification for kOS deployment, including all required services and volumes.",
+  "version": "1.0.0",
+  "services": [
+    "ollama",
+    "weaviate",
+    "mongodb",
+    "n8n",
+    "frontend",
+    "vault"
+  ],
+  "volumes": [
+    "/data",
+    "/vault",
+    "/runtime/kitchen/tmp"
+  ],
+  "env_files": [
+    ".env"
+  ],
+  "entrypoint": "kos_main.py"
+} 

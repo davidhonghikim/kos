@@ -1,0 +1,33 @@
+{
+  "title": "kOS Memory Configuration",
+  "description": "Mounts local and vector memory for context recall, traceability, and semantic access.",
+  "version": "1.0.0",
+  "layers": {
+    "short_term": {
+      "type": "local_buffer",
+      "storage": "/tmp/kos_session_cache",
+      "ttl_seconds": 600
+    },
+    "long_term": {
+      "type": "weaviate",
+      "host": "http://localhost:8080",
+      "schema": "kos_vector_schema.json"
+    },
+    "narrative": {
+      "type": "archive_index",
+      "handler": "griot_indexer",
+      "store": "/vault/memory/chronicle.db"
+    }
+  },
+  "controls": {
+    "allow_write": true,
+    "allow_delete": false,
+    "autosync_on_boot": true,
+    "flush_on_shutdown": false
+  },
+  "limits": {
+    "max_token_context": 30000,
+    "entry_max_tokens": 4000,
+    "retention_days": 180
+  }
+} 

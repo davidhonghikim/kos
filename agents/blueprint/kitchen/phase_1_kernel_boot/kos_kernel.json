@@ -1,0 +1,41 @@
+{
+  "title": "kOS Kernel",
+  "description": "Core runtime control system that orchestrates agents, executes tasks, and manages deterministic loop execution.",
+  "version": "1.0.0",
+  "components": {
+    "init": "boot_loop.json",
+    "scheduler": "loop_schedule",
+    "validator": "registry_validator",
+    "task_executor": "task_router",
+    "memory_engine": "memory_config.json",
+    "vault_link": "vault_config.json"
+  },
+  "modes": {
+    "sync": true,
+    "async": true,
+    "dry_run": true,
+    "audit": true
+  },
+  "defaults": {
+    "max_context_tokens": 30000,
+    "max_lines_per_task": 300,
+    "fail_fast": true,
+    "retry_limit": 2
+  },
+  "signals": {
+    "on_task_start": "log/task_start",
+    "on_task_complete": "log/task_done",
+    "on_error": "log/error_trigger",
+    "on_mismatch": "enforcer/rollback"
+  },
+  "control": {
+    "pause": "user/override",
+    "stop": "system/halt",
+    "force_reboot": "boot_loop/restart"
+  },
+  "integration": {
+    "IDE": "ide_integration.json",
+    "CLI": "cli_toolkit.json",
+    "Docs": "kos_manual.json"
+  }
+} 

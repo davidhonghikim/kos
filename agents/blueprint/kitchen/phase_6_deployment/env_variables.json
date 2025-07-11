@@ -1,0 +1,31 @@
+{
+  "title": "kOS Environment Variable Map",
+  "description": "Canonical list of required and optional environment variables for each module and agent class.",
+  "version": "1.0.0",
+  "vars": {
+    "KOS_MASTER_KEY": {
+      "required": true,
+      "description": "Master AES key used to unlock the vault"
+    },
+    "OLLAMA_API_HOST": {
+      "required": true,
+      "default": "http://localhost:11434"
+    },
+    "WEAVIATE_HOST": {
+      "required": true,
+      "default": "http://localhost:8080"
+    },
+    "MONGODB_URI": {
+      "required": true,
+      "description": "Primary state + memory store"
+    },
+    "N8N_API_KEY": {
+      "required": false,
+      "description": "Used if agent triggers workflow orchestrator"
+    },
+    "LOG_LEVEL": {
+      "required": false,
+      "default": "INFO"
+    }
+  }
+} 

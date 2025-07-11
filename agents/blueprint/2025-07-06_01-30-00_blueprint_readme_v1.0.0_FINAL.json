@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-07-06T01:30:00Z",
+    "created_by": "Claude Sonnet 4",
+    "purpose": "Main project documentation for AI-Q Knowledge Library System"
+  },
+  "project": {
+    "name": "AI-Q Knowledge Library System",
+    "description": "A comprehensive knowledge management system with dual-representation storage (structured YAML and unstructured RAG), providing unified access through intelligent retrieval and AI-driven orchestration.",
+    "version": "1.0.0",
+    "status": "Development Phase",
+    "technology_stack": [
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "PostgreSQL",
+      "Redis",
+      "Neo4j",
+      "Weaviate",
+      "Elasticsearch",
+      "Docker"
+    ]
+  },
+  "features": {
+    "core_capabilities": [
+      "Unified knowledge management across all kOS components",
+      "Intelligent content organization and retrieval",
+      "AI-powered knowledge discovery and insights",
+      "Scalable architecture supporting millions of artifacts",
+      "Cross-platform compatibility and enterprise distribution"
+    ],
+    "ai_features": [
+      "Semantic search across all content",
+      "Related content recommendations",
+      "Knowledge gap identification",
+      "Trend analysis and insights",
+      "Cross-domain knowledge synthesis"
+    ],
+    "content_management": [
+      "Multi-format content support (PDF, DOC, TXT, MD, YAML, JSON)",
+      "Automatic content categorization and tagging",
+      "Relationship discovery and mapping",
+      "Version control and history tracking",
+      "Quality assessment and scoring"
+    ]
+  },
+  "architecture": {
+    "design_pattern": "Modular Microservices",
+    "components": {
+      "api_gateway": "Central API entry point with authentication and routing",
+      "knowledge_storage": "Centralized storage for all knowledge artifacts",
+      "rag_engine": "Retrieval-Augmented Generation system for intelligent search",
+      "content_processor": "Automated content analysis and organization",
+      "relationship_manager": "Knowledge graph and relationship management"
+    },
+    "data_storage": {
+      "postgresql": "Primary relational database for structured data",
+      "redis": "Caching and session management",
+      "neo4j": "Graph database for relationship management",
+      "weaviate": "Vector database for semantic search",
+      "elasticsearch": "Full-text search and indexing"
+    }
+  },
+  "quick_start": {
+    "prerequisites": [
+      "Node.js 18+",
+      "Docker and Docker Compose",
+      "Git"
+    ],
+    "installation": [
+      "Clone the repository: git clone [repository-url]",
+      "Navigate to project: cd ai-Q",
+      "Install dependencies: npm install",
+      "Start services: docker-compose up -d",
+      "Start development server: npm run dev"
+    ],
+    "verification": [
+      "Health check: http://localhost:8000/health",
+      "API status: http://localhost:8000/api/status",
+      "System metrics: http://localhost:8000/api/system/metrics"
+    ]
+  },
+  "development": {
+    "setup": {
+      "install_dependencies": "npm install",
+      "setup_environment": "cp .env.example .env",
+      "start_services": "docker-compose up -d",
+      "run_migrations": "npm run migrate",
+      "start_development": "npm run dev"
+    },
+    "testing": {
+      "unit_tests": "npm run test:unit",
+      "integration_tests": "npm run test:integration",
+      "e2e_tests": "npm run test:e2e",
+      "coverage": "npm run test:coverage"
+    },
+    "building": {
+      "build": "npm run build",
+      "build_docker": "docker-compose build",
+      "production_build": "npm run build:prod"
+    }
+  },
+  "api_documentation": {
+    "base_url": "http://localhost:8000",
+    "authentication": "JWT-based authentication",
+    "rate_limiting": "100 requests per minute per IP",
+    "endpoints": {
+      "knowledge": "/api/knowledge",
+      "rag": "/api/rag",
+      "system": "/api/system"
+    },
+    "documentation": "http://localhost:8000/api/docs"
+  },
+  "configuration": {
+    "environment_variables": {
+      "NODE_ENV": "Environment (development/production)",
+      "PORT": "Server port (default: 8000)",
+      "DATABASE_URL": "PostgreSQL connection string",
+      "REDIS_URL": "Redis connection string",
+      "JWT_SECRET": "JWT signing secret",
+      "LOG_LEVEL": "Logging level (info/debug/warn/error)"
+    },
+    "feature_flags": {
+      "ENABLE_RAG": "Enable RAG engine functionality",
+      "ENABLE_KNOWLEDGE_GRAPH": "Enable knowledge graph features",
+      "ENABLE_VECTOR_SEARCH": "Enable vector search capabilities",
+      "ENABLE_OBJECT_STORAGE": "Enable object storage features"
+    }
+  },
+  "deployment": {
+    "docker": {
+      "development": "docker-compose up -d",
+      "production": "docker-compose -f docker-compose.prod.yml up -d"
+    },
+    "kubernetes": {
+      "deploy": "kubectl apply -f k8s/",
+      "monitoring": "kubectl apply -f k8s/monitoring/"
+    },
+    "environment_variables": "Set all required environment variables for target environment"
+  },
+  "monitoring": {
+    "health_checks": [
+      "http://localhost:8000/health",
+      "http://localhost:8000/api/system/health"
+    ],
+    "metrics": "http://localhost:8000/api/system/metrics",
+    "logs": "http://localhost:8000/api/system/logs",
+    "dashboard": "http://localhost:3000 (Grafana)"
+  },
+  "contributing": {
+    "guidelines": [
+      "Follow TypeScript coding standards",
+      "Write comprehensive tests",
+      "Update documentation for all changes",
+      "Use conventional commit messages",
+      "Ensure zero technical debt"
+    ],
+    "development_workflow": [
+      "Create feature branch from main",
+      "Make changes and write tests",
+      "Run all tests and linting",
+      "Submit pull request with description",
+      "Code review and approval required"
+    ]
+  },
+  "troubleshooting": {
+    "common_issues": {
+      "port_conflicts": "Check if required ports are available",
+      "database_connection": "Verify database credentials and connectivity",
+      "docker_issues": "Restart Docker service and rebuild containers",
+      "permission_errors": "Check file permissions and volume mounts"
+    },
+    "logs": {
+      "application": "logs/app.log",
+      "docker": "docker-compose logs [service-name]",
+      "system": "journalctl -u docker"
+    }
+  },
+  "license": "MIT License",
+  "support": {
+    "documentation": "See docs/ directory for detailed documentation",
+    "issues": "Report issues via GitHub Issues",
+    "discussions": "Use GitHub Discussions for questions and ideas"
+  }
+} 

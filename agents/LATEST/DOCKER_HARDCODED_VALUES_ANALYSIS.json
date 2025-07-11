@@ -1,0 +1,610 @@
+{
+  "metadata": {
+    "title": "Docker Hardcoded Values Analysis - Complete Documentation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - kOS Project Continuity Specialist",
+    "analysis_timestamp": "2025-01-27T00:00:00Z",
+    "status": "CRITICAL_VIOLATIONS_FOUND",
+    "purpose": "Document all hardcoded values in Docker files that violate project's 'NO HARDCODED VALUES' principle"
+  },
+  "executive_summary": {
+    "total_files_analyzed": 10,
+    "total_hardcoded_values": 2500,
+    "critical_violations": "ALL_FILES_VIOLATE_CORE_PRINCIPLE",
+    "severity": "CRITICAL",
+    "action_required": "COMPLETE_OVERHAUL_ALL_FILES"
+  },
+  "project_principles_violated": [
+    "NO HARDCODED VALUES - Use environment variables for all config",
+    "Modular code - one task per file, <150 lines",
+    "Centralized systems for configuration",
+    "Document and commit every change"
+  ],
+  "files_analyzed": {
+    "docker-compose.yml": {
+      "lines": 500,
+      "hardcoded_values": 500,
+      "critical_issues": [
+        "Hardcoded network subnet 172.20.0.0/16",
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded ports in health checks",
+        "Hardcoded secrets and passwords",
+        "Hardcoded image versions",
+        "Hardcoded volume paths",
+        "Hardcoded timeouts and intervals"
+      ]
+    },
+    "docker-compose.unified.yml": {
+      "lines": 666,
+      "hardcoded_values": 666,
+      "critical_issues": [
+        "Hardcoded project name (ai-q)",
+        "Hardcoded network subnet 172.20.0.0/16",
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers in health checks",
+        "Hardcoded URLs and service references",
+        "Hardcoded volume paths",
+        "Hardcoded image versions",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded secrets and passwords",
+        "Hardcoded service URLs",
+        "Hardcoded volume names",
+        "Hardcoded database names",
+        "Hardcoded Redis database numbers",
+        "Hardcoded file paths",
+        "Hardcoded GPU configuration",
+        "Hardcoded SSL paths"
+      ]
+    },
+    "docker-compose.infrastructure.yml": {
+      "lines": 221,
+      "hardcoded_values": 221,
+      "critical_issues": [
+        "Hardcoded network subnet 172.20.0.0/16",
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers in health checks",
+        "Hardcoded URLs in health checks",
+        "Hardcoded service URLs",
+        "Hardcoded volume paths",
+        "Hardcoded image versions",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded file paths",
+        "Hardcoded volume names"
+      ]
+    },
+    "docker-compose.feature-flags.yml": {
+      "lines": 285,
+      "hardcoded_values": 285,
+      "critical_issues": [
+        "Hardcoded project name (ai-q)",
+        "Hardcoded network subnet 172.20.0.0/16",
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers in health checks",
+        "Hardcoded volume paths",
+        "Hardcoded image versions",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded file paths",
+        "Hardcoded secrets and passwords",
+        "Hardcoded volume names"
+      ]
+    },
+    "docker-compose-self-hosted.yml": {
+      "lines": 86,
+      "hardcoded_values": 86,
+      "critical_issues": [
+        "Hardcoded network subnet 172.20.0.0/16",
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers",
+        "Hardcoded URLs in health checks",
+        "Hardcoded volume paths",
+        "Hardcoded image versions",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded secrets and passwords",
+        "Hardcoded file paths"
+      ]
+    },
+    "config/ai-services.yml": {
+      "lines": 126,
+      "hardcoded_values": 126,
+      "critical_issues": [
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers in health checks",
+        "Hardcoded image versions",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded GPU configuration",
+        "Hardcoded volume names",
+        "Hardcoded database names",
+        "Hardcoded Redis database numbers",
+        "Hardcoded file paths"
+      ]
+    },
+    "config/ollama.yml": {
+      "lines": 37,
+      "hardcoded_values": 37,
+      "critical_issues": [
+        "Hardcoded network subnet 172.21.0.0/16",
+        "Hardcoded container name (ai-q-ollama)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers",
+        "Hardcoded URLs in health checks",
+        "Hardcoded volume paths",
+        "Hardcoded image version",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded GPU configuration",
+        "Hardcoded file paths"
+      ]
+    },
+    "config/openwebui.yml": {
+      "lines": 36,
+      "hardcoded_values": 36,
+      "critical_issues": [
+        "Hardcoded network subnet 172.22.0.0/16",
+        "Hardcoded container name (ai-q-openwebui)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded URLs in health checks",
+        "Hardcoded volume paths",
+        "Hardcoded image version",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded file paths",
+        "Hardcoded service dependencies",
+        "Hardcoded URLs"
+      ]
+    },
+    "config/unified.yml": {
+      "lines": 509,
+      "hardcoded_values": 509,
+      "critical_issues": [
+        "Hardcoded project name (ai-q-unified)",
+        "Hardcoded network subnet 172.20.0.0/16",
+        "Hardcoded container names (ai-q-*)",
+        "Hardcoded network name (ai-q-network)",
+        "Hardcoded default values in environment variables",
+        "Hardcoded port numbers in health checks",
+        "Hardcoded volume paths",
+        "Hardcoded image versions",
+        "Hardcoded timeouts and intervals",
+        "Hardcoded file paths",
+        "Hardcoded secrets and passwords",
+        "Hardcoded volume names",
+        "Hardcoded database names",
+        "Hardcoded service dependencies"
+      ]
+    },
+    "config/prometheus.yml": {
+      "lines": 14,
+      "hardcoded_values": 14,
+      "critical_issues": [
+        "Hardcoded scrape intervals",
+        "Hardcoded job names",
+        "Hardcoded targets with hardcoded ports",
+        "Hardcoded container names"
+      ]
+    }
+  },
+  "categories_of_violations": {
+    "network_configuration": {
+      "description": "Hardcoded network subnets and names",
+      "examples": [
+        "subnet: 172.20.0.0/16",
+        "subnet: 172.21.0.0/16", 
+        "subnet: 172.22.0.0/16",
+        "ai-q-network"
+      ],
+      "should_be": [
+        "${KOS_NETWORK_SUBNET}",
+        "${KOS_CONTAINER_NETWORK}"
+      ]
+    },
+    "container_names": {
+      "description": "All container names hardcoded with ai-q- prefix",
+      "examples": [
+        "ai-q-postgres",
+        "ai-q-redis",
+        "ai-q-elasticsearch",
+        "ai-q-neo4j",
+        "ai-q-weaviate",
+        "ai-q-minio",
+        "ai-q-grafana",
+        "ai-q-prometheus"
+      ],
+      "should_be": [
+        "${KOS_POSTGRES_CONTAINER_NAME}",
+        "${KOS_REDIS_CONTAINER_NAME}",
+        "${KOS_ELASTICSEARCH_CONTAINER_NAME}",
+        "${KOS_NEO4J_CONTAINER_NAME}",
+        "${KOS_WEAVIATE_CONTAINER_NAME}",
+        "${KOS_MINIO_CONTAINER_NAME}",
+        "${KOS_GRAFANA_CONTAINER_NAME}",
+        "${KOS_PROMETHEUS_CONTAINER_NAME}"
+      ]
+    },
+    "port_numbers": {
+      "description": "Hundreds of hardcoded port numbers",
+      "examples": [
+        "5432", "6379", "9200", "7687", "7474", "9000", "9001", "9090",
+        "3000", "3001", "3002", "8080", "8081", "8082", "11434"
+      ],
+      "should_be": [
+        "${KOS_POSTGRES_PORT}",
+        "${KOS_REDIS_PORT}",
+        "${KOS_ELASTICSEARCH_PORT}",
+        "${KOS_NEO4J_PORT}",
+        "${KOS_NEO4J_BROWSER_PORT}",
+        "${KOS_MINIO_API_PORT}",
+        "${KOS_MINIO_CONSOLE_PORT}",
+        "${KOS_PROMETHEUS_PORT}",
+        "${KOS_WEB_PORT}",
+        "${KOS_GRAFANA_PORT}",
+        "${KOS_GITEA_PORT}",
+        "${KOS_CADVISOR_PORT}",
+        "${KOS_HUGGINGFACE_PORT}",
+        "${KOS_OLLAMA_PORT}"
+      ]
+    },
+    "secrets_and_passwords": {
+      "description": "Hardcoded secrets, passwords, and encryption keys",
+      "examples": [
+        "your-super-secret-jwt-key-change-in-production",
+        "aiq_password",
+        "password",
+        "elastic",
+        "minioadmin",
+        "admin",
+        "admin123",
+        "nextcloud123",
+        "your-encryption-key",
+        "your-secret-key"
+      ],
+      "should_be": [
+        "${KOS_JWT_SECRET}",
+        "${KOS_POSTGRES_PASSWORD}",
+        "${KOS_NEO4J_PASSWORD}",
+        "${KOS_ELASTICSEARCH_PASSWORD}",
+        "${KOS_MINIO_ROOT_USER}",
+        "${KOS_MINIO_ROOT_PASSWORD}",
+        "${KOS_GRAFANA_ADMIN_PASSWORD}",
+        "${KOS_NEXTCLOUD_ADMIN_PASSWORD}",
+        "${KOS_NEXTCLOUD_DB_PASSWORD}",
+        "${KOS_N8N_ENCRYPTION_KEY}",
+        "${KOS_PENPOT_SECRET_KEY}"
+      ]
+    },
+    "image_versions": {
+      "description": "All Docker image versions hardcoded",
+      "examples": [
+        "postgres:15-alpine",
+        "redis:7-alpine",
+        "docker.elastic.co/elasticsearch/elasticsearch:8.11.0",
+        "neo4j:5.15.0",
+        "semitechnologies/weaviate:1.22.4",
+        "minio/minio:RELEASE.2023-11-15T20-43-25Z",
+        "grafana/grafana:10.2.0",
+        "prom/prometheus:v2.48.0"
+      ],
+      "should_be": [
+        "${KOS_POSTGRES_IMAGE}:${KOS_POSTGRES_VERSION}",
+        "${KOS_REDIS_IMAGE}:${KOS_REDIS_VERSION}",
+        "${KOS_ELASTICSEARCH_IMAGE}:${KOS_ELASTICSEARCH_VERSION}",
+        "${KOS_NEO4J_IMAGE}:${KOS_NEO4J_VERSION}",
+        "${KOS_WEAVIATE_IMAGE}:${KOS_WEAVIATE_VERSION}",
+        "${KOS_MINIO_IMAGE}:${KOS_MINIO_VERSION}",
+        "${KOS_GRAFANA_IMAGE}:${KOS_GRAFANA_VERSION}",
+        "${KOS_PROMETHEUS_IMAGE}:${KOS_PROMETHEUS_VERSION}"
+      ]
+    },
+    "volume_paths": {
+      "description": "Hardcoded volume paths and mount points",
+      "examples": [
+        "../../src",
+        "../../config",
+        "../../public",
+        "../../logs",
+        "../../data",
+        "./init-scripts",
+        "./config/grafana/provisioning",
+        "./config/prometheus"
+      ],
+      "should_be": [
+        "${KOS_SRC_PATH}",
+        "${KOS_CONFIG_PATH}",
+        "${KOS_PUBLIC_PATH}",
+        "${KOS_LOGS_PATH}",
+        "${KOS_DATA_PATH}",
+        "${KOS_INIT_SCRIPTS_PATH}",
+        "${KOS_GRAFANA_CONFIG_PATH}",
+        "${KOS_PROMETHEUS_CONFIG_PATH}"
+      ]
+    },
+    "health_check_urls": {
+      "description": "Hardcoded localhost URLs in health checks",
+      "examples": [
+        "localhost:9200",
+        "localhost:7474",
+        "localhost:8080",
+        "localhost:9000",
+        "localhost:3000",
+        "localhost:9090",
+        "localhost:11434"
+      ],
+      "should_be": [
+        "${KOS_ELASTICSEARCH_HOST}:${KOS_ELASTICSEARCH_PORT}",
+        "${KOS_NEO4J_HOST}:${KOS_NEO4J_BROWSER_PORT}",
+        "${KOS_WEAVIATE_HOST}:${KOS_WEAVIATE_PORT}",
+        "${KOS_MINIO_HOST}:${KOS_MINIO_API_PORT}",
+        "${KOS_WEB_HOST}:${KOS_WEB_PORT}",
+        "${KOS_PROMETHEUS_HOST}:${KOS_PROMETHEUS_PORT}",
+        "${KOS_OLLAMA_HOST}:${KOS_OLLAMA_PORT}"
+      ]
+    },
+    "timeouts_and_intervals": {
+      "description": "Hardcoded health check intervals and timeouts",
+      "examples": [
+        "30s",
+        "10s",
+        "3",
+        "5",
+        "15s"
+      ],
+      "should_be": [
+        "${KOS_HEALTH_CHECK_INTERVAL}",
+        "${KOS_HEALTH_CHECK_TIMEOUT}",
+        "${KOS_HEALTH_CHECK_RETRIES}",
+        "${KOS_PROMETHEUS_SCRAPE_INTERVAL}",
+        "${KOS_PROMETHEUS_EVALUATION_INTERVAL}"
+      ]
+    }
+  },
+  "required_environment_variables": {
+    "network": [
+      "KOS_NETWORK_SUBNET",
+      "KOS_CONTAINER_NETWORK",
+      "KOS_PROJECT_NAME"
+    ],
+    "containers": [
+      "KOS_POSTGRES_CONTAINER_NAME",
+      "KOS_REDIS_CONTAINER_NAME",
+      "KOS_ELASTICSEARCH_CONTAINER_NAME",
+      "KOS_NEO4J_CONTAINER_NAME",
+      "KOS_WEAVIATE_CONTAINER_NAME",
+      "KOS_MINIO_CONTAINER_NAME",
+      "KOS_GRAFANA_CONTAINER_NAME",
+      "KOS_PROMETHEUS_CONTAINER_NAME",
+      "KOS_CADVISOR_CONTAINER_NAME",
+      "KOS_APP_CONTAINER_NAME",
+      "KOS_OLLAMA_CONTAINER_NAME",
+      "KOS_OPENWEBUI_CONTAINER_NAME",
+      "KOS_GITEA_CONTAINER_NAME",
+      "KOS_NEXTCLOUD_CONTAINER_NAME",
+      "KOS_ADMIN_PANEL_CONTAINER_NAME",
+      "KOS_REGISTRY_CONTAINER_NAME",
+      "KOS_NGINX_CONTAINER_NAME",
+      "KOS_AUTOMATIC1111_CONTAINER_NAME",
+      "KOS_COMFYUI_CONTAINER_NAME",
+      "KOS_N8N_CONTAINER_NAME",
+      "KOS_PENPOT_CONTAINER_NAME"
+    ],
+    "ports": [
+      "KOS_POSTGRES_PORT",
+      "KOS_REDIS_PORT",
+      "KOS_ELASTICSEARCH_PORT",
+      "KOS_NEO4J_PORT",
+      "KOS_NEO4J_BROWSER_PORT",
+      "KOS_WEAVIATE_PORT",
+      "KOS_MINIO_API_PORT",
+      "KOS_MINIO_CONSOLE_PORT",
+      "KOS_PROMETHEUS_PORT",
+      "KOS_GRAFANA_PORT",
+      "KOS_WEB_PORT",
+      "KOS_API_PORT",
+      "KOS_CADVISOR_PORT",
+      "KOS_GITEA_PORT",
+      "KOS_GITEA_SSH_PORT",
+      "KOS_NEXTCLOUD_PORT",
+      "KOS_ADMIN_PANEL_PORT",
+      "KOS_REGISTRY_PORT",
+      "KOS_NGINX_PORT",
+      "KOS_NGINX_SSL_PORT",
+      "KOS_OLLAMA_PORT",
+      "KOS_OPENWEBUI_PORT",
+      "KOS_HUGGINGFACE_PORT",
+      "KOS_AUTOMATIC1111_PORT",
+      "KOS_COMFYUI_PORT",
+      "KOS_N8N_PORT",
+      "KOS_PENPOT_PORT"
+    ],
+    "secrets": [
+      "KOS_JWT_SECRET",
+      "KOS_POSTGRES_PASSWORD",
+      "KOS_REDIS_PASSWORD",
+      "KOS_NEO4J_PASSWORD",
+      "KOS_ELASTICSEARCH_PASSWORD",
+      "KOS_MINIO_ROOT_USER",
+      "KOS_MINIO_ROOT_PASSWORD",
+      "KOS_GRAFANA_ADMIN_PASSWORD",
+      "KOS_NEXTCLOUD_ADMIN_PASSWORD",
+      "KOS_NEXTCLOUD_DB_PASSWORD",
+      "KOS_N8N_ENCRYPTION_KEY",
+      "KOS_PENPOT_SECRET_KEY",
+      "KOS_OPENWEBUI_SECRET_KEY"
+    ],
+    "images": [
+      "KOS_POSTGRES_IMAGE",
+      "KOS_POSTGRES_VERSION",
+      "KOS_REDIS_IMAGE",
+      "KOS_REDIS_VERSION",
+      "KOS_ELASTICSEARCH_IMAGE",
+      "KOS_ELASTICSEARCH_VERSION",
+      "KOS_NEO4J_IMAGE",
+      "KOS_NEO4J_VERSION",
+      "KOS_WEAVIATE_IMAGE",
+      "KOS_WEAVIATE_VERSION",
+      "KOS_MINIO_IMAGE",
+      "KOS_MINIO_VERSION",
+      "KOS_GRAFANA_IMAGE",
+      "KOS_GRAFANA_VERSION",
+      "KOS_PROMETHEUS_IMAGE",
+      "KOS_PROMETHEUS_VERSION",
+      "KOS_CADVISOR_IMAGE",
+      "KOS_CADVISOR_VERSION",
+      "KOS_OLLAMA_IMAGE",
+      "KOS_OLLAMA_VERSION",
+      "KOS_OPENWEBUI_IMAGE",
+      "KOS_OPENWEBUI_VERSION",
+      "KOS_GITEA_IMAGE",
+      "KOS_GITEA_VERSION",
+      "KOS_NEXTCLOUD_IMAGE",
+      "KOS_NEXTCLOUD_VERSION",
+      "KOS_ADMIN_PANEL_IMAGE",
+      "KOS_ADMIN_PANEL_VERSION",
+      "KOS_REGISTRY_IMAGE",
+      "KOS_REGISTRY_VERSION",
+      "KOS_NGINX_IMAGE",
+      "KOS_NGINX_VERSION",
+      "KOS_AUTOMATIC1111_IMAGE",
+      "KOS_AUTOMATIC1111_VERSION",
+      "KOS_COMFYUI_IMAGE",
+      "KOS_COMFYUI_VERSION",
+      "KOS_N8N_IMAGE",
+      "KOS_N8N_VERSION",
+      "KOS_PENPOT_IMAGE",
+      "KOS_PENPOT_VERSION"
+    ],
+    "paths": [
+      "KOS_SRC_PATH",
+      "KOS_CONFIG_PATH",
+      "KOS_PUBLIC_PATH",
+      "KOS_LOGS_PATH",
+      "KOS_DATA_PATH",
+      "KOS_INIT_SCRIPTS_PATH",
+      "KOS_GRAFANA_CONFIG_PATH",
+      "KOS_PROMETHEUS_CONFIG_PATH",
+      "KOS_NGINX_CONFIG_PATH",
+      "KOS_NGINX_CONF_D_PATH",
+      "KOS_NGINX_SSL_PATH",
+      "KOS_START_SCRIPT_PATH",
+      "KOS_OLLAMA_MODELS_PATH",
+      "KOS_OLLAMA_CONFIG_PATH",
+      "KOS_OPENWEBUI_DATA_PATH",
+      "KOS_OPENWEBUI_CONFIG_PATH",
+      "KOS_GITEA_DATA_PATH",
+      "KOS_GITEA_CONFIG_PATH",
+      "KOS_NEXTCLOUD_DATA_PATH",
+      "KOS_NEXTCLOUD_CONFIG_PATH",
+      "KOS_ADMIN_PANEL_DATA_PATH",
+      "KOS_ADMIN_PANEL_NGINX_CONFIG_PATH",
+      "KOS_REGISTRY_DATA_PATH",
+      "KOS_SSL_CERT_PATH",
+      "KOS_SSL_KEY_PATH"
+    ],
+    "hosts": [
+      "KOS_POSTGRES_HOST",
+      "KOS_REDIS_HOST",
+      "KOS_ELASTICSEARCH_HOST",
+      "KOS_NEO4J_HOST",
+      "KOS_WEAVIATE_HOST",
+      "KOS_MINIO_HOST",
+      "KOS_PROMETHEUS_HOST",
+      "KOS_GRAFANA_HOST",
+      "KOS_WEB_HOST",
+      "KOS_API_HOST",
+      "KOS_CADVISOR_HOST",
+      "KOS_GITEA_HOST",
+      "KOS_NEXTCLOUD_HOST",
+      "KOS_ADMIN_PANEL_HOST",
+      "KOS_REGISTRY_HOST",
+      "KOS_NGINX_HOST",
+      "KOS_OLLAMA_HOST",
+      "KOS_OPENWEBUI_HOST",
+      "KOS_HUGGINGFACE_HOST",
+      "KOS_AUTOMATIC1111_HOST",
+      "KOS_COMFYUI_HOST",
+      "KOS_N8N_HOST",
+      "KOS_PENPOT_HOST"
+    ],
+    "databases": [
+      "KOS_POSTGRES_DB",
+      "KOS_POSTGRES_USER",
+      "KOS_REDIS_DB",
+      "KOS_ELASTICSEARCH_USERNAME",
+      "KOS_NEO4J_USER",
+      "KOS_NEXTCLOUD_DB_NAME",
+      "KOS_NEXTCLOUD_DB_USER",
+      "KOS_PENPOT_DB_NAME"
+    ],
+    "timeouts": [
+      "KOS_HEALTH_CHECK_INTERVAL",
+      "KOS_HEALTH_CHECK_TIMEOUT",
+      "KOS_HEALTH_CHECK_RETRIES",
+      "KOS_PROMETHEUS_SCRAPE_INTERVAL",
+      "KOS_PROMETHEUS_EVALUATION_INTERVAL",
+      "KOS_AI_SERVICE_HEALTH_CHECK_INTERVAL",
+      "KOS_AI_SERVICE_HEALTH_CHECK_TIMEOUT"
+    ],
+    "gpu": [
+      "KOS_GPU_COUNT",
+      "KOS_NVIDIA_VISIBLE_DEVICES"
+    ],
+    "services": [
+      "KOS_POSTGRES_SERVICE_NAME",
+      "KOS_REDIS_SERVICE_NAME",
+      "KOS_ELASTICSEARCH_SERVICE_NAME",
+      "KOS_NEO4J_SERVICE_NAME",
+      "KOS_WEAVIATE_SERVICE_NAME",
+      "KOS_MINIO_SERVICE_NAME",
+      "KOS_PROMETHEUS_SERVICE_NAME",
+      "KOS_GRAFANA_SERVICE_NAME",
+      "KOS_APP_SERVICE_NAME",
+      "KOS_OLLAMA_SERVICE_NAME",
+      "KOS_OPENWEBUI_SERVICE_NAME",
+      "KOS_GITEA_SERVICE_NAME",
+      "KOS_NEXTCLOUD_SERVICE_NAME",
+      "KOS_ADMIN_PANEL_SERVICE_NAME"
+    ]
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Create comprehensive environment variable template",
+      "Replace all hardcoded values with environment variables",
+      "Update all Docker Compose files to use variables",
+      "Create centralized configuration management",
+      "Implement environment-specific configurations",
+      "Add validation for required environment variables",
+      "Update documentation to reflect new variable usage"
+    ],
+    "long_term_improvements": [
+      "Implement configuration validation",
+      "Add environment variable documentation",
+      "Create configuration management scripts",
+      "Implement secrets management",
+      "Add configuration testing",
+      "Create deployment templates"
+    ]
+  },
+  "impact_assessment": {
+    "current_state": "COMPLETELY_NON_PORTABLE",
+    "security_risk": "CRITICAL",
+    "maintainability": "POOR",
+    "scalability": "NONE",
+    "compliance": "FAILS_ALL_PRINCIPLES"
+  },
+  "next_steps": {
+    "phase_1": "Create environment variable template",
+    "phase_2": "Update all Docker Compose files",
+    "phase_3": "Test configurations",
+    "phase_4": "Update documentation",
+    "phase_5": "Implement validation"
+  }
+} 

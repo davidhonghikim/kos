@@ -1,0 +1,36 @@
+{
+  "title": "kOS Agent-UI Bridge",
+  "description": "Abstract layer that allows UIs (web, CLI, mobile) to interface consistently with the agent runtime.",
+  "version": "1.0.0",
+  "interfaces": {
+    "chat": {
+      "input_format": "text or JSON",
+      "output_format": "text, JSON, or HTML",
+      "live_typing": true
+    },
+    "task_dispatch": {
+      "input_format": "recipe_ref or freeform task",
+      "output_format": "streamed JSON or status updates"
+    },
+    "file_upload": {
+      "types": ["image", "pdf", "audio", "midi", "video"],
+      "max_size_mb": 250
+    },
+    "media_viewer": {
+      "support": ["2D", "audio", "video", "markdown", "HTML"],
+      "mode": "modal or inline"
+    }
+  },
+  "client_support": {
+    "web": true,
+    "mobile": true,
+    "browser_extension": true,
+    "cli": true
+  },
+  "config": {
+    "max_concurrent_sessions": 5,
+    "session_timeout_seconds": 1800,
+    "theme": "auto",
+    "user_locale_detection": true
+  }
+} 

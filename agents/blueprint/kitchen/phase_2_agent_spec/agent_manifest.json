@@ -1,0 +1,41 @@
+{
+  "title": "kOS Agent Manifest",
+  "description": "Live registry of all agents known to the current kOS Engine node and their operational metadata.",
+  "version": "1.0.0",
+  "agents": [
+    {
+      "id": "agent_griot",
+      "name": "Griot",
+      "role": "griot",
+      "capabilities": [
+        "storytelling", "narrative memory indexing", "conversation archiving"
+      ],
+      "traits": ["long_term_memory", "recall_timeline", "context_normalizer"],
+      "active": true
+    },
+    {
+      "id": "agent_chef",
+      "name": "Chef",
+      "role": "chef",
+      "capabilities": [
+        "recipe execution", "meal orchestration", "kitchen runtime"
+      ],
+      "traits": ["atomic_runner", "validator", "retry_safe"],
+      "active": true
+    },
+    {
+      "id": "agent_oracle",
+      "name": "Oracle",
+      "role": "oracle",
+      "capabilities": [
+        "semantic query", "rag dispatch", "embedding generator"
+      ],
+      "traits": ["rag_linked", "vault_access", "query_optimizer"],
+      "active": true
+    }
+  ],
+  "config": {
+    "max_concurrent_agents": 5,
+    "default_context_window": 28000
+  }
+} 

@@ -1,0 +1,41 @@
+{
+  "title": "kOS Kitchen Runtime Loader",
+  "description": "Initializes the kOS kitchen engine, loads the pantry, and preps all recipe execution pipelines.",
+  "version": "1.0.0",
+  "components": {
+    "pantry": "pantry_config.json",
+    "recipe_schema": "recipe_schema.json",
+    "meal_planner": "meal_plan.json"
+  },
+  "init_sequence": [
+    {
+      "step": 1,
+      "action": "validate pantry",
+      "target": "pantry_config.json"
+    },
+    {
+      "step": 2,
+      "action": "load recipe schema",
+      "target": "recipe_schema.json"
+    },
+    {
+      "step": 3,
+      "action": "parse meal plan",
+      "target": "meal_plan.json"
+    },
+    {
+      "step": 4,
+      "action": "spawn chef agent",
+      "target": "agent_chef"
+    }
+  ],
+  "signals": {
+    "on_invalid_ingredient": "halt_recipe",
+    "on_missing_file": "fallback_or_notify"
+  },
+  "constraints": {
+    "max_ingredients": 50,
+    "max_parallel_recipes": 3,
+    "max_recipe_size": 30000
+  }
+} 

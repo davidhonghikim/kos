@@ -1,0 +1,116 @@
+{
+  "validation_metadata": {
+    "agent_id": "",
+    "timestamp": "",
+    "version": "1.0.0",
+    "status": "DRAFT",
+    "priority": "medium",
+    "validation_type": "",
+    "context_window_status": ""
+  },
+  "validation_scope": {
+    "test_scope": "",
+    "components_tested": [],
+    "validation_level": "",
+    "test_environment": ""
+  },
+  "test_results": {
+    "environment_tests": {
+      "node_npm_installation": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "python_environment": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "build_process": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      }
+    },
+    "documentation_tests": {
+      "template_validation": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "schema_validation": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "migration_validation": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      }
+    },
+    "recipe_tests": {
+      "v5_0_0_compliance": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "kitchen_system_integration": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "token_estimates": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      }
+    },
+    "automation_tests": {
+      "validation_scripts": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "index_update_scripts": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      },
+      "cleanup_scripts": {
+        "status": "PASS|FAIL|SKIP",
+        "details": "",
+        "recommendations": []
+      }
+    }
+  },
+  "issues_found": {
+    "critical_issues": [],
+    "high_priority_issues": [],
+    "medium_priority_issues": [],
+    "low_priority_issues": []
+  },
+  "recommendations": {
+    "immediate_actions": [],
+    "short_term_improvements": [],
+    "long_term_improvements": []
+  },
+  "quality_metrics": {
+    "overall_score": 0,
+    "documentation_quality": 0,
+    "recipe_quality": 0,
+    "automation_quality": 0,
+    "environment_quality": 0
+  },
+  "success_criteria": {
+    "environment": [],
+    "documentation_system": [],
+    "recipe_library": [],
+    "automation": []
+  },
+  "next_steps": {
+    "immediate_actions": [],
+    "validation_checkpoints": [],
+    "completion_criteria": []
+  }
+} 

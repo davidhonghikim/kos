@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Handoff Document Schema",
+  "description": "Schema for validating agent handoff documents",
+  "type": "object",
+  "required": [
+    "handoff_metadata",
+    "execution_summary",
+    "critical_context",
+    "immediate_actions_required",
+    "quality_standards",
+    "file_locations",
+    "success_criteria",
+    "next_agent_instructions",
+    "risk_mitigation"
+  ],
+  "properties": {
+    "handoff_metadata": {
+      "type": "object",
+      "required": ["agent_id", "timestamp", "version", "status", "priority"],
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "description": "Identifier of the agent creating the handoff"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of handoff creation"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version of the handoff document"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["DRAFT", "FINAL", "ARCHIVED"],
+          "description": "Current status of the handoff document"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Priority level of the handoff"
+        },
+        "estimated_completion_time": {
+          "type": "string",
+          "description": "Estimated time to complete remaining work"
+        },
+        "context_window_status": {
+          "type": "string",
+          "description": "Status of context window (full, partial, empty)"
+        }
+      }
+    },
+    "execution_summary": {
+      "type": "object",
+      "required": ["completed_work", "work_in_progress", "blocked_items"],
+      "properties": {
+        "completed_work": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of completed tasks and achievements"
+        },
+        "work_in_progress": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of tasks currently in progress"
+        },
+        "blocked_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of blocked or pending items"
+        }
+      }
+    },
+    "critical_context": {
+      "type": "object",
+      "required": ["project_state"],
+      "properties": {
+        "project_state": {
+          "type": "object",
+          "required": ["current_phase", "documentation_system_state", "recipe_library_state", "automation_state"],
+          "properties": {
+            "current_phase": {
+              "type": "string",
+              "description": "Current phase of the project"
+            },
+            "documentation_system_state": {
+              "type": "string",
+              "description": "Current state of documentation system"
+            },
+            "recipe_library_state": {
+              "type": "string",
+              "description": "Current state of recipe library"
+            },
+            "automation_state": {
+              "type": "string",
+              "description": "Current state of automation"
+            }
+          }
+        },
+        "key_decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key decisions made during this session"
+        },
+        "technical_debt": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Technical debt accumulated"
+        },
+        "performance_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Performance-related notes"
+        }
+      }
+    },
+    "immediate_actions_required": {
+      "type": "object",
+      "properties": {
+        "phase_1": {
+          "type": "object",
+          "required": ["duration", "tasks"],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "Estimated duration for phase 1"
+            },
+            "tasks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["task", "description"],
+                "properties": {
+                  "task": {
+                    "type": "string",
+                    "description": "Task name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Task description"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "File or directory location"
+                  },
+                  "template": {
+                    "type": "string",
+                    "description": "Template to use"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "phase_2": {
+          "type": "object",
+          "required": ["duration", "tasks"],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "Estimated duration for phase 2"
+            },
+            "tasks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["task", "description"],
+                "properties": {
+                  "task": {
+                    "type": "string",
+                    "description": "Task name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Task description"
+                  },
+                  "files_to_review": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "categorization_criteria": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "phase_3": {
+          "type": "object",
+          "required": ["duration", "tasks"],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "Estimated duration for phase 3"
+            },
+            "tasks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["task", "description"],
+                "properties": {
+                  "task": {
+                    "type": "string",
+                    "description": "Task name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Task description"
+                  },
+                  "priority_files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "enhancement_requirements": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "quality_standards": {
+      "type": "object",
+      "required": ["documentation_standards", "recipe_standards", "agent_standards"],
+      "properties": {
+        "documentation_standards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standards for documentation"
+        },
+        "recipe_standards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standards for recipes"
+        },
+        "agent_standards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standards for agents"
+        }
+      }
+    },
+    "file_locations": {
+      "type": "object",
+      "required": ["critical_files", "recipe_library"],
+      "properties": {
+        "critical_files": {
+          "type": "object",
+          "description": "Critical file locations"
+        },
+        "recipe_library": {
+          "type": "object",
+          "description": "Recipe library file locations"
+        }
+      }
+    },
+    "success_criteria": {
+      "type": "object",
+      "required": ["immediate", "long_term"],
+      "properties": {
+        "immediate": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Immediate success criteria"
+        },
+        "long_term": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Long-term success criteria"
+        }
+      }
+    },
+    "next_agent_instructions": {
+      "type": "object",
+      "required": ["immediate_start", "critical_reminders", "handoff_completion"],
+      "properties": {
+        "immediate_start": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Instructions for immediate start"
+        },
+        "critical_reminders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Critical reminders for next agent"
+        },
+        "handoff_completion": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Instructions for handoff completion"
+        }
+      }
+    },
+    "risk_mitigation": {
+      "type": "object",
+      "properties": {
+        "context_window_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Mitigation for context window limitations"
+        },
+        "documentation_complexity": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Mitigation for documentation complexity"
+        },
+        "recipe_enhancement_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Mitigation for recipe enhancement scope"
+        }
+      }
+    }
+  }
+} 

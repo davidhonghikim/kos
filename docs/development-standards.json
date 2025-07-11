@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "title": "kOS Development Standards and Guidelines",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T23:50:00Z",
+    "purpose": "Define coding standards, file organization, and development guidelines for kOS project",
+    "audience": "AI agents and development team"
+  },
+  "file_organization": {
+    "line_limits": {
+      "ideal_range": "150-250 lines",
+      "maximum": "300 lines",
+      "justification_required": "If over 300 lines, must include justification in file header",
+      "rationale": "Promotes modularity, readability, and maintainability"
+    },
+    "single_responsibility": {
+      "principle": "Each file should have one clear, focused purpose",
+      "benefits": [
+        "Easier testing and debugging",
+        "Better code reusability",
+        "Clearer responsibility boundaries",
+        "Reduced cognitive load for developers"
+      ],
+      "examples": {
+        "good": "user-authentication.ts - handles only user authentication",
+        "bad": "user-service.ts - handles users, auth, profiles, and settings"
+      }
+    },
+    "naming_conventions": {
+      "files": {
+        "pattern": "kebab-case",
+        "examples": [
+          "user-service.ts",
+          "api-client.ts",
+          "database-connection.ts"
+        ]
+      },
+      "functions": {
+        "pattern": "camelCase",
+        "examples": [
+          "getUserData()",
+          "validateInput()",
+          "processRequest()"
+        ]
+      },
+      "classes": {
+        "pattern": "PascalCase",
+        "examples": [
+          "UserService",
+          "ApiClient",
+          "DatabaseConnection"
+        ]
+      },
+      "constants": {
+        "pattern": "UPPER_SNAKE_CASE",
+        "examples": [
+          "API_BASE_URL",
+          "MAX_RETRY_ATTEMPTS",
+          "DEFAULT_TIMEOUT"
+        ]
+      }
+    }
+  },
+  "code_quality": {
+    "typescript": {
+      "strict_mode": "Required - enables all strict type checking",
+      "type_hints": "Required for all function parameters and return values",
+      "linting": "ESLint with TypeScript-specific rules",
+      "formatting": "Prettier with project-specific configuration",
+      "examples": {
+        "good": "function getUser(id: string): Promise<User | null>",
+        "bad": "function getUser(id) { return fetch('/user/' + id) }"
+      }
+    },
+    "python": {
+      "type_hints": "Required for all function parameters and return values",
+      "formatting": "Black with 100 character line length",
+      "linting": "Flake8 with project-specific configuration",
+      "type_checking": "MyPy with strict mode enabled",
+      "examples": {
+        "good": "def get_user(user_id: str) -> Optional[User]:",
+        "bad": "def get_user(user_id): return fetch('/user/' + user_id)"
+      }
+    },
+    "environment_variables": {
+      "rule": "NO HARDCODED VALUES - All configuration must use environment variables",
+      "prefix": "KOS_ prefix for all kOS-specific variables",
+      "examples": {
+        "correct": [
+          "process.env.KOS_API_URL",
+          "os.getenv('KOS_DATABASE_HOST')",
+          "config.get('KOS_REDIS_PORT')"
+        ],
+        "incorrect": [
+          "'http://localhost:8000'",
+          "'localhost'",
+          "5432"
+        ]
+      },
+      "validation": "All environment variables must be validated at startup"
+    }
+  },
+  "modular_architecture": {
+    "principles": [
+      "Break large functionality into smaller, focused modules",
+      "Each module should have a clear interface",
+      "Minimize dependencies between modules",
+      "Use dependency injection for flexibility"
+    ],
+    "module_structure": {
+      "interface": "Clear public API with well-defined contracts",
+      "implementation": "Internal logic hidden from external consumers",
+      "dependencies": "Explicit dependency declarations",
+      "testing": "Each module should be independently testable"
+    },
+    "examples": {
+      "good_structure": {
+        "user-module": {
+          "user-service.ts": "Main user business logic (200 lines)",
+          "user-repository.ts": "Data access layer (150 lines)",
+          "user-validator.ts": "Input validation (100 lines)",
+          "user-types.ts": "Type definitions (50 lines)"
+        }
+      },
+      "bad_structure": {
+        "user-service.ts": "All user functionality in one file (800 lines)"
+      }
+    }
+  },
+  "testing_requirements": {
+    "coverage": {
+      "minimum": "90%",
+      "target": "95%",
+      "exclusions": ["test files", "configuration files", "documentation"]
+    },
+    "test_types": {
+      "unit_tests": {
+        "scope": "Individual functions and methods",
+        "coverage": "All code paths",
+        "isolation": "No external dependencies"
+      },
+      "integration_tests": {
+        "scope": "Module interactions and APIs",
+        "coverage": "Service integration points",
+        "dependencies": "Mocked external services"
+      },
+      "end_to_end_tests": {
+        "scope": "Complete user workflows",
+        "coverage": "Critical user journeys",
+        "environment": "Test environment with real services"
+      }
+    },
+    "test_organization": {
+      "mirror_structure": "Test files mirror source file structure",
+      "naming": "test_*.py for Python, *.test.ts for TypeScript",
+      "fixtures": "Shared test data in tests/fixtures/",
+      "mocks": "Mock objects for external dependencies"
+    }
+  },
+  "documentation_standards": {
+    "agent_documentation": {
+      "format": "JSON only",
+      "location": "docs/ directory",
+      "metadata": {
+        "required_fields": ["title", "version", "created_by", "created_timestamp", "purpose"],
+        "timestamp_format": "ISO 8601 (YYYY-MM-DDTHH:MM:SSZ)"
+      },
+      "structure": "Modular with clear sections and logical organization"
+    },
+    "human_documentation": {
+      "format": "Markdown only",
+      "files": ["README.md"],
+      "purpose": "Human-readable project overview and quick start"
+    },
+    "code_documentation": {
+      "inline_comments": "Required for complex logic and business rules",
+      "function_docs": {
+        "typescript": "JSDoc comments with @param, @returns, @example",
+        "python": "Docstrings with type hints and examples"
+      },
+      "api_documentation": "OpenAPI 3.0 specifications in JSON format"
+    }
+  },
+  "git_workflow": {
+    "branch_naming": {
+      "feature": "feature/description (e.g., feature/user-authentication)",
+      "fix": "fix/description (e.g., fix/login-bug)",
+      "docs": "docs/description (e.g., docs/api-documentation)",
+      "refactor": "refactor/description (e.g., refactor/user-service)"
+    },
+    "commit_messages": {
+      "format": "conventional commits",
+      "structure": "type(scope): description",
+      "types": [
+        "feat: New feature",
+        "fix: Bug fix",
+        "docs: Documentation",
+        "style: Formatting",
+        "refactor: Code refactoring",
+        "test: Adding tests",
+        "chore: Maintenance"
+      ]
+    },
+    "pull_request_requirements": [
+      "All tests passing",
+      "90% code coverage maintained",
+      "No hardcoded values",
+      "Files under 300 lines",
+      "Documentation updated",
+      "Code review completed"
+    ]
+  },
+  "ci_cd_requirements": {
+    "automated_checks": [
+      "Linting (ESLint, Flake8)",
+      "Formatting (Prettier, Black)",
+      "Type checking (TypeScript, MyPy)",
+      "Unit tests with coverage",
+      "Integration tests",
+      "Security scanning"
+    ],
+    "quality_gates": [
+      "All automated checks must pass",
+      "Coverage must meet minimum requirements",
+      "No security vulnerabilities",
+      "No hardcoded values detected"
+    ]
+  }
+} 
