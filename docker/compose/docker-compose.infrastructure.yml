@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: ai-q-postgres
+    container_name: kos-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-aiq_knowledge}
       POSTGRES_USER: ${POSTGRES_USER:-aiq_user}
@@ -15,7 +15,7 @@ services:
     ports:
       - "${KOS_POSTGRES_EXTERNAL_PORT:-5432}:${KOS_POSTGRES_INTERNAL_PORT:-5432}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aiq_user} -d ${POSTGRES_DB:-aiq_knowledge}"]
@@ -25,36 +25,41 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: ai-q-redis
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    container_name: kos-redis
+    command: >
+      sh -c "if [ -n '${KOS_REDIS_PASSWORD:-}' ]; then 
+               redis-server --appendonly yes --requirepass '${KOS_REDIS_PASSWORD}'; 
+             else 
+               redis-server --appendonly yes; 
+             fi"
     volumes:
       - redis_data:/data
     ports:
       - "${KOS_REDIS_EXTERNAL_PORT:-6379}:${KOS_REDIS_INTERNAL_PORT:-6379}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: ai-q-elasticsearch
+    container_name: kos-elasticsearch
     environment:
-      - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE:-single-node}
-      - xpack.security.enabled=${ELASTICSEARCH_XPACK_SECURITY_ENABLED:-true}
-      - ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD:-elastic}
+      - discovery.type=${KOS_ELASTICSEARCH_DISCOVERY_TYPE:-single-node}
+      - xpack.security.enabled=${KOS_ELASTICSEARCH_XPACK_SECURITY_ENABLED:-false}
+      - ES_JAVA_OPTS=${KOS_ELASTICSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
+      - ELASTIC_PASSWORD=${KOS_ELASTICSEARCH_PASSWORD:-}
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     ports:
       - "${KOS_ELASTICSEARCH_EXTERNAL_PORT:-9200}:${KOS_ELASTICSEARCH_INTERNAL_PORT:-9200}"
       - "${KOS_ELASTICSEARCH_CLUSTER_EXTERNAL_PORT:-9300}:${KOS_ELASTICSEARCH_CLUSTER_INTERNAL_PORT:-9300}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
@@ -64,9 +69,9 @@ services:
 
   neo4j:
     image: neo4j:5.15.0
-    container_name: ai-q-neo4j
+    container_name: kos-neo4j
     environment:
-      NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-password}
+      NEO4J_AUTH: ${KOS_NEO4J_USER:-neo4j}/${KOS_NEO4J_PASSWORD:-none}
       NEO4J_PLUGINS: ${NEO4J_PLUGINS:-apoc,graph-data-science}
       NEO4J_dbms_security_procedures_unrestricted: ${NEO4J_PROCEDURES_UNRESTRICTED:-gds.*,apoc.*}
       NEO4J_dbms_memory_heap_initial__size: ${NEO4J_HEAP_INITIAL_SIZE:-512m}
@@ -81,7 +86,7 @@ services:
       - "${KOS_NEO4J_HTTP_EXTERNAL_PORT:-7474}:${KOS_NEO4J_HTTP_INTERNAL_PORT:-7474}"
       - "${KOS_NEO4J_EXTERNAL_PORT:-7687}:${KOS_NEO4J_INTERNAL_PORT:-7687}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474/browser/ || exit 1"]
@@ -91,7 +96,7 @@ services:
 
   weaviate:
     image: semitechnologies/weaviate:1.22.4
-    container_name: ai-q-weaviate
+    container_name: kos-weaviate
     environment:
       QUERY_DEFAULTS_LIMIT: ${WEAVIATE_QUERY_DEFAULTS_LIMIT:-25}
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: ${WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED:-true}
@@ -105,7 +110,7 @@ services:
     ports:
       - "${KOS_WEAVIATE_EXTERNAL_PORT:-8080}:${KOS_WEAVIATE_INTERNAL_PORT:-8080}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/v1/.well-known/ready"]
@@ -115,17 +120,17 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2023-11-15T20-43-25Z
-    container_name: ai-q-minio
+    container_name: kos-minio
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_ROOT_USER: ${KOS_MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${KOS_MINIO_ROOT_PASSWORD:-minioadmin}
     volumes:
       - minio_data:/data
     ports:
       - "${KOS_MINIO_EXTERNAL_PORT:-9000}:${KOS_MINIO_INTERNAL_PORT:-9000}"
       - "${KOS_MINIO_CONSOLE_EXTERNAL_PORT:-9001}:${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     command: server /data --console-address ":${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
     healthcheck:
@@ -136,16 +141,16 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.0
-    container_name: ai-q-grafana
+    container_name: kos-grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${KOS_GRAFANA_ADMIN_PASSWORD:-}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
     ports:
       - "${KOS_GRAFANA_EXTERNAL_PORT:-3001}:${KOS_GRAFANA_INTERNAL_PORT:-3000}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
@@ -155,7 +160,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.48.0
-    container_name: ai-q-prometheus
+    container_name: kos-prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -169,7 +174,7 @@ services:
     ports:
       - "${KOS_PROMETHEUS_EXTERNAL_PORT:-9090}:${KOS_PROMETHEUS_INTERNAL_PORT:-9090}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
@@ -179,7 +184,7 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.2
-    container_name: ai-q-cadvisor
+    container_name: kos-cadvisor
     privileged: true
     devices:
       - /dev/kmsg:/dev/kmsg
@@ -192,7 +197,7 @@ services:
     ports:
       - "${KOS_CADVISOR_EXTERNAL_PORT:-8080}:${KOS_CADVISOR_INTERNAL_PORT:-8080}"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1"]
@@ -214,7 +219,7 @@ volumes:
   prometheus_data:
 
 networks:
-  ai-q-network:
+  kos-network:
     driver: bridge
     ipam:
       config:
