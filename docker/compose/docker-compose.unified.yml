@@ -1,12 +1,12 @@
-name: ai-q
+name: kos
 
 services:
   # Main AI-Q Application Container
-  ai-q-app:
+  kos-app:
     build:
       context: ../..
       dockerfile: docker/dockerfiles/Dockerfile.unified
-    container_name: ai-q-unified-app
+    container_name: kos-unified-app
     environment:
       # Application Settings
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -88,7 +88,7 @@ services:
       - ../../logs:/app/logs
       - ../../data:/app/data
     networks:
-      - ai-q-network
+      - kos-network
     depends_on:
       - postgres
       - redis
@@ -106,7 +106,7 @@ services:
   # Infrastructure Services (External dependencies)
   postgres:
     image: postgres:15-alpine
-    container_name: ai-q-postgres
+    container_name: kos-postgres
     profiles: ["postgres", "core", "full"]
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-aiq_knowledge}
@@ -114,12 +114,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aiq_password}
       POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS:---auth-host=scram-sha-256}
     volumes:
-      - ai-q-postgres-data:/var/lib/postgresql/data
+      - kos-postgres-data:/var/lib/postgresql/data
       - ../../init-scripts:/docker-entrypoint-initdb.d
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aiq_user} -d ${POSTGRES_DB:-aiq_knowledge}"]
@@ -129,15 +129,15 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: ai-q-redis
+    container_name: kos-redis
     profiles: ["redis", "core", "full"]
     command: redis-server --appendonly yes
     volumes:
-      - ai-q-redis-data:/data
+      - kos-redis-data:/data
     ports:
       - "${REDIS_PORT:-6379}:6379"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -147,7 +147,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: ai-q-elasticsearch
+    container_name: kos-elasticsearch
     profiles: ["elasticsearch", "full"]
     environment:
       - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE:-single-node}
@@ -155,12 +155,12 @@ services:
       - ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS:--Xms256m -Xmx512m}
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD:-elastic}
     volumes:
-      - ai-q-elasticsearch-data:/usr/share/elasticsearch/data
+      - kos-elasticsearch-data:/usr/share/elasticsearch/data
     ports:
       - "${ELASTICSEARCH_PORT:-9200}:9200"
       - "${ELASTICSEARCH_CLUSTER_PORT:-9300}:9300"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
@@ -170,7 +170,7 @@ services:
 
   neo4j:
     image: neo4j:5.15.0
-    container_name: ai-q-neo4j
+    container_name: kos-neo4j
     profiles: ["neo4j", "full"]
     environment:
       NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-password}
@@ -180,15 +180,15 @@ services:
       NEO4J_dbms_memory_heap_max__size: ${NEO4J_HEAP_MAX_SIZE:-1G}
       NEO4J_dbms_memory_pagecache_size: ${NEO4J_PAGECACHE_SIZE:-512m}
     volumes:
-      - ai-q-neo4j-data:/data
-      - ai-q-neo4j-logs:/logs
-      - ai-q-neo4j-import:/var/lib/neo4j/import
-      - ai-q-neo4j-plugins:/plugins
+      - kos-neo4j-data:/data
+      - kos-neo4j-logs:/logs
+      - kos-neo4j-import:/var/lib/neo4j/import
+      - kos-neo4j-plugins:/plugins
     ports:
       - "${NEO4J_BROWSER_PORT:-7474}:7474"
       - "${NEO4J_PORT:-7687}:7687"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474/browser/ || exit 1"]
@@ -198,7 +198,7 @@ services:
 
   weaviate:
     image: semitechnologies/weaviate:1.22.4
-    container_name: ai-q-weaviate
+    container_name: kos-weaviate
     profiles: ["weaviate", "core", "full"]
     environment:
       QUERY_DEFAULTS_LIMIT: ${WEAVIATE_QUERY_DEFAULTS_LIMIT:-25}
@@ -208,11 +208,11 @@ services:
       ENABLE_MODULES: ${WEAVIATE_ENABLE_MODULES:-}
       CLUSTER_HOSTNAME: ${WEAVIATE_CLUSTER_HOSTNAME:-node1}
     volumes:
-      - ai-q-weaviate-data:/var/lib/weaviate
+      - kos-weaviate-data:/var/lib/weaviate
     ports:
       - "${WEAVIATE_PORT:-8080}:8080"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/v1/.well-known/ready"]
@@ -222,18 +222,18 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2023-11-15T20-43-25Z
-    container_name: ai-q-minio
+    container_name: kos-minio
     profiles: ["minio", "core", "full"]
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     volumes:
-      - ai-q-minio-data:/data
+      - kos-minio-data:/data
     ports:
       - "${MINIO_API_PORT:-9000}:9000"
       - "${MINIO_CONSOLE_PORT:-9001}:9001"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     command: server /data --console-address ":9001"
     healthcheck:
@@ -244,7 +244,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.48.0
-    container_name: ai-q-prometheus
+    container_name: kos-prometheus
     profiles: ["monitoring", "full"]
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -254,12 +254,12 @@ services:
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     volumes:
-      - ai-q-prometheus-data:/prometheus
+      - kos-prometheus-data:/prometheus
       - ../../config/prometheus:/etc/prometheus
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
@@ -269,17 +269,17 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.0
-    container_name: ai-q-grafana
+    container_name: kos-grafana
     profiles: ["monitoring", "full"]
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
     volumes:
-      - ai-q-grafana-data:/var/lib/grafana
+      - kos-grafana-data:/var/lib/grafana
       - ../../config/grafana/provisioning:/etc/grafana/provisioning
     ports:
       - "${GRAFANA_PORT:-3001}:3000"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
@@ -290,19 +290,19 @@ services:
   # AI/ML Services
   huggingface-inference:
     image: python:3.11-slim
-    container_name: ai-q-huggingface-inference
+    container_name: kos-huggingface-inference
     profiles: ["ai-ml", "full"]
     environment:
       - TRANSFORMERS_CACHE=${HUGGINGFACE_TRANSFORMERS_CACHE:-/app/cache}
       - HF_HOME=${HUGGINGFACE_HOME:-/app/huggingface}
       - HF_HUB_OFFLINE=${HUGGINGFACE_HUB_OFFLINE:-false}
     volumes:
-      - ai-q-huggingface-data:/app/cache
-      - ai-q-huggingface-models:/app/models
+      - kos-huggingface-data:/app/cache
+      - kos-huggingface-models:/app/models
     ports:
       - "${HUGGINGFACE_PORT:-8082}:8080"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
@@ -312,18 +312,18 @@ services:
 
   ollama:
     image: ollama/ollama:latest
-    container_name: ai-q-ollama
+    container_name: kos-ollama
     profiles: ["ollama", "core", "full"]
     environment:
       - OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0}
       - OLLAMA_ORIGINS=${OLLAMA_ORIGINS:-*}
       - OLLAMA_MODELS=${OLLAMA_MODELS:-/root/.ollama/models}
     volumes:
-      - ai-q-ollama-data:/root/.ollama
+      - kos-ollama-data:/root/.ollama
     ports:
       - "${OLLAMA_PORT:-11434}:11434"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
@@ -345,18 +345,18 @@ services:
 
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: ai-q-openwebui
+    container_name: kos-openwebui
     profiles: ["ollama", "core", "full"]
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - WEBUI_SECRET_KEY=${OPENWEBUI_SECRET_KEY:-}
       - DEFAULT_MODELS=${OPENWEBUI_DEFAULT_MODELS:-gemma3:2b,llama3.2:3b}
     volumes:
-      - ai-q-openwebui-data:/app/backend/data
+      - kos-openwebui-data:/app/backend/data
     ports:
       - "${OPENWEBUI_PORT:-3000}:8080"
     networks:
-      - ai-q-network
+      - kos-network
     depends_on:
       - ollama
     restart: unless-stopped
@@ -369,7 +369,7 @@ services:
   # Development Services
   gitea:
     image: gitea/gitea:1.21.0
-    container_name: ai-q-gitea
+    container_name: kos-gitea
     profiles: ["development", "full"]
     environment:
       - USER_UID=${GITEA_USER_UID:-1000}
@@ -387,13 +387,13 @@ services:
       - GITEA__log__LEVEL=${GITEA_LOG_LEVEL:-Info}
       - GITEA__log__MODE=${GITEA_LOG_MODE:-console}
     volumes:
-      - ai-q-gitea-data:/data
-      - ai-q-gitea-config:/data/gitea/conf
+      - kos-gitea-data:/data
+      - kos-gitea-config:/data/gitea/conf
     ports:
       - "${GITEA_PORT:-3002}:3000"
       - "${GITEA_SSH_PORT:-222}:22"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/v1/version || exit 1"]
@@ -404,19 +404,19 @@ services:
   # AI Image Generation Services (GPU Required)
   automatic1111:
     image: automatic1111/stable-diffusion-webui:latest
-    container_name: ai-q-automatic1111
+    container_name: kos-automatic1111
     profiles: ["ai-image", "full"]
     environment:
       - COMMANDLINE_ARGS=--listen --port 7860 --enable-insecure-extension-access
       - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
     volumes:
-      - ai-q-automatic1111-models:/app/models
-      - ai-q-automatic1111-outputs:/app/outputs
-      - ai-q-automatic1111-config:/app/config
+      - kos-automatic1111-models:/app/models
+      - kos-automatic1111-outputs:/app/outputs
+      - kos-automatic1111-config:/app/config
     ports:
       - "${AUTOMATIC1111_PORT:-7860}:7860"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     deploy:
       resources:
@@ -433,18 +433,18 @@ services:
 
   comfyui:
     image: comfyui/comfyui:latest
-    container_name: ai-q-comfyui
+    container_name: kos-comfyui
     profiles: ["ai-image", "full"]
     environment:
       - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
     volumes:
-      - ai-q-comfyui-models:/app/models
-      - ai-q-comfyui-outputs:/app/outputs
-      - ai-q-comfyui-config:/app/config
+      - kos-comfyui-models:/app/models
+      - kos-comfyui-outputs:/app/outputs
+      - kos-comfyui-config:/app/config
     ports:
       - "${COMFYUI_PORT:-8188}:8188"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     deploy:
       resources:
@@ -462,7 +462,7 @@ services:
   # Workflow & Automation Services
   n8n:
     image: n8nio/n8n:latest
-    container_name: ai-q-n8n
+    container_name: kos-n8n
     profiles: ["workflow", "full"]
     environment:
       - N8N_HOST=${N8N_HOST:-localhost}
@@ -476,11 +476,11 @@ services:
       - N8N_TIMEZONE=${N8N_TIMEZONE:-UTC}
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-}
     volumes:
-      - ai-q-n8n-data:/home/node/.n8n
+      - kos-n8n-data:/home/node/.n8n
     ports:
       - "${N8N_PORT:-5678}:5678"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5678/healthz || exit 1"]
@@ -490,7 +490,7 @@ services:
 
   penpot:
     image: penpot/penpot:latest
-    container_name: ai-q-penpot
+    container_name: kos-penpot
     profiles: ["design", "full"]
     environment:
       - PENPOT_DATABASE_URI=${PENPOT_DATABASE_URI:-postgresql://penpot:penpot@postgres:5432/penpot}
@@ -498,11 +498,11 @@ services:
       - PENPOT_SECRET_KEY=${PENPOT_SECRET_KEY:-}
       - PENPOT_PUBLIC_URI=${PENPOT_PUBLIC_URI:-http://localhost:9002}
     volumes:
-      - ai-q-penpot-data:/app/data
+      - kos-penpot-data:/app/data
     ports:
       - "${PENPOT_PORT:-9002}:80"
     networks:
-      - ai-q-network
+      - kos-network
     depends_on:
       - postgres
       - redis
@@ -516,19 +516,19 @@ services:
   # Self-Hosted Services
   nextcloud:
     image: nextcloud:25.0.0
-    container_name: ai-q-nextcloud
+    container_name: kos-nextcloud
     profiles: ["storage", "full"]
     environment:
       - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER:-admin}
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD:-admin123}
       - NEXTCLOUD_DB_PASSWORD=${NEXTCLOUD_DB_PASSWORD:-nextcloud123}
     volumes:
-      - ai-q-nextcloud-data:/var/www/html
-      - ai-q-nextcloud-config:/var/www/html/config
+      - kos-nextcloud-data:/var/www/html
+      - kos-nextcloud-config:/var/www/html/config
     ports:
       - "${NEXTCLOUD_PORT:-8083}:80"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost/status.php || exit 1"]
@@ -538,17 +538,17 @@ services:
 
   admin-panel:
     image: portainer/portainer-ce:latest
-    container_name: ai-q-admin-panel
+    container_name: kos-admin-panel
     profiles: ["infrastructure", "full"]
     environment:
       - ADMIN_PANEL_PORT=${ADMIN_PANEL_PORT:-9003}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ai-q-admin-panel-data:/data
+      - kos-admin-panel-data:/data
     ports:
       - "${ADMIN_PANEL_PORT:-9003}:9000"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9000/api/status || exit 1"]
@@ -558,16 +558,16 @@ services:
 
   registry:
     image: registry:2.8.2
-    container_name: ai-q-registry
+    container_name: kos-registry
     profiles: ["infrastructure", "full"]
     environment:
       - REGISTRY_PORT=${REGISTRY_PORT:-5000}
     volumes:
-      - ai-q-registry-data:/var/lib/registry
+      - kos-registry-data:/var/lib/registry
     ports:
       - "${REGISTRY_PORT:-5000}:5000"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5000/v2/ || exit 1"]
@@ -578,21 +578,21 @@ services:
   # Load Balancer & Proxy
   nginx:
     image: nginx:alpine
-    container_name: ai-q-nginx
+    container_name: kos-nginx
     profiles: ["infrastructure", "full"]
     environment:
       - NGINX_PORT=${NGINX_PORT:-80}
       - NGINX_SSL_PORT=${NGINX_SSL_PORT:-443}
     volumes:
-      - ai-q-nginx-config:/etc/nginx/conf.d
-      - ai-q-nginx-logs:/var/log/nginx
+      - kos-nginx-config:/etc/nginx/conf.d
+      - kos-nginx-logs:/var/log/nginx
       - ${SSL_CERT_PATH:-/dev/null}:/etc/nginx/ssl/cert.pem:ro
       - ${SSL_KEY_PATH:-/dev/null}:/etc/nginx/ssl/key.pem:ro
     ports:
       - "${NGINX_PORT:-80}:80"
       - "${NGINX_SSL_PORT:-443}:443"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
@@ -603,7 +603,7 @@ services:
   # Monitoring Services
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.2
-    container_name: ai-q-cadvisor
+    container_name: kos-cadvisor
     profiles: ["monitoring", "full"]
     privileged: true
     devices:
@@ -617,7 +617,7 @@ services:
     ports:
       - "${CADVISOR_PORT:-8081}:8080"
     networks:
-      - ai-q-network
+      - kos-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
@@ -626,40 +626,40 @@ services:
       retries: 3
 
 volumes:
-  ai-q-postgres-data:
-  ai-q-redis-data:
-  ai-q-elasticsearch-data:
-  ai-q-neo4j-data:
-  ai-q-neo4j-logs:
-  ai-q-neo4j-import:
-  ai-q-neo4j-plugins:
-  ai-q-weaviate-data:
-  ai-q-minio-data:
-  ai-q-grafana-data:
-  ai-q-prometheus-data:
-  ai-q-huggingface-data:
-  ai-q-huggingface-models:
-  ai-q-ollama-data:
-  ai-q-openwebui-data:
-  ai-q-gitea-data:
-  ai-q-gitea-config:
-  ai-q-automatic1111-models:
-  ai-q-automatic1111-outputs:
-  ai-q-automatic1111-config:
-  ai-q-comfyui-models:
-  ai-q-comfyui-outputs:
-  ai-q-comfyui-config:
-  ai-q-n8n-data:
-  ai-q-penpot-data:
-  ai-q-nextcloud-data:
-  ai-q-nextcloud-config:
-  ai-q-admin-panel-data:
-  ai-q-registry-data:
-  ai-q-nginx-config:
-  ai-q-nginx-logs:
+  kos-postgres-data:
+  kos-redis-data:
+  kos-elasticsearch-data:
+  kos-neo4j-data:
+  kos-neo4j-logs:
+  kos-neo4j-import:
+  kos-neo4j-plugins:
+  kos-weaviate-data:
+  kos-minio-data:
+  kos-grafana-data:
+  kos-prometheus-data:
+  kos-huggingface-data:
+  kos-huggingface-models:
+  kos-ollama-data:
+  kos-openwebui-data:
+  kos-gitea-data:
+  kos-gitea-config:
+  kos-automatic1111-models:
+  kos-automatic1111-outputs:
+  kos-automatic1111-config:
+  kos-comfyui-models:
+  kos-comfyui-outputs:
+  kos-comfyui-config:
+  kos-n8n-data:
+  kos-penpot-data:
+  kos-nextcloud-data:
+  kos-nextcloud-config:
+  kos-admin-panel-data:
+  kos-registry-data:
+  kos-nginx-config:
+  kos-nginx-logs:
 
 networks:
-  ai-q-network:
+  kos-network:
     driver: bridge
     ipam:
       config:

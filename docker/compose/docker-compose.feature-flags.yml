@@ -1,10 +1,10 @@
-name: ai-q
+name: kos
 services:
-  ai-q-app:
+  kos-app:
     build:
       context: ../..
       dockerfile: docker/dockerfiles/Dockerfile.unified
-    container_name: ai-q-unified-app
+    container_name: kos-unified-app
     environment:
     - ENVIRONMENT=${ENVIRONMENT:-development}
     - API_HOST=${API_HOST:-0.0.0.0}
@@ -52,7 +52,7 @@ services:
     - ../../logs:/app/logs
     - ../../data:/app/data
     networks:
-    - ai-q-network
+    - kos-network
     depends_on:
     - postgres
     - redis
@@ -76,19 +76,19 @@ services:
     - ./scripts/start-unified.sh
   postgres:
     image: postgres:15-alpine
-    container_name: ai-q-postgres
+    container_name: kos-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-aiq_knowledge}
       POSTGRES_USER: ${POSTGRES_USER:-aiq_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aiq_password}
       POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS:---auth-host=scram-sha-256}
     volumes:
-    - ai-q-postgres-data:/var/lib/postgresql/data
+    - kos-postgres-data:/var/lib/postgresql/data
     - ../../init-scripts:/docker-entrypoint-initdb.d
     ports:
     - ${POSTGRES_PORT:-5432}:5432
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -99,14 +99,14 @@ services:
       retries: 3
   redis:
     image: redis:7-alpine
-    container_name: ai-q-redis
+    container_name: kos-redis
     command: redis-server --appendonly yes
     volumes:
-    - ai-q-redis-data:/data
+    - kos-redis-data:/data
     ports:
     - ${REDIS_PORT:-6379}:6379
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -118,19 +118,19 @@ services:
       retries: 3
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: ai-q-elasticsearch
+    container_name: kos-elasticsearch
     environment:
     - discovery.type=single-node
     - xpack.security.enabled=false
     - ES_JAVA_OPTS=-Xms256m -Xmx512m
     - ELASTIC_PASSWORD=elastic
     volumes:
-    - ai-q-elasticsearch-data:/usr/share/elasticsearch/data
+    - kos-elasticsearch-data:/usr/share/elasticsearch/data
     ports:
     - ${ELASTICSEARCH_PORT:-9200}:9200
     - ${ELASTICSEARCH_CLUSTER_PORT:-9300}:9300
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -141,7 +141,7 @@ services:
       retries: 5
   neo4j:
     image: neo4j:5.15.0
-    container_name: ai-q-neo4j
+    container_name: kos-neo4j
     environment:
       NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-password}
       NEO4J_PLUGINS: ${NEO4J_PLUGINS:-apoc,graph-data-science}
@@ -150,15 +150,15 @@ services:
       NEO4J_dbms_memory_heap_max__size: ${NEO4J_HEAP_MAX_SIZE:-1G}
       NEO4J_dbms_memory_pagecache_size: ${NEO4J_PAGECACHE_SIZE:-512m}
     volumes:
-    - ai-q-neo4j-data:/data
-    - ai-q-neo4j-logs:/logs
-    - ai-q-neo4j-import:/var/lib/neo4j/import
-    - ai-q-neo4j-plugins:/plugins
+    - kos-neo4j-data:/data
+    - kos-neo4j-logs:/logs
+    - kos-neo4j-import:/var/lib/neo4j/import
+    - kos-neo4j-plugins:/plugins
     ports:
     - ${NEO4J_BROWSER_PORT:-7474}:7474
     - ${NEO4J_BOLT_PORT:-7687}:7687
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -170,7 +170,7 @@ services:
       retries: 3
   weaviate:
     image: semitechnologies/weaviate:1.22.4
-    container_name: ai-q-weaviate
+    container_name: kos-weaviate
     environment:
       QUERY_DEFAULTS_LIMIT: ${WEAVIATE_QUERY_DEFAULTS_LIMIT:-25}
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: ${WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED:-true}
@@ -179,11 +179,11 @@ services:
       ENABLE_MODULES: ${WEAVIATE_ENABLE_MODULES:-}
       CLUSTER_HOSTNAME: ${WEAVIATE_CLUSTER_HOSTNAME:-node1}
     volumes:
-    - ai-q-weaviate-data:/var/lib/weaviate
+    - kos-weaviate-data:/var/lib/weaviate
     ports:
     - ${WEAVIATE_PORT:-8080}:8080
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -196,17 +196,17 @@ services:
       retries: 3
   minio:
     image: minio/minio:RELEASE.2023-11-15T20-43-25Z
-    container_name: ai-q-minio
+    container_name: kos-minio
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     volumes:
-    - ai-q-minio-data:/data
+    - kos-minio-data:/data
     ports:
     - ${MINIO_API_PORT:-9000}:9000
     - ${MINIO_CONSOLE_PORT:-9001}:9001
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     command: server /data --console-address ":9001"
     healthcheck:
@@ -220,7 +220,7 @@ services:
       retries: 3
   prometheus:
     image: prom/prometheus:v2.48.0
-    container_name: ai-q-prometheus
+    container_name: kos-prometheus
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     - --storage.tsdb.path=/prometheus
@@ -229,12 +229,12 @@ services:
     - --storage.tsdb.retention.time=200h
     - --web.enable-lifecycle
     volumes:
-    - ai-q-prometheus-data:/prometheus
+    - kos-prometheus-data:/prometheus
     - ../../config/prometheus:/etc/prometheus
     ports:
     - ${PROMETHEUS_PORT:-9090}:9090
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -246,16 +246,16 @@ services:
       retries: 3
   grafana:
     image: grafana/grafana:10.2.0
-    container_name: ai-q-grafana
+    container_name: kos-grafana
     environment:
     - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
     volumes:
-    - ai-q-grafana-data:/var/lib/grafana
+    - kos-grafana-data:/var/lib/grafana
     - ../../config/grafana/provisioning:/etc/grafana/provisioning
     ports:
     - ${GRAFANA_PORT:-3001}:3000
     networks:
-    - ai-q-network
+    - kos-network
     restart: unless-stopped
     healthcheck:
       test:
@@ -265,19 +265,19 @@ services:
       timeout: 10s
       retries: 3
 volumes:
-  ai-q-postgres-data: null
-  ai-q-redis-data: null
-  ai-q-elasticsearch-data: null
-  ai-q-neo4j-data: null
-  ai-q-neo4j-logs: null
-  ai-q-neo4j-import: null
-  ai-q-neo4j-plugins: null
-  ai-q-weaviate-data: null
-  ai-q-minio-data: null
-  ai-q-grafana-data: null
-  ai-q-prometheus-data: null
+  kos-postgres-data: null
+  kos-redis-data: null
+  kos-elasticsearch-data: null
+  kos-neo4j-data: null
+  kos-neo4j-logs: null
+  kos-neo4j-import: null
+  kos-neo4j-plugins: null
+  kos-weaviate-data: null
+  kos-minio-data: null
+  kos-grafana-data: null
+  kos-prometheus-data: null
 networks:
-  ai-q-network:
+  kos-network:
     driver: bridge
     ipam:
       config:
