@@ -1,0 +1,76 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "04-RESEARCH-LITERATURE-REVIEW-005",
+    "title": "Automated Literature Review",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Implements an automated literature review system with gap analysis, trend identification, and research direction recommendations.",
+    "technology_stack": {
+      "analysis": "Gap analysis, trend identification",
+      "data_processing": "Pandas, spaCy"
+    },
+    "deliverables": [
+      "A system to automatically identify gaps in existing literature",
+      "Trend analysis of research topics over time",
+      "Recommendations for future research directions"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "08-005",
+      "title": "Automated Literature Review",
+      "description": "Implement automated literature review system with gap analysis, trend identification, and research direction recommendations.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2100,
+      "dependencies": [
+        "08-004"
+      ],
+      "commands": [],
+      "files_to_create": [
+        "src/modules/research/analysis/gap_analyzer.py",
+        "src/modules/research/analysis/trend_analyzer.py",
+        "src/modules/research/analysis/recommendation_engine.py"
+      ],
+      "acceptance_criteria": [
+        "Gap analysis correctly identifies under-researched areas.",
+        "Trend analysis accurately reflects the evolution of research topics.",
+        "Research recommendations are relevant and insightful."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "05-Automated-Literature-Review",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

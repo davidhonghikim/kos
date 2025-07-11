@@ -1,0 +1,291 @@
+{
+  "metadata": {
+    "recipe_id": "05-self-hosted-services",
+    "title": "Self-Hosted Services Integration",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - Infrastructure Specialist",
+    "last_updated": "2025-07-05T21:59:00Z",
+    "purpose": "Deploy self-hosted Git server, NAS, and admin panel for complete off-grid operation",
+    "total_tasks": 10,
+    "estimated_duration": "6 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "01-volume-structure-design"
+    ],
+    "self_hosted_stack": [
+      "Git Server",
+      "File Storage",
+      "Admin Panel",
+      "Monitoring",
+      "Integration"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_recipes": [
+      "01-volume-structure-design",
+      "02-docker-caching-system"
+    ],
+    "system_requirements": {
+      "storage": "Minimum 500GB available storage",
+      "ram": "Minimum 16GB RAM",
+      "cpu": "Minimum 8 CPU cores",
+      "network": "Local network access"
+    },
+    "software_requirements": [
+      "Docker 24.0+",
+      "Docker Compose 2.15+",
+      "Git 2.40+",
+      "curl 7.80+",
+      "jq 1.6+"
+    ]
+  },
+  "task_01_create_self_hosted_directory_structure": {
+    "task_id": "05-01",
+    "title": "Create Self-Hosted Services Directory Structure",
+    "description": "Create directory structure for self-hosted services with proper permissions",
+    "estimated_duration": "20 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "05-01-01",
+        "title": "Create self-hosted service directories",
+        "description": "Create directories for Gitea, NextCloud, and admin panel",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/self-hosted",
+          "sudo mkdir -p /opt/ai-q/self-hosted/gitea",
+          "sudo mkdir -p /opt/ai-q/self-hosted/nextcloud",
+          "sudo mkdir -p /opt/ai-q/self-hosted/admin-panel",
+          "sudo mkdir -p /opt/ai-q/self-hosted/configs",
+          "sudo mkdir -p /opt/ai-q/self-hosted/logs"
+        ],
+        "verification": "Verify self-hosted directories created",
+        "expected_output": "All self-hosted service directories created successfully"
+      },
+      {
+        "step_id": "05-01-02",
+        "title": "Set self-hosted directory permissions",
+        "description": "Set appropriate permissions for self-hosted services",
+        "commands": [
+          "sudo chown -R root:root /opt/ai-q/self-hosted",
+          "sudo chmod -R 755 /opt/ai-q/self-hosted",
+          "sudo chown -R 1000:1000 /opt/ai-q/self-hosted/gitea",
+          "sudo chown -R 1000:1000 /opt/ai-q/self-hosted/nextcloud",
+          "sudo chown -R 1000:1000 /opt/ai-q/self-hosted/admin-panel"
+        ],
+        "verification": "Verify self-hosted directory permissions set correctly",
+        "expected_output": "Self-hosted directories have correct ownership and permissions"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/self-hosted/",
+      "find /opt/ai-q/self-hosted -type d | wc -l"
+    ],
+    "expected_outputs": {
+      "directory_count": "At least 6 self-hosted directories created",
+      "permissions": "Correct ownership and permissions for all directories"
+    }
+  },
+  "task_02_deploy_gitea_git_server": {
+    "task_id": "05-02",
+    "title": "Deploy Gitea Git Server",
+    "description": "Deploy Gitea as self-hosted Git server with complete configuration",
+    "estimated_duration": "1 hour",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "05-02-01",
+        "title": "Create Gitea configuration",
+        "description": "Create Gitea configuration file",
+        "file_path": "/opt/ai-q/self-hosted/configs/gitea-app.ini",
+        "content": "[server]\nDOMAIN = localhost\nROOT_URL = http://localhost:3000/\nHTTP_ADDR = 0.0.0.0\nHTTP_PORT = 3000\n\n[database]\nDB_TYPE = sqlite3\nPATH = /data/gitea/gitea.db\n\n[repository]\nROOT = /data/git/repositories\n\n[server]\nSTART_SSH_SERVER = true\nSSH_PORT = 22\n\n[security]\nINSTALL_LOCK = true\nSECRET_KEY = your-super-secret-gitea-key-change-in-production\n\n[service]\nDISABLE_REGISTRATION = false\nREQUIRE_SIGNIN_VIEW = false\n\n[admin]\nUSERNAME = admin\nEMAIL = admin@ai-q.local\nPASSWORD = admin123\n\n[log]\nMODE = file\nLEVEL = Info\nFILE_PATH = /data/gitea/log/gitea.log",
+        "verification": "Verify Gitea configuration created",
+        "expected_output": "Gitea configuration file created successfully"
+      },
+      {
+        "step_id": "05-02-02",
+        "title": "Create Gitea Docker Compose service",
+        "description": "Add Gitea service to Docker Compose configuration",
+        "docker_compose_addition": {
+          "service_name": "gitea",
+          "image": "gitea/gitea:1.21.0",
+          "container_name": "ai-q-gitea",
+          "environment": [
+            "USER_UID=1000",
+            "USER_GID=1000"
+          ],
+          "restart": "unless-stopped",
+          "networks": [
+            "ai-q-network"
+          ],
+          "volumes": [
+            "/opt/ai-q/self-hosted/gitea:/data",
+            "/opt/ai-q/self-hosted/configs/gitea-app.ini:/data/gitea/conf/app.ini"
+          ],
+          "ports": [
+            "3000:3000"
+          ],
+          "expose": [
+            "22"
+          ]
+        },
+        "verification": "Verify Gitea service added to Docker Compose",
+        "expected_output": "Gitea service configured in Docker Compose"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/self-hosted/configs/gitea-app.ini",
+      "docker ps | grep ai-q-gitea"
+    ],
+    "expected_outputs": {
+      "gitea_config": "Gitea configuration file created",
+      "gitea_service": "Gitea service running on port 3000"
+    }
+  },
+  "task_03_deploy_nextcloud_nas": {
+    "task_id": "05-03",
+    "title": "Deploy NextCloud NAS",
+    "description": "Deploy NextCloud as self-hosted file storage and collaboration platform",
+    "estimated_duration": "1 hour",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "05-03-01",
+        "title": "Create NextCloud configuration",
+        "description": "Create NextCloud configuration file",
+        "file_path": "/opt/ai-q/self-hosted/configs/nextcloud-config.php",
+        "content": "<?php\n$CONFIG = array (\n  'instanceid' => 'ai-q-nextcloud',\n  'passwordsalt' => 'your-super-secret-nextcloud-salt-change-in-production',\n  'secret' => 'your-super-secret-nextcloud-key-change-in-production',\n  'trusted_domains' => \n  array (\n    0 => 'localhost',\n    1 => '127.0.0.1',\n  ),\n  'datadirectory' => '/var/www/html/data',\n  'dbtype' => 'sqlite3',\n  'version' => '25.0.0.0',\n  'overwrite.cli.url' => 'http://localhost:8080',\n  'htaccess.RewriteBase' => '/',\n  'installed' => true,\n);",
+        "verification": "Verify NextCloud configuration created",
+        "expected_output": "NextCloud configuration file created successfully"
+      },
+      {
+        "step_id": "05-03-02",
+        "title": "Create NextCloud Docker Compose service",
+        "description": "Add NextCloud service to Docker Compose configuration",
+        "docker_compose_addition": {
+          "service_name": "nextcloud",
+          "image": "nextcloud:25.0.0",
+          "container_name": "ai-q-nextcloud",
+          "restart": "unless-stopped",
+          "networks": [
+            "ai-q-network"
+          ],
+          "volumes": [
+            "/opt/ai-q/self-hosted/nextcloud:/var/www/html",
+            "/opt/ai-q/self-hosted/configs/nextcloud-config.php:/var/www/html/config/config.php"
+          ],
+          "ports": [
+            "8080:80"
+          ],
+          "environment": [
+            "NEXTCLOUD_ADMIN_USER=admin",
+            "NEXTCLOUD_ADMIN_PASSWORD=admin123"
+          ]
+        },
+        "verification": "Verify NextCloud service added to Docker Compose",
+        "expected_output": "NextCloud service configured in Docker Compose"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/self-hosted/configs/nextcloud-config.php",
+      "docker ps | grep ai-q-nextcloud"
+    ],
+    "expected_outputs": {
+      "nextcloud_config": "NextCloud configuration file created",
+      "nextcloud_service": "NextCloud service running on port 8080"
+    }
+  },
+  "task_04_create_admin_panel": {
+    "task_id": "05-04",
+    "title": "Create Custom Admin Panel",
+    "description": "Create custom web-based admin panel for system management",
+    "estimated_duration": "2 hours",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "05-04-01",
+        "title": "Create admin panel HTML interface",
+        "description": "Create main admin panel HTML interface",
+        "file_path": "/opt/ai-q/self-hosted/admin-panel/index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>AI-Q Admin Panel</title>\n    <style>\n        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }\n        .container { max-width: 1200px; margin: 0 auto; }\n        .header { background: #333; color: white; padding: 20px; border-radius: 5px; margin-bottom: 20px; }\n        .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }\n        .service-card { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }\n        .service-status { padding: 5px 10px; border-radius: 3px; color: white; font-weight: bold; }\n        .status-running { background: #28a745; }\n        .status-stopped { background: #dc3545; }\n        .btn { padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; margin: 5px; }\n        .btn-primary { background: #007bff; color: white; }\n        .btn-danger { background: #dc3545; color: white; }\n        .btn-success { background: #28a745; color: white; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1>AI-Q System Admin Panel</h1>\n            <p>Complete system management and monitoring</p>\n        </div>\n        \n        <div class=\"service-grid\">\n            <div class=\"service-card\">\n                <h3>System Status</h3>\n                <p><strong>Status:</strong> <span id=\"system-status\" class=\"service-status status-running\">Running</span></p>\n                <p><strong>Uptime:</strong> <span id=\"system-uptime\">Loading...</span></p>\n                <p><strong>CPU Usage:</strong> <span id=\"cpu-usage\">Loading...</span></p>\n                <p><strong>Memory Usage:</strong> <span id=\"memory-usage\">Loading...</span></p>\n                <button class=\"btn btn-primary\" onclick=\"refreshSystemStatus()\">Refresh</button>\n            </div>\n            \n            <div class=\"service-card\">\n                <h3>Docker Services</h3>\n                <div id=\"docker-services\">Loading...</div>\n                <button class=\"btn btn-primary\" onclick=\"refreshDockerServices()\">Refresh</button>\n            </div>\n            \n            <div class=\"service-card\">\n                <h3>Storage</h3>\n                <p><strong>Total Space:</strong> <span id=\"total-space\">Loading...</span></p>\n                <p><strong>Used Space:</strong> <span id=\"used-space\">Loading...</span></p>\n                <p><strong>Available Space:</strong> <span id=\"available-space\">Loading...</span></p>\n                <button class=\"btn btn-primary\" onclick=\"refreshStorage()\">Refresh</button>\n            </div>\n            \n            <div class=\"service-card\">\n                <h3>Quick Actions</h3>\n                <button class=\"btn btn-success\" onclick=\"startAllServices()\">Start All Services</button>\n                <button class=\"btn btn-danger\" onclick=\"stopAllServices()\">Stop All Services</button>\n                <button class=\"btn btn-primary\" onclick=\"createBackup()\">Create Backup</button>\n                <button class=\"btn btn-primary\" onclick=\"showLogs()\">View Logs</button>\n            </div>\n        </div>\n        \n        <div class=\"service-card\" style=\"margin-top: 20px;\">\n            <h3>Service Links</h3>\n            <p><a href=\"http://localhost:3000\" target=\"_blank\">Gitea Git Server</a></p>\n            <p><a href=\"http://localhost:8080\" target=\"_blank\">NextCloud File Storage</a></p>\n            <p><a href=\"http://localhost:3001\" target=\"_blank\">Grafana Monitoring</a></p>\n            <p><a href=\"http://localhost:9090\" target=\"_blank\">Prometheus Metrics</a></p>\n            <p><a href=\"http://localhost:8082\" target=\"_blank\">Volume Health</a></p>\n            <p><a href=\"http://localhost:8083\" target=\"_blank\">Backup Health</a></p>\n        </div>\n    </div>\n    \n    <script>\n        // System status functions\n        async function refreshSystemStatus() {\n            try {\n                const response = await fetch('/api/system/status');\n                const data = await response.json();\n                document.getElementById('system-status').textContent = data.status;\n                document.getElementById('system-uptime').textContent = data.uptime;\n                document.getElementById('cpu-usage').textContent = data.cpu + '%';\n                document.getElementById('memory-usage').textContent = data.memory + '%';\n            } catch (error) {\n                console.error('Error fetching system status:', error);\n            }\n        }\n        \n        // Docker services functions\n        async function refreshDockerServices() {\n            try {\n                const response = await fetch('/api/docker/services');\n                const services = await response.json();\n                const container = document.getElementById('docker-services');\n                container.innerHTML = services.map(service => \n                    `<p><strong>${service.name}:</strong> <span class=\"service-status ${service.status === 'running' ? 'status-running' : 'status-stopped'}\">${service.status}</span></p>`\n                ).join('');\n            } catch (error) {\n                console.error('Error fetching Docker services:', error);\n            }\n        }\n        \n        // Storage functions\n        async function refreshStorage() {\n            try {\n                const response = await fetch('/api/storage/status');\n                const data = await response.json();\n                document.getElementById('total-space').textContent = data.total;\n                document.getElementById('used-space').textContent = data.used;\n                document.getElementById('available-space').textContent = data.available;\n            } catch (error) {\n                console.error('Error fetching storage status:', error);\n            }\n        }\n        \n        // Action functions\n        async function startAllServices() {\n            try {\n                await fetch('/api/docker/start-all', { method: 'POST' });\n                refreshDockerServices();\n            } catch (error) {\n                console.error('Error starting services:', error);\n            }\n        }\n        \n        async function stopAllServices() {\n            try {\n                await fetch('/api/docker/stop-all', { method: 'POST' });\n                refreshDockerServices();\n            } catch (error) {\n                console.error('Error stopping services:', error);\n            }\n        }\n        \n        async function createBackup() {\n            try {\n                await fetch('/api/backup/create', { method: 'POST' });\n                alert('Backup started successfully');\n            } catch (error) {\n                console.error('Error creating backup:', error);\n            }\n        }\n        \n        function showLogs() {\n            window.open('/api/logs/view', '_blank');\n        }\n        \n        // Initialize page\n        document.addEventListener('DOMContentLoaded', function() {\n            refreshSystemStatus();\n            refreshDockerServices();\n            refreshStorage();\n            \n            // Auto-refresh every 30 seconds\n            setInterval(() => {\n                refreshSystemStatus();\n                refreshDockerServices();\n                refreshStorage();\n            }, 30000);\n        });\n    </script>\n</body>\n</html>",
+        "verification": "Verify admin panel HTML created",
+        "expected_output": "Admin panel HTML interface created successfully"
+      },
+      {
+        "step_id": "05-04-02",
+        "title": "Create admin panel API server",
+        "description": "Create Python API server for admin panel functionality",
+        "script_path": "/opt/ai-q/scripts/admin-panel-server.py",
+        "script_content": "#!/usr/bin/env python3\n\n# AI-Q Admin Panel Server\n# Version: 1.0.0\n# Created: 2025-01-28\n# Purpose: API server for admin panel functionality\n\nimport os\nimport json\nimport subprocess\nimport psutil\nfrom datetime import datetime\nfrom flask import Flask, jsonify, request, send_from_directory\nfrom flask_cors import CORS\n\napp = Flask(__name__)\nCORS(app)\n\n# Configuration\nADMIN_PANEL_DIR = \"/opt/ai-q/self-hosted/admin-panel\"\n\n@app.route('/')\ndef index():\n    return send_from_directory(ADMIN_PANEL_DIR, 'index.html')\n\n@app.route('/api/system/status')\ndef system_status():\n    try:\n        # Get system information\n        cpu_percent = psutil.cpu_percent(interval=1)\n        memory = psutil.virtual_memory()\n        boot_time = datetime.fromtimestamp(psutil.boot_time())\n        uptime = datetime.now() - boot_time\n        \n        return jsonify({\n            'status': 'running',\n            'uptime': str(uptime).split('.')[0],\n            'cpu': round(cpu_percent, 1),\n            'memory': round(memory.percent, 1)\n        })\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\n@app.route('/api/docker/services')\ndef docker_services():\n    try:\n        # Get Docker services status\n        result = subprocess.run(['docker', 'ps', '--format', 'json'], \n                               capture_output=True, text=True)\n        \n        services = []\n        for line in result.stdout.strip().split('\\n'):\n            if line:\n                container = json.loads(line)\n                if 'ai-q' in container.get('Names', ''):\n                    services.append({\n                        'name': container['Names'],\n                        'status': container['Status'],\n                        'image': container['Image']\n                    })\n        \n        return jsonify(services)\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\n@app.route('/api/storage/status')\ndef storage_status():\n    try:\n        # Get storage information\n        disk = psutil.disk_usage('/opt/ai-q')\n        \n        return jsonify({\n            'total': f\"{disk.total // (1024**3)} GB\",\n            'used': f\"{disk.used // (1024**3)} GB\",\n            'available': f\"{disk.free // (1024**3)} GB\"\n        })\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\n@app.route('/api/docker/start-all', methods=['POST'])\ndef start_all_services():\n    try:\n        subprocess.run(['docker-compose', '-f', '/opt/ai-q/docker/compose/docker-compose.yml', 'up', '-d'], \n                      cwd='/opt/ai-q')\n        return jsonify({'status': 'success'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\n@app.route('/api/docker/stop-all', methods=['POST'])\ndef stop_all_services():\n    try:\n        subprocess.run(['docker-compose', '-f', '/opt/ai-q/docker/compose/docker-compose.yml', 'down'], \n                      cwd='/opt/ai-q')\n        return jsonify({'status': 'success'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\n@app.route('/api/backup/create', methods=['POST'])\ndef create_backup():\n    try:\n        subprocess.run(['/opt/ai-q/scripts/backup-automation.sh', 'incremental'], \n                      cwd='/opt/ai-q')\n        return jsonify({'status': 'success'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\n@app.route('/api/logs/view')\ndef view_logs():\n    try:\n        # Get recent logs\n        result = subprocess.run(['tail', '-n', '100', '/opt/ai-q/logs/system.log'], \n                               capture_output=True, text=True)\n        return jsonify({'logs': result.stdout})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=8081, debug=False)",
+        "verification": "Verify admin panel API server created",
+        "expected_output": "Admin panel API server created successfully"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/self-hosted/admin-panel/index.html",
+      "ls -la /opt/ai-q/scripts/admin-panel-server.py",
+      "chmod +x /opt/ai-q/scripts/admin-panel-server.py"
+    ],
+    "expected_outputs": {
+      "admin_panel_html": "Admin panel HTML interface created",
+      "admin_panel_api": "Admin panel API server created and executable"
+    }
+  },
+  "verification_and_testing": {
+    "verification_commands": [
+      "ls -la /opt/ai-q/self-hosted/",
+      "docker ps | grep ai-q-gitea",
+      "docker ps | grep ai-q-nextcloud",
+      "curl -s http://localhost:3000 | head -10",
+      "curl -s http://localhost:8080 | head -10",
+      "curl -s http://localhost:8081 | head -10"
+    ],
+    "expected_outputs": {
+      "self_hosted_structure": "Complete self-hosted services structure with proper permissions",
+      "gitea_service": "Gitea service running on port 3000",
+      "nextcloud_service": "NextCloud service running on port 8080",
+      "admin_panel": "Admin panel accessible on port 8081",
+      "service_integration": "All self-hosted services integrated and functional"
+    }
+  },
+  "success_criteria": [
+    "✅ Complete self-hosted services structure created with proper permissions",
+    "✅ Gitea Git server deployed and operational on port 3000",
+    "✅ NextCloud NAS deployed and operational on port 8080",
+    "✅ Custom admin panel created and accessible on port 8081",
+    "✅ All services integrated with proper configuration",
+    "✅ Service monitoring and management capabilities functional",
+    "✅ Complete off-grid operation capability achieved",
+    "✅ All services accessible via web interface"
+  ],
+  "next_steps": [
+    "Test all self-hosted services thoroughly",
+    "Validate service integration and communication",
+    "Test admin panel functionality",
+    "Integrate with versioning and rollback infrastructure",
+    "Prepare for complete system validation"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

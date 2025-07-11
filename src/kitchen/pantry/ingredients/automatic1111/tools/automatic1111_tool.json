@@ -1,0 +1,28 @@
+{
+  "id": "tool.automatic1111",
+  "type": "tool",
+  "name": "Automatic1111 Tool",
+  "description": "Comprehensive Automatic1111 Stable Diffusion WebUI operations for image generation and manipulation",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["stable", "diffusion", "image", "generation", "ai", "art", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for Stable Diffusion image generation and manipulation tasks in recipes",
+  "operations": {
+    "txt2img": "Generate images from text prompts",
+    "img2img": "Transform images using text prompts",
+    "interrogate": "Analyze images to extract prompts",
+    "upscale": "Upscale images using various algorithms",
+    "controlnet": "Apply ControlNet for precise image control",
+    "inpaint": "Inpaint specific areas of images",
+    "outpaint": "Extend images beyond their boundaries"
+  },
+  "validation": {
+    "required_fields": ["operation", "prompt"],
+    "operations": ["txt2img", "img2img", "interrogate", "upscale", "controlnet", "inpaint", "outpaint"]
+  }
+} 

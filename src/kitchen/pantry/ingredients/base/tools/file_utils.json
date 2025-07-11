@@ -1,0 +1,27 @@
+{
+  "id": "tool.file_utils",
+  "type": "tool",
+  "name": "File Utilities",
+  "description": "Modular file utility functions for reading, writing, checking, deleting, copying, and listing files",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["file", "utility", "io", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for basic file operations in recipes",
+  "operations": {
+    "file_reader": "Read text and binary files",
+    "file_writer": "Write text and binary files", 
+    "file_checker": "Check file existence and get info",
+    "file_deleter": "Delete files with force option",
+    "file_copier": "Copy files with overwrite option",
+    "directory_lister": "List directory contents"
+  },
+  "validation": {
+    "required_fields": ["operation", "file_path"],
+    "operations": ["read", "write", "exists", "delete", "copy", "list"]
+  }
+} 

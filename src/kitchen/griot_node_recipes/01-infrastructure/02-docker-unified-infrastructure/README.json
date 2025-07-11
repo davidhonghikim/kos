@@ -1,0 +1,153 @@
+{
+  "metadata": {
+    "recipe_id": "02-docker",
+    "title": "Docker Infrastructure Recipe - Complete Implementation Guide",
+    "version": "3.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T18:03:12Z",
+    "purpose": "Comprehensive multi-task recipe for Docker infrastructure implementation",
+    "total_sub_recipes": 2,
+    "total_tasks": 60,
+    "estimated_duration": "1-2 weeks",
+    "complexity": "Advanced",
+    "dependencies": [
+      "01-core-infrastructure"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "recipe_overview": {
+    "description": "Complete implementation of Docker infrastructure including core environment, services, orchestration, and container management",
+    "architecture": "Containerized microservices with Docker orchestration",
+    "target_environment": "Production-ready with development and staging support",
+    "scalability": "Horizontal scaling with container orchestration",
+    "security": "Container security with isolation and access controls"
+  },
+  "sub_recipes": [
+    {
+      "id": "01-docker-core",
+      "name": "Docker Core Foundation",
+      "file": "01-docker-core.json",
+      "description": "Core Docker environment with network configuration and volume management",
+      "estimated_tasks": 30,
+      "duration": "3-4 days",
+      "dependencies": [
+        "01-core-infrastructure"
+      ],
+      "components": [
+        "Docker Engine",
+        "Network Architecture",
+        "Volume Management",
+        "Basic Services"
+      ]
+    },
+    {
+      "id": "02-docker-services",
+      "name": "Docker Services and Orchestration",
+      "file": "02-docker-services.json",
+      "description": "Advanced Docker services with orchestration and management",
+      "estimated_tasks": 30,
+      "duration": "3-4 days",
+      "dependencies": [
+        "01-docker-core"
+      ],
+      "components": [
+        "Docker Compose",
+        "Service Orchestration",
+        "Management Tools",
+        "Monitoring"
+      ]
+    }
+  ],
+  "implementation_workflow": {
+    "phase_1": {
+      "name": "Core Foundation",
+      "sub_recipes": [
+        "01-docker-core"
+      ],
+      "duration": "3-4 days",
+      "description": "Basic Docker environment and networking"
+    },
+    "phase_2": {
+      "name": "Services and Orchestration",
+      "sub_recipes": [
+        "02-docker-services"
+      ],
+      "duration": "3-4 days",
+      "description": "Advanced services and orchestration"
+    }
+  },
+  "success_criteria": {
+    "functional_requirements": [
+      "Docker environment properly configured",
+      "Network architecture operational",
+      "Volume management functional",
+      "Service orchestration working",
+      "All containers running properly",
+      "Management tools operational"
+    ],
+    "performance_requirements": [
+      "Container startup time < 30 seconds",
+      "Network latency < 10ms between containers",
+      "Volume I/O performance optimized",
+      "Resource utilization < 80%"
+    ],
+    "security_requirements": [
+      "Container isolation implemented",
+      "Network segmentation functional",
+      "Access controls in place",
+      "Security scanning passed"
+    ]
+  },
+  "maintenance_and_operations": {
+    "monitoring": "Container health monitoring and alerting",
+    "backup": "Volume backup and recovery procedures",
+    "updates": "Container image update procedures",
+    "scaling": "Horizontal scaling procedures"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      "Container startup failures",
+      "Network connectivity issues",
+      "Volume mounting problems",
+      "Resource exhaustion"
+    ],
+    "diagnostic_commands": [
+      "docker ps -a",
+      "docker network ls",
+      "docker volume ls",
+      "docker system df"
+    ]
+  },
+  "next_steps": {
+    "next_recipe": "03-storage-systems",
+    "prerequisites_completed": [
+      "Docker environment operational",
+      "Network architecture functional",
+      "Volume management working",
+      "Service orchestration ready"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

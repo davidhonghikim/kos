@@ -1,0 +1,210 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-AI-SERVICE-OPEN-WEBUI-SETUP-003",
+    "title": "Open WebUI Service Setup",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "difficulty_level": "intermediate",
+    "total_tasks": 1,
+    "kitchen_system": {
+      "pantry_category": "ui_services",
+      "cooking_time": "20 minutes",
+      "complexity": "intermediate",
+      "kitchen_tools": [
+        "web_ui_deployment",
+        "service_integration",
+        "user_interface"
+      ],
+      "cache_strategy": "openwebui_service_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "description": "Deploys the Open WebUI service using Docker, providing a user-friendly interface for interacting with the Ollama backend. This is a default component.",
+    "technology_stack": {
+      "llm_ui": "Open WebUI",
+      "orchestration": "Docker Compose",
+      "backend_integration": "Ollama_API",
+      "web_interface": "React_TypeScript"
+    },
+    "deliverables": [
+      "A running Open WebUI Docker container.",
+      "A Docker Compose file that links Open WebUI to the Ollama service.",
+      "A web interface accessible to the user in their browser."
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "OPENWEBUI_DEPLOYMENT_TASK",
+        "name": "Open WebUI Container Deployment",
+        "description": "Deploy and configure Open WebUI service container",
+        "estimated_time": "20 minutes",
+        "dependencies": [
+          "OLLAMA_DEPLOYMENT_TASK"
+        ],
+        "skills_required": [
+          "web_ui_deployment",
+          "service_integration",
+          "user_interface"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "WEB_UI_DEPLOYMENT_SKILL",
+        "name": "Web UI Deployment",
+        "description": "Deploy and configure web user interfaces",
+        "tools": [
+          "docker_compose",
+          "web_container_management"
+        ],
+        "validation": "web_ui_deployment_validation"
+      },
+      {
+        "skill_id": "SERVICE_INTEGRATION_SKILL",
+        "name": "Service Integration",
+        "description": "Integrate services with backend APIs",
+        "tools": [
+          "api_integration",
+          "service_communication"
+        ],
+        "validation": "service_integration_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "OPENWEBUI_DEPLOYMENT_TOOL",
+        "name": "Open WebUI Deployment Tool",
+        "description": "Docker Compose configuration for Open WebUI",
+        "file_path": "docker/compose/open-webui.yml",
+        "config": "config/openwebui/openwebui_config.json"
+      },
+      {
+        "tool_id": "SERVICE_INTEGRATION_TOOL",
+        "name": "Service Integration Tool",
+        "description": "Integrate Open WebUI with Ollama backend",
+        "file_path": "scripts/integration/service_integrator.py",
+        "config": "config/integration/service_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "OPENWEBUI_CONFIG",
+        "name": "Open WebUI Configuration",
+        "description": "Configuration for Open WebUI service",
+        "file_path": "config/openwebui/openwebui_config.json",
+        "schema": "openwebui_config_schema"
+      },
+      {
+        "config_id": "SERVICE_INTEGRATION_CONFIG",
+        "name": "Service Integration Configuration",
+        "description": "Configuration for service integration",
+        "file_path": "config/integration/service_config.json",
+        "schema": "service_integration_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "OPENWEBUI_DEPLOYMENT_TASK",
+          "WEB_UI_DEPLOYMENT_SKILL",
+          "OPENWEBUI_DEPLOYMENT_TOOL"
+        ],
+        "description": "Gather Open WebUI deployment ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "openwebui_service_cache",
+        "description": "Check for existing Open WebUI service cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "integrate_with_backend",
+        "tool": "SERVICE_INTEGRATION_TOOL",
+        "description": "Integrate Open WebUI with Ollama backend"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_task",
+        "task": "OPENWEBUI_DEPLOYMENT_TASK",
+        "description": "Execute Open WebUI deployment task"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "validate_results",
+        "validation": "web_ui_deployment_validation",
+        "description": "Validate Open WebUI service deployment"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "cache_results",
+        "cache_key": "openwebui_service_cache",
+        "description": "Cache Open WebUI service configuration"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "openwebui_service_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "service_config_change",
+      "cache_validation": "web_ui_deployment_validation"
+    }
+  },
+  "tasks": [
+    {
+      "id": "40-003",
+      "title": "Deploy Open WebUI Container",
+      "description": "Create and configure a docker-compose.yml file to run the official Open WebUI image and connect it to the Ollama container.",
+      "dependencies": [
+        "40-002"
+      ],
+      "estimated_time": "20 minutes",
+      "commands": [
+        "docker-compose -f docker/compose/open-webui.yml up -d"
+      ],
+      "files_to_create": [
+        "docker/compose/open-webui.yml"
+      ],
+      "acceptance_criteria": [
+        "The open-webui.yml Docker Compose file is created.",
+        "The Open WebUI container starts and successfully connects to the Ollama backend.",
+        "The web interface is accessible on its specified port (e.g., 8080)."
+      ]
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-Open-Webui-Setup",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

@@ -1,0 +1,363 @@
+{
+  "metadata": {
+    "sub_recipe_id": "02-09-security-services",
+    "title": "Security Services - Fail2Ban and Security Monitoring",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T18:17:18Z",
+    "purpose": "Deploy security services including Fail2Ban, intrusion detection, and security monitoring",
+    "total_tasks": 4,
+    "estimated_duration": "1-2 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "02-01-docker-core",
+      "02-02-docker-services",
+      "02-08-reverse-proxy"
+    ],
+    "port_assignments": {
+      "fail2ban": 2222,
+      "security-monitor": 8082,
+      "notes": "Using alternative ports for security services"
+    },
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "02-01-01: Docker environment setup",
+      "02-01-02: Network architecture configured",
+      "02-01-03: Volume management setup",
+      "02-02-01: Docker services orchestration",
+      "02-08-01: Nginx configuration created",
+      "02-08-02: Nginx reverse proxy deployed"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 1 core for security services",
+      "ram": "Minimum 512MB for security services",
+      "storage": "Minimum 2GB for logs and security data",
+      "network": "Stable network for security monitoring"
+    }
+  },
+  "task_01_deploy_fail2ban": {
+    "task_id": "02-09-01",
+    "title": "Deploy Fail2Ban",
+    "description": "Deploy Fail2Ban for intrusion prevention and log monitoring",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-09-01-01",
+        "title": "Create Fail2Ban configuration directory",
+        "description": "Create directory structure for Fail2Ban",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/config/fail2ban",
+          "sudo mkdir -p /opt/ai-q/config/fail2ban/jail.d",
+          "sudo mkdir -p /opt/ai-q/config/fail2ban/filter.d",
+          "sudo mkdir -p /opt/ai-q/data/fail2ban/logs"
+        ],
+        "verification": "Check directories created",
+        "expected_output": "All Fail2Ban directories created successfully"
+      },
+      {
+        "step_id": "02-09-01-02",
+        "title": "Create Fail2Ban configuration",
+        "description": "Create comprehensive Fail2Ban configuration",
+        "config_file": "/opt/ai-q/config/fail2ban/jail.local",
+        "config_content": {
+          "DEFAULT": {
+            "bantime": 3600,
+            "findtime": 600,
+            "maxretry": 5,
+            "backend": "auto",
+            "usedns": "warn"
+          },
+          "sshd": {
+            "enabled": true,
+            "port": "ssh",
+            "filter": "sshd",
+            "logpath": "/var/log/auth.log",
+            "maxretry": 3
+          },
+          "nginx-http-auth": {
+            "enabled": true,
+            "filter": "nginx-http-auth",
+            "port": "http,https",
+            "logpath": "/var/log/nginx/error.log",
+            "maxretry": 3
+          },
+          "nginx-limit-req": {
+            "enabled": true,
+            "filter": "nginx-limit-req",
+            "port": "http,https",
+            "logpath": "/var/log/nginx/access.log",
+            "maxretry": 10
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/config/fail2ban/jail.local << 'EOF'\n[DEFAULT]\nbantime = 3600\nfindtime = 600\nmaxretry = 5\nbackend = auto\nusedns = warn\n\n[sshd]\nenabled = true\nport = ssh\nfilter = sshd\nlogpath = /var/log/auth.log\nmaxretry = 3\n\n[nginx-http-auth]\nenabled = true\nfilter = nginx-http-auth\nport = http,https\nlogpath = /var/log/nginx/error.log\nmaxretry = 3\n\n[nginx-limit-req]\nenabled = true\nfilter = nginx-limit-req\nport = http,https\nlogpath = /var/log/nginx/access.log\nmaxretry = 10\nEOF"
+        ],
+        "verification": "Check configuration file exists",
+        "expected_output": "jail.local created with specified configuration"
+      },
+      {
+        "step_id": "02-09-01-03",
+        "title": "Create Fail2Ban Docker Compose service",
+        "description": "Create Fail2Ban service configuration",
+        "config_file": "/opt/ai-q/docker/compose/fail2ban-service.yml",
+        "config_content": {
+          "version": "3.8",
+          "services": {
+            "fail2ban": {
+              "image": "crazymax/fail2ban:latest",
+              "container_name": "ai-q-fail2ban",
+              "restart": "unless-stopped",
+              "ports": [
+                "2222:2222"
+              ],
+              "volumes": [
+                "/opt/ai-q/config/fail2ban:/data",
+                "/opt/ai-q/data/fail2ban/logs:/var/log",
+                "/var/log/nginx:/var/log/nginx:ro",
+                "/var/log/auth.log:/var/log/auth.log:ro"
+              ],
+              "cap_add": [
+                "NET_ADMIN",
+                "NET_RAW"
+              ],
+              "network_mode": "host",
+              "environment": [
+                "TZ=UTC",
+                "F2B_LOG_LEVEL=INFO"
+              ],
+              "healthcheck": {
+                "test": [
+                  "CMD",
+                  "fail2ban-client",
+                  "ping"
+                ],
+                "interval": "30s",
+                "timeout": "10s",
+                "retries": 3
+              }
+            }
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/docker/compose/fail2ban-service.yml << 'EOF'\nversion: '3.8'\n\nservices:\n  fail2ban:\n    image: crazymax/fail2ban:latest\n    container_name: ai-q-fail2ban\n    restart: unless-stopped\n    ports:\n      - 2222:2222\n    volumes:\n      - /opt/ai-q/config/fail2ban:/data\n      - /opt/ai-q/data/fail2ban/logs:/var/log\n      - /var/log/nginx:/var/log/nginx:ro\n      - /var/log/auth.log:/var/log/auth.log:ro\n    cap_add:\n      - NET_ADMIN\n      - NET_RAW\n    network_mode: host\n    environment:\n      - TZ=UTC\n      - F2B_LOG_LEVEL=INFO\n    healthcheck:\n      test: [\"CMD\", \"fail2ban-client\", \"ping\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\nEOF"
+        ],
+        "verification": "Check configuration file exists",
+        "expected_output": "fail2ban-service.yml created with specified configuration"
+      },
+      {
+        "step_id": "02-09-01-04",
+        "title": "Deploy Fail2Ban service",
+        "description": "Start Fail2Ban service and verify deployment",
+        "commands": [
+          "docker-compose -f /opt/ai-q/docker/compose/fail2ban-service.yml up -d",
+          "sleep 15",
+          "docker exec ai-q-fail2ban fail2ban-client ping"
+        ],
+        "verification": "Check Fail2Ban service is running",
+        "expected_output": "Fail2Ban service running and responding to ping"
+      }
+    ],
+    "verification_commands": [
+      "docker ps --filter name=ai-q-fail2ban",
+      "docker exec ai-q-fail2ban fail2ban-client ping",
+      "docker exec ai-q-fail2ban fail2ban-client status",
+      "docker logs ai-q-fail2ban"
+    ],
+    "expected_outputs": {
+      "service_running": "Fail2Ban container is running",
+      "ping_response": "Fail2Ban responds to ping",
+      "status_ok": "Fail2Ban status shows active jails",
+      "logs_clean": "No error messages in logs"
+    }
+  },
+  "task_02_deploy_security_monitor": {
+    "task_id": "02-09-02",
+    "title": "Deploy Security Monitor",
+    "description": "Deploy security monitoring service for threat detection",
+    "estimated_duration": "30 minutes",
+    "critical": false,
+    "steps": [
+      {
+        "step_id": "02-09-02-01",
+        "title": "Create Security Monitor configuration directory",
+        "description": "Create directory structure for Security Monitor",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/config/security-monitor",
+          "sudo mkdir -p /opt/ai-q/data/security-monitor/logs",
+          "sudo mkdir -p /opt/ai-q/data/security-monitor/alerts"
+        ],
+        "verification": "Check directories created",
+        "expected_output": "All Security Monitor directories created successfully"
+      },
+      {
+        "step_id": "02-09-02-02",
+        "title": "Create Security Monitor Docker Compose service",
+        "description": "Create Security Monitor service configuration",
+        "config_file": "/opt/ai-q/docker/compose/security-monitor-service.yml",
+        "config_content": {
+          "version": "3.8",
+          "services": {
+            "security-monitor": {
+              "image": "alpine:latest",
+              "container_name": "ai-q-security-monitor",
+              "restart": "unless-stopped",
+              "ports": [
+                "8082:8080"
+              ],
+              "volumes": [
+                "/opt/ai-q/config/security-monitor:/config",
+                "/opt/ai-q/data/security-monitor/logs:/logs",
+                "/opt/ai-q/data/security-monitor/alerts:/alerts",
+                "/var/log:/host/logs:ro"
+              ],
+              "command": [
+                "sh",
+                "-c",
+                "apk add --no-cache python3 py3-pip && pip3 install flask requests && python3 -m http.server 8080"
+              ],
+              "networks": [
+                "ai-q-network"
+              ],
+              "healthcheck": {
+                "test": [
+                  "CMD",
+                  "wget",
+                  "--no-verbose",
+                  "--tries=1",
+                  "--spider",
+                  "http://localhost:8080/"
+                ],
+                "interval": "30s",
+                "timeout": "10s",
+                "retries": 3
+              }
+            }
+          },
+          "networks": {
+            "ai-q-network": {
+              "external": true
+            }
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/docker/compose/security-monitor-service.yml << 'EOF'\nversion: '3.8'\n\nservices:\n  security-monitor:\n    image: alpine:latest\n    container_name: ai-q-security-monitor\n    restart: unless-stopped\n    ports:\n      - 8082:8080\n    volumes:\n      - /opt/ai-q/config/security-monitor:/config\n      - /opt/ai-q/data/security-monitor/logs:/logs\n      - /opt/ai-q/data/security-monitor/alerts:/alerts\n      - /var/log:/host/logs:ro\n    command:\n      - sh\n      - -c\n      - apk add --no-cache python3 py3-pip && pip3 install flask requests && python3 -m http.server 8080\n    networks:\n      - ai-q-network\n    healthcheck:\n      test: [\"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:8080/\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n\nnetworks:\n  ai-q-network:\n    external: true\nEOF"
+        ],
+        "verification": "Check configuration file exists",
+        "expected_output": "security-monitor-service.yml created with specified configuration"
+      },
+      {
+        "step_id": "02-09-02-03",
+        "title": "Deploy Security Monitor service",
+        "description": "Start Security Monitor service and verify deployment",
+        "commands": [
+          "docker-compose -f /opt/ai-q/docker/compose/security-monitor-service.yml up -d",
+          "sleep 30",
+          "curl -f http://localhost:8082/"
+        ],
+        "verification": "Check Security Monitor service is running",
+        "expected_output": "Security Monitor service running and responding to requests"
+      }
+    ],
+    "verification_commands": [
+      "docker ps --filter name=ai-q-security-monitor",
+      "curl -s http://localhost:8082/",
+      "docker logs ai-q-security-monitor"
+    ],
+    "expected_outputs": {
+      "service_running": "Security Monitor container is running",
+      "http_responding": "Security Monitor responds to HTTP requests",
+      "logs_clean": "No error messages in logs"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Security Services Verification",
+      "description": "Run comprehensive tests to verify all security components",
+      "test_commands": [
+        "docker-compose -f /opt/ai-q/docker/compose/fail2ban-service.yml ps",
+        "docker-compose -f /opt/ai-q/docker/compose/security-monitor-service.yml ps",
+        "docker exec ai-q-fail2ban fail2ban-client ping",
+        "docker exec ai-q-fail2ban fail2ban-client status",
+        "curl -s http://localhost:8082/",
+        "docker exec ai-q-fail2ban fail2ban-client get sshd banned"
+      ],
+      "expected_results": {
+        "fail2ban": "Responds to ping and shows status",
+        "security_monitor": "Responds to HTTP requests",
+        "jails_active": "Fail2Ban jails are active and monitoring"
+      }
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Fail2Ban cannot access log files",
+        "symptoms": "Fail2Ban shows log file access errors",
+        "solution": "Check log file permissions and volume mounts",
+        "commands": [
+          "docker logs ai-q-fail2ban",
+          "ls -la /var/log/nginx/",
+          "ls -la /var/log/auth.log",
+          "docker exec ai-q-fail2ban ls -la /var/log/"
+        ]
+      },
+      {
+        "issue": "Fail2Ban iptables rules not working",
+        "symptoms": "Fail2Ban cannot modify iptables rules",
+        "solution": "Check container capabilities and network mode",
+        "commands": [
+          "docker logs ai-q-fail2ban",
+          "docker inspect ai-q-fail2ban | grep -A 10 CapAdd",
+          "iptables -L -n | grep f2b"
+        ]
+      },
+      {
+        "issue": "Security Monitor not starting",
+        "symptoms": "Security Monitor container exits with errors",
+        "solution": "Check Python dependencies and port conflicts",
+        "commands": [
+          "docker logs ai-q-security-monitor",
+          "docker exec ai-q-security-monitor python3 --version",
+          "netstat -tlnp | grep 8082"
+        ]
+      }
+    ]
+  },
+  "next_steps": {
+    "next_sub_recipe": "02-10-backup-services",
+    "prerequisites_completed": [
+      "Fail2Ban deployed and running",
+      "Security Monitor deployed and running",
+      "Security services integrated",
+      "Port 2222 reserved for Fail2Ban",
+      "Port 8082 reserved for Security Monitor"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

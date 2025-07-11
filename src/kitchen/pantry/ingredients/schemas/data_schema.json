@@ -1,0 +1,28 @@
+{
+  "id": "schema.data",
+  "type": "schema",
+  "name": "Data Schema",
+  "description": "Schema definition for structured data validation",
+  "version": "1.0.0",
+  "category": "schemas",
+  "dependencies": [],
+  "tags": ["schema", "validation", "data_structure", "json_schema"],
+  "author": "system",
+  "created": "2025-07-07T23:00:00Z",
+  "updated": "2025-07-07T23:00:00Z",
+  "access_level": "public",
+  "usage": "Use for validating data structure and format",
+  "validation": {
+    "required_fields": ["schema_type", "fields"],
+    "schema_definition": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "value": {"type": "number"},
+        "timestamp": {"type": "string", "format": "date-time"}
+      },
+      "required": ["id", "name"]
+    }
+  }
+} 

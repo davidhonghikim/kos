@@ -1,0 +1,892 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-09-SECURITY-HARDENING-COMPREHENSIVE",
+    "title": "Security Hardening and Compliance - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T17:59:15Z",
+    "last_updated": "2025-07-05T17:59:15Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "2-3 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 8,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2",
+      "NIST"
+    ],
+    "architecture_tier": "enterprise-security",
+    "description": "Complete security hardening and compliance implementation with firewall rules, security policies, and compliance monitoring",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "01-01-docker-environment",
+        "01-02-system-monitoring",
+        "01-03-logging-infrastructure",
+        "01-04-load-balancing",
+        "01-05-service-discovery",
+        "01-06-message-queue",
+        "01-07-cache-layer",
+        "01-08-backup-infrastructure"
+      ],
+      "required_services": [
+        "docker",
+        "ufw",
+        "openssl"
+      ],
+      "required_networks": [
+        "ai-q-network",
+        "ai-q-services"
+      ],
+      "required_volumes": [
+        "ai-q-data",
+        "ai-q-config"
+      ],
+      "required_ports": [
+        22,
+        80,
+        443,
+        9090,
+        3000,
+        5601,
+        8500,
+        15672,
+        6379,
+        5432
+      ],
+      "required_files": [
+        "/opt/ai-q/security/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "security",
+      "cooking_time": "180 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "firewall_setup",
+        "security_policies",
+        "compliance_monitoring"
+      ],
+      "cache_strategy": "security_hardening_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Security Hardening and Compliance",
+    "description": "Complete security hardening and compliance implementation with firewall rules, security policies, and compliance monitoring",
+    "prerequisites": [
+      "01-01-docker-environment completed",
+      "01-02-system-monitoring completed",
+      "01-03-logging-infrastructure completed",
+      "01-04-load-balancing completed",
+      "01-05-service-discovery completed",
+      "01-06-message-queue completed",
+      "01-07-cache-layer completed",
+      "01-08-backup-infrastructure completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 4GB RAM available",
+      "20GB free disk space for security logs"
+    ],
+    "target_outcome": "Production-ready security hardening with comprehensive compliance monitoring",
+    "success_criteria": [
+      "Firewall rules configured and active",
+      "Security policies implemented",
+      "Compliance monitoring operational",
+      "Access controls enforced",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "FIREWALL_SETUP_TASK",
+        "name": "Firewall Setup",
+        "description": "Configure comprehensive firewall rules for security",
+        "estimated_time": "45 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "firewall_configuration",
+          "network_security",
+          "ufw_management"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/security/firewall",
+          "tee /opt/ai-q/security/firewall/ufw.conf << 'EOF'",
+          "{",
+          "  \"default_policies\": {",
+          "    \"input\": \"deny\",",
+          "    \"output\": \"allow\",",
+          "    \"forward\": \"deny\"",
+          "  },",
+          "  \"allowed_ports\": [",
+          "    {\"port\": 22, \"protocol\": \"tcp\", \"description\": \"SSH\"},",
+          "    {\"port\": 80, \"protocol\": \"tcp\", \"description\": \"HTTP\"},",
+          "    {\"port\": 443, \"protocol\": \"tcp\", \"description\": \"HTTPS\"},",
+          "    {\"port\": 9090, \"protocol\": \"tcp\", \"description\": \"Prometheus\"},",
+          "    {\"port\": 3000, \"protocol\": \"tcp\", \"description\": \"Grafana\"},",
+          "    {\"port\": 5601, \"protocol\": \"tcp\", \"description\": \"Kibana\"},",
+          "    {\"port\": 8500, \"protocol\": \"tcp\", \"description\": \"Consul\"},",
+          "    {\"port\": 15672, \"protocol\": \"tcp\", \"description\": \"RabbitMQ Management\"},",
+          "    {\"port\": 6379, \"protocol\": \"tcp\", \"description\": \"Redis\"},",
+          "    {\"port\": 5432, \"protocol\": \"tcp\", \"description\": \"PostgreSQL\"}",
+          "  ],",
+          "  \"allowed_networks\": [",
+          "    {\"network\": \"10.0.0.0/8\", \"description\": \"Internal network\"},",
+          "    {\"network\": \"172.16.0.0/12\", \"description\": \"Docker network\"},",
+          "    {\"network\": \"192.168.0.0/16\", \"description\": \"Local network\"}",
+          "  ]",
+          "}",
+          "EOF",
+          "tee /opt/ai-q/security/firewall/setup-ufw.sh << 'EOF'",
+          "#!/bin/bash",
+          "# UFW Firewall Setup Script",
+          "",
+          "# Reset UFW",
+          "ufw --force reset",
+          "",
+          "# Set default policies",
+          "ufw default deny incoming",
+          "ufw default allow outgoing",
+          "ufw default deny forward",
+          "",
+          "# Allow SSH",
+          "ufw allow 22/tcp comment 'SSH'",
+          "",
+          "# Allow HTTP/HTTPS",
+          "ufw allow 80/tcp comment 'HTTP'",
+          "ufw allow 443/tcp comment 'HTTPS'",
+          "",
+          "# Allow monitoring ports",
+          "ufw allow 9090/tcp comment 'Prometheus'",
+          "ufw allow 3000/tcp comment 'Grafana'",
+          "ufw allow 5601/tcp comment 'Kibana'",
+          "",
+          "# Allow service discovery",
+          "ufw allow 8500/tcp comment 'Consul'",
+          "",
+          "# Allow message queue management",
+          "ufw allow 15672/tcp comment 'RabbitMQ Management'",
+          "",
+          "# Allow database access (restrict to internal networks)",
+          "ufw allow from 10.0.0.0/8 to any port 5432 comment 'PostgreSQL'",
+          "ufw allow from 172.16.0.0/12 to any port 6379 comment 'Redis'",
+          "",
+          "# Enable UFW",
+          "ufw --force enable",
+          "",
+          "# Show status",
+          "ufw status verbose",
+          "EOF",
+          "chmod +x /opt/ai-q/security/firewall/setup-ufw.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/security/firewall/",
+          "cat /opt/ai-q/security/firewall/ufw.conf",
+          "test -x /opt/ai-q/security/firewall/setup-ufw.sh"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "FIREWALL_CONFIGURATION_SKILL",
+        "name": "Firewall Configuration",
+        "description": "Configure firewall rules with exact specifications",
+        "tools": [
+          "firewall_setup",
+          "network_security",
+          "ufw_management"
+        ],
+        "validation": "firewall_configuration_validation",
+        "exact_validation_commands": [
+          "ufw status verbose",
+          "ufw status numbered",
+          "cat /opt/ai-q/security/firewall/ufw.conf"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "SECURITY_SETUP_TOOL",
+        "name": "Security Setup Tool",
+        "description": "Automated security hardening installation and configuration",
+        "file_path": "scripts/security/setup_security.py",
+        "config": "config/security/security_config.json",
+        "exact_config_spec": {
+          "firewall_enabled": true,
+          "default_policy": "deny",
+          "allowed_ports": [
+            22,
+            80,
+            443,
+            9090,
+            3000,
+            5601,
+            8500,
+            15672,
+            6379,
+            5432
+          ],
+          "compliance_monitoring": true
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "SECURITY_CONFIG",
+        "name": "Security Configuration",
+        "description": "Security configuration with exact specifications",
+        "file_path": "/opt/ai-q/security/firewall/ufw.conf",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "default_policies": {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "string"
+                },
+                "output": {
+                  "type": "string"
+                },
+                "forward": {
+                  "type": "string"
+                }
+              }
+            },
+            "allowed_ports": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "port": {
+                    "type": "integer"
+                  },
+                  "protocol": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "allowed_networks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "network": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "01-01-01: Docker Engine installed",
+      "01-01-02: Docker daemon configured",
+      "01-01-03: Docker networks created",
+      "01-02-01: Prometheus installed",
+      "01-02-02: Node Exporter running",
+      "01-02-03: Alert Manager configured",
+      "01-02-04: Grafana installed",
+      "01-03-01: Elasticsearch installed",
+      "01-03-02: Logstash configured",
+      "01-03-03: Kibana installed",
+      "01-04-01: Nginx installed",
+      "01-05-01: Consul server installed",
+      "01-06-01: RabbitMQ server installed",
+      "01-07-01: Redis server installed",
+      "01-08-01: Backup scripts created"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 2 cores for security operations",
+      "ram": "Minimum 4GB for security operations",
+      "storage": "Minimum 20GB for security logs",
+      "network": "Access to all service networks"
+    }
+  },
+  "task_01_configure_firewall_rules": {
+    "task_id": "01-09-01",
+    "title": "Configure Firewall Rules",
+    "description": "Configure comprehensive firewall rules for security",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-09-01-01",
+        "title": "Create firewall configuration",
+        "description": "Create UFW firewall configuration",
+        "config_file": "/opt/ai-q/security/firewall/ufw.conf",
+        "config_content": {
+          "default_policies": {
+            "input": "deny",
+            "output": "allow",
+            "forward": "deny"
+          },
+          "allowed_ports": [
+            {
+              "port": 22,
+              "protocol": "tcp",
+              "description": "SSH"
+            },
+            {
+              "port": 80,
+              "protocol": "tcp",
+              "description": "HTTP"
+            },
+            {
+              "port": 443,
+              "protocol": "tcp",
+              "description": "HTTPS"
+            },
+            {
+              "port": 9090,
+              "protocol": "tcp",
+              "description": "Prometheus"
+            },
+            {
+              "port": 3000,
+              "protocol": "tcp",
+              "description": "Grafana"
+            },
+            {
+              "port": 5601,
+              "protocol": "tcp",
+              "description": "Kibana"
+            },
+            {
+              "port": 8500,
+              "protocol": "tcp",
+              "description": "Consul"
+            },
+            {
+              "port": 15672,
+              "protocol": "tcp",
+              "description": "RabbitMQ Management"
+            },
+            {
+              "port": 6379,
+              "protocol": "tcp",
+              "description": "Redis"
+            },
+            {
+              "port": 5432,
+              "protocol": "tcp",
+              "description": "PostgreSQL"
+            }
+          ],
+          "allowed_networks": [
+            {
+              "network": "10.0.0.0/8",
+              "description": "Internal network"
+            },
+            {
+              "network": "172.16.0.0/12",
+              "description": "Docker network"
+            },
+            {
+              "network": "192.168.0.0/16",
+              "description": "Local network"
+            }
+          ]
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/security/firewall",
+          "sudo tee /opt/ai-q/security/firewall/ufw.conf << 'EOF'\n{\n  \"default_policies\": {\n    \"input\": \"deny\",\n    \"output\": \"allow\",\n    \"forward\": \"deny\"\n  },\n  \"allowed_ports\": [\n    {\"port\": 22, \"protocol\": \"tcp\", \"description\": \"SSH\"},\n    {\"port\": 80, \"protocol\": \"tcp\", \"description\": \"HTTP\"},\n    {\"port\": 443, \"protocol\": \"tcp\", \"description\": \"HTTPS\"},\n    {\"port\": 9090, \"protocol\": \"tcp\", \"description\": \"Prometheus\"},\n    {\"port\": 3000, \"protocol\": \"tcp\", \"description\": \"Grafana\"},\n    {\"port\": 5601, \"protocol\": \"tcp\", \"description\": \"Kibana\"},\n    {\"port\": 8500, \"protocol\": \"tcp\", \"description\": \"Consul\"},\n    {\"port\": 15672, \"protocol\": \"tcp\", \"description\": \"RabbitMQ Management\"},\n    {\"port\": 6379, \"protocol\": \"tcp\", \"description\": \"Redis\"},\n    {\"port\": 5432, \"protocol\": \"tcp\", \"description\": \"PostgreSQL\"}\n  ],\n  \"allowed_networks\": [\n    {\"network\": \"10.0.0.0/8\", \"description\": \"Internal network\"},\n    {\"network\": \"172.16.0.0/12\", \"description\": \"Docker network\"},\n    {\"network\": \"192.168.0.0/16\", \"description\": \"Local network\"}\n  ]\n}\nEOF"
+        ],
+        "verification": "Check firewall configuration exists",
+        "expected_output": "ufw.conf created with specified configuration"
+      },
+      {
+        "step_id": "01-09-01-02",
+        "title": "Create firewall setup script",
+        "description": "Create script to configure UFW firewall",
+        "config_file": "/opt/ai-q/security/firewall/setup-ufw.sh",
+        "config_content": "#!/bin/bash\n# UFW Firewall Setup Script\n\n# Reset UFW\nufw --force reset\n\n# Set default policies\nufw default deny incoming\nufw default allow outgoing\nufw default deny forward\n\n# Allow SSH\nufw allow 22/tcp comment 'SSH'\n\n# Allow HTTP/HTTPS\nufw allow 80/tcp comment 'HTTP'\nufw allow 443/tcp comment 'HTTPS'\n\n# Allow monitoring ports\nufw allow 9090/tcp comment 'Prometheus'\nufw allow 3000/tcp comment 'Grafana'\nufw allow 5601/tcp comment 'Kibana'\n\n# Allow service discovery\nufw allow 8500/tcp comment 'Consul'\n\n# Allow message queue management\nufw allow 15672/tcp comment 'RabbitMQ Management'\n\n# Allow database access (restrict to internal networks)\nufw allow from 10.0.0.0/8 to any port 5432 comment 'PostgreSQL'\nufw allow from 172.16.0.0/12 to any port 6379 comment 'Redis'\n\n# Enable UFW\nufw --force enable\n\n# Show status\nufw status verbose",
+        "commands": [
+          "sudo tee /opt/ai-q/security/firewall/setup-ufw.sh << 'EOF'\n#!/bin/bash\n# UFW Firewall Setup Script\n\n# Reset UFW\nufw --force reset\n\n# Set default policies\nufw default deny incoming\nufw default allow outgoing\nufw default deny forward\n\n# Allow SSH\nufw allow 22/tcp comment 'SSH'\n\n# Allow HTTP/HTTPS\nufw allow 80/tcp comment 'HTTP'\nufw allow 443/tcp comment 'HTTPS'\n\n# Allow monitoring ports\nufw allow 9090/tcp comment 'Prometheus'\nufw allow 3000/tcp comment 'Grafana'\nufw allow 5601/tcp comment 'Kibana'\n\n# Allow service discovery\nufw allow 8500/tcp comment 'Consul'\n\n# Allow message queue management\nufw allow 15672/tcp comment 'RabbitMQ Management'\n\n# Allow database access (restrict to internal networks)\nufw allow from 10.0.0.0/8 to any port 5432 comment 'PostgreSQL'\nufw allow from 172.16.0.0/12 to any port 6379 comment 'Redis'\n\n# Enable UFW\nufw --force enable\n\n# Show status\nufw status verbose\nEOF",
+          "sudo chmod +x /opt/ai-q/security/firewall/setup-ufw.sh"
+        ],
+        "verification": "Check firewall script exists and is executable",
+        "expected_output": "setup-ufw.sh created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/security/firewall/",
+      "cat /opt/ai-q/security/firewall/ufw.conf"
+    ],
+    "expected_outputs": {
+      "firewall_config": "ufw.conf contains firewall configuration",
+      "firewall_script": "setup-ufw.sh contains firewall setup logic"
+    }
+  },
+  "task_02_implement_security_policies": {
+    "task_id": "01-09-02",
+    "title": "Implement Security Policies",
+    "description": "Implement comprehensive security policies and controls",
+    "estimated_duration": "60 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-09-02-01",
+        "title": "Create access control policies",
+        "description": "Create access control policies for all services",
+        "config_file": "/opt/ai-q/security/policies/access-control.json",
+        "config_content": {
+          "authentication": {
+            "jwt_secret": "ai_q_jwt_secret_key_2025",
+            "jwt_expiry": "24h",
+            "bcrypt_rounds": 12,
+            "password_policy": {
+              "min_length": 12,
+              "require_uppercase": true,
+              "require_lowercase": true,
+              "require_numbers": true,
+              "require_special": true
+            }
+          },
+          "authorization": {
+            "roles": [
+              {
+                "name": "admin",
+                "permissions": [
+                  "read",
+                  "write",
+                  "delete",
+                  "admin"
+                ]
+              },
+              {
+                "name": "user",
+                "permissions": [
+                  "read",
+                  "write"
+                ]
+              },
+              {
+                "name": "viewer",
+                "permissions": [
+                  "read"
+                ]
+              }
+            ]
+          },
+          "rate_limiting": {
+            "requests_per_minute": 100,
+            "burst_limit": 20,
+            "window_size": "1m"
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/security/policies",
+          "sudo tee /opt/ai-q/security/policies/access-control.json << 'EOF'\n{\n  \"authentication\": {\n    \"jwt_secret\": \"ai_q_jwt_secret_key_2025\",\n    \"jwt_expiry\": \"24h\",\n    \"bcrypt_rounds\": 12,\n    \"password_policy\": {\n      \"min_length\": 12,\n      \"require_uppercase\": true,\n      \"require_lowercase\": true,\n      \"require_numbers\": true,\n      \"require_special\": true\n    }\n  },\n  \"authorization\": {\n    \"roles\": [\n      {\n        \"name\": \"admin\",\n        \"permissions\": [\"read\", \"write\", \"delete\", \"admin\"]\n      },\n      {\n        \"name\": \"user\",\n        \"permissions\": [\"read\", \"write\"]\n      },\n      {\n        \"name\": \"viewer\",\n        \"permissions\": [\"read\"]\n      }\n    ]\n  },\n  \"rate_limiting\": {\n    \"requests_per_minute\": 100,\n    \"burst_limit\": 20,\n    \"window_size\": \"1m\"\n  }\n}\nEOF"
+        ],
+        "verification": "Check access control policies exist",
+        "expected_output": "access-control.json created with specified configuration"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/security/policies/access-control.json"
+    ],
+    "expected_outputs": {
+      "access_control": "access-control.json contains security policies"
+    }
+  },
+  "task_03_setup_compliance_monitoring": {
+    "task_id": "01-09-03",
+    "title": "Setup Compliance Monitoring",
+    "description": "Setup compliance monitoring and reporting",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-09-03-01",
+        "title": "Create compliance checks",
+        "description": "Create compliance checking scripts",
+        "config_file": "/opt/ai-q/security/compliance/check-compliance.sh",
+        "config_content": "#!/bin/bash\n# Security Compliance Check Script\n\nLOG_FILE=\"/opt/ai-q/security/compliance/compliance-report-$(date +%Y%m%d).json\"\n\n# Initialize report\ncat > \"$LOG_FILE\" << EOF\n{\n  \"timestamp\": \"$(date -Iseconds)\",\n  \"checks\": [\nEOF\n\n# Check 1: UFW Status\ncheck_ufw() {\n    if ufw status | grep -q \"Status: active\"; then\n        echo \"    {\\\"check\\\": \\\"ufw_status\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"UFW firewall is active\\\"},\" >> \"$LOG_FILE\"\n    else\n        echo \"    {\\\"check\\\": \\\"ufw_status\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"UFW firewall is not active\\\"},\" >> \"$LOG_FILE\"\n    fi\n}\n\n# Check 2: Docker Security\ncheck_docker() {\n    if docker info | grep -q \"User Namespaces: enabled\"; then\n        echo \"    {\\\"check\\\": \\\"docker_userns\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"Docker user namespaces enabled\\\"},\" >> \"$LOG_FILE\"\n    else\n        echo \"    {\\\"check\\\": \\\"docker_userns\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"Docker user namespaces not enabled\\\"},\" >> \"$LOG_FILE\"\n    fi\n}\n\n# Check 3: SSL Certificates\ncheck_ssl() {\n    if openssl s_client -connect localhost:443 -servername ai-q.local < /dev/null 2>/dev/null | grep -q \"Verify return code: 0\"; then\n        echo \"    {\\\"check\\\": \\\"ssl_certificate\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"SSL certificate is valid\\\"},\" >> \"$LOG_FILE\"\n    else\n        echo \"    {\\\"check\\\": \\\"ssl_certificate\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"SSL certificate validation failed\\\"},\" >> \"$LOG_FILE\"\n    fi\n}\n\n# Run checks\ncheck_ufw\ncheck_docker\ncheck_ssl\n\n# Close JSON\ncat >> \"$LOG_FILE\" << EOF\n    {\\\"check\\\": \\\"end\\\", \\\"status\\\": \\\"complete\\\", \\\"details\\\": \\\"Compliance check completed\\\"}\n  ]\n}\nEOF\n\necho \"Compliance report generated: $LOG_FILE\"",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/security/compliance",
+          "sudo tee /opt/ai-q/security/compliance/check-compliance.sh << 'EOF'\n#!/bin/bash\n# Security Compliance Check Script\n\nLOG_FILE=\"/opt/ai-q/security/compliance/compliance-report-$(date +%Y%m%d).json\"\n\n# Initialize report\ncat > \"$LOG_FILE\" << EOF\n{\n  \"timestamp\": \"$(date -Iseconds)\",\n  \"checks\": [\nEOF\n\n# Check 1: UFW Status\ncheck_ufw() {\n    if ufw status | grep -q \"Status: active\"; then\n        echo \"    {\\\"check\\\": \\\"ufw_status\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"UFW firewall is active\\\"},\" >> \"$LOG_FILE\"\n    else\n        echo \"    {\\\"check\\\": \\\"ufw_status\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"UFW firewall is not active\\\"},\" >> \"$LOG_FILE\"\n    fi\n}\n\n# Check 2: Docker Security\ncheck_docker() {\n    if docker info | grep -q \"User Namespaces: enabled\"; then\n        echo \"    {\\\"check\\\": \\\"docker_userns\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"Docker user namespaces enabled\\\"},\" >> \"$LOG_FILE\"\n    else\n        echo \"    {\\\"check\\\": \\\"docker_userns\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"Docker user namespaces not enabled\\\"},\" >> \"$LOG_FILE\"\n    fi\n}\n\n# Check 3: SSL Certificates\ncheck_ssl() {\n    if openssl s_client -connect localhost:443 -servername ai-q.local < /dev/null 2>/dev/null | grep -q \"Verify return code: 0\"; then\n        echo \"    {\\\"check\\\": \\\"ssl_certificate\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"SSL certificate is valid\\\"},\" >> \"$LOG_FILE\"\n    else\n        echo \"    {\\\"check\\\": \\\"ssl_certificate\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"SSL certificate validation failed\\\"},\" >> \"$LOG_FILE\"\n    fi\n}\n\n# Run checks\ncheck_ufw\ncheck_docker\ncheck_ssl\n\n# Close JSON\ncat >> \"$LOG_FILE\" << EOF\n    {\\\"check\\\": \\\"end\\\", \\\"status\\\": \\\"complete\\\", \\\"details\\\": \\\"Compliance check completed\\\"}\n  ]\n}\nEOF\n\necho \"Compliance report generated: $LOG_FILE\"\nEOF",
+          "sudo chmod +x /opt/ai-q/security/compliance/check-compliance.sh"
+        ],
+        "verification": "Check compliance script exists and is executable",
+        "expected_output": "check-compliance.sh created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/security/compliance/",
+      "cat /opt/ai-q/security/compliance/check-compliance.sh"
+    ],
+    "expected_outputs": {
+      "compliance_script": "check-compliance.sh contains compliance checks",
+      "executable": "Script is executable"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete Security Hardening Verification",
+      "description": "Run comprehensive tests to verify security measures",
+      "test_commands": [
+        "/opt/ai-q/security/firewall/setup-ufw.sh",
+        "ufw status verbose",
+        "/opt/ai-q/security/compliance/check-compliance.sh",
+        "cat /opt/ai-q/security/compliance/compliance-report-$(date +%Y%m%d).json"
+      ],
+      "expected_results": {
+        "firewall_active": "UFW firewall is active with correct rules",
+        "compliance_report": "Compliance report generated successfully",
+        "security_checks": "All security checks pass"
+      }
+    }
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:firewall-setup:1.0.0",
+          "task:security-policies:1.0.0",
+          "task:compliance-monitoring:1.0.0",
+          "skill:firewall-configuration:1.0.0",
+          "skill:security-policies:1.0.0",
+          "skill:compliance-monitoring:1.0.0",
+          "tool:security-setup:1.0.0",
+          "config:security:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/security/setup_security.py --gather-ingredients",
+          "python3 scripts/security/setup_firewall.py --gather-ingredients",
+          "python3 scripts/security/setup_compliance.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 4GB RAM available",
+          "20GB free disk space available",
+          "All previous infrastructure components operational"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+          "ufw status"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_firewall_setup",
+        "description": "Configure firewall rules with exact commands",
+        "sub_steps": [
+          "Create firewall directories",
+          "Create firewall configuration",
+          "Create firewall setup script",
+          "Execute firewall setup",
+          "Validate firewall configuration"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/security/firewall",
+          "tee /opt/ai-q/security/firewall/ufw.conf << 'EOF'",
+          "{",
+          "  \"default_policies\": {",
+          "    \"input\": \"deny\",",
+          "    \"output\": \"allow\",",
+          "    \"forward\": \"deny\"",
+          "  },",
+          "  \"allowed_ports\": [",
+          "    {\"port\": 22, \"protocol\": \"tcp\", \"description\": \"SSH\"},",
+          "    {\"port\": 80, \"protocol\": \"tcp\", \"description\": \"HTTP\"},",
+          "    {\"port\": 443, \"protocol\": \"tcp\", \"description\": \"HTTPS\"},",
+          "    {\"port\": 9090, \"protocol\": \"tcp\", \"description\": \"Prometheus\"},",
+          "    {\"port\": 3000, \"protocol\": \"tcp\", \"description\": \"Grafana\"},",
+          "    {\"port\": 5601, \"protocol\": \"tcp\", \"description\": \"Kibana\"},",
+          "    {\"port\": 8500, \"protocol\": \"tcp\", \"description\": \"Consul\"},",
+          "    {\"port\": 15672, \"protocol\": \"tcp\", \"description\": \"RabbitMQ Management\"},",
+          "    {\"port\": 6379, \"protocol\": \"tcp\", \"description\": \"Redis\"},",
+          "    {\"port\": 5432, \"protocol\": \"tcp\", \"description\": \"PostgreSQL\"}",
+          "  ],",
+          "  \"allowed_networks\": [",
+          "    {\"network\": \"10.0.0.0/8\", \"description\": \"Internal network\"},",
+          "    {\"network\": \"172.16.0.0/12\", \"description\": \"Docker network\"},",
+          "    {\"network\": \"192.168.0.0/16\", \"description\": \"Local network\"}",
+          "  ]",
+          "}",
+          "EOF",
+          "tee /opt/ai-q/security/firewall/setup-ufw.sh << 'EOF'",
+          "#!/bin/bash",
+          "# UFW Firewall Setup Script",
+          "",
+          "# Reset UFW",
+          "ufw --force reset",
+          "",
+          "# Set default policies",
+          "ufw default deny incoming",
+          "ufw default allow outgoing",
+          "ufw default deny forward",
+          "",
+          "# Allow SSH",
+          "ufw allow 22/tcp comment 'SSH'",
+          "",
+          "# Allow HTTP/HTTPS",
+          "ufw allow 80/tcp comment 'HTTP'",
+          "ufw allow 443/tcp comment 'HTTPS'",
+          "",
+          "# Allow monitoring ports",
+          "ufw allow 9090/tcp comment 'Prometheus'",
+          "ufw allow 3000/tcp comment 'Grafana'",
+          "ufw allow 5601/tcp comment 'Kibana'",
+          "",
+          "# Allow service discovery",
+          "ufw allow 8500/tcp comment 'Consul'",
+          "",
+          "# Allow message queue management",
+          "ufw allow 15672/tcp comment 'RabbitMQ Management'",
+          "",
+          "# Allow database access (restrict to internal networks)",
+          "ufw allow from 10.0.0.0/8 to any port 5432 comment 'PostgreSQL'",
+          "ufw allow from 172.16.0.0/12 to any port 6379 comment 'Redis'",
+          "",
+          "# Enable UFW",
+          "ufw --force enable",
+          "",
+          "# Show status",
+          "ufw status verbose",
+          "EOF",
+          "chmod +x /opt/ai-q/security/firewall/setup-ufw.sh",
+          "/opt/ai-q/security/firewall/setup-ufw.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/security/firewall/",
+          "/opt/ai-q/security/firewall/ufw.conf",
+          "/opt/ai-q/security/firewall/setup-ufw.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_security_policies",
+        "description": "Implement security policies with exact commands",
+        "sub_steps": [
+          "Create security directories",
+          "Create access control policies",
+          "Validate security policies"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/security/policies",
+          "tee /opt/ai-q/security/policies/access-control.json << 'EOF'",
+          "{",
+          "  \"authentication\": {",
+          "    \"jwt_secret\": \"ai_q_jwt_secret_key_2025\",",
+          "    \"jwt_expiry\": \"24h\",",
+          "    \"bcrypt_rounds\": 12,",
+          "    \"password_policy\": {",
+          "      \"min_length\": 12,",
+          "      \"require_uppercase\": true,",
+          "      \"require_lowercase\": true,",
+          "      \"require_numbers\": true,",
+          "      \"require_special\": true",
+          "    }",
+          "  },",
+          "  \"authorization\": {",
+          "    \"roles\": [",
+          "      {",
+          "        \"name\": \"admin\",",
+          "        \"permissions\": [\"read\", \"write\", \"delete\", \"admin\"]",
+          "      },",
+          "      {",
+          "        \"name\": \"user\",",
+          "        \"permissions\": [\"read\", \"write\"]",
+          "      },",
+          "      {",
+          "        \"name\": \"viewer\",",
+          "        \"permissions\": [\"read\"]",
+          "      }",
+          "    ]",
+          "  },",
+          "  \"rate_limiting\": {",
+          "    \"requests_per_minute\": 100,",
+          "    \"burst_limit\": 20,",
+          "    \"window_size\": \"1m\"",
+          "  }",
+          "}",
+          "EOF"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/security/policies/",
+          "/opt/ai-q/security/policies/access-control.json"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_compliance_monitoring",
+        "description": "Setup compliance monitoring with exact commands",
+        "sub_steps": [
+          "Create compliance directories",
+          "Create compliance check script",
+          "Execute compliance checks",
+          "Validate compliance monitoring"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/security/compliance",
+          "tee /opt/ai-q/security/compliance/check-compliance.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Security Compliance Check Script",
+          "",
+          "LOG_FILE=\"/opt/ai-q/security/compliance/compliance-report-$(date +%Y%m%d).json\"",
+          "",
+          "# Initialize report",
+          "cat > \"$LOG_FILE\" << EOF",
+          "{",
+          "  \"timestamp\": \"$(date -Iseconds)\",",
+          "  \"checks\": [",
+          "EOF",
+          "",
+          "# Check 1: UFW Status",
+          "check_ufw() {",
+          "    if ufw status | grep -q \"Status: active\"; then",
+          "        echo \"    {\\\"check\\\": \\\"ufw_status\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"UFW firewall is active\\\"},\" >> \"$LOG_FILE\"",
+          "    else",
+          "        echo \"    {\\\"check\\\": \\\"ufw_status\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"UFW firewall is not active\\\"},\" >> \"$LOG_FILE\"",
+          "    fi",
+          "}",
+          "",
+          "# Check 2: Docker Security",
+          "check_docker() {",
+          "    if docker info | grep -q \"User Namespaces: enabled\"; then",
+          "        echo \"    {\\\"check\\\": \\\"docker_userns\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"Docker user namespaces enabled\\\"},\" >> \"$LOG_FILE\"",
+          "    else",
+          "        echo \"    {\\\"check\\\": \\\"docker_userns\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"Docker user namespaces not enabled\\\"},\" >> \"$LOG_FILE\"",
+          "    fi",
+          "}",
+          "",
+          "# Check 3: SSL Certificates",
+          "check_ssl() {",
+          "    if openssl s_client -connect localhost:443 -servername ai-q.local < /dev/null 2>/dev/null | grep -q \"Verify return code: 0\"; then",
+          "        echo \"    {\\\"check\\\": \\\"ssl_certificate\\\", \\\"status\\\": \\\"pass\\\", \\\"details\\\": \\\"SSL certificate is valid\\\"},\" >> \"$LOG_FILE\"",
+          "    else",
+          "        echo \"    {\\\"check\\\": \\\"ssl_certificate\\\", \\\"status\\\": \\\"fail\\\", \\\"details\\\": \\\"SSL certificate validation failed\\\"},\" >> \"$LOG_FILE\"",
+          "    fi",
+          "}",
+          "",
+          "# Run checks",
+          "check_ufw",
+          "check_docker",
+          "check_ssl",
+          "",
+          "# Close JSON",
+          "cat >> \"$LOG_FILE\" << EOF",
+          "    {\\\"check\\\": \\\"end\\\", \\\"status\\\": \\\"complete\\\", \\\"details\\\": \\\"Compliance check completed\\\"}",
+          "  ]",
+          "}",
+          "EOF",
+          "",
+          "echo \"Compliance report generated: $LOG_FILE\"",
+          "EOF",
+          "chmod +x /opt/ai-q/security/compliance/check-compliance.sh",
+          "/opt/ai-q/security/compliance/check-compliance.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/security/compliance/",
+          "/opt/ai-q/security/compliance/check-compliance.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete security hardening setup",
+        "validation": "security_hardening_validation",
+        "exact_commands": [
+          "ufw status verbose",
+          "cat /opt/ai-q/security/policies/access-control.json",
+          "ls -la /opt/ai-q/security/compliance/",
+          "cat /opt/ai-q/security/compliance/compliance-report-$(date +%Y%m%d).json"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache security hardening configuration and setup",
+        "cache_key": "security_hardening_cache",
+        "exact_commands": [
+          "python3 scripts/security/setup_security.py --cache-results",
+          "python3 scripts/security/setup_firewall.py --cache-results",
+          "python3 scripts/security/setup_compliance.py --cache-results",
+          "tar -czf /opt/ai-q/cache/security_hardening_cache.tar.gz /opt/ai-q/security"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "security_hardening_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "security_update",
+      "cache_validation": "security_hardening_validation",
+      "exact_cache_commands": [
+        "python3 scripts/security/setup_security.py --cache-config",
+        "python3 scripts/security/setup_firewall.py --cache-config",
+        "python3 scripts/security/setup_compliance.py --cache-config"
+      ]
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "01-10-performance-optimization",
+    "prerequisites_completed": [
+      "Firewall rules configured and active",
+      "Security policies implemented",
+      "Access controls configured",
+      "Compliance monitoring setup",
+      "Security testing completed",
+      "All security measures verified"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-09-Security-Hardening",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

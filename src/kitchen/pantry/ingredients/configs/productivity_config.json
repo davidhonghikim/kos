@@ -1,0 +1,26 @@
+{
+  "id": "config.productivity",
+  "type": "config",
+  "name": "Productivity Configuration",
+  "description": "Configuration settings for productivity and time management workflows",
+  "version": "1.3.0",
+  "category": "configs",
+  "dependencies": [],
+  "tags": ["configuration", "productivity", "time_management", "settings", "workflow"],
+  "author": "productivity_team",
+  "created": "2025-07-07T23:00:00Z",
+  "updated": "2025-07-07T23:00:00Z",
+  "access_level": "public",
+  "usage": "Use to configure productivity workflow parameters and settings",
+  "validation": {
+    "required_fields": ["work_hours", "break_intervals"],
+    "settings": {
+      "work_day_start": "09:00",
+      "work_day_end": "17:00",
+      "break_duration": 15,
+      "focus_sessions": 25,
+      "task_priority_levels": 3,
+      "reminder_intervals": 30
+    }
+  }
+} 

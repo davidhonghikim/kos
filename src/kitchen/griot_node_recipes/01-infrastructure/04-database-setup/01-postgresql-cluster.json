@@ -1,0 +1,319 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-POSTGRESQL-CLUSTER-001",
+    "title": "Enterprise PostgreSQL High-Availability Cluster",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 15000,
+    "estimated_execution_time": "6-8 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "SOC 2",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "PCI DSS"
+    ],
+    "architecture_tier": "enterprise-database"
+  },
+  "recipe_overview": {
+    "description": "Deploy and configure a production-ready PostgreSQL high-availability cluster with streaming replication, automated failover, connection pooling, and advanced performance optimization. This implementation includes master-slave replication, pgBouncer connection pooling, automated backup with point-in-time recovery, comprehensive monitoring, and enterprise-grade security. The cluster will support read scaling, automated failover, and seamless integration with application infrastructure while maintaining ACID compliance and data consistency.",
+    "technology_stack": {
+      "relational_database": "PostgreSQL 15+",
+      "connection_pooling": "pgBouncer",
+      "high_availability": "Patroni, HAProxy",
+      "backup_recovery": "pgBackRest",
+      "monitoring": "Prometheus, Grafana"
+    },
+    "deliverables": [
+      "High-availability PostgreSQL cluster with read replicas and automated failover",
+      "pgBouncer connection pooling for efficient resource management",
+      "Automated backup and point-in-time recovery solution",
+      "Comprehensive monitoring dashboards and alerting for PostgreSQL"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-postgresql-cluster-001",
+      "title": "Enterprise PostgreSQL High-Availability Cluster Implementation",
+      "description": "Deploy and configure a production-ready PostgreSQL high-availability cluster with streaming replication, automated failover, connection pooling, and advanced performance optimization. This implementation includes master-slave replication, pgBouncer connection pooling, automated backup with point-in-time recovery, comprehensive monitoring, and enterprise-grade security. The cluster will support read scaling, automated failover, and seamless integration with application infrastructure while maintaining ACID compliance and data consistency.",
+      "category": "infrastructure",
+      "estimated_tokens": 15000,
+      "estimated_duration": "6-8 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "PostgreSQL administration",
+          "Database replication",
+          "Connection pooling",
+          "Database security",
+          "Performance tuning"
+        ],
+        "tools_required": [
+          "PostgreSQL 15+",
+          "pgBouncer",
+          "Patroni",
+          "HAProxy",
+          "pgBackRest"
+        ],
+        "environment_setup": [
+          "Database network configured",
+          "Storage volumes prepared",
+          "SSL certificates available"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker-compose.yml",
+          "config/postgresql/cluster-config.yaml",
+          "config/security/database-certificates.yaml"
+        ],
+        "config_dependencies": [
+          "Network configuration",
+          "Storage configuration",
+          "Security policies"
+        ],
+        "environment_variables": [
+          "POSTGRES_USER",
+          "POSTGRES_PASSWORD",
+          "POSTGRES_DB",
+          "REPLICATION_USER",
+          "REPLICATION_PASSWORD"
+        ],
+        "external_services": [
+          "Load balancer",
+          "Monitoring system",
+          "Backup storage"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/postgresql/cluster-config.yaml - PostgreSQL cluster configuration",
+          "config/postgresql/postgresql.conf - PostgreSQL server configuration",
+          "config/postgresql/pg_hba.conf - Authentication configuration",
+          "config/postgresql/recovery.conf - Replication configuration",
+          "config/pgbouncer/pgbouncer.ini - Connection pooling configuration",
+          "scripts/postgresql/cluster-setup.sh - Automated cluster deployment",
+          "scripts/postgresql/failover-test.sh - Failover testing automation",
+          "scripts/postgresql/backup-restore.sh - Backup and recovery procedures",
+          "monitoring/postgresql/dashboards.json - Grafana dashboards",
+          "docs/postgresql/cluster-architecture.json - Architecture documentation"
+        ],
+        "files_modified": [
+          "docker-compose.yml - PostgreSQL cluster services",
+          "config/prometheus/postgresql-targets.yaml - Monitoring targets",
+          "config/grafana/datasources.yaml - Database connections"
+        ],
+        "database_changes": [
+          "Create replication user with appropriate privileges",
+          "Set up initial database schema and user management",
+          "Configure database-specific extensions and functions"
+        ],
+        "api_endpoints": [
+          "GET /postgresql/health - Cluster health status",
+          "GET /postgresql/metrics - Performance metrics",
+          "POST /postgresql/failover - Manual failover trigger",
+          "GET /postgresql/replication-status - Replication lag monitoring"
+        ],
+        "configuration_updates": [
+          "Cluster topology",
+          "Replication settings",
+          "Security policies",
+          "Performance tuning"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "01-infra-verification-001",
+          "02-storage-minio-enterprise-001"
+        ],
+        "optional_tasks": [
+          "monitoring-setup",
+          "security-hardening"
+        ],
+        "blocked_tasks": [
+          "03-database-redis-cluster-002",
+          "03-database-unified-api-004"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task implements a production-ready PostgreSQL high-availability cluster that serves as the primary relational database for the enterprise application. The implementation includes advanced features such as streaming replication, automated failover with Patroni, connection pooling with pgBouncer, comprehensive backup with pgBackRest, and enterprise-grade monitoring. The cluster is designed for high availability, read scaling, and seamless integration with application infrastructure while maintaining ACID compliance and data consistency.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "PostgreSQL Cluster Architecture Planning",
+            "description": "Design and plan the PostgreSQL cluster architecture including master-slave topology, storage allocation, and network configuration",
+            "commands": [
+              "# Plan PostgreSQL cluster architecture",
+              "echo 'Planning PostgreSQL HA cluster with streaming replication...'",
+              "# Calculate memory allocation for PostgreSQL",
+              "TOTAL_RAM=$(free -g | awk 'NR==2{print $2}')",
+              "POSTGRES_SHARED_BUFFERS=$((TOTAL_RAM / 4))",
+              "POSTGRES_EFFECTIVE_CACHE_SIZE=$((TOTAL_RAM * 3 / 4))",
+              "echo \"Shared buffers: ${POSTGRES_SHARED_BUFFERS}GB\"",
+              "echo \"Effective cache size: ${POSTGRES_EFFECTIVE_CACHE_SIZE}GB\"",
+              "# Verify storage requirements",
+              "df -h | grep -E '(postgres|database)' | awk '{print $1, $2, $4}'"
+            ],
+            "expected_output": "Cluster architecture planned with optimal memory and storage allocation",
+            "troubleshooting": "Ensure sufficient storage capacity and memory for PostgreSQL workloads"
+          },
+          {
+            "step": 2,
+            "title": "PostgreSQL Master Node Deployment",
+            "description": "Deploy the PostgreSQL master node with optimized configuration and security settings",
+            "commands": [
+              "# Create PostgreSQL configuration directories",
+              "mkdir -p config/postgresql/{master,slave,pgbouncer}",
+              "mkdir -p data/postgresql/{master,slave,archive}",
+              "# Generate optimized PostgreSQL configuration",
+              "cat > config/postgresql/postgresql.conf << 'EOF'",
+              "# PostgreSQL Enterprise Configuration",
+              "listen_addresses = '*'",
+              "port = 5432",
+              "max_connections = 500",
+              "shared_buffers = ${POSTGRES_SHARED_BUFFERS}GB",
+              "effective_cache_size = ${POSTGRES_EFFECTIVE_CACHE_SIZE}GB",
+              "work_mem = 256MB",
+              "maintenance_work_mem = 2GB",
+              "wal_level = replica",
+              "max_wal_senders = 10",
+              "max_replication_slots = 10",
+              "hot_standby = on",
+              "archive_mode = on",
+              "archive_command = 'pgbackrest --stanza=main archive-push %p'",
+              "EOF",
+              "# Deploy PostgreSQL master",
+              "docker-compose -f docker-compose.postgresql.yml up -d postgresql-master",
+              "# Wait for master to be ready",
+              "sleep 30",
+              "# Initialize database and users",
+              "docker exec postgresql-master psql -U postgres -c \"CREATE USER replicator REPLICATION LOGIN ENCRYPTED PASSWORD 'replication_password';\""
+            ],
+            "expected_output": "PostgreSQL master node deployed and accessible with replication user created",
+            "troubleshooting": "Check PostgreSQL logs for configuration errors and network connectivity"
+          },
+          {
+            "step": 3,
+            "title": "PostgreSQL Slave Node Configuration",
+            "description": "Configure PostgreSQL slave nodes with streaming replication from master",
+            "commands": [
+              "# Create base backup for slave",
+              "docker exec postgresql-master pg_basebackup -h postgresql-master -D /var/lib/postgresql/slave_backup -U replicator -v -P -W",
+              "# Configure slave node",
+              "cat > config/postgresql/recovery.conf << 'EOF'",
+              "standby_mode = 'on'",
+              "primary_conninfo = 'host=postgresql-master port=5432 user=replicator password=replication_password'",
+              "recovery_target_timeline = 'latest'",
+              "EOF",
+              "# Deploy PostgreSQL slave",
+              "docker-compose -f docker-compose.postgresql.yml up -d postgresql-slave",
+              "# Verify replication status",
+              "sleep 30",
+              "docker exec postgresql-master psql -U postgres -c \"SELECT client_addr, state, sync_state FROM pg_stat_replication;\""
+            ],
+            "expected_output": "PostgreSQL slave node deployed with active streaming replication",
+            "troubleshooting": "Verify network connectivity and replication user permissions"
+          },
+          {
+            "step": 4,
+            "title": "pgBouncer Connection Pooling Setup",
+            "description": "Configure pgBouncer for efficient connection pooling and load balancing",
+            "commands": [
+              "# Configure pgBouncer",
+              "cat > config/pgbouncer/pgbouncer.ini << 'EOF'",
+              "[databases]",
+              "ai_q_production = host=postgresql-master port=5432 dbname=ai_q_production",
+              "ai_q_readonly = host=postgresql-slave port=5432 dbname=ai_q_production",
+              "",
+              "[pgbouncer]",
+              "listen_port = 6432",
+              "listen_addr = *",
+              "auth_type = md5",
+              "auth_file = /etc/pgbouncer/userlist.txt",
+              "pool_mode = transaction",
+              "max_client_conn = 1000",
+              "default_pool_size = 100",
+              "reserve_pool_size = 10",
+              "server_lifetime = 3600",
+              "server_idle_timeout = 600",
+              "EOF",
+              "# Deploy pgBouncer",
+              "docker-compose -f docker-compose.postgresql.yml up -d pgbouncer",
+              "# Test connection pooling",
+              "sleep 15",
+              "psql -h localhost -p 6432 -U postgres -d ai_q_production -c \"SELECT version();\""
+            ],
+            "expected_output": "pgBouncer deployed and connection pooling working correctly",
+            "troubleshooting": "Check pgBouncer logs for authentication and connection issues"
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "PostgreSQL master-slave cluster deployed with streaming replication",
+          "All cluster nodes healthy and properly synchronized",
+          "pgBouncer connection pooling operational with load balancing",
+          "Database schema created with proper user management",
+          "SSL/TLS encryption enabled for all connections",
+          "Automated failover mechanism tested and functional"
+        ],
+        "performance_requirements": [
+          "Query response times under 10ms for simple queries",
+          "Replication lag under 100ms between master and slave",
+          "Connection pooling supporting 1000+ concurrent connections",
+          "Database throughput exceeding 10k transactions per second",
+          "Backup and recovery operations completing within SLA"
+        ],
+        "security_requirements": [
+          "All database connections encrypted with TLS 1.3",
+          "Role-based access control properly configured",
+          "Audit logging enabled for all administrative operations",
+          "Password policies enforced for all database users",
+          "Network segmentation implemented for database traffic"
+        ],
+        "integration_requirements": [
+          "Cluster integrated with monitoring systems",
+          "Backup integration working with automated scheduling",
+          "Load balancer integration distributing traffic properly",
+          "Application integration through connection pooling",
+          "Health checks responding correctly for all nodes"
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Postgresql-Cluster",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

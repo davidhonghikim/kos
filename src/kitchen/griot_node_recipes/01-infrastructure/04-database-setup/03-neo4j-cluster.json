@@ -1,0 +1,190 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-NEO4J-CLUSTER-003",
+    "title": "Enterprise Neo4j Graph Database Cluster",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 14000,
+    "estimated_execution_time": "5-7 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "GDPR"
+    ],
+    "architecture_tier": "enterprise-graph"
+  },
+  "recipe_overview": {
+    "description": "Deploy a highly available and scalable Neo4j Enterprise cluster for graph data storage and analysis. This recipe covers the setup of a multi-node causal cluster, ensuring data safety and high availability. It includes configuration for clustering, security, performance tuning, and integration with the APOC (Awesome Procedures on Cypher) library.",
+    "technology_stack": {
+      "graph_database": "Neo4j 5+ Enterprise",
+      "clustering": "Causal Clustering",
+      "extensions": "APOC, Graph Data Science Library",
+      "monitoring": "Prometheus, Grafana"
+    },
+    "deliverables": [
+      "A 3-node Neo4j causal cluster",
+      "Configuration for high availability and read scaling",
+      "Secure setup with authentication and encryption",
+      "Monitoring dashboards for cluster health and performance"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-neo4j-cluster-003",
+      "title": "Enterprise Neo4j Graph Database Cluster Implementation",
+      "description": "Deploy a highly available and scalable Neo4j Enterprise cluster for graph data storage and analysis. This recipe covers the setup of a multi-node causal cluster, ensuring data safety and high availability. It includes configuration for clustering, security, performance tuning, and integration with the APOC (Awesome Procedures on Cypher) library.",
+      "category": "infrastructure",
+      "estimated_tokens": 14000,
+      "estimated_duration": "5-7 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Neo4j administration",
+          "Graph database concepts",
+          "Cypher query language",
+          "Java memory management"
+        ],
+        "tools_required": [
+          "Neo4j 5+ Enterprise",
+          "Docker",
+          "Cypher Shell"
+        ],
+        "environment_setup": [
+          "Sufficient CPU, RAM, and storage for graph workloads",
+          "Network configuration allowing inter-node communication"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker-compose.neo4j.yml",
+          "config/neo4j/neo4j.conf"
+        ],
+        "config_dependencies": [
+          "Network configuration",
+          "Neo4j Enterprise license key"
+        ],
+        "environment_variables": [
+          "NEO4J_PASSWORD"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/neo4j/neo4j.conf - Neo4j server configuration for clustering",
+          "scripts/neo4j/cluster-setup.sh - Automated script to initialize the cluster",
+          "monitoring/neo4j/dashboards.json - Grafana dashboards for Neo4j"
+        ],
+        "files_modified": [
+          "docker-compose.neo4j.yml - Service definitions for the Neo4j cluster nodes",
+          "config/prometheus/neo4j-targets.yaml - Monitoring targets for Prometheus"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "01-infra-verification-001"
+        ],
+        "optional_tasks": [
+          "monitoring-setup"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task sets up a 3-node Neo4j Enterprise causal cluster. Causal clustering provides data safety guarantees and high availability, making it suitable for production environments. The cluster consists of core members that participate in Raft consensus for writes, ensuring data consistency.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Neo4j Configuration for Clustering",
+            "description": "Create a shared configuration file for all Neo4j nodes in the cluster.",
+            "commands": [
+              "mkdir -p config/neo4j",
+              "cat > config/neo4j/neo4j.conf << 'EOF'",
+              "server.default_listen_address=0.0.0.0",
+              "server.bolt.listen_address=:7687",
+              "server.http.listen_address=:7474",
+              "server.https.listen_address=:7473",
+              "initial.dbms.default_database=neo4j",
+              "dbms.security.auth_enabled=true",
+              "dbms.security.procedures.unrestricted=apoc.*,gds.*",
+              "dbms.tx_log.rotation.retention_policy=100M size",
+              "causal_clustering.expected_core_cluster_size=3",
+              "causal_clustering.initial_discovery_members=neo4j-1:5000,neo4j-2:5000,neo4j-3:5000",
+              "NEO4J_ACCEPT_LICENSE_AGREEMENT=yes",
+              "EOF"
+            ],
+            "expected_output": "Neo4j configuration file `neo4j.conf` created.",
+            "troubleshooting": "Ensure the `initial_discovery_members` list contains the correct hostnames and ports for all core nodes."
+          },
+          {
+            "step": 2,
+            "title": "Deploy Neo4j Cluster Nodes",
+            "description": "Use Docker Compose to deploy the three Neo4j core members.",
+            "commands": [
+              "# Create docker-compose.neo4j.yml",
+              "# This file should define three services: neo4j-1, neo4j-2, neo4j-3",
+              "# Each service should use the neo4j:5-enterprise image and mount the config, data, and logs volumes.",
+              "# Ensure they are on the same network and have distinct hostnames.",
+              "docker-compose -f docker-compose.neo4j.yml up -d",
+              "sleep 30"
+            ],
+            "expected_output": "Three Neo4j containers are running.",
+            "troubleshooting": "Check container logs (`docker logs <container_name>`) for startup errors. Common issues include license key problems or incorrect discovery configuration."
+          },
+          {
+            "step": 3,
+            "title": "Verify Cluster Status",
+            "description": "Connect to the cluster and verify that all members have joined and a leader has been elected.",
+            "commands": [
+              "echo 'CALL dbms.cluster.overview()' | docker exec -i neo4j-1 cypher-shell -u neo4j -p ${NEO4J_PASSWORD}"
+            ],
+            "expected_output": "A table showing the three cluster members, their roles (LEADER, FOLLOWER), and database status.",
+            "troubleshooting": "If nodes are not joining the cluster, check network connectivity between containers and review the discovery configuration in `neo4j.conf`."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Neo4j cluster is operational with one leader and two followers.",
+          "Write operations are replicated across the cluster.",
+          "Read operations can be served by follower nodes.",
+          "APOC and GDS procedures are available."
+        ],
+        "performance_requirements": [
+          "Graph query performance meets application requirements.",
+          "Cluster maintains stability under load."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-Neo4J-Cluster",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

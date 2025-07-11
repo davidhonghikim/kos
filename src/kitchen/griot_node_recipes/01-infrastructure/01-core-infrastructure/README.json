@@ -1,0 +1,337 @@
+{
+  "metadata": {
+    "recipe_id": "01-core-infrastructure",
+    "title": "Core Infrastructure Recipe - Complete Implementation Guide",
+    "version": "3.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T17:42:20Z",
+    "purpose": "Comprehensive multi-task recipe for core infrastructure implementation",
+    "total_sub_recipes": 12,
+    "total_tasks": 180,
+    "estimated_duration": "3-4 weeks",
+    "complexity": "Advanced",
+    "dependencies": [],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "recipe_overview": {
+    "description": "Complete implementation of core infrastructure including Docker environment, networking, monitoring, logging, and foundational services",
+    "architecture": "Microservices with container orchestration",
+    "target_environment": "Production-ready with development and staging support",
+    "scalability": "Horizontal scaling with load balancing",
+    "security": "Multi-layer security with encryption and access controls"
+  },
+  "sub_recipes": [
+    {
+      "id": "01-01-docker-environment",
+      "name": "Docker Environment Setup",
+      "file": "01-01-docker-environment.json",
+      "description": "Complete Docker environment with Compose, networking, and orchestration",
+      "estimated_tasks": 25,
+      "duration": "3-4 days",
+      "dependencies": [],
+      "components": [
+        "Docker Engine",
+        "Docker Compose",
+        "Networking",
+        "Volume Management"
+      ]
+    },
+    {
+      "id": "01-02-system-monitoring",
+      "name": "System Monitoring Infrastructure",
+      "file": "01-02-system-monitoring.json",
+      "description": "Prometheus, Grafana, and comprehensive monitoring stack",
+      "estimated_tasks": 20,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Prometheus",
+        "Grafana",
+        "Node Exporter",
+        "Alert Manager"
+      ]
+    },
+    {
+      "id": "01-03-logging-infrastructure",
+      "name": "Centralized Logging System",
+      "file": "01-03-logging-infrastructure.json",
+      "description": "ELK stack with log aggregation and analysis",
+      "estimated_tasks": 18,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Elasticsearch",
+        "Logstash",
+        "Kibana",
+        "Filebeat"
+      ]
+    },
+    {
+      "id": "01-04-load-balancing",
+      "name": "Load Balancing and Reverse Proxy",
+      "file": "01-04-load-balancing.json",
+      "description": "Nginx with advanced load balancing and SSL termination",
+      "estimated_tasks": 15,
+      "duration": "2 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Nginx",
+        "SSL Certificates",
+        "Load Balancing",
+        "Health Checks"
+      ]
+    },
+    {
+      "id": "01-05-service-discovery",
+      "name": "Service Discovery and Configuration",
+      "file": "01-05-service-discovery.json",
+      "description": "Consul for service discovery and configuration management",
+      "estimated_tasks": 12,
+      "duration": "1-2 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Consul",
+        "Service Registry",
+        "Configuration Management"
+      ]
+    },
+    {
+      "id": "01-06-message-queue",
+      "name": "Message Queue Infrastructure",
+      "file": "01-06-message-queue.json",
+      "description": "RabbitMQ with clustering and high availability",
+      "estimated_tasks": 16,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "RabbitMQ",
+        "Clustering",
+        "Management UI",
+        "Monitoring"
+      ]
+    },
+    {
+      "id": "01-07-cache-layer",
+      "name": "Distributed Caching Layer",
+      "file": "01-07-cache-layer.json",
+      "description": "Redis cluster with persistence and high availability",
+      "estimated_tasks": 14,
+      "duration": "2 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Redis",
+        "Clustering",
+        "Persistence",
+        "Sentinel"
+      ]
+    },
+    {
+      "id": "01-08-backup-infrastructure",
+      "name": "Backup and Recovery System",
+      "file": "01-08-backup-infrastructure.json",
+      "description": "Automated backup system with versioning and recovery",
+      "estimated_tasks": 12,
+      "duration": "1-2 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Backup Scripts",
+        "Versioning",
+        "Recovery Procedures"
+      ]
+    },
+    {
+      "id": "01-09-security-hardening",
+      "name": "Security Hardening and Compliance",
+      "file": "01-09-security-hardening.json",
+      "description": "Security hardening, firewall rules, and compliance measures",
+      "estimated_tasks": 18,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Firewall",
+        "Security Policies",
+        "Compliance Checks"
+      ]
+    },
+    {
+      "id": "01-10-performance-optimization",
+      "name": "Performance Optimization and Tuning",
+      "file": "01-10-performance-optimization.json",
+      "description": "System optimization, resource management, and performance tuning",
+      "estimated_tasks": 15,
+      "duration": "2 days",
+      "dependencies": [
+        "01-01-docker-environment"
+      ],
+      "components": [
+        "Resource Limits",
+        "Performance Tuning",
+        "Optimization"
+      ]
+    },
+    {
+      "id": "01-11-disaster-recovery",
+      "name": "Disaster Recovery and High Availability",
+      "file": "01-11-disaster-recovery.json",
+      "description": "DR procedures, failover mechanisms, and business continuity",
+      "estimated_tasks": 10,
+      "duration": "1-2 days",
+      "dependencies": [
+        "01-08-backup-infrastructure"
+      ],
+      "components": [
+        "Failover",
+        "Recovery Procedures",
+        "Business Continuity"
+      ]
+    },
+    {
+      "id": "01-12-documentation-and-handover",
+      "name": "Documentation and Handover",
+      "file": "01-12-documentation-and-handover.json",
+      "description": "Comprehensive documentation and handover procedures",
+      "estimated_tasks": 10,
+      "duration": "1 day",
+      "dependencies": [
+        "01-01-docker-environment",
+        "01-02-system-monitoring"
+      ],
+      "components": [
+        "System Documentation",
+        "User Guides",
+        "Handover Procedures"
+      ]
+    }
+  ],
+  "implementation_workflow": {
+    "phase_1": {
+      "name": "Foundation Setup",
+      "sub_recipes": [
+        "01-01-docker-environment",
+        "01-02-system-monitoring",
+        "01-03-logging-infrastructure"
+      ],
+      "duration": "1 week",
+      "description": "Basic infrastructure and observability"
+    },
+    "phase_2": {
+      "name": "Core Services",
+      "sub_recipes": [
+        "01-04-load-balancing",
+        "01-05-service-discovery",
+        "01-06-message-queue",
+        "01-07-cache-layer"
+      ],
+      "duration": "1 week",
+      "description": "Essential services for application support"
+    },
+    "phase_3": {
+      "name": "Production Readiness",
+      "sub_recipes": [
+        "01-08-backup-infrastructure",
+        "01-09-security-hardening",
+        "01-10-performance-optimization"
+      ],
+      "duration": "1 week",
+      "description": "Production hardening and optimization"
+    },
+    "phase_4": {
+      "name": "Documentation and Handover",
+      "sub_recipes": [
+        "01-11-disaster-recovery",
+        "01-12-documentation-and-handover"
+      ],
+      "duration": "3-4 days",
+      "description": "Final documentation and handover procedures"
+    }
+  },
+  "success_criteria": {
+    "functional_requirements": [
+      "All services running in Docker containers",
+      "Monitoring and alerting operational",
+      "Centralized logging functional",
+      "Load balancing working",
+      "Service discovery operational",
+      "Message queue functional",
+      "Caching layer operational",
+      "Backup system automated",
+      "Security measures implemented",
+      "Performance optimized",
+      "DR procedures documented",
+      "All tests passing"
+    ],
+    "performance_requirements": [
+      "99.9% uptime target",
+      "Response time < 100ms for core services",
+      "Resource utilization < 80%",
+      "Backup completion < 4 hours",
+      "Recovery time < 2 hours"
+    ],
+    "security_requirements": [
+      "All services encrypted in transit",
+      "Access controls implemented",
+      "Audit logging enabled",
+      "Vulnerability scanning passed",
+      "Compliance requirements met"
+    ]
+  },
+  "maintenance_and_operations": {
+    "daily_operations": [
+      "Monitor system health",
+      "Review logs for anomalies",
+      "Check backup status",
+      "Verify service availability"
+    ],
+    "weekly_operations": [
+      "Performance analysis",
+      "Security updates",
+      "Capacity planning",
+      "DR testing"
+    ],
+    "monthly_operations": [
+      "Comprehensive security audit",
+      "Performance optimization review",
+      "Disaster recovery testing",
+      "Documentation updates"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

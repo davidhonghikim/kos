@@ -1,0 +1,392 @@
+{
+  "metadata": {
+    "sub_recipe_id": "02-02-aws-s3-integration",
+    "title": "AWS S3 Integration and Configuration - Complete Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T18:17:00Z",
+    "purpose": "Exact step-by-step AWS S3 integration implementation with zero ambiguity",
+    "total_tasks": 6,
+    "estimated_duration": "3-4 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "02-01-minio-enterprise-cluster"
+    ],
+    "components": [
+      "AWS S3",
+      "IAM Configuration",
+      "Bucket Setup",
+      "Lifecycle Policies",
+      "Cost Optimization"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "02-01-01: MinIO cluster architecture planned",
+      "02-01-02: SSL certificates generated",
+      "02-01-03: MinIO cluster deployed",
+      "02-01-04: MinIO client configured",
+      "02-01-05: Storage buckets created"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 4 cores for S3 operations",
+      "ram": "Minimum 8GB for S3 operations",
+      "storage": "Minimum 100GB for S3 cache",
+      "network": "High-speed internet connection for S3 access"
+    }
+  },
+  "task_01_aws_credentials_setup": {
+    "task_id": "02-02-01",
+    "title": "AWS Credentials Setup",
+    "description": "Setup AWS credentials and IAM configuration for S3 access",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-01-01",
+        "title": "Install AWS CLI",
+        "description": "Install AWS CLI for S3 management",
+        "commands": [
+          "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o 'awscliv2.zip'",
+          "unzip awscliv2.zip",
+          "sudo ./aws/install",
+          "aws --version",
+          "rm -rf aws awscliv2.zip"
+        ],
+        "verification": "Check AWS CLI installed",
+        "expected_output": "AWS CLI installed and accessible"
+      },
+      {
+        "step_id": "02-02-01-02",
+        "title": "Configure AWS credentials",
+        "description": "Configure AWS credentials for S3 access",
+        "config_file": "/opt/ai-q/storage/s3/aws-config.json",
+        "config_content": {
+          "aws_configuration": {
+            "default_region": "us-east-1",
+            "output_format": "json",
+            "max_attempts": 3,
+            "retry_mode": "adaptive"
+          },
+          "s3_configuration": {
+            "multipart_threshold": "64MB",
+            "multipart_chunksize": "16MB",
+            "max_concurrent_requests": 10,
+            "use_accelerate_endpoint": false
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/storage/s3",
+          "sudo tee /opt/ai-q/storage/s3/aws-config.json << 'EOF'\\n{\\n  \\\"aws_configuration\\\": {\\n    \\\"default_region\\\": \\\"us-east-1\\\",\\n    \\\"output_format\\\": \\\"json\\\",\\n    \\\"max_attempts\\\": 3,\\n    \\\"retry_mode\\\": \\\"adaptive\\\"\\n  },\\n  \\\"s3_configuration\\\": {\\n    \\\"multipart_threshold\\\": \\\"64MB\\\",\\n    \\\"multipart_chunksize\\\": \\\"16MB\\\",\\n    \\\"max_concurrent_requests\\\": 10,\\n    \\\"use_accelerate_endpoint\\\": false\\n  }\\n}\\nEOF",
+          "aws configure set default.region us-east-1",
+          "aws configure set default.output json"
+        ],
+        "verification": "Check AWS configuration created",
+        "expected_output": "AWS configuration created and set"
+      }
+    ],
+    "verification_commands": [
+      "aws --version",
+      "cat /opt/ai-q/storage/s3/aws-config.json",
+      "aws configure list"
+    ],
+    "expected_outputs": {
+      "aws_cli_installed": "AWS CLI installed and working",
+      "aws_config_created": "AWS configuration file created",
+      "aws_configured": "AWS CLI configured with default settings"
+    }
+  },
+  "task_02_s3_bucket_creation": {
+    "task_id": "02-02-02",
+    "title": "S3 Bucket Creation and Configuration",
+    "description": "Create S3 buckets with proper configuration and policies",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-02-01",
+        "title": "Create S3 buckets",
+        "description": "Create S3 buckets for AI-Q storage",
+        "commands": [
+          "aws s3 mb s3://ai-q-documents-$(date +%Y%m%d)",
+          "aws s3 mb s3://ai-q-media-$(date +%Y%m%d)",
+          "aws s3 mb s3://ai-q-backups-$(date +%Y%m%d)",
+          "aws s3 mb s3://ai-q-logs-$(date +%Y%m%d)",
+          "aws s3 ls"
+        ],
+        "verification": "Check S3 buckets created",
+        "expected_output": "All S3 buckets created successfully"
+      },
+      {
+        "step_id": "02-02-02-02",
+        "title": "Configure bucket versioning",
+        "description": "Enable versioning for important buckets",
+        "commands": [
+          "aws s3api put-bucket-versioning --bucket ai-q-documents-$(date +%Y%m%d) --versioning-configuration Status=Enabled",
+          "aws s3api put-bucket-versioning --bucket ai-q-media-$(date +%Y%m%d) --versioning-configuration Status=Enabled",
+          "aws s3api put-bucket-versioning --bucket ai-q-backups-$(date +%Y%m%d) --versioning-configuration Status=Enabled"
+        ],
+        "verification": "Check versioning enabled",
+        "expected_output": "Versioning enabled for important buckets"
+      },
+      {
+        "step_id": "02-02-02-03",
+        "title": "Configure bucket encryption",
+        "description": "Enable server-side encryption for all buckets",
+        "commands": [
+          "aws s3api put-bucket-encryption --bucket ai-q-documents-$(date +%Y%m%d) --server-side-encryption-configuration '{\"Rules\": [{\"ApplyServerSideEncryptionByDefault\": {\"SSEAlgorithm\": \"AES256\"}}]}'",
+          "aws s3api put-bucket-encryption --bucket ai-q-media-$(date +%Y%m%d) --server-side-encryption-configuration '{\"Rules\": [{\"ApplyServerSideEncryptionByDefault\": {\"SSEAlgorithm\": \"AES256\"}}]}'",
+          "aws s3api put-bucket-encryption --bucket ai-q-backups-$(date +%Y%m%d) --server-side-encryption-configuration '{\"Rules\": [{\"ApplyServerSideEncryptionByDefault\": {\"SSEAlgorithm\": \"AES256\"}}]}'",
+          "aws s3api put-bucket-encryption --bucket ai-q-logs-$(date +%Y%m%d) --server-side-encryption-configuration '{\"Rules\": [{\"ApplyServerSideEncryptionByDefault\": {\"SSEAlgorithm\": \"AES256\"}}]}'"
+        ],
+        "verification": "Check encryption enabled",
+        "expected_output": "Server-side encryption enabled for all buckets"
+      }
+    ],
+    "verification_commands": [
+      "aws s3 ls",
+      "aws s3api get-bucket-versioning --bucket ai-q-documents-$(date +%Y%m%d)",
+      "aws s3api get-bucket-encryption --bucket ai-q-documents-$(date +%Y%m%d)"
+    ],
+    "expected_outputs": {
+      "buckets_created": "All S3 buckets created successfully",
+      "versioning_enabled": "Versioning enabled for important buckets",
+      "encryption_enabled": "Server-side encryption enabled for all buckets"
+    }
+  },
+  "task_03_lifecycle_policies": {
+    "task_id": "02-02-03",
+    "title": "Lifecycle Policies Configuration",
+    "description": "Configure intelligent lifecycle policies for cost optimization",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-03-01",
+        "title": "Create lifecycle policy for logs",
+        "description": "Create lifecycle policy for log files with automatic deletion",
+        "config_file": "/opt/ai-q/storage/s3/logs-lifecycle.json",
+        "config_content": "{\\n  \\\"Rules\\\": [\\n    {\\n      \\\"ID\\\": \\\"LogRetentionPolicy\\\",\\n      \\\"Status\\\": \\\"Enabled\\\",\\n      \\\"Filter\\\": {\\n        \\\"Prefix\\\": \\\"logs/\\\"\\n      },\\n      \\\"Transitions\\\": [\\n        {\\n          \\\"Days\\\": 30,\\n          \\\"StorageClass\\\": \\\"STANDARD_IA\\\"\\n        },\\n        {\\n          \\\"Days\\\": 90,\\n          \\\"StorageClass\\\": \\\"GLACIER\\\"\\n        }\\n      ],\\n      \\\"Expiration\\\": {\\n        \\\"Days\\\": 365\\n      }\\n    }\\n  ]\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/s3/logs-lifecycle.json << 'EOF'\\n{\\n  \\\"Rules\\\": [\\n    {\\n      \\\"ID\\\": \\\"LogRetentionPolicy\\\",\\n      \\\"Status\\\": \\\"Enabled\\\",\\n      \\\"Filter\\\": {\\n        \\\"Prefix\\\": \\\"logs/\\\"\\n      },\\n      \\\"Transitions\\\": [\\n        {\\n          \\\"Days\\\": 30,\\n          \\\"StorageClass\\\": \\\"STANDARD_IA\\\"\\n        },\\n        {\\n          \\\"Days\\\": 90,\\n          \\\"StorageClass\\\": \\\"GLACIER\\\"\\n        }\\n      ],\\n      \\\"Expiration\\\": {\\n        \\\"Days\\\": 365\\n      }\\n    }\\n  ]\\n}\\nEOF",
+          "aws s3api put-bucket-lifecycle-configuration --bucket ai-q-logs-$(date +%Y%m%d) --lifecycle-configuration file:///opt/ai-q/storage/s3/logs-lifecycle.json"
+        ],
+        "verification": "Check lifecycle policy applied",
+        "expected_output": "Lifecycle policy applied to logs bucket"
+      },
+      {
+        "step_id": "02-02-03-02",
+        "title": "Create lifecycle policy for backups",
+        "description": "Create lifecycle policy for backup files with long-term retention",
+        "config_file": "/opt/ai-q/storage/s3/backups-lifecycle.json",
+        "config_content": "{\\n  \\\"Rules\\\": [\\n    {\\n      \\\"ID\\\": \\\"BackupRetentionPolicy\\\",\\n      \\\"Status\\\": \\\"Enabled\\\",\\n      \\\"Filter\\\": {\\n        \\\"Prefix\\\": \\\"backups/\\\"\\n      },\\n      \\\"Transitions\\\": [\\n        {\\n          \\\"Days\\\": 90,\\n          \\\"StorageClass\\\": \\\"STANDARD_IA\\\"\\n        },\\n        {\\n          \\\"Days\\\": 365,\\n          \\\"StorageClass\\\": \\\"GLACIER\\\"\\n        }\\n      ],\\n      \\\"Expiration\\\": {\\n        \\\"Days\\\": 2555\\n      }\\n    }\\n  ]\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/s3/backups-lifecycle.json << 'EOF'\\n{\\n  \\\"Rules\\\": [\\n    {\\n      \\\"ID\\\": \\\"BackupRetentionPolicy\\\",\\n      \\\"Status\\\": \\\"Enabled\\\",\\n      \\\"Filter\\\": {\\n        \\\"Prefix\\\": \\\"backups/\\\"\\n      },\\n      \\\"Transitions\\\": [\\n        {\\n          \\\"Days\\\": 90,\\n          \\\"StorageClass\\\": \\\"STANDARD_IA\\\"\\n        },\\n        {\\n          \\\"Days\\\": 365,\\n          \\\"StorageClass\\\": \\\"GLACIER\\\"\\n        }\\n      ],\\n      \\\"Expiration\\\": {\\n        \\\"Days\\\": 2555\\n      }\\n    }\\n  ]\\n}\\nEOF",
+          "aws s3api put-bucket-lifecycle-configuration --bucket ai-q-backups-$(date +%Y%m%d) --lifecycle-configuration file:///opt/ai-q/storage/s3/backups-lifecycle.json"
+        ],
+        "verification": "Check lifecycle policy applied",
+        "expected_output": "Lifecycle policy applied to backups bucket"
+      }
+    ],
+    "verification_commands": [
+      "aws s3api get-bucket-lifecycle-configuration --bucket ai-q-logs-$(date +%Y%m%d)",
+      "aws s3api get-bucket-lifecycle-configuration --bucket ai-q-backups-$(date +%Y%m%d)"
+    ],
+    "expected_outputs": {
+      "logs_lifecycle": "Lifecycle policy applied to logs bucket",
+      "backups_lifecycle": "Lifecycle policy applied to backups bucket"
+    }
+  },
+  "task_04_access_policies": {
+    "task_id": "02-02-04",
+    "title": "Access Policies and Security",
+    "description": "Configure access policies and security measures for S3 buckets",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-04-01",
+        "title": "Create bucket policies",
+        "description": "Create bucket policies for access control",
+        "config_file": "/opt/ai-q/storage/s3/bucket-policy.json",
+        "config_content": "{\\n  \\\"Version\\\": \\\"2012-10-17\\\",\\n  \\\"Statement\\\": [\\n    {\\n      \\\"Sid\\\": \\\"DenyUnencryptedObjectUploads\\\",\\n      \\\"Effect\\\": \\\"Deny\\\",\\n      \\\"Principal\\\": \\\"*\\\",\\n      \\\"Action\\\": \\\"s3:PutObject\\\",\\n      \\\"Resource\\\": \\\"arn:aws:s3:::ai-q-*/*\\\",\\n      \\\"Condition\\\": {\\n        \\\"StringNotEquals\\\": {\\n          \\\"s3:x-amz-server-side-encryption\\\": \\\"AES256\\\"\\n        }\\n      }\\n    },\\n    {\\n      \\\"Sid\\\": \\\"DenyIncorrectEncryptionHeader\\\",\\n      \\\"Effect\\\": \\\"Deny\\\",\\n      \\\"Principal\\\": \\\"*\\\",\\n      \\\"Action\\\": \\\"s3:PutObject\\\",\\n      \\\"Resource\\\": \\\"arn:aws:s3:::ai-q-*/*\\\",\\n      \\\"Condition\\\": {\\n        \\\"StringNotEquals\\\": {\\n          \\\"s3:x-amz-server-side-encryption-aws-kms-key-id\\\": \\\"${KMS_KEY_ID}\\\"\\n        }\\n      }\\n    }\\n  ]\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/s3/bucket-policy.json << 'EOF'\\n{\\n  \\\"Version\\\": \\\"2012-10-17\\\",\\n  \\\"Statement\\\": [\\n    {\\n      \\\"Sid\\\": \\\"DenyUnencryptedObjectUploads\\\",\\n      \\\"Effect\\\": \\\"Deny\\\",\\n      \\\"Principal\\\": \\\"*\\\",\\n      \\\"Action\\\": \\\"s3:PutObject\\\",\\n      \\\"Resource\\\": \\\"arn:aws:s3:::ai-q-*/*\\\",\\n      \\\"Condition\\\": {\\n        \\\"StringNotEquals\\\": {\\n          \\\"s3:x-amz-server-side-encryption\\\": \\\"AES256\\\"\\n        }\\n      }\\n    },\\n    {\\n      \\\"Sid\\\": \\\"DenyIncorrectEncryptionHeader\\\",\\n      \\\"Effect\\\": \\\"Deny\\\",\\n      \\\"Principal\\\": \\\"*\\\",\\n      \\\"Action\\\": \\\"s3:PutObject\\\",\\n      \\\"Resource\\\": \\\"arn:aws:s3:::ai-q-*/*\\\",\\n      \\\"Condition\\\": {\\n        \\\"StringNotEquals\\\": {\\n          \\\"s3:x-amz-server-side-encryption-aws-kms-key-id\\\": \\\"${KMS_KEY_ID}\\\"\\n        }\\n      }\\n    }\\n  ]\\n}\\nEOF"
+        ],
+        "verification": "Check bucket policy created",
+        "expected_output": "Bucket policy created for security enforcement"
+      },
+      {
+        "step_id": "02-02-04-02",
+        "title": "Apply bucket policies",
+        "description": "Apply bucket policies to all S3 buckets",
+        "commands": [
+          "aws s3api put-bucket-policy --bucket ai-q-documents-$(date +%Y%m%d) --policy file:///opt/ai-q/storage/s3/bucket-policy.json",
+          "aws s3api put-bucket-policy --bucket ai-q-media-$(date +%Y%m%d) --policy file:///opt/ai-q/storage/s3/bucket-policy.json",
+          "aws s3api put-bucket-policy --bucket ai-q-backups-$(date +%Y%m%d) --policy file:///opt/ai-q/storage/s3/bucket-policy.json",
+          "aws s3api put-bucket-policy --bucket ai-q-logs-$(date +%Y%m%d) --policy file:///opt/ai-q/storage/s3/bucket-policy.json"
+        ],
+        "verification": "Check bucket policies applied",
+        "expected_output": "Bucket policies applied to all S3 buckets"
+      }
+    ],
+    "verification_commands": [
+      "aws s3api get-bucket-policy --bucket ai-q-documents-$(date +%Y%m%d)",
+      "aws s3api get-bucket-policy --bucket ai-q-media-$(date +%Y%m%d)"
+    ],
+    "expected_outputs": {
+      "policy_created": "Bucket policy created for security enforcement",
+      "policies_applied": "Bucket policies applied to all S3 buckets"
+    }
+  },
+  "task_05_s3_sync_configuration": {
+    "task_id": "02-02-05",
+    "title": "S3 Sync Configuration",
+    "description": "Configure S3 sync for data replication and backup",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-05-01",
+        "title": "Create S3 sync script",
+        "description": "Create script for S3 synchronization",
+        "config_file": "/opt/ai-q/storage/s3/sync-s3.sh",
+        "config_content": "#!/bin/bash\\n\\n# S3 Sync Script for AI-Q Storage\\n\\nBUCKET_DATE=$(date +%Y%m%d)\\nMINIO_ENDPOINT=\"https://localhost:9000\"\\nS3_BUCKET_PREFIX=\"ai-q\"\\n\\n# Sync documents\\necho \"Syncing documents to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-documents s3://${S3_BUCKET_PREFIX}-documents-${BUCKET_DATE} --delete\\n\\n# Sync media\\necho \"Syncing media to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-media s3://${S3_BUCKET_PREFIX}-media-${BUCKET_DATE} --delete\\n\\n# Sync backups\\necho \"Syncing backups to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-backups s3://${S3_BUCKET_PREFIX}-backups-${BUCKET_DATE} --delete\\n\\n# Sync logs\\necho \"Syncing logs to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-logs s3://${S3_BUCKET_PREFIX}-logs-${BUCKET_DATE} --delete\\n\\necho \"S3 sync completed successfully\"",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/s3/sync-s3.sh << 'EOF'\\n#!/bin/bash\\n\\n# S3 Sync Script for AI-Q Storage\\n\\nBUCKET_DATE=$(date +%Y%m%d)\\nMINIO_ENDPOINT=\"https://localhost:9000\"\\nS3_BUCKET_PREFIX=\"ai-q\"\\n\\n# Sync documents\\necho \"Syncing documents to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-documents s3://${S3_BUCKET_PREFIX}-documents-${BUCKET_DATE} --delete\\n\\n# Sync media\\necho \"Syncing media to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-media s3://${S3_BUCKET_PREFIX}-media-${BUCKET_DATE} --delete\\n\\n# Sync backups\\necho \"Syncing backups to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-backups s3://${S3_BUCKET_PREFIX}-backups-${BUCKET_DATE} --delete\\n\\n# Sync logs\\necho \"Syncing logs to S3...\"\\naws s3 sync s3://minio-cluster/ai-q-logs s3://${S3_BUCKET_PREFIX}-logs-${BUCKET_DATE} --delete\\n\\necho \"S3 sync completed successfully\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/storage/s3/sync-s3.sh"
+        ],
+        "verification": "Check S3 sync script created",
+        "expected_output": "S3 sync script created and made executable"
+      },
+      {
+        "step_id": "02-02-05-02",
+        "title": "Setup S3 sync cron job",
+        "description": "Setup automated S3 sync using cron",
+        "commands": [
+          "echo '0 2 * * * /opt/ai-q/storage/s3/sync-s3.sh >> /var/log/s3-sync.log 2>&1' | sudo crontab -",
+          "sudo crontab -l"
+        ],
+        "verification": "Check cron job configured",
+        "expected_output": "S3 sync cron job configured for daily execution"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/storage/s3/sync-s3.sh",
+      "sudo crontab -l"
+    ],
+    "expected_outputs": {
+      "sync_script": "S3 sync script created and executable",
+      "cron_job": "S3 sync cron job configured"
+    }
+  },
+  "task_06_s3_verification": {
+    "task_id": "02-02-06",
+    "title": "S3 Integration Verification",
+    "description": "Verify S3 integration and test functionality",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-06-01",
+        "title": "Test S3 connectivity",
+        "description": "Test S3 connectivity and bucket access",
+        "commands": [
+          "aws s3 ls",
+          "aws s3api list-buckets --query 'Buckets[?contains(Name, `ai-q`)].Name' --output table",
+          "echo 'test file content' > /tmp/test-s3.txt",
+          "aws s3 cp /tmp/test-s3.txt s3://ai-q-documents-$(date +%Y%m%d)/test-s3.txt",
+          "aws s3 ls s3://ai-q-documents-$(date +%Y%m%d)/",
+          "aws s3 cp s3://ai-q-documents-$(date +%Y%m%d)/test-s3.txt /tmp/test-s3-download.txt",
+          "diff /tmp/test-s3.txt /tmp/test-s3-download.txt",
+          "aws s3 rm s3://ai-q-documents-$(date +%Y%m%d)/test-s3.txt",
+          "rm /tmp/test-s3.txt /tmp/test-s3-download.txt"
+        ],
+        "verification": "Check S3 operations working",
+        "expected_output": "All S3 operations working correctly"
+      },
+      {
+        "step_id": "02-02-06-02",
+        "title": "Create verification report",
+        "description": "Create comprehensive S3 verification report",
+        "config_file": "/opt/ai-q/storage/s3/verification-report.json",
+        "config_content": "{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"s3_buckets\\\": \\\"$(aws s3api list-buckets --query 'length(Buckets[?contains(Name, `ai-q`)])' --output text)\\\",\\n  \\\"bucket_names\\\": \\\"$(aws s3api list-buckets --query 'Buckets[?contains(Name, `ai-q`)].Name' --output text)\\\",\\n  \\\"encryption_status\\\": \\\"$(aws s3api get-bucket-encryption --bucket ai-q-documents-$(date +%Y%m%d) --query 'ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm' --output text)\\\",\\n  \\\"versioning_status\\\": \\\"$(aws s3api get-bucket-versioning --bucket ai-q-documents-$(date +%Y%m%d) --query 'Status' --output text)\\\"\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/s3/verification-report.json << 'EOF'\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"s3_buckets\\\": \\\"$(aws s3api list-buckets --query 'length(Buckets[?contains(Name, `ai-q`)])' --output text)\\\",\\n  \\\"bucket_names\\\": \\\"$(aws s3api list-buckets --query 'Buckets[?contains(Name, `ai-q`)].Name' --output text)\\\",\\n  \\\"encryption_status\\\": \\\"$(aws s3api get-bucket-encryption --bucket ai-q-documents-$(date +%Y%m%d) --query 'ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm' --output text)\\\",\\n  \\\"versioning_status\\\": \\\"$(aws s3api get-bucket-versioning --bucket ai-q-documents-$(date +%Y%m%d) --query 'Status' --output text)\\\"\\n}\\nEOF"
+        ],
+        "verification": "Check verification report created",
+        "expected_output": "S3 verification report created with complete status"
+      }
+    ],
+    "verification_commands": [
+      "aws s3 ls",
+      "cat /opt/ai-q/storage/s3/verification-report.json",
+      "ls -la /opt/ai-q/storage/s3/"
+    ],
+    "expected_outputs": {
+      "s3_operations": "All S3 operations working correctly",
+      "verification_report": "S3 verification report created with complete status"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete S3 Integration Verification",
+      "description": "Run comprehensive tests to verify S3 integration",
+      "test_commands": [
+        "aws --version",
+        "aws s3 ls",
+        "aws s3api list-buckets --query 'Buckets[?contains(Name, `ai-q`)].Name'",
+        "aws s3api get-bucket-encryption --bucket ai-q-documents-$(date +%Y%m%d)",
+        "aws s3api get-bucket-versioning --bucket ai-q-documents-$(date +%Y%m%d)",
+        "aws s3api get-bucket-lifecycle-configuration --bucket ai-q-logs-$(date +%Y%m%d)",
+        "cat /opt/ai-q/storage/s3/verification-report.json",
+        "sudo crontab -l"
+      ],
+      "expected_results": {
+        "aws_cli_working": "AWS CLI installed and working",
+        "buckets_created": "All S3 buckets created successfully",
+        "encryption_enabled": "Server-side encryption enabled",
+        "versioning_enabled": "Versioning enabled for important buckets",
+        "lifecycle_configured": "Lifecycle policies configured",
+        "verification_complete": "Verification report generated successfully",
+        "cron_configured": "S3 sync cron job configured"
+      }
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "02-03-local-storage-optimization",
+    "prerequisites_completed": [
+      "AWS CLI installed and configured",
+      "S3 buckets created with proper configuration",
+      "Lifecycle policies configured for cost optimization",
+      "Access policies and security measures implemented",
+      "S3 sync configuration completed",
+      "S3 integration verification completed successfully"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

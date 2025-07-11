@@ -1,0 +1,28 @@
+{
+  "id": "tool.comfyui",
+  "type": "tool",
+  "name": "ComfyUI Tool",
+  "description": "Comprehensive ComfyUI node-based workflow operations for advanced image generation and processing",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["comfyui", "workflow", "nodes", "image", "generation", "ai", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for ComfyUI node-based workflow tasks in recipes",
+  "operations": {
+    "execute_workflow": "Execute custom ComfyUI workflows",
+    "load_workflow": "Load workflow from JSON file",
+    "save_workflow": "Save workflow to JSON file",
+    "get_workflow_history": "Retrieve workflow execution history",
+    "get_available_nodes": "List available nodes and their parameters",
+    "queue_workflow": "Queue workflow for execution",
+    "get_queue_status": "Check workflow queue status"
+  },
+  "validation": {
+    "required_fields": ["operation", "workflow_data"],
+    "operations": ["execute_workflow", "load_workflow", "save_workflow", "get_workflow_history", "get_available_nodes", "queue_workflow", "get_queue_status"]
+  }
+} 

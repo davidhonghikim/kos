@@ -1,0 +1,23 @@
+{
+  "id": "tool.video_editor",
+  "type": "tool",
+  "name": "Video Editor",
+  "description": "Modular video editing operations for trimming and adding subtitles",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": ["moviepy"],
+  "tags": ["video", "editing", "trim", "subtitle", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for video editing operations in recipes",
+  "operations": {
+    "trim_video": "Trim videos to specified time range",
+    "add_subtitle": "Add subtitles to videos"
+  },
+  "validation": {
+    "required_fields": ["operation", "video_path", "output_path"],
+    "operations": ["trim", "subtitle"]
+  }
+} 

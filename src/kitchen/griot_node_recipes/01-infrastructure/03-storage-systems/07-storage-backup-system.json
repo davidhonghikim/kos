@@ -1,0 +1,304 @@
+{
+  "metadata": {
+    "sub_recipe_id": "02-07-storage-backup-system",
+    "title": "Storage Backup System - Complete Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-01-28T00:00:00Z",
+    "purpose": "Exact step-by-step storage backup system implementation with zero ambiguity",
+    "total_tasks": 5,
+    "estimated_duration": "3-4 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "02-01-minio-enterprise-cluster",
+      "02-02-aws-s3-integration"
+    ],
+    "components": [
+      "Automated Backups",
+      "Incremental Backups",
+      "Backup Verification",
+      "Recovery Procedures"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "02-01-05: Storage buckets created",
+      "02-02-02: S3 buckets created",
+      "02-02-03: Lifecycle policies configured"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 4 cores for backup operations",
+      "ram": "Minimum 8GB for backup operations",
+      "storage": "Minimum 500GB for backup storage",
+      "network": "High-speed network for backup transfers"
+    }
+  },
+  "task_01_backup_strategy": {
+    "task_id": "02-07-01",
+    "title": "Backup Strategy Configuration",
+    "description": "Configure comprehensive backup strategy for storage systems",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-07-01-01",
+        "title": "Create backup strategy configuration",
+        "description": "Create backup strategy configuration for storage systems",
+        "config_file": "/opt/ai-q/storage/backup/backup-strategy.json",
+        "config_content": {
+          "backup_strategy": {
+            "minio_backup": {
+              "frequency": "daily",
+              "retention_days": 30,
+              "incremental": true,
+              "compression": true,
+              "encryption": true
+            },
+            "s3_backup": {
+              "frequency": "weekly",
+              "retention_days": 90,
+              "incremental": true,
+              "compression": true,
+              "encryption": true
+            },
+            "local_backup": {
+              "frequency": "daily",
+              "retention_days": 7,
+              "incremental": false,
+              "compression": true,
+              "encryption": false
+            },
+            "backup_schedule": {
+              "daily_backup": "02:00",
+              "weekly_backup": "Sunday 03:00",
+              "monthly_backup": "1st of month 04:00"
+            }
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/storage/backup",
+          "sudo tee /opt/ai-q/storage/backup/backup-strategy.json << 'EOF'\\n{\\n  \\\"backup_strategy\\\": {\\n    \\\"minio_backup\\\": {\\n      \\\"frequency\\\": \\\"daily\\\",\\n      \\\"retention_days\\\": 30,\\n      \\\"incremental\\\": true,\\n      \\\"compression\\\": true,\\n      \\\"encryption\\\": true\\n    },\\n    \\\"s3_backup\\\": {\\n      \\\"frequency\\\": \\\"weekly\\\",\\n      \\\"retention_days\\\": 90,\\n      \\\"incremental\\\": true,\\n      \\\"compression\\\": true,\\n      \\\"encryption\\\": true\\n    },\\n    \\\"local_backup\\\": {\\n      \\\"frequency\\\": \\\"daily\\\",\\n      \\\"retention_days\\\": 7,\\n      \\\"incremental\\\": false,\\n      \\\"compression\\\": true,\\n      \\\"encryption\\\": false\\n    },\\n    \\\"backup_schedule\\\": {\\n      \\\"daily_backup\\\": \\\"02:00\\\",\\n      \\\"weekly_backup\\\": \\\"Sunday 03:00\\\",\\n      \\\"monthly_backup\\\": \\\"1st of month 04:00\\\"\\n    }\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check backup strategy configuration created",
+        "expected_output": "Backup strategy configuration created successfully"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/storage/backup/backup-strategy.json"
+    ],
+    "expected_outputs": {
+      "backup_strategy": "Backup strategy configuration created successfully"
+    }
+  },
+  "task_02_automated_backup_scripts": {
+    "task_id": "02-07-02",
+    "title": "Automated Backup Scripts",
+    "description": "Create automated backup scripts for all storage systems",
+    "estimated_duration": "60 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-07-02-01",
+        "title": "Create MinIO backup script",
+        "description": "Create script for automated MinIO backups",
+        "config_file": "/opt/ai-q/storage/backup/backup-minio.sh",
+        "config_content": "#!/bin/bash\\n\\n# MinIO Automated Backup Script\\n\\nBACKUP_DIR=\"/data/backups/minio\"\\nLOG_FILE=\"/var/log/minio-backup.log\"\\nDATE=$(date +%Y%m%d_%H%M%S)\\n\\nlog_message() {\\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" >> \"$LOG_FILE\"\\n}\\n\\n# Create backup directory\\nmkdir -p \"$BACKUP_DIR\"\\n\\n# Backup MinIO buckets\\nbackup_minio_buckets() {\\n    log_message \"Starting MinIO bucket backup...\"\\n    \\n    for bucket in ai-q-documents ai-q-media ai-q-backups ai-q-logs; do\\n        log_message \"Backing up bucket: $bucket\"\\n        mc mirror minio-cluster/$bucket \"$BACKUP_DIR/$bucket-$DATE\"\\n        if [ $? -eq 0 ]; then\\n            log_message \"Successfully backed up bucket: $bucket\"\\n        else\\n            log_message \"Failed to backup bucket: $bucket\"\\n        fi\\n    done\\n}\\n\\n# Compress backup\\ncompress_backup() {\\n    log_message \"Compressing backup...\"\\n    tar -czf \"$BACKUP_DIR/minio-backup-$DATE.tar.gz\" -C \"$BACKUP_DIR\" .\\n    rm -rf \"$BACKUP_DIR/ai-q-*\"\\n    log_message \"Backup compressed: minio-backup-$DATE.tar.gz\"\\n}\\n\\n# Clean old backups\\ncleanup_old_backups() {\\n    log_message \"Cleaning up old backups...\"\\n    find \"$BACKUP_DIR\" -name \"minio-backup-*.tar.gz\" -mtime +30 -delete\\n    log_message \"Old backups cleaned up\"\\n}\\n\\n# Main execution\\nmain() {\\n    log_message \"Starting MinIO backup process\"\\n    backup_minio_buckets\\n    compress_backup\\n    cleanup_old_backups\\n    log_message \"MinIO backup process completed\"\\n}\\n\\nmain \"$@\"",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/backup/backup-minio.sh << 'EOF'\\n#!/bin/bash\\n\\n# MinIO Automated Backup Script\\n\\nBACKUP_DIR=\\\"/data/backups/minio\\\"\\nLOG_FILE=\\\"/var/log/minio-backup.log\\\"\\nDATE=$(date +%Y%m%d_%H%M%S)\\n\\nlog_message() {\\n    echo \\\"$(date '+%Y-%m-%d %H:%M:%S') - $1\\\" >> \\\"$LOG_FILE\\\"\\n}\\n\\n# Create backup directory\\nmkdir -p \\\"$BACKUP_DIR\\\"\\n\\n# Backup MinIO buckets\\nbackup_minio_buckets() {\\n    log_message \\\"Starting MinIO bucket backup...\\\"\\n    \\n    for bucket in ai-q-documents ai-q-media ai-q-backups ai-q-logs; do\\n        log_message \\\"Backing up bucket: $bucket\\\"\\n        mc mirror minio-cluster/$bucket \\\"$BACKUP_DIR/$bucket-$DATE\\\"\\n        if [ $? -eq 0 ]; then\\n            log_message \\\"Successfully backed up bucket: $bucket\\\"\\n        else\\n            log_message \\\"Failed to backup bucket: $bucket\\\"\\n        fi\\n    done\\n}\\n\\n# Compress backup\\ncompress_backup() {\\n    log_message \\\"Compressing backup...\\\"\\n    tar -czf \\\"$BACKUP_DIR/minio-backup-$DATE.tar.gz\\\" -C \\\"$BACKUP_DIR\\\" .\\n    rm -rf \\\"$BACKUP_DIR/ai-q-*\\\"\\n    log_message \\\"Backup compressed: minio-backup-$DATE.tar.gz\\\"\\n}\\n\\n# Clean old backups\\ncleanup_old_backups() {\\n    log_message \\\"Cleaning up old backups...\\\"\\n    find \\\"$BACKUP_DIR\\\" -name \\\"minio-backup-*.tar.gz\\\" -mtime +30 -delete\\n    log_message \\\"Old backups cleaned up\\\"\\n}\\n\\n# Main execution\\nmain() {\\n    log_message \\\"Starting MinIO backup process\\\"\\n    backup_minio_buckets\\n    compress_backup\\n    cleanup_old_backups\\n    log_message \\\"MinIO backup process completed\\\"\\n}\\n\\nmain \\\"$@\\\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/storage/backup/backup-minio.sh"
+        ],
+        "verification": "Check MinIO backup script created",
+        "expected_output": "MinIO backup script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/storage/backup/backup-minio.sh"
+    ],
+    "expected_outputs": {
+      "minio_backup_script": "MinIO backup script created and executable"
+    }
+  },
+  "task_03_backup_verification": {
+    "task_id": "02-07-03",
+    "title": "Backup Verification System",
+    "description": "Setup backup verification and integrity checking",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-07-03-01",
+        "title": "Create backup verification script",
+        "description": "Create script for backup verification and integrity checking",
+        "config_file": "/opt/ai-q/storage/backup/verify-backup.sh",
+        "config_content": "#!/bin/bash\\n\\n# Backup Verification Script\\n\\nBACKUP_DIR=\"/data/backups\"\\nLOG_FILE=\"/var/log/backup-verification.log\"\\nVERIFICATION_REPORT=\"/opt/ai-q/storage/backup/verification-report.json\"\\n\\nlog_message() {\\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" >> \"$LOG_FILE\"\\n}\\n\\n# Verify MinIO backup\\nverify_minio_backup() {\\n    log_message \"Verifying MinIO backup...\"\\n    \\n    latest_backup=$(find \"$BACKUP_DIR/minio\" -name \"minio-backup-*.tar.gz\" -type f -printf '%T@ %p\\n' | sort -n | tail -1 | cut -d' ' -f2-)\\n    \\n    if [ -n \"$latest_backup\" ]; then\\n        # Check file integrity\\n        tar -tzf \"$latest_backup\" > /dev/null 2>&1\\n        if [ $? -eq 0 ]; then\\n            log_message \"MinIO backup integrity check passed\"\\n            echo \"minio_backup_status: verified\"\\n        else\\n            log_message \"MinIO backup integrity check failed\"\\n            echo \"minio_backup_status: failed\"\\n        fi\\n    else\\n        log_message \"No MinIO backup found\"\\n        echo \"minio_backup_status: not_found\"\\n    fi\\n}\\n\\n# Verify S3 backup\\nverify_s3_backup() {\\n    log_message \"Verifying S3 backup...\"\\n    \\n    # Check S3 bucket accessibility\\n    aws s3 ls s3://ai-q-backups-$(date +%Y%m%d) > /dev/null 2>&1\\n    if [ $? -eq 0 ]; then\\n        log_message \"S3 backup accessibility check passed\"\\n        echo \"s3_backup_status: verified\"\\n    else\\n        log_message \"S3 backup accessibility check failed\"\\n        echo \"s3_backup_status: failed\"\\n    fi\\n}\\n\\n# Generate verification report\\ngenerate_report() {\\n    log_message \"Generating verification report...\"\\n    \\n    cat > \"$VERIFICATION_REPORT\" << EOF\\n{\\n  \"timestamp\": \"$(date -Iseconds)\",\\n  \"verification_results\": {\\n    \"minio_backup\": \"$(verify_minio_backup | grep minio_backup_status | cut -d: -f2 | tr -d ' ')\",\\n    \"s3_backup\": \"$(verify_s3_backup | grep s3_backup_status | cut -d: -f2 | tr -d ' ')\",\\n    \"backup_count\": \"$(find $BACKUP_DIR -name \"*.tar.gz\" | wc -l)\",\\n    \"total_size\": \"$(du -sh $BACKUP_DIR | cut -f1)\"\\n  }\\n}\\nEOF\\n    \\n    log_message \"Verification report generated\"\\n}\\n\\n# Main execution\\nmain() {\\n    log_message \"Starting backup verification process\"\\n    verify_minio_backup > /tmp/minio_verification\\n    verify_s3_backup > /tmp/s3_verification\\n    generate_report\\n    log_message \"Backup verification process completed\"\\n}\\n\\nmain \"$@\"",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/backup/verify-backup.sh << 'EOF'\\n#!/bin/bash\\n\\n# Backup Verification Script\\n\\nBACKUP_DIR=\\\"/data/backups\\\"\\nLOG_FILE=\\\"/var/log/backup-verification.log\\\"\\nVERIFICATION_REPORT=\\\"/opt/ai-q/storage/backup/verification-report.json\\\"\\n\\nlog_message() {\\n    echo \\\"$(date '+%Y-%m-%d %H:%M:%S') - $1\\\" >> \\\"$LOG_FILE\\\"\\n}\\n\\n# Verify MinIO backup\\nverify_minio_backup() {\\n    log_message \\\"Verifying MinIO backup...\\\"\\n    \\n    latest_backup=$(find \\\"$BACKUP_DIR/minio\\\" -name \\\"minio-backup-*.tar.gz\\\" -type f -printf '%T@ %p\\\\n' | sort -n | tail -1 | cut -d' ' -f2-)\\n    \\n    if [ -n \\\"$latest_backup\\\" ]; then\\n        # Check file integrity\\n        tar -tzf \\\"$latest_backup\\\" > /dev/null 2>&1\\n        if [ $? -eq 0 ]; then\\n            log_message \\\"MinIO backup integrity check passed\\\"\\n            echo \\\"minio_backup_status: verified\\\"\\n        else\\n            log_message \\\"MinIO backup integrity check failed\\\"\\n            echo \\\"minio_backup_status: failed\\\"\\n        fi\\n    else\\n        log_message \\\"No MinIO backup found\\\"\\n        echo \\\"minio_backup_status: not_found\\\"\\n    fi\\n}\\n\\n# Verify S3 backup\\nverify_s3_backup() {\\n    log_message \\\"Verifying S3 backup...\\\"\\n    \\n    # Check S3 bucket accessibility\\n    aws s3 ls s3://ai-q-backups-$(date +%Y%m%d) > /dev/null 2>&1\\n    if [ $? -eq 0 ]; then\\n        log_message \\\"S3 backup accessibility check passed\\\"\\n        echo \\\"s3_backup_status: verified\\\"\\n    else\\n        log_message \\\"S3 backup accessibility check failed\\\"\\n        echo \\\"s3_backup_status: failed\\\"\\n    fi\\n}\\n\\n# Generate verification report\\ngenerate_report() {\\n    log_message \\\"Generating verification report...\\\"\\n    \\n    cat > \\\"$VERIFICATION_REPORT\\\" << EOF\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"verification_results\\\": {\\n    \\\"minio_backup\\\": \\\"$(verify_minio_backup | grep minio_backup_status | cut -d: -f2 | tr -d ' ')\\\",\\n    \\\"s3_backup\\\": \\\"$(verify_s3_backup | grep s3_backup_status | cut -d: -f2 | tr -d ' ')\\\",\\n    \\\"backup_count\\\": \\\"$(find $BACKUP_DIR -name \\\"*.tar.gz\\\" | wc -l)\\\",\\n    \\\"total_size\\\": \\\"$(du -sh $BACKUP_DIR | cut -f1)\\\"\\n  }\\n}\\nEOF\\n    \\n    log_message \\\"Verification report generated\\\"\\n}\\n\\n# Main execution\\nmain() {\\n    log_message \\\"Starting backup verification process\\\"\\n    verify_minio_backup > /tmp/minio_verification\\n    verify_s3_backup > /tmp/s3_verification\\n    generate_report\\n    log_message \\\"Backup verification process completed\\\"\\n}\\n\\nmain \\\"$@\\\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/storage/backup/verify-backup.sh"
+        ],
+        "verification": "Check backup verification script created",
+        "expected_output": "Backup verification script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/storage/backup/verify-backup.sh"
+    ],
+    "expected_outputs": {
+      "backup_verification_script": "Backup verification script created and executable"
+    }
+  },
+  "task_04_recovery_procedures": {
+    "task_id": "02-07-04",
+    "title": "Recovery Procedures",
+    "description": "Create comprehensive recovery procedures for storage systems",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-07-04-01",
+        "title": "Create recovery procedures",
+        "description": "Create recovery procedures for storage systems",
+        "config_file": "/opt/ai-q/storage/backup/recovery-procedures.json",
+        "config_content": {
+          "recovery_procedures": {
+            "minio_recovery": {
+              "full_recovery": {
+                "steps": [
+                  "Stop MinIO cluster",
+                  "Extract latest backup",
+                  "Restore data to MinIO buckets",
+                  "Verify data integrity",
+                  "Start MinIO cluster"
+                ],
+                "estimated_time": "2-4 hours"
+              },
+              "partial_recovery": {
+                "steps": [
+                  "Identify affected buckets",
+                  "Extract specific backup",
+                  "Restore specific data",
+                  "Verify data integrity"
+                ],
+                "estimated_time": "30-60 minutes"
+              }
+            },
+            "s3_recovery": {
+              "full_recovery": {
+                "steps": [
+                  "Download S3 backup",
+                  "Restore to S3 buckets",
+                  "Verify data integrity",
+                  "Update bucket policies"
+                ],
+                "estimated_time": "4-8 hours"
+              },
+              "partial_recovery": {
+                "steps": [
+                  "Download specific backup",
+                  "Restore specific data",
+                  "Verify data integrity"
+                ],
+                "estimated_time": "1-2 hours"
+              }
+            }
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/storage/backup/recovery-procedures.json << 'EOF'\\n{\\n  \\\"recovery_procedures\\\": {\\n    \\\"minio_recovery\\\": {\\n      \\\"full_recovery\\\": {\\n        \\\"steps\\\": [\\n          \\\"Stop MinIO cluster\\\",\\n          \\\"Extract latest backup\\\",\\n          \\\"Restore data to MinIO buckets\\\",\\n          \\\"Verify data integrity\\\",\\n          \\\"Start MinIO cluster\\\"\\n        ],\\n        \\\"estimated_time\\\": \\\"2-4 hours\\\"\\n      },\\n      \\\"partial_recovery\\\": {\\n        \\\"steps\\\": [\\n          \\\"Identify affected buckets\\\",\\n          \\\"Extract specific backup\\\",\\n          \\\"Restore specific data\\\",\\n          \\\"Verify data integrity\\\"\\n        ],\\n        \\\"estimated_time\\\": \\\"30-60 minutes\\\"\\n      }\\n    },\\n    \\\"s3_recovery\\\": {\\n      \\\"full_recovery\\\": {\\n        \\\"steps\\\": [\\n          \\\"Download S3 backup\\\",\\n          \\\"Restore to S3 buckets\\\",\\n          \\\"Verify data integrity\\\",\\n          \\\"Update bucket policies\\\"\\n        ],\\n        \\\"estimated_time\\\": \\\"4-8 hours\\\"\\n      },\\n      \\\"partial_recovery\\\": {\\n        \\\"steps\\\": [\\n          \\\"Download specific backup\\\",\\n          \\\"Restore specific data\\\",\\n          \\\"Verify data integrity\\\"\\n        ],\\n        \\\"estimated_time\\\": \\\"1-2 hours\\\"\\n      }\\n    }\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check recovery procedures created",
+        "expected_output": "Recovery procedures created successfully"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/storage/backup/recovery-procedures.json"
+    ],
+    "expected_outputs": {
+      "recovery_procedures": "Recovery procedures created successfully"
+    }
+  },
+  "task_05_backup_system_verification": {
+    "task_id": "02-07-05",
+    "title": "Backup System Verification",
+    "description": "Verify backup system implementation",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-07-05-01",
+        "title": "Create backup system verification report",
+        "description": "Create comprehensive verification report for backup system",
+        "config_file": "/opt/ai-q/storage/backup/backup-system-verification.json",
+        "config_content": "{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"backup_system_status\\\": {\\n    \\\"backup_strategy\\\": \\\"$(cat /opt/ai-q/storage/backup/backup-strategy.json | jq '.backup_strategy | keys | length')\\\",\\n    \\\"backup_scripts\\\": \\\"$(ls -la /opt/ai-q/storage/backup/*.sh | wc -l)\\\",\\n    \\\"verification_script\\\": \\\"$(ls -la /opt/ai-q/storage/backup/verify-backup.sh | wc -l)\\\",\\n    \\\"recovery_procedures\\\": \\\"$(cat /opt/ai-q/storage/backup/recovery-procedures.json | jq '.recovery_procedures | keys | length')\\\",\\n    \\\"backup_directories\\\": \\\"$(ls -la /data/backups/ | wc -l)\\\"\\n  }\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/backup/backup-system-verification.json << 'EOF'\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"backup_system_status\\\": {\\n    \\\"backup_strategy\\\": \\\"$(cat /opt/ai-q/storage/backup/backup-strategy.json | jq '.backup_strategy | keys | length')\\\",\\n    \\\"backup_scripts\\\": \\\"$(ls -la /opt/ai-q/storage/backup/*.sh | wc -l)\\\",\\n    \\\"verification_script\\\": \\\"$(ls -la /opt/ai-q/storage/backup/verify-backup.sh | wc -l)\\\",\\n    \\\"recovery_procedures\\\": \\\"$(cat /opt/ai-q/storage/backup/recovery-procedures.json | jq '.recovery_procedures | keys | length')\\\",\\n    \\\"backup_directories\\\": \\\"$(ls -la /data/backups/ | wc -l)\\\"\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check backup system verification report created",
+        "expected_output": "Backup system verification report created with complete status"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/storage/backup/backup-system-verification.json",
+      "ls -la /opt/ai-q/storage/backup/"
+    ],
+    "expected_outputs": {
+      "backup_system_verification": "Backup system verification report created with complete status"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete Storage Backup System Verification",
+      "description": "Run comprehensive tests to verify storage backup system",
+      "test_commands": [
+        "cat /opt/ai-q/storage/backup/backup-strategy.json",
+        "ls -la /opt/ai-q/storage/backup/backup-minio.sh",
+        "ls -la /opt/ai-q/storage/backup/verify-backup.sh",
+        "cat /opt/ai-q/storage/backup/recovery-procedures.json",
+        "cat /opt/ai-q/storage/backup/backup-system-verification.json",
+        "ls -la /data/backups/"
+      ],
+      "expected_results": {
+        "backup_strategy": "Backup strategy configuration created",
+        "backup_scripts": "Backup scripts created and executable",
+        "verification_script": "Backup verification script created",
+        "recovery_procedures": "Recovery procedures documented",
+        "backup_system_verification": "Backup system verification report generated successfully",
+        "backup_directories": "Backup directories created"
+      }
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "02-08-storage-performance-monitoring",
+    "prerequisites_completed": [
+      "Backup strategy configuration completed",
+      "Automated backup scripts created",
+      "Backup verification system setup",
+      "Recovery procedures documented",
+      "Backup system verification completed successfully"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

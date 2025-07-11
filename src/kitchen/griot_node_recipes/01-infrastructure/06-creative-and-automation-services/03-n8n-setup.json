@@ -1,0 +1,68 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-INFRA-N8N-SETUP-003",
+    "title": "n8n Workflow Automation (Optional)",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T21:32:53Z",
+    "difficulty_level": "intermediate",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Deploys n8n, a free and source-available workflow automation tool. This service allows for creating complex automations and integrating different services. The recipe also supports connecting to a remote n8n instance.",
+    "technology_stack": {
+      "automation": "n8n",
+      "orchestration": "Docker Compose"
+    },
+    "deliverables": [
+      "A running n8n Docker container.",
+      "Configuration for connecting to a local or remote n8n instance."
+    ]
+  },
+  "tasks": [
+    {
+      "id": "50-003",
+      "title": "Deploy n8n Container",
+      "description": "Deploys the n8n container via Docker Compose. This service is not hardware-intensive and can be run on most systems. Provides an option to configure a remote URL and API key.",
+      "dependencies": [],
+      "estimated_time": "20 minutes",
+      "files_to_create": [
+        "docker/compose/n8n.yml",
+        "config/automation_services/n8n_config.yml"
+      ],
+      "acceptance_criteria": [
+        "The n8n container starts successfully.",
+        "The 'config/automation_services/n8n_config.yml' is created, allowing a user to specify a remote_url and api_key."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-N8N-Setup",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

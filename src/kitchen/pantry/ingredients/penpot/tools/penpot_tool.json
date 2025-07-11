@@ -1,0 +1,29 @@
+{
+  "id": "tool.penpot",
+  "type": "tool",
+  "name": "Penpot Tool",
+  "description": "Comprehensive Penpot design and prototyping operations for UI/UX design workflows",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["penpot", "design", "prototyping", "ui", "ux", "figma", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for Penpot design and prototyping tasks in recipes",
+  "operations": {
+    "create_project": "Create new design projects",
+    "export_design": "Export designs in various formats",
+    "import_design": "Import designs from external sources",
+    "get_projects": "List all available projects",
+    "update_project": "Update project metadata",
+    "delete_project": "Delete projects",
+    "share_project": "Share projects with team members",
+    "get_assets": "Manage design assets and libraries"
+  },
+  "validation": {
+    "required_fields": ["operation", "project_id"],
+    "operations": ["create_project", "export_design", "import_design", "get_projects", "update_project", "delete_project", "share_project", "get_assets"]
+  }
+} 

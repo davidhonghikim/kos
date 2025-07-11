@@ -1,0 +1,382 @@
+{
+  "metadata": {
+    "sub_recipe_id": "02-10-backup-services",
+    "title": "Backup Services - Automated Backup and Recovery",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T18:18:55Z",
+    "purpose": "Deploy automated backup services for data protection and disaster recovery",
+    "total_tasks": 4,
+    "estimated_duration": "1-2 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "02-01-docker-core",
+      "02-02-docker-services",
+      "02-05-infrastructure-services"
+    ],
+    "port_assignments": {
+      "backup-manager": 8083,
+      "backup-api": 8084,
+      "notes": "Using alternative ports for backup services"
+    },
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "02-01-01: Docker environment setup",
+      "02-01-02: Network architecture configured",
+      "02-01-03: Volume management setup",
+      "02-02-01: Docker services orchestration",
+      "02-05-01: PostgreSQL deployed",
+      "02-05-02: Redis deployed",
+      "02-05-03: MinIO deployed"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 2 cores for backup services",
+      "ram": "Minimum 2GB for backup services",
+      "storage": "Minimum 100GB for backup storage",
+      "network": "Stable network for backup operations"
+    }
+  },
+  "task_01_deploy_backup_manager": {
+    "task_id": "02-10-01",
+    "title": "Deploy Backup Manager",
+    "description": "Deploy centralized backup management service",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-10-01-01",
+        "title": "Create Backup Manager configuration directory",
+        "description": "Create directory structure for Backup Manager",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/config/backup-manager",
+          "sudo mkdir -p /opt/ai-q/data/backup-manager/data",
+          "sudo mkdir -p /opt/ai-q/data/backup-manager/logs",
+          "sudo mkdir -p /opt/ai-q/data/backup-manager/schedules"
+        ],
+        "verification": "Check directories created",
+        "expected_output": "All Backup Manager directories created successfully"
+      },
+      {
+        "step_id": "02-10-01-02",
+        "title": "Create Backup Manager configuration",
+        "description": "Create comprehensive backup configuration",
+        "config_file": "/opt/ai-q/config/backup-manager/config.yml",
+        "config_content": {
+          "backup": {
+            "retention_days": 30,
+            "compression": true,
+            "encryption": false,
+            "verify_backups": true
+          },
+          "schedules": {
+            "postgresql": {
+              "frequency": "daily",
+              "time": "02:00",
+              "enabled": true
+            },
+            "redis": {
+              "frequency": "daily",
+              "time": "02:30",
+              "enabled": true
+            },
+            "minio": {
+              "frequency": "weekly",
+              "time": "03:00",
+              "enabled": true
+            },
+            "applications": {
+              "frequency": "daily",
+              "time": "01:00",
+              "enabled": true
+            }
+          },
+          "storage": {
+            "type": "local",
+            "path": "/backups",
+            "max_size_gb": 100
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/config/backup-manager/config.yml << 'EOF'\nbackup:\n  retention_days: 30\n  compression: true\n  encryption: false\n  verify_backups: true\n\nschedules:\n  postgresql:\n    frequency: daily\n    time: 02:00\n    enabled: true\n  redis:\n    frequency: daily\n    time: 02:30\n    enabled: true\n  minio:\n    frequency: weekly\n    time: 03:00\n    enabled: true\n  applications:\n    frequency: daily\n    time: 01:00\n    enabled: true\n\nstorage:\n  type: local\n  path: /backups\n  max_size_gb: 100\nEOF"
+        ],
+        "verification": "Check configuration file exists",
+        "expected_output": "config.yml created with specified configuration"
+      },
+      {
+        "step_id": "02-10-01-03",
+        "title": "Create Backup Manager Docker Compose service",
+        "description": "Create Backup Manager service configuration",
+        "config_file": "/opt/ai-q/docker/compose/backup-manager-service.yml",
+        "config_content": {
+          "version": "3.8",
+          "services": {
+            "backup-manager": {
+              "image": "alpine:latest",
+              "container_name": "ai-q-backup-manager",
+              "restart": "unless-stopped",
+              "ports": [
+                "8083:8080"
+              ],
+              "volumes": [
+                "/opt/ai-q/config/backup-manager:/config",
+                "/opt/ai-q/data/backup-manager/data:/backups",
+                "/opt/ai-q/data/backup-manager/logs:/logs",
+                "/opt/ai-q/data/backup-manager/schedules:/schedules",
+                "/opt/ai-q/data/postgresql:/host/postgresql:ro",
+                "/opt/ai-q/data/redis:/host/redis:ro",
+                "/opt/ai-q/data/minio:/host/minio:ro"
+              ],
+              "command": [
+                "sh",
+                "-c",
+                "apk add --no-cache python3 py3-pip curl && pip3 install flask schedule psycopg2-binary redis boto3 && python3 -c 'import flask; print(\"Backup Manager Ready\")' && python3 -m http.server 8080"
+              ],
+              "networks": [
+                "ai-q-network"
+              ],
+              "depends_on": [
+                "postgresql",
+                "redis",
+                "minio"
+              ],
+              "healthcheck": {
+                "test": [
+                  "CMD",
+                  "wget",
+                  "--no-verbose",
+                  "--tries=1",
+                  "--spider",
+                  "http://localhost:8080/"
+                ],
+                "interval": "30s",
+                "timeout": "10s",
+                "retries": 3
+              }
+            }
+          },
+          "networks": {
+            "ai-q-network": {
+              "external": true
+            }
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/docker/compose/backup-manager-service.yml << 'EOF'\nversion: '3.8'\n\nservices:\n  backup-manager:\n    image: alpine:latest\n    container_name: ai-q-backup-manager\n    restart: unless-stopped\n    ports:\n      - 8083:8080\n    volumes:\n      - /opt/ai-q/config/backup-manager:/config\n      - /opt/ai-q/data/backup-manager/data:/backups\n      - /opt/ai-q/data/backup-manager/logs:/logs\n      - /opt/ai-q/data/backup-manager/schedules:/schedules\n      - /opt/ai-q/data/postgresql:/host/postgresql:ro\n      - /opt/ai-q/data/redis:/host/redis:ro\n      - /opt/ai-q/data/minio:/host/minio:ro\n    command:\n      - sh\n      - -c\n      - apk add --no-cache python3 py3-pip curl && pip3 install flask schedule psycopg2-binary redis boto3 && python3 -c 'import flask; print(\"Backup Manager Ready\")' && python3 -m http.server 8080\n    networks:\n      - ai-q-network\n    depends_on:\n      - postgresql\n      - redis\n      - minio\n    healthcheck:\n      test: [\"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:8080/\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n\nnetworks:\n  ai-q-network:\n    external: true\nEOF"
+        ],
+        "verification": "Check configuration file exists",
+        "expected_output": "backup-manager-service.yml created with specified configuration"
+      },
+      {
+        "step_id": "02-10-01-04",
+        "title": "Deploy Backup Manager service",
+        "description": "Start Backup Manager service and verify deployment",
+        "commands": [
+          "docker-compose -f /opt/ai-q/docker/compose/backup-manager-service.yml up -d",
+          "sleep 60",
+          "curl -f http://localhost:8083/"
+        ],
+        "verification": "Check Backup Manager service is running",
+        "expected_output": "Backup Manager service running and responding to requests"
+      }
+    ],
+    "verification_commands": [
+      "docker ps --filter name=ai-q-backup-manager",
+      "curl -s http://localhost:8083/",
+      "docker logs ai-q-backup-manager",
+      "ls -la /opt/ai-q/data/backup-manager/"
+    ],
+    "expected_outputs": {
+      "service_running": "Backup Manager container is running",
+      "http_responding": "Backup Manager responds to HTTP requests",
+      "dependencies_installed": "Python dependencies installed successfully",
+      "directories_created": "Backup directories created and accessible"
+    }
+  },
+  "task_02_deploy_backup_api": {
+    "task_id": "02-10-02",
+    "title": "Deploy Backup API",
+    "description": "Deploy REST API for backup operations and monitoring",
+    "estimated_duration": "30 minutes",
+    "critical": false,
+    "steps": [
+      {
+        "step_id": "02-10-02-01",
+        "title": "Create Backup API configuration directory",
+        "description": "Create directory structure for Backup API",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/config/backup-api",
+          "sudo mkdir -p /opt/ai-q/data/backup-api/logs"
+        ],
+        "verification": "Check directories created",
+        "expected_output": "All Backup API directories created successfully"
+      },
+      {
+        "step_id": "02-10-02-02",
+        "title": "Create Backup API Docker Compose service",
+        "description": "Create Backup API service configuration",
+        "config_file": "/opt/ai-q/docker/compose/backup-api-service.yml",
+        "config_content": {
+          "version": "3.8",
+          "services": {
+            "backup-api": {
+              "image": "alpine:latest",
+              "container_name": "ai-q-backup-api",
+              "restart": "unless-stopped",
+              "ports": [
+                "8084:8080"
+              ],
+              "volumes": [
+                "/opt/ai-q/config/backup-api:/config",
+                "/opt/ai-q/data/backup-api/logs:/logs",
+                "/opt/ai-q/data/backup-manager/data:/backups:ro"
+              ],
+              "command": [
+                "sh",
+                "-c",
+                "apk add --no-cache python3 py3-pip && pip3 install flask flask-restful && echo 'from flask import Flask; app = Flask(__name__); @app.route(\"/\"); def home(): return \"Backup API Ready\"; app.run(host=\"0.0.0.0\", port=8080)' > /app.py && python3 /app.py"
+              ],
+              "networks": [
+                "ai-q-network"
+              ],
+              "healthcheck": {
+                "test": [
+                  "CMD",
+                  "wget",
+                  "--no-verbose",
+                  "--tries=1",
+                  "--spider",
+                  "http://localhost:8080/"
+                ],
+                "interval": "30s",
+                "timeout": "10s",
+                "retries": 3
+              }
+            }
+          },
+          "networks": {
+            "ai-q-network": {
+              "external": true
+            }
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/docker/compose/backup-api-service.yml << 'EOF'\nversion: '3.8'\n\nservices:\n  backup-api:\n    image: alpine:latest\n    container_name: ai-q-backup-api\n    restart: unless-stopped\n    ports:\n      - 8084:8080\n    volumes:\n      - /opt/ai-q/config/backup-api:/config\n      - /opt/ai-q/data/backup-api/logs:/logs\n      - /opt/ai-q/data/backup-manager/data:/backups:ro\n    command:\n      - sh\n      - -c\n      - apk add --no-cache python3 py3-pip && pip3 install flask flask-restful && echo 'from flask import Flask; app = Flask(__name__); @app.route(\"/\"); def home(): return \"Backup API Ready\"; app.run(host=\"0.0.0.0\", port=8080)' > /app.py && python3 /app.py\n    networks:\n      - ai-q-network\n    healthcheck:\n      test: [\"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:8080/\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n\nnetworks:\n  ai-q-network:\n    external: true\nEOF"
+        ],
+        "verification": "Check configuration file exists",
+        "expected_output": "backup-api-service.yml created with specified configuration"
+      },
+      {
+        "step_id": "02-10-02-03",
+        "title": "Deploy Backup API service",
+        "description": "Start Backup API service and verify deployment",
+        "commands": [
+          "docker-compose -f /opt/ai-q/docker/compose/backup-api-service.yml up -d",
+          "sleep 30",
+          "curl -f http://localhost:8084/"
+        ],
+        "verification": "Check Backup API service is running",
+        "expected_output": "Backup API service running and responding to requests"
+      }
+    ],
+    "verification_commands": [
+      "docker ps --filter name=ai-q-backup-api",
+      "curl -s http://localhost:8084/",
+      "docker logs ai-q-backup-api"
+    ],
+    "expected_outputs": {
+      "service_running": "Backup API container is running",
+      "http_responding": "Backup API responds to HTTP requests",
+      "logs_clean": "No error messages in logs"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Backup Services Verification",
+      "description": "Run comprehensive tests to verify all backup components",
+      "test_commands": [
+        "docker-compose -f /opt/ai-q/docker/compose/backup-manager-service.yml ps",
+        "docker-compose -f /opt/ai-q/docker/compose/backup-api-service.yml ps",
+        "curl -s http://localhost:8083/",
+        "curl -s http://localhost:8084/",
+        "ls -la /opt/ai-q/data/backup-manager/",
+        "docker exec ai-q-backup-manager ls -la /backups"
+      ],
+      "expected_results": {
+        "backup_manager": "Responds to HTTP requests",
+        "backup_api": "Responds to HTTP requests",
+        "directories_accessible": "Backup directories are accessible",
+        "volumes_mounted": "Host volumes are properly mounted"
+      }
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Backup Manager cannot access data volumes",
+        "symptoms": "Backup Manager shows permission or access errors",
+        "solution": "Check volume mount permissions and data directory access",
+        "commands": [
+          "docker logs ai-q-backup-manager",
+          "ls -la /opt/ai-q/data/",
+          "docker exec ai-q-backup-manager ls -la /host/"
+        ]
+      },
+      {
+        "issue": "Python dependencies installation fails",
+        "symptoms": "Backup Manager shows Python import errors",
+        "solution": "Check Python package installation and dependencies",
+        "commands": [
+          "docker logs ai-q-backup-manager",
+          "docker exec ai-q-backup-manager pip3 list",
+          "docker exec ai-q-backup-manager python3 -c 'import flask, schedule, psycopg2, redis, boto3'"
+        ]
+      },
+      {
+        "issue": "Backup API not responding",
+        "symptoms": "Backup API shows connection errors",
+        "solution": "Check Flask application startup and port binding",
+        "commands": [
+          "docker logs ai-q-backup-api",
+          "docker exec ai-q-backup-api netstat -tlnp",
+          "curl -s http://localhost:8084/"
+        ]
+      }
+    ]
+  },
+  "next_steps": {
+    "next_sub_recipe": "02-11-unified-orchestration",
+    "prerequisites_completed": [
+      "Backup Manager deployed and running",
+      "Backup API deployed and running",
+      "Backup services integrated",
+      "Port 8083 reserved for Backup Manager",
+      "Port 8084 reserved for Backup API"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

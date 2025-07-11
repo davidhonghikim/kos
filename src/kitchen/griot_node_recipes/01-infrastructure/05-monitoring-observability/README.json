@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "recipe_id": "05-monitoring-observability",
+    "title": "Monitoring and Observability Recipe - Complete Implementation Guide",
+    "version": "3.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-06T16:46:50Z",
+    "purpose": "Comprehensive multi-task recipe for monitoring and observability implementation",
+    "total_sub_recipes": 8,
+    "total_tasks": 120,
+    "estimated_duration": "2-3 weeks",
+    "complexity": "Advanced",
+    "dependencies": [
+      "01-core-infrastructure",
+      "02-docker"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "recipe_overview": {
+    "description": "Complete implementation of monitoring and observability stack including Prometheus, Grafana, AlertManager, Loki, Jaeger, and comprehensive dashboards",
+    "architecture": "Distributed monitoring with centralized observability",
+    "target_environment": "Production-ready with development and staging support",
+    "scalability": "Horizontal scaling with distributed monitoring",
+    "security": "Secure monitoring with encrypted communications and access controls"
+  },
+  "port_assignments": {
+    "grafana": 3001,
+    "prometheus": 9090,
+    "alertmanager": 9093,
+    "loki": 3100,
+    "jaeger": 16686,
+    "cadvisor": 8080,
+    "node_exporter": 9100,
+    "notes": "Grafana uses port 3001 (not 3000) to avoid conflict with Open WebUI"
+  },
+  "sub_recipes": [
+    {
+      "id": "01-monitoring-architecture",
+      "name": "Monitoring Architecture Setup",
+      "file": "01-monitoring-architecture.json",
+      "description": "Core monitoring architecture and infrastructure setup",
+      "estimated_tasks": 15,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-core-infrastructure",
+        "02-docker"
+      ],
+      "components": [
+        "Monitoring Networks",
+        "Storage Setup",
+        "Base Infrastructure"
+      ]
+    },
+    {
+      "id": "02-prometheus-deployment",
+      "name": "Prometheus Metrics Collection",
+      "file": "02-prometheus-deployment.json",
+      "description": "Prometheus deployment with metrics collection and configuration",
+      "estimated_tasks": 20,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-monitoring-architecture"
+      ],
+      "components": [
+        "Prometheus Server",
+        "Metrics Collection",
+        "Target Configuration"
+      ]
+    },
+    {
+      "id": "03-grafana-deployment",
+      "name": "Grafana Visualization Platform",
+      "file": "03-grafana-deployment.json",
+      "description": "Grafana deployment with dashboards and data sources (Port 3001)",
+      "estimated_tasks": 18,
+      "duration": "2-3 days",
+      "dependencies": [
+        "02-prometheus-deployment"
+      ],
+      "components": [
+        "Grafana Server",
+        "Dashboards",
+        "Data Sources"
+      ]
+    },
+    {
+      "id": "04-alertmanager-setup",
+      "name": "AlertManager Configuration",
+      "file": "04-alertmanager-setup.json",
+      "description": "AlertManager setup with alert routing and notifications",
+      "estimated_tasks": 12,
+      "duration": "1-2 days",
+      "dependencies": [
+        "02-prometheus-deployment"
+      ],
+      "components": [
+        "AlertManager",
+        "Alert Rules",
+        "Notification Channels"
+      ]
+    },
+    {
+      "id": "05-container-monitoring",
+      "name": "Container Monitoring with cAdvisor",
+      "file": "05-container-monitoring.json",
+      "description": "Container monitoring using cAdvisor and Node Exporter",
+      "estimated_tasks": 15,
+      "duration": "2 days",
+      "dependencies": [
+        "02-prometheus-deployment"
+      ],
+      "components": [
+        "cAdvisor",
+        "Node Exporter",
+        "Container Metrics"
+      ]
+    },
+    {
+      "id": "06-log-aggregation",
+      "name": "Log Aggregation with Loki",
+      "file": "06-log-aggregation.json",
+      "description": "Centralized log aggregation using Loki",
+      "estimated_tasks": 16,
+      "duration": "2-3 days",
+      "dependencies": [
+        "01-monitoring-architecture"
+      ],
+      "components": [
+        "Loki",
+        "Log Collection",
+        "Log Querying"
+      ]
+    },
+    {
+      "id": "07-distributed-tracing",
+      "name": "Distributed Tracing with Jaeger",
+      "file": "07-distributed-tracing.json",
+      "description": "Distributed tracing implementation with Jaeger",
+      "estimated_tasks": 14,
+      "duration": "2 days",
+      "dependencies": [
+        "01-monitoring-architecture"
+      ],
+      "components": [
+        "Jaeger",
+        "Tracing",
+        "Trace Analysis"
+      ]
+    },
+    {
+      "id": "08-dashboard-configuration",
+      "name": "Dashboard and Alert Configuration",
+      "file": "08-dashboard-configuration.json",
+      "description": "Comprehensive dashboard setup and alert configuration",
+      "estimated_tasks": 10,
+      "duration": "1-2 days",
+      "dependencies": [
+        "03-grafana-deployment",
+        "04-alertmanager-setup"
+      ],
+      "components": [
+        "Dashboards",
+        "Alerts",
+        "Documentation"
+      ]
+    }
+  ],
+  "implementation_workflow": {
+    "phase_1": {
+      "name": "Foundation Setup",
+      "sub_recipes": [
+        "01-monitoring-architecture",
+        "02-prometheus-deployment"
+      ],
+      "duration": "1 week",
+      "description": "Core monitoring infrastructure and metrics collection"
+    },
+    "phase_2": {
+      "name": "Visualization and Alerting",
+      "sub_recipes": [
+        "03-grafana-deployment",
+        "04-alertmanager-setup"
+      ],
+      "duration": "1 week",
+      "description": "Visualization platform and alerting system"
+    },
+    "phase_3": {
+      "name": "Advanced Monitoring",
+      "sub_recipes": [
+        "05-container-monitoring",
+        "06-log-aggregation",
+        "07-distributed-tracing"
+      ],
+      "duration": "1 week",
+      "description": "Container monitoring, logging, and tracing"
+    },
+    "phase_4": {
+      "name": "Configuration and Documentation",
+      "sub_recipes": [
+        "08-dashboard-configuration"
+      ],
+      "duration": "3-4 days",
+      "description": "Final dashboard setup and documentation"
+    }
+  },
+  "success_criteria": {
+    "functional_requirements": [
+      "All monitoring services operational",
+      "Metrics collection functional",
+      "Dashboards accessible and responsive",
+      "Alerting system operational",
+      "Log aggregation working",
+      "Tracing system functional"
+    ],
+    "performance_requirements": [
+      "Dashboard response time < 2 seconds",
+      "Metrics collection latency < 100ms",
+      "Alert delivery time < 30 seconds",
+      "Log query response time < 5 seconds"
+    ],
+    "security_requirements": [
+      "All communications encrypted",
+      "Access controls implemented",
+      "Authentication required",
+      "Audit logging enabled"
+    ]
+  },
+  "maintenance_and_operations": {
+    "monitoring": "Self-monitoring of monitoring systems",
+    "backup": "Monitoring data backup procedures",
+    "updates": "Monitoring stack update procedures",
+    "scaling": "Horizontal scaling procedures"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      "Prometheus target failures",
+      "Grafana dashboard loading issues",
+      "Alert delivery failures",
+      "Log collection problems"
+    ],
+    "diagnostic_commands": [
+      "curl -f http://localhost:9090/-/healthy",
+      "curl -f http://localhost:3001/api/health",
+      "curl -f http://localhost:9093/api/v1/status"
+    ]
+  },
+  "next_steps": {
+    "next_recipe": "06-api-gateway",
+    "prerequisites_completed": [
+      "Monitoring stack operational",
+      "All dashboards functional",
+      "Alerting system working",
+      "Log aggregation active"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

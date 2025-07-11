@@ -1,0 +1,24 @@
+{
+  "id": "config.data_analysis",
+  "type": "config",
+  "name": "Data Analysis Configuration",
+  "description": "Configuration settings for data analysis workflows",
+  "version": "1.2.0",
+  "category": "configs",
+  "dependencies": [],
+  "tags": ["configuration", "settings", "workflow", "analysis"],
+  "author": "system",
+  "created": "2025-07-07T23:00:00Z",
+  "updated": "2025-07-07T23:00:00Z",
+  "access_level": "public",
+  "usage": "Use to configure data analysis workflow parameters",
+  "validation": {
+    "required_fields": ["output_format", "quality_threshold"],
+    "settings": {
+      "default_output_format": "html",
+      "quality_threshold": 0.95,
+      "max_iterations": 1000,
+      "random_seed": 42
+    }
+  }
+} 

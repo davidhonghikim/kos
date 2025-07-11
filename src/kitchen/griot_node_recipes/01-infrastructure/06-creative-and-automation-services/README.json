@@ -1,0 +1,63 @@
+{
+  "index_metadata": {
+    "index_id": "06-CREATIVE-AUTOMATION-SUB-RECIPE-INDEX",
+    "title": "Index of Creative & Automation Services Sub-Recipes",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T21:33:36Z",
+    "description": "This index lists all the modular sub-recipes for deploying optional creative and workflow automation services."
+  },
+  "sub_recipes": [
+    {
+      "id": "01-automatic1111-setup",
+      "title": "Automatic1111 Stable Diffusion WebUI (Optional)",
+      "path": "01-automatic1111-setup.json"
+    },
+    {
+      "id": "02-comfyui-setup",
+      "title": "ComfyUI (Optional)",
+      "path": "02-comfyui-setup.json"
+    },
+    {
+      "id": "03-n8n-setup",
+      "title": "n8n Workflow Automation (Optional)",
+      "path": "03-n8n-setup.json"
+    },
+    {
+      "id": "04-penpot-setup",
+      "title": "Penpot Design Platform (Optional)",
+      "path": "04-penpot-setup.json"
+    }
+  ],
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:22.704097Z",
+    "last_updated": "2025-07-07T14:50:22.704097Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "metadata": {
+    "title": "Pantry System Index",
+    "version": "2.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_timestamp": "2025-07-05T23:53:09Z",
+    "last_updated": "2025-07-05T23:53:09Z",
+    "status": "ACTIVE",
+    "purpose": "Central registry index for all pantry ingredients"
+  },
+  "resource_storage": {
+    "enabled": true,
+    "storage_type": "hierarchical",
+    "base_path": "recipes/pantry",
+    "backup_enabled": true,
+    "version_control": true,
+    "compression": false
+  },
+  "dependency_tracking": {
+    "enabled": true,
+    "tracking_method": "graph_based",
+    "circular_dependency_detection": true,
+    "dependency_resolution": "automatic",
+    "conflict_resolution": "manual"
+  },
+  "version_control": {
+    "enabled": true,
+    "versioning_scheme": "semantic",
+    "auto_versioning": true,
+    "version_history": true,
+    "rollback_capability": true
+  },
+  "access_control": {
+    "enabled": true,
+    "authentication": "required",
+    "authorization": "role_based",
+    "permissions": {
+      "read": [
+        "all"
+      ],
+      "write": [
+        "admin",
+        "developer"
+      ],
+      "delete": [
+        "admin"
+      ],
+      "execute": [
+        "all"
+      ]
+    }
+  },
+  "backup_recovery": {
+    "enabled": true,
+    "backup_frequency": "daily",
+    "retention_days": 30,
+    "backup_location": "backup/pantry",
+    "recovery_procedures": "automated"
+  },
+  "resource_discovery": {
+    "enabled": true,
+    "search_methods": [
+      "by_name",
+      "by_type",
+      "by_tag",
+      "by_dependency",
+      "by_usage"
+    ],
+    "indexing": "automatic",
+    "search_optimization": true
+  },
+  "inventory_management": {
+    "enabled": true,
+    "inventory_tracking": true,
+    "usage_statistics": true,
+    "popularity_ranking": true,
+    "deprecation_tracking": true
+  },
+  "security_protocols": {
+    "enabled": true,
+    "encryption": "at_rest",
+    "integrity_checks": true,
+    "audit_logging": true,
+    "access_monitoring": true
+  },
+  "ingredient_categories": {
+    "tasks": {
+      "count": 2,
+      "path": "tasks/",
+      "description": "Atomic, single-purpose actions"
+    },
+    "modules": {
+      "count": 1,
+      "path": "modules/",
+      "description": "Reusable logic blocks or service definitions"
+    },
+    "skills": {
+      "count": 1,
+      "path": "skills/",
+      "description": "Agent abilities or specialized functions"
+    },
+    "tools": {
+      "count": 2,
+      "path": "tools/",
+      "description": "External binaries, scripts, or APIs"
+    },
+    "configs": {
+      "count": 1,
+      "path": "configs/",
+      "description": "Reusable configuration templates or files"
+    }
+  },
+  "caching_system": {
+    "enabled": true,
+    "cache_strategies": {
+      "aggressive": "Cache everything with long TTL",
+      "conservative": "Cache only stable ingredients with short TTL",
+      "smart": "Adaptive caching based on usage patterns"
+    },
+    "cache_configuration": {
+      "cacheable": true,
+      "cache_key": "auto_generated",
+      "cache_ttl": "24_hours",
+      "cache_invalidation": "on_update",
+      "cache_location": "local",
+      "cache_validation": "content_hash"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

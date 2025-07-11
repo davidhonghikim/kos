@@ -1,0 +1,403 @@
+{
+  "metadata": {
+    "recipe_id": "01-volume-structure-design",
+    "title": "Volume Structure Design & Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - Infrastructure Specialist",
+    "last_updated": "2025-07-05T21:39:00Z",
+    "purpose": "Design and implement comprehensive volume structure for all services with persistent data management",
+    "total_tasks": 12,
+    "estimated_duration": "4 hours",
+    "complexity": "Advanced",
+    "dependencies": [],
+    "volume_stack": [
+      "Persistent Storage",
+      "Data Management",
+      "Backup Infrastructure",
+      "Monitoring"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "storage": "Minimum 500GB available storage",
+      "ram": "Minimum 8GB RAM",
+      "cpu": "Minimum 4 CPU cores",
+      "permissions": "Administrative privileges required"
+    },
+    "software_requirements": [
+      "Docker 24.0+",
+      "Docker Compose 2.15+",
+      "Linux filesystem with support for extended attributes"
+    ]
+  },
+  "task_01_create_base_directory_structure": {
+    "task_id": "01-01",
+    "title": "Create Base Directory Structure",
+    "description": "Create comprehensive directory structure for all persistent data",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-01-01",
+        "title": "Create main ai-q directory structure",
+        "description": "Create the main directory structure for all persistent data",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q",
+          "sudo mkdir -p /opt/ai-q/data",
+          "sudo mkdir -p /opt/ai-q/cache",
+          "sudo mkdir -p /opt/ai-q/backups",
+          "sudo mkdir -p /opt/ai-q/archives",
+          "sudo mkdir -p /opt/ai-q/config",
+          "sudo mkdir -p /opt/ai-q/logs",
+          "sudo mkdir -p /opt/ai-q/temp"
+        ],
+        "verification": "Verify all directories created",
+        "expected_output": "All base directories created successfully"
+      },
+      {
+        "step_id": "01-01-02",
+        "title": "Create service-specific data directories",
+        "description": "Create directories for each service's persistent data",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/data/postgresql",
+          "sudo mkdir -p /opt/ai-q/data/redis",
+          "sudo mkdir -p /opt/ai-q/data/elasticsearch",
+          "sudo mkdir -p /opt/ai-q/data/weaviate",
+          "sudo mkdir -p /opt/ai-q/data/minio",
+          "sudo mkdir -p /opt/ai-q/data/gitea",
+          "sudo mkdir -p /opt/ai-q/data/nextcloud",
+          "sudo mkdir -p /opt/ai-q/data/grafana",
+          "sudo mkdir -p /opt/ai-q/data/prometheus",
+          "sudo mkdir -p /opt/ai-q/data/alertmanager"
+        ],
+        "verification": "Verify service directories created",
+        "expected_output": "All service data directories created successfully"
+      },
+      {
+        "step_id": "01-01-03",
+        "title": "Create cache directories",
+        "description": "Create directories for Docker cache and temporary data",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/cache/docker-registry",
+          "sudo mkdir -p /opt/ai-q/cache/redis-cache",
+          "sudo mkdir -p /opt/ai-q/cache/elasticsearch-cache",
+          "sudo mkdir -p /opt/ai-q/cache/weaviate-cache",
+          "sudo mkdir -p /opt/ai-q/cache/temp-files"
+        ],
+        "verification": "Verify cache directories created",
+        "expected_output": "All cache directories created successfully"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/",
+      "find /opt/ai-q -type d | wc -l"
+    ],
+    "expected_outputs": {
+      "directory_count": "At least 25 directories created",
+      "structure": "Complete directory hierarchy established"
+    }
+  },
+  "task_02_setup_permissions_and_ownership": {
+    "task_id": "01-02",
+    "title": "Setup Permissions and Ownership",
+    "description": "Set appropriate permissions and ownership for all directories",
+    "estimated_duration": "20 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-02-01",
+        "title": "Set base directory ownership",
+        "description": "Set ownership for the main ai-q directory",
+        "commands": [
+          "sudo chown -R root:root /opt/ai-q",
+          "sudo chmod -R 755 /opt/ai-q"
+        ],
+        "verification": "Verify ownership set correctly",
+        "expected_output": "Base directory owned by root:root with 755 permissions"
+      },
+      {
+        "step_id": "01-02-02",
+        "title": "Set service-specific permissions",
+        "description": "Set appropriate permissions for each service",
+        "commands": [
+          "sudo chown -R 999:999 /opt/ai-q/data/postgresql",
+          "sudo chown -R 999:999 /opt/ai-q/data/redis",
+          "sudo chown -R 1000:1000 /opt/ai-q/data/elasticsearch",
+          "sudo chown -R 1000:1000 /opt/ai-q/data/weaviate",
+          "sudo chown -R 1000:1000 /opt/ai-q/data/minio",
+          "sudo chown -R 1000:1000 /opt/ai-q/data/gitea",
+          "sudo chown -R 1000:1000 /opt/ai-q/data/nextcloud"
+        ],
+        "verification": "Verify service permissions set correctly",
+        "expected_output": "All service directories have correct ownership"
+      },
+      {
+        "step_id": "01-02-03",
+        "title": "Set cache directory permissions",
+        "description": "Set permissions for cache directories",
+        "commands": [
+          "sudo chown -R 1000:1000 /opt/ai-q/cache/",
+          "sudo chmod -R 755 /opt/ai-q/cache/"
+        ],
+        "verification": "Verify cache permissions set correctly",
+        "expected_output": "Cache directories have correct ownership and permissions"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/data/",
+      "ls -la /opt/ai-q/cache/"
+    ],
+    "expected_outputs": {
+      "ownership": "Correct ownership for all directories",
+      "permissions": "Appropriate permissions (755) for all directories"
+    }
+  },
+  "task_03_create_docker_volumes": {
+    "task_id": "01-03",
+    "title": "Create Docker Named Volumes",
+    "description": "Create Docker named volumes for persistent data management",
+    "estimated_duration": "15 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-03-01",
+        "title": "Create named volumes for core services",
+        "description": "Create Docker named volumes for all core services",
+        "commands": [
+          "docker volume create ai-q-postgresql-data",
+          "docker volume create ai-q-redis-data",
+          "docker volume create ai-q-elasticsearch-data",
+          "docker volume create ai-q-weaviate-data",
+          "docker volume create ai-q-minio-data"
+        ],
+        "verification": "Verify volumes created",
+        "expected_output": "All core service volumes created successfully"
+      },
+      {
+        "step_id": "01-03-02",
+        "title": "Create named volumes for additional services",
+        "description": "Create volumes for Git server, NAS, and monitoring",
+        "commands": [
+          "docker volume create ai-q-gitea-data",
+          "docker volume create ai-q-nextcloud-data",
+          "docker volume create ai-q-grafana-data",
+          "docker volume create ai-q-prometheus-data",
+          "docker volume create ai-q-alertmanager-data"
+        ],
+        "verification": "Verify additional volumes created",
+        "expected_output": "All additional service volumes created successfully"
+      },
+      {
+        "step_id": "01-03-03",
+        "title": "Create cache and backup volumes",
+        "description": "Create volumes for caching and backup systems",
+        "commands": [
+          "docker volume create ai-q-docker-registry",
+          "docker volume create ai-q-backup-storage",
+          "docker volume create ai-q-archive-storage"
+        ],
+        "verification": "Verify cache and backup volumes created",
+        "expected_output": "Cache and backup volumes created successfully"
+      }
+    ],
+    "verification_commands": [
+      "docker volume ls | grep ai-q",
+      "docker volume inspect ai-q-postgresql-data"
+    ],
+    "expected_outputs": {
+      "volume_count": "At least 12 ai-q volumes created",
+      "volume_status": "All volumes show as 'local' driver"
+    }
+  },
+  "task_04_implement_volume_monitoring": {
+    "task_id": "01-04",
+    "title": "Implement Volume Monitoring",
+    "description": "Setup monitoring and alerting for volume usage and health",
+    "estimated_duration": "30 minutes",
+    "critical": false,
+    "steps": [
+      {
+        "step_id": "01-04-01",
+        "title": "Create volume monitoring script",
+        "description": "Create script to monitor volume usage and health",
+        "script_file": "/opt/ai-q/scripts/volume-monitor.sh",
+        "script_content": "#!/bin/bash\n\n# Volume monitoring script\nVOLUME_BASE=\"/opt/ai-q\"\nTHRESHOLD=80\n\n# Check disk usage\ncheck_disk_usage() {\n    local usage=$(df -h $VOLUME_BASE | tail -1 | awk '{print $5}' | sed 's/%//')\n    if [ $usage -gt $THRESHOLD ]; then\n        echo \"WARNING: Disk usage is ${usage}%\"\n        return 1\n    fi\n    echo \"Disk usage: ${usage}%\"\n    return 0\n}\n\n# Check volume permissions\ncheck_permissions() {\n    local dirs=(\"data\" \"cache\" \"backups\" \"config\" \"logs\")\n    for dir in \"${dirs[@]}\"; do\n        if [ ! -r \"$VOLUME_BASE/$dir\" ]; then\n            echo \"ERROR: Cannot read $VOLUME_BASE/$dir\"\n            return 1\n        fi\n    done\n    echo \"All volume permissions OK\"\n    return 0\n}\n\n# Main execution\ncheck_disk_usage\ncheck_permissions",
+        "commands": [
+          "sudo tee /opt/ai-q/scripts/volume-monitor.sh << 'EOF'\n#!/bin/bash\n\n# Volume monitoring script\nVOLUME_BASE=\"/opt/ai-q\"\nTHRESHOLD=80\n\n# Check disk usage\ncheck_disk_usage() {\n    local usage=$(df -h $VOLUME_BASE | tail -1 | awk '{print $5}' | sed 's/%//')\n    if [ $usage -gt $THRESHOLD ]; then\n        echo \"WARNING: Disk usage is ${usage}%\"\n        return 1\n    fi\n    echo \"Disk usage: ${usage}%\"\n    return 0\n}\n\n# Check volume permissions\ncheck_permissions() {\n    local dirs=(\"data\" \"cache\" \"backups\" \"config\" \"logs\")\n    for dir in \"${dirs[@]}\"; do\n        if [ ! -r \"$VOLUME_BASE/$dir\" ]; then\n            echo \"ERROR: Cannot read $VOLUME_BASE/$dir\"\n            return 1\n        fi\n    done\n    echo \"All volume permissions OK\"\n    return 0\n}\n\n# Main execution\ncheck_disk_usage\ncheck_permissions\nEOF",
+          "sudo chmod +x /opt/ai-q/scripts/volume-monitor.sh"
+        ],
+        "verification": "Verify monitoring script created and executable",
+        "expected_output": "Volume monitoring script created and made executable"
+      },
+      {
+        "step_id": "01-04-02",
+        "title": "Setup volume monitoring cron job",
+        "description": "Create cron job to run volume monitoring every 15 minutes",
+        "commands": [
+          "echo '*/15 * * * * /opt/ai-q/scripts/volume-monitor.sh >> /opt/ai-q/logs/volume-monitor.log 2>&1' | sudo tee -a /etc/crontab"
+        ],
+        "verification": "Verify cron job added",
+        "expected_output": "Volume monitoring cron job added to system crontab"
+      },
+      {
+        "step_id": "01-04-03",
+        "title": "Create volume health check endpoint",
+        "description": "Create simple HTTP endpoint for volume health checks",
+        "script_file": "/opt/ai-q/scripts/volume-health.py",
+        "script_content": "#!/usr/bin/env python3\n\nimport os\nimport json\nimport subprocess\nfrom http.server import HTTPServer, BaseHTTPRequestHandler\n\nclass VolumeHealthHandler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        if self.path == '/health':\n            self.send_response(200)\n            self.send_header('Content-type', 'application/json')\n            self.end_headers()\n            \n            health_status = self.check_volume_health()\n            self.wfile.write(json.dumps(health_status).encode())\n        else:\n            self.send_response(404)\n            self.end_headers()\n    \n    def check_volume_health(self):\n        base_path = '/opt/ai-q'\n        status = {\n            'status': 'healthy',\n            'volumes': {},\n            'disk_usage': {}\n        }\n        \n        # Check disk usage\n        try:\n            result = subprocess.run(['df', '-h', base_path], \n                                  capture_output=True, text=True)\n            if result.returncode == 0:\n                lines = result.stdout.strip().split('\\n')\n                if len(lines) > 1:\n                    parts = lines[1].split()\n                    if len(parts) >= 5:\n                        usage = parts[4].replace('%', '')\n                        status['disk_usage'] = {\n                            'usage_percent': int(usage),\n                            'status': 'healthy' if int(usage) < 80 else 'warning'\n                        }\n        except Exception as e:\n            status['disk_usage'] = {'error': str(e)}\n        \n        # Check volume directories\n        volumes = ['data', 'cache', 'backups', 'config', 'logs']\n        for volume in volumes:\n            volume_path = os.path.join(base_path, volume)\n            status['volumes'][volume] = {\n                'exists': os.path.exists(volume_path),\n                'readable': os.access(volume_path, os.R_OK),\n                'writable': os.access(volume_path, os.W_OK)\n            }\n        \n        return status\n\nif __name__ == '__main__':\n    server = HTTPServer(('0.0.0.0', 8082), VolumeHealthHandler)\n    print('Volume health server starting on port 8082...')\n    server.serve_forever()",
+        "commands": [
+          "sudo tee /opt/ai-q/scripts/volume-health.py << 'EOF'\n#!/usr/bin/env python3\n\nimport os\nimport json\nimport subprocess\nfrom http.server import HTTPServer, BaseHTTPRequestHandler\n\nclass VolumeHealthHandler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        if self.path == '/health':\n            self.send_response(200)\n            self.send_header('Content-type', 'application/json')\n            self.end_headers()\n            \n            health_status = self.check_volume_health()\n            self.wfile.write(json.dumps(health_status).encode())\n        else:\n            self.send_response(404)\n            self.end_headers()\n    \n    def check_volume_health(self):\n        base_path = '/opt/ai-q'\n        status = {\n            'status': 'healthy',\n            'volumes': {},\n            'disk_usage': {}\n        }\n        \n        # Check disk usage\n        try:\n            result = subprocess.run(['df', '-h', base_path], \n                                  capture_output=True, text=True)\n            if result.returncode == 0:\n                lines = result.stdout.strip().split('\\n')\n                if len(lines) > 1:\n                    parts = lines[1].split()\n                    if len(parts) >= 5:\n                        usage = parts[4].replace('%', '')\n                        status['disk_usage'] = {\n                            'usage_percent': int(usage),\n                            'status': 'healthy' if int(usage) < 80 else 'warning'\n                        }\n        except Exception as e:\n            status['disk_usage'] = {'error': str(e)}\n        \n        # Check volume directories\n        volumes = ['data', 'cache', 'backups', 'config', 'logs']\n        for volume in volumes:\n            volume_path = os.path.join(base_path, volume)\n            status['volumes'][volume] = {\n                'exists': os.path.exists(volume_path),\n                'readable': os.access(volume_path, os.R_OK),\n                'writable': os.access(volume_path, os.W_OK)\n            }\n        \n        return status\n\nif __name__ == '__main__':\n    server = HTTPServer(('0.0.0.0', 8082), VolumeHealthHandler)\n    print('Volume health server starting on port 8082...')\n    server.serve_forever()\nEOF",
+          "sudo chmod +x /opt/ai-q/scripts/volume-health.py"
+        ],
+        "verification": "Verify health check script created",
+        "expected_output": "Volume health check script created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/",
+      "crontab -l | grep volume-monitor"
+    ],
+    "expected_outputs": {
+      "scripts": "Volume monitoring and health check scripts created",
+      "cron_job": "Volume monitoring cron job active"
+    }
+  },
+  "task_05_create_volume_backup_procedures": {
+    "task_id": "01-05",
+    "title": "Create Volume Backup Procedures",
+    "description": "Implement automated backup procedures for all volumes",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-05-01",
+        "title": "Create backup script",
+        "description": "Create comprehensive backup script for all volumes",
+        "script_file": "/opt/ai-q/scripts/volume-backup.sh",
+        "script_content": "#!/bin/bash\n\n# Volume backup script\nBACKUP_BASE=\"/opt/ai-q/backups\"\nDATA_BASE=\"/opt/ai-q/data\"\nCONFIG_BASE=\"/opt/ai-q/config\"\nDATE=$(date +%Y%m%d_%H%M%S)\nBACKUP_DIR=\"$BACKUP_BASE/backup_$DATE\"\n\n# Create backup directory\nmkdir -p \"$BACKUP_DIR\"\n\n# Function to backup directory\nbackup_directory() {\n    local source=\"$1\"\n    local target=\"$2\"\n    \n    if [ -d \"$source\" ]; then\n        echo \"Backing up $source to $target\"\n        tar -czf \"$target\" -C \"$(dirname $source)\" \"$(basename $source)\"\n        if [ $? -eq 0 ]; then\n            echo \"Backup of $source completed successfully\"\n        else\n            echo \"ERROR: Backup of $source failed\"\n            return 1\n        fi\n    else\n        echo \"WARNING: Source directory $source does not exist\"\n    fi\n}\n\n# Backup all data directories\nfor dir in postgresql redis elasticsearch weaviate minio gitea nextcloud; do\n    backup_directory \"$DATA_BASE/$dir\" \"$BACKUP_DIR/${dir}_data.tar.gz\"\ndone\n\n# Backup configuration\nbackup_directory \"$CONFIG_BASE\" \"$BACKUP_DIR/config.tar.gz\"\n\n# Create backup manifest\ncat > \"$BACKUP_DIR/manifest.json\" << EOF\n{\n    \"backup_date\": \"$DATE\",\n    \"backup_type\": \"volume_backup\",\n    \"backup_version\": \"1.0.0\",\n    \"volumes_backed_up\": [\n        \"postgresql_data\",\n        \"redis_data\",\n        \"elasticsearch_data\",\n        \"weaviate_data\",\n        \"minio_data\",\n        \"gitea_data\",\n        \"nextcloud_data\",\n        \"config\"\n    ],\n    \"backup_size\": \"$(du -sh $BACKUP_DIR | cut -f1)\"\n}\nEOF\n\necho \"Volume backup completed: $BACKUP_DIR\"\n\n# Cleanup old backups (keep last 7 days)\nfind \"$BACKUP_BASE\" -name \"backup_*\" -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null\n\necho \"Old backups cleaned up\"",
+        "commands": [
+          "sudo tee /opt/ai-q/scripts/volume-backup.sh << 'EOF'\n#!/bin/bash\n\n# Volume backup script\nBACKUP_BASE=\"/opt/ai-q/backups\"\nDATA_BASE=\"/opt/ai-q/data\"\nCONFIG_BASE=\"/opt/ai-q/config\"\nDATE=$(date +%Y%m%d_%H%M%S)\nBACKUP_DIR=\"$BACKUP_BASE/backup_$DATE\"\n\n# Create backup directory\nmkdir -p \"$BACKUP_DIR\"\n\n# Function to backup directory\nbackup_directory() {\n    local source=\"$1\"\n    local target=\"$2\"\n    \n    if [ -d \"$source\" ]; then\n        echo \"Backing up $source to $target\"\n        tar -czf \"$target\" -C \"$(dirname $source)\" \"$(basename $source)\"\n        if [ $? -eq 0 ]; then\n            echo \"Backup of $source completed successfully\"\n        else\n            echo \"ERROR: Backup of $source failed\"\n            return 1\n        fi\n    else\n        echo \"WARNING: Source directory $source does not exist\"\n    fi\n}\n\n# Backup all data directories\nfor dir in postgresql redis elasticsearch weaviate minio gitea nextcloud; do\n    backup_directory \"$DATA_BASE/$dir\" \"$BACKUP_DIR/${dir}_data.tar.gz\"\ndone\n\n# Backup configuration\nbackup_directory \"$CONFIG_BASE\" \"$BACKUP_DIR/config.tar.gz\"\n\n# Create backup manifest\ncat > \"$BACKUP_DIR/manifest.json\" << EOF\n{\n    \"backup_date\": \"$DATE\",\n    \"backup_type\": \"volume_backup\",\n    \"backup_version\": \"1.0.0\",\n    \"volumes_backed_up\": [\n        \"postgresql_data\",\n        \"redis_data\",\n        \"elasticsearch_data\",\n        \"weaviate_data\",\n        \"minio_data\",\n        \"gitea_data\",\n        \"nextcloud_data\",\n        \"config\"\n    ],\n    \"backup_size\": \"$(du -sh $BACKUP_DIR | cut -f1)\"\n}\nEOF\n\necho \"Volume backup completed: $BACKUP_DIR\"\n\n# Cleanup old backups (keep last 7 days)\nfind \"$BACKUP_BASE\" -name \"backup_*\" -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null\n\necho \"Old backups cleaned up\"\nEOF",
+          "sudo chmod +x /opt/ai-q/scripts/volume-backup.sh"
+        ],
+        "verification": "Verify backup script created and executable",
+        "expected_output": "Volume backup script created and made executable"
+      },
+      {
+        "step_id": "01-05-02",
+        "title": "Setup automated backup cron job",
+        "description": "Create cron job for daily automated backups",
+        "commands": [
+          "echo '0 2 * * * /opt/ai-q/scripts/volume-backup.sh >> /opt/ai-q/logs/backup.log 2>&1' | sudo tee -a /etc/crontab"
+        ],
+        "verification": "Verify backup cron job added",
+        "expected_output": "Automated backup cron job added to system crontab"
+      },
+      {
+        "step_id": "01-05-03",
+        "title": "Create backup verification script",
+        "description": "Create script to verify backup integrity",
+        "script_file": "/opt/ai-q/scripts/backup-verify.sh",
+        "script_content": "#!/bin/bash\n\n# Backup verification script\nBACKUP_BASE=\"/opt/ai-q/backups\"\n\n# Find latest backup\nLATEST_BACKUP=$(find \"$BACKUP_BASE\" -name \"backup_*\" -type d | sort | tail -1)\n\nif [ -z \"$LATEST_BACKUP\" ]; then\n    echo \"ERROR: No backups found\"\n    exit 1\nfi\n\necho \"Verifying backup: $LATEST_BACKUP\"\n\n# Check backup manifest\nif [ -f \"$LATEST_BACKUP/manifest.json\" ]; then\n    echo \"Backup manifest found\"\n    cat \"$LATEST_BACKUP/manifest.json\"\nelse\n    echo \"ERROR: Backup manifest not found\"\n    exit 1\nfi\n\n# Verify backup files\nfor backup_file in \"$LATEST_BACKUP\"/*.tar.gz; do\n    if [ -f \"$backup_file\" ]; then\n        echo \"Verifying $backup_file\"\n        if tar -tzf \"$backup_file\" > /dev/null 2>&1; then\n            echo \"✓ $backup_file is valid\"\n        else\n            echo \"✗ $backup_file is corrupted\"\n            exit 1\n        fi\n    fi\ndone\n\necho \"Backup verification completed successfully\"",
+        "commands": [
+          "sudo tee /opt/ai-q/scripts/backup-verify.sh << 'EOF'\n#!/bin/bash\n\n# Backup verification script\nBACKUP_BASE=\"/opt/ai-q/backups\"\n\n# Find latest backup\nLATEST_BACKUP=$(find \"$BACKUP_BASE\" -name \"backup_*\" -type d | sort | tail -1)\n\nif [ -z \"$LATEST_BACKUP\" ]; then\n    echo \"ERROR: No backups found\"\n    exit 1\nfi\n\necho \"Verifying backup: $LATEST_BACKUP\"\n\n# Check backup manifest\nif [ -f \"$LATEST_BACKUP/manifest.json\" ]; then\n    echo \"Backup manifest found\"\n    cat \"$LATEST_BACKUP/manifest.json\"\nelse\n    echo \"ERROR: Backup manifest not found\"\n    exit 1\nfi\n\n# Verify backup files\nfor backup_file in \"$LATEST_BACKUP\"/*.tar.gz; do\n    if [ -f \"$backup_file\" ]; then\n        echo \"Verifying $backup_file\"\n        if tar -tzf \"$backup_file\" > /dev/null 2>&1; then\n            echo \"✓ $backup_file is valid\"\n        else\n            echo \"✗ $backup_file is corrupted\"\n            exit 1\n        fi\n    fi\ndone\n\necho \"Backup verification completed successfully\"\nEOF",
+          "sudo chmod +x /opt/ai-q/scripts/backup-verify.sh"
+        ],
+        "verification": "Verify backup verification script created",
+        "expected_output": "Backup verification script created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/volume-backup.sh",
+      "crontab -l | grep volume-backup"
+    ],
+    "expected_outputs": {
+      "backup_script": "Volume backup script created and executable",
+      "backup_cron": "Automated backup cron job active",
+      "verify_script": "Backup verification script created"
+    }
+  },
+  "verification_and_testing": {
+    "verification_commands": [
+      "ls -la /opt/ai-q/",
+      "docker volume ls | grep ai-q",
+      "/opt/ai-q/scripts/volume-monitor.sh",
+      "/opt/ai-q/scripts/volume-backup.sh",
+      "curl -s http://localhost:8082/health | jq ."
+    ],
+    "expected_outputs": {
+      "directory_structure": "Complete directory hierarchy with correct permissions",
+      "docker_volumes": "All 12+ ai-q volumes created and available",
+      "monitoring": "Volume monitoring script runs without errors",
+      "backup": "Backup script creates valid backup archives",
+      "health_endpoint": "Volume health endpoint returns JSON status"
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Permission denied errors",
+        "solution": "Check ownership and permissions with 'ls -la /opt/ai-q/' and adjust with chown/chmod"
+      },
+      {
+        "issue": "Docker volume creation fails",
+        "solution": "Ensure Docker daemon is running and user has appropriate permissions"
+      },
+      {
+        "issue": "Backup script fails",
+        "solution": "Check available disk space and ensure backup directory is writable"
+      }
+    ],
+    "recovery_procedures": [
+      {
+        "procedure": "Volume permission repair",
+        "commands": [
+          "sudo chown -R root:root /opt/ai-q",
+          "sudo chmod -R 755 /opt/ai-q"
+        ]
+      },
+      {
+        "procedure": "Docker volume cleanup",
+        "commands": [
+          "docker volume ls | grep ai-q | awk '{print $2}' | xargs -r docker volume rm"
+        ]
+      }
+    ]
+  },
+  "next_steps": [
+    "Proceed to Docker Caching System implementation",
+    "Test volume monitoring and backup procedures",
+    "Validate volume health endpoint functionality",
+    "Prepare for next recipe: Docker Caching System"
+  ],
+  "success_criteria": [
+    "✅ Complete directory structure created with correct permissions",
+    "✅ All Docker named volumes created and accessible",
+    "✅ Volume monitoring and health check systems operational",
+    "✅ Automated backup procedures implemented and tested",
+    "✅ Backup verification procedures working correctly"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

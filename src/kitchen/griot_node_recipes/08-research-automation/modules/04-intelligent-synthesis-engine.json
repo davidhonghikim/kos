@@ -1,0 +1,80 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "04-RESEARCH-SYNTHESIS-ENGINE-004",
+    "title": "Intelligent Synthesis Engine",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Creates an advanced content synthesis engine with NLP for summarization, relationship extraction, and knowledge graph construction.",
+    "technology_stack": {
+      "synthesis_engine": "NLP, summarization, relationship extraction, knowledge graphs",
+      "ai_integration": "OpenAI GPT, local LLMs, embedding models, vector search",
+      "data_processing": "spaCy, NLTK"
+    },
+    "deliverables": [
+      "Automated summarization of large volumes of text",
+      "Extraction of key entities and their relationships",
+      "Construction of knowledge graphs to represent information"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "08-004",
+      "title": "Intelligent Synthesis Engine",
+      "description": "Create advanced content synthesis engine with NLP, summarization, relationship extraction, and knowledge graph construction.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2400,
+      "dependencies": [
+        "08-003"
+      ],
+      "commands": [
+        "pip install transformers torch"
+      ],
+      "files_to_create": [
+        "src/modules/research/synthesis/summarizer.py",
+        "src/modules/research/synthesis/relationship_extractor.py",
+        "src/modules/research/synthesis/knowledge_graph_builder.py",
+        "config/synthesis_models.json"
+      ],
+      "acceptance_criteria": [
+        "Summaries are coherent, accurate, and capture the key points.",
+        "Relationship extraction correctly identifies connections between entities.",
+        "Knowledge graphs are well-formed and represent the domain accurately."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "04-Intelligent-Synthesis-Engine",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

@@ -1,0 +1,294 @@
+{
+  "recipe_id": "npm-safe-installation-v1.0.0",
+  "title": "Safe npm Installation Process - Prevents Dependency Corruption",
+  "version": "1.0.0",
+  "created_by": "Claude Sonnet 4",
+  "creation_date": "2025-01-30T19:57:00Z",
+  "estimated_tokens": 2500,
+  "estimated_execution_time": "15-30 minutes",
+  "difficulty_level": "intermediate",
+  "total_tasks": 12,
+  "agent_autonomy_level": "high",
+  "success_rate_target": 95,
+  "compliance_standards": [
+    "atomic_tasks",
+    "no_technical_debt",
+    "reproducible_results"
+  ],
+  "architecture_tier": "foundation",
+  "kitchen_system_integration": {
+    "ingredient_registry": [
+      "nodejs-portable",
+      "npm",
+      "package.json"
+    ],
+    "equipment_registry": [
+      "rimraf",
+      "powershell",
+      "terminal"
+    ],
+    "technique_registry": [
+      "incremental_installation",
+      "cleanup_procedures",
+      "verification_steps"
+    ],
+    "quality_control": [
+      "dependency_validation",
+      "build_verification",
+      "security_audit"
+    ],
+    "execution_tracking": [
+      "step_by_step_logging",
+      "error_documentation",
+      "success_criteria"
+    ]
+  },
+  "prerequisites": {
+    "required_tools": [
+      "Node.js portable installation (node-v20.11.0-win-x64)",
+      "npm (version 10.2.4+)",
+      "rimraf (for cleanup)",
+      "PowerShell access"
+    ],
+    "required_files": [
+      "package.json (conservative version)",
+      "next.config.js (minimal)",
+      "tsconfig.json"
+    ],
+    "environment_requirements": [
+      "Windows PowerShell",
+      "Network connectivity to npm registry",
+      "Sufficient disk space (2GB+)"
+    ]
+  },
+  "atomic_tasks": [
+    {
+      "task_id": "pre-installation-cleanup",
+      "title": "Complete Environment Cleanup",
+      "description": "Remove any existing corrupted installations",
+      "steps": [
+        "Verify current directory is project root (ai-Q/)",
+        "Run: Test-Path node_modules (check if exists)",
+        "If node_modules exists, run: nodejs-portable\\node-v20.11.0-win-x64\\npx.cmd rimraf node_modules",
+        "Remove package-lock.json: Remove-Item package-lock.json -ErrorAction SilentlyContinue",
+        "Remove npm debug logs: Remove-Item npm-debug.log* -ErrorAction SilentlyContinue",
+        "Clean npm cache: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd cache clean --force",
+        "Verify cleanup: Test-Path node_modules (should return False)"
+      ],
+      "verification": "node_modules directory does not exist",
+      "failure_handling": "If rimraf fails, use Remove-Item -Recurse -Force node_modules"
+    },
+    {
+      "task_id": "package-json-preparation",
+      "title": "Prepare Conservative Package.json",
+      "description": "Create minimal package.json to prevent automatic dependency installation",
+      "steps": [
+        "Backup existing package.json: Copy-Item package.json package.json.backup",
+        "Create conservative package.json with only essential packages",
+        "Include only: next, react, react-dom, typescript, @types/node, @types/react, @types/react-dom",
+        "Use latest stable versions: next@15.3.5, react@18.2.0, react-dom@18.2.0",
+        "Remove all development tools initially (ESLint, Prettier, etc.)",
+        "Remove all backend dependencies initially (Express, etc.)",
+        "Verify package.json syntax: nodejs-portable\\node-v20.11.0-win-x64\\node.exe -e \"console.log(require('./package.json'))\""
+      ],
+      "verification": "package.json loads without errors and contains only essential packages",
+      "failure_handling": "If syntax error, check for hidden characters or encoding issues"
+    },
+    {
+      "task_id": "minimal-installation",
+      "title": "Install Minimal Dependencies",
+      "description": "Install only the core packages to establish a clean foundation",
+      "steps": [
+        "Set NODE_ENV: $env:NODE_ENV=\"production\" (for production builds)",
+        "Run installation: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd install --legacy-peer-deps",
+        "Wait for completion (should take 1-3 minutes)",
+        "Verify installation: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd list --depth=0",
+        "Check for extraneous packages in output",
+        "If extraneous packages found, remove them individually using rimraf"
+      ],
+      "verification": "Only intended packages are installed, no extraneous packages",
+      "failure_handling": "If installation fails, check network connectivity and try again"
+    },
+    {
+      "task_id": "dependency-validation",
+      "title": "Validate Installation Quality",
+      "description": "Ensure installation meets quality standards",
+      "steps": [
+        "Run security audit: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd audit",
+        "Verify no vulnerabilities found",
+        "Check package versions: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd list --depth=0",
+        "Ensure no deprecated direct dependencies",
+        "Verify all packages are current versions",
+        "Document any warnings (deprecated indirect dependencies are acceptable)"
+      ],
+      "verification": "No security vulnerabilities, no deprecated direct dependencies",
+      "failure_handling": "If vulnerabilities found, update packages or document acceptable risks"
+    },
+    {
+      "task_id": "build-verification",
+      "title": "Verify Core Build Process",
+      "description": "Test that the minimal installation can build successfully",
+      "steps": [
+        "Set PATH for subprocesses: $env:PATH = \"E:\\kos\\ai-Q\\nodejs-portable\\node-v20.11.0-win-x64;\" + $env:PATH",
+        "Run build test: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd run build",
+        "Expect ESLint error (intentional - not installed yet)",
+        "Expect TypeScript errors in backend files (intentional - dependencies not installed)",
+        "Verify Next.js core functionality works",
+        "Document expected vs actual errors"
+      ],
+      "verification": "Next.js core builds successfully, errors are only for missing optional dependencies",
+      "failure_handling": "If core build fails, check next.config.js and TypeScript configuration"
+    },
+    {
+      "task_id": "incremental-eslint-addition",
+      "title": "Add ESLint Safely",
+      "description": "Add ESLint in controlled manner to avoid corruption",
+      "steps": [
+        "Create package-batch2.json with ESLint dependencies",
+        "Include: eslint@9.0.0, eslint-config-next@15.3.5, prettier@3.2.4",
+        "Update package.json: Copy-Item package-batch2.json package.json",
+        "Install batch: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd install --legacy-peer-deps",
+        "Verify installation: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd list --depth=0",
+        "Remove any extraneous packages that appear",
+        "Test build again to ensure ESLint works"
+      ],
+      "verification": "ESLint installed without corruption, build process includes linting",
+      "failure_handling": "If corruption occurs, revert to previous package.json and try smaller batch"
+    },
+    {
+      "task_id": "backend-dependencies-batch",
+      "title": "Add Backend Dependencies in Batches",
+      "description": "Install backend dependencies incrementally to prevent corruption",
+      "steps": [
+        "Create package-batch3.json with backend dependencies",
+        "Include: express@4.18.2, cors@2.8.5, helmet@7.1.0, compression@1.7.4",
+        "Update package.json: Copy-Item package-batch3.json package.json",
+        "Install batch: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd install --legacy-peer-deps",
+        "Verify installation and remove extraneous packages",
+        "Test build to ensure backend TypeScript errors are resolved",
+        "Repeat for additional backend packages as needed"
+      ],
+      "verification": "Backend dependencies installed, TypeScript errors in backend files resolved",
+      "failure_handling": "If batch fails, split into smaller batches and retry"
+    },
+    {
+      "task_id": "final-verification",
+      "title": "Complete System Verification",
+      "description": "Verify entire system works correctly",
+      "steps": [
+        "Run full build: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd run build",
+        "Verify build completes successfully",
+        "Run type check: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd run type-check",
+        "Verify no TypeScript errors",
+        "Run lint: nodejs-portable\\node-v20.11.0-win-x64\\npm.cmd run lint",
+        "Verify linting passes",
+        "Document final package list and versions"
+      ],
+      "verification": "All build, type-check, and lint processes complete successfully",
+      "failure_handling": "Address any remaining errors before proceeding"
+    },
+    {
+      "task_id": "documentation-update",
+      "title": "Update Project Documentation",
+      "description": "Document the successful installation process",
+      "steps": [
+        "Update progress tracking: agents/LATEST/progress_current.json",
+        "Document installed packages and versions",
+        "Record any warnings or acceptable deprecated packages",
+        "Update handoff document with current status",
+        "Create installation checklist for future agents",
+        "Document lessons learned and best practices"
+      ],
+      "verification": "All documentation updated with current status and process",
+      "failure_handling": "Ensure documentation is complete before marking task done"
+    },
+    {
+      "task_id": "cleanup-backup-files",
+      "title": "Clean Up Temporary Files",
+      "description": "Remove temporary files created during installation",
+      "steps": [
+        "Remove backup package.json files: Remove-Item package-*.json -ErrorAction SilentlyContinue",
+        "Keep only the final working package.json",
+        "Remove any temporary installation logs",
+        "Verify clean project structure",
+        "Document final file structure"
+      ],
+      "verification": "Only essential files remain, temporary files cleaned up",
+      "failure_handling": "Keep backup files if there are any concerns about the final state"
+    }
+  ],
+  "success_criteria": [
+    "npm install completes without errors",
+    "No extraneous packages in node_modules",
+    "No security vulnerabilities",
+    "No deprecated direct dependencies",
+    "Build process works correctly",
+    "TypeScript compilation succeeds",
+    "ESLint runs without errors",
+    "All documentation updated",
+    "Clean project structure maintained"
+  ],
+  "failure_modes": [
+    "Network connectivity issues during installation",
+    "Corrupted node_modules not properly cleaned",
+    "Automatic dependency installation triggered",
+    "Version conflicts between packages",
+    "Insufficient disk space",
+    "Permission issues with file operations"
+  ],
+  "troubleshooting": {
+    "network_issues": "Try different npm registry or check firewall settings",
+    "corruption_issues": "Use rimraf for complete cleanup, then restart process",
+    "automatic_installation": "Use conservative package.json, avoid triggers",
+    "version_conflicts": "Use --legacy-peer-deps flag, check compatibility",
+    "disk_space": "Free up space, check available storage",
+    "permissions": "Run as administrator, check file permissions"
+  },
+  "quality_standards": {
+    "dependency_management": "Only current, supported versions",
+    "security": "No critical or high vulnerabilities",
+    "performance": "Minimal package footprint",
+    "maintainability": "Clean dependency tree, documented process",
+    "reproducibility": "Consistent results across installations"
+  },
+  "post_installation_checks": [
+    "Verify all expected packages are installed",
+    "Confirm no unexpected packages are present",
+    "Test all npm scripts work correctly",
+    "Validate build process completes successfully",
+    "Check for any remaining TypeScript errors",
+    "Ensure linting passes without issues",
+    "Document any warnings or acceptable issues"
+  ],
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:22.401739Z",
+    "last_updated": "2025-07-07T14:50:22.401739Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

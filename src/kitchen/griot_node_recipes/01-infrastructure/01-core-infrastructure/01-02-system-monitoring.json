@@ -1,0 +1,896 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-02-SYSTEM-MONITORING-COMPREHENSIVE",
+    "title": "System Monitoring Infrastructure - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T17:45:37Z",
+    "last_updated": "2025-07-05T17:45:37Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "3-4 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 8,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-monitoring",
+    "description": "Complete system monitoring infrastructure with Prometheus, Grafana, AlertManager, and comprehensive alerting",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "01-01-docker-environment"
+      ],
+      "required_services": [
+        "docker",
+        "docker-compose"
+      ],
+      "required_networks": [
+        "ai-q-monitoring"
+      ],
+      "required_volumes": [
+        "ai-q-data",
+        "ai-q-config"
+      ],
+      "required_ports": [
+        9090,
+        3001,
+        9093,
+        9100,
+        8081
+      ],
+      "required_files": [
+        "/opt/ai-q/monitoring/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "monitoring",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "prometheus_setup",
+        "grafana_configuration",
+        "alertmanager_setup",
+        "node_exporter_setup"
+      ],
+      "cache_strategy": "monitoring_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "System Monitoring Infrastructure",
+    "description": "Complete monitoring infrastructure with Prometheus, Grafana, AlertManager, Node Exporter, and cAdvisor",
+    "prerequisites": [
+      "01-01-docker-environment completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 4GB RAM available",
+      "20GB free disk space for monitoring data"
+    ],
+    "target_outcome": "Production-ready monitoring infrastructure with comprehensive alerting",
+    "success_criteria": [
+      "Prometheus collecting metrics from all targets",
+      "Grafana dashboard accessible and functional",
+      "AlertManager sending alerts properly",
+      "Node Exporter providing system metrics",
+      "cAdvisor providing container metrics",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "PROMETHEUS_SETUP_TASK",
+        "name": "Prometheus Setup",
+        "description": "Install and configure Prometheus with exact specifications",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "prometheus_configuration",
+          "metrics_collection",
+          "service_discovery"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/prometheus/{config,data,rules,targets}",
+          "chmod 755 /opt/ai-q/monitoring/prometheus",
+          "tee /opt/ai-q/monitoring/prometheus/config/prometheus.yml << 'EOF'",
+          "global:",
+          "  scrape_interval: 15s",
+          "  evaluation_interval: 15s",
+          "  external_labels:",
+          "    cluster: ai-q-cluster",
+          "    environment: production",
+          "rule_files:",
+          "  - /etc/prometheus/rules/*.yml",
+          "scrape_configs:",
+          "  - job_name: prometheus",
+          "    static_configs:",
+          "      - targets: ['localhost:9090']",
+          "  - job_name: node-exporter",
+          "    static_configs:",
+          "      - targets: ['node-exporter:9100']",
+          "  - job_name: cadvisor",
+          "    static_configs:",
+          "      - targets: ['cadvisor:8080']",
+          "alerting:",
+          "  alertmanagers:",
+          "    - static_configs:",
+          "        - targets: ['alertmanager:9093']",
+          "EOF",
+          "docker run -d --name prometheus --network ai-q-monitoring -p 9090:9090 -v /opt/ai-q/monitoring/prometheus/config:/etc/prometheus -v /opt/ai-q/monitoring/prometheus/data:/prometheus prom/prometheus:latest --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/etc/prometheus/console_libraries --web.console.templates=/etc/prometheus/consoles --storage.tsdb.retention.time=200h --web.enable-lifecycle"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=prometheus",
+          "curl -f http://localhost:9090/api/v1/status/targets",
+          "curl -f http://localhost:9090/api/v1/query?query=up"
+        ]
+      },
+      {
+        "task_id": "GRAFANA_SETUP_TASK",
+        "name": "Grafana Setup",
+        "description": "Install and configure Grafana with exact specifications",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "PROMETHEUS_SETUP_TASK"
+        ],
+        "skills_required": [
+          "grafana_configuration",
+          "dashboard_management",
+          "data_source_setup"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/grafana/{config,data,provisioning}",
+          "chmod 755 /opt/ai-q/monitoring/grafana",
+          "tee /opt/ai-q/monitoring/grafana/config/grafana.ini << 'EOF'",
+          "[server]",
+          "http_port = 3001",
+          "domain = localhost",
+          "[database]",
+          "type = sqlite3",
+          "path = /var/lib/grafana/grafana.db",
+          "[security]",
+          "admin_user = admin",
+          "admin_password = admin123",
+          "EOF",
+          "docker run -d --name grafana --network ai-q-monitoring -p 3001:3001 -v /opt/ai-q/monitoring/grafana/config:/etc/grafana -v /opt/ai-q/monitoring/grafana/data:/var/lib/grafana grafana/grafana:latest"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=grafana",
+          "curl -f http://localhost:3001/api/health",
+          "curl -f http://localhost:3001/api/datasources"
+        ]
+      },
+      {
+        "task_id": "ALERTMANAGER_SETUP_TASK",
+        "name": "AlertManager Setup",
+        "description": "Install and configure AlertManager with exact specifications",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "GRAFANA_SETUP_TASK"
+        ],
+        "skills_required": [
+          "alertmanager_configuration",
+          "notification_setup",
+          "alert_routing"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/alertmanager/{config,data}",
+          "chmod 755 /opt/ai-q/monitoring/alertmanager",
+          "tee /opt/ai-q/monitoring/alertmanager/config/alertmanager.yml << 'EOF'",
+          "global:",
+          "  resolve_timeout: 5m",
+          "route:",
+          "  group_by: ['alertname']",
+          "  group_wait: 10s",
+          "  group_interval: 10s",
+          "  repeat_interval: 1h",
+          "  receiver: 'web.hook'",
+          "receivers:",
+          "  - name: 'web.hook'",
+          "    webhook_configs:",
+          "      - url: 'http://127.0.0.1:5001/'",
+          "EOF",
+          "docker run -d --name alertmanager --network ai-q-monitoring -p 9093:9093 -v /opt/ai-q/monitoring/alertmanager/config:/etc/alertmanager prom/alertmanager:latest --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=alertmanager",
+          "curl -f http://localhost:9093/api/v1/status",
+          "curl -f http://localhost:9093/api/v1/alerts"
+        ]
+      },
+      {
+        "task_id": "NODE_EXPORTER_SETUP_TASK",
+        "name": "Node Exporter Setup",
+        "description": "Install and configure Node Exporter with exact specifications",
+        "estimated_time": "30 minutes",
+        "dependencies": [
+          "ALERTMANAGER_SETUP_TASK"
+        ],
+        "skills_required": [
+          "node_exporter_configuration",
+          "system_metrics",
+          "metric_collection"
+        ],
+        "exact_commands": [
+          "docker run -d --name node-exporter --network ai-q-monitoring -p 9100:9100 -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /:/rootfs:ro prom/node-exporter:latest --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=node-exporter",
+          "curl -f http://localhost:9100/metrics",
+          "curl -f http://localhost:9100/api/v1/query?query=node_cpu_seconds_total"
+        ]
+      },
+      {
+        "task_id": "CADVISOR_SETUP_TASK",
+        "name": "cAdvisor Setup",
+        "description": "Install and configure cAdvisor with exact specifications",
+        "estimated_time": "30 minutes",
+        "dependencies": [
+          "NODE_EXPORTER_SETUP_TASK"
+        ],
+        "skills_required": [
+          "cadvisor_configuration",
+          "container_metrics",
+          "performance_monitoring"
+        ],
+        "exact_commands": [
+          "docker run -d --name cadvisor --network ai-q-monitoring -p 8081:8080 -v /:/rootfs:ro -v /var/run:/var/run:ro -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro -v /dev/disk/:/dev/disk:ro gcr.io/cadvisor/cadvisor:latest"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=cadvisor",
+          "curl -f http://localhost:8081/metrics",
+          "curl -f http://localhost:8081/api/v1.3/docker/"
+        ]
+      },
+      {
+        "task_id": "ALERT_RULES_SETUP_TASK",
+        "name": "Alert Rules Setup",
+        "description": "Create comprehensive alert rules with exact specifications",
+        "estimated_time": "30 minutes",
+        "dependencies": [
+          "CADVISOR_SETUP_TASK"
+        ],
+        "skills_required": [
+          "prometheus_rules",
+          "alert_configuration",
+          "threshold_management"
+        ],
+        "exact_commands": [
+          "tee /opt/ai-q/monitoring/prometheus/rules/alerts.yml << 'EOF'",
+          "groups:",
+          "  - name: ai-q-system-alerts",
+          "    rules:",
+          "      - alert: HighCPUUsage",
+          "        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100) > 80",
+          "        for: 5m",
+          "        labels:",
+          "          severity: warning",
+          "        annotations:",
+          "          summary: High CPU usage detected",
+          "          description: CPU usage is above 80% for 5 minutes",
+          "      - alert: HighMemoryUsage",
+          "        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85",
+          "        for: 5m",
+          "        labels:",
+          "          severity: warning",
+          "        annotations:",
+          "          summary: High memory usage detected",
+          "          description: Memory usage is above 85% for 5 minutes",
+          "      - alert: HighDiskUsage",
+          "        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 90",
+          "        for: 5m",
+          "        labels:",
+          "          severity: critical",
+          "        annotations:",
+          "          summary: High disk usage detected",
+          "          description: Disk usage is above 90% for 5 minutes",
+          "      - alert: DockerContainerDown",
+          "        expr: absent(container_last_seen)",
+          "        for: 1m",
+          "        labels:",
+          "          severity: critical",
+          "        annotations:",
+          "          summary: Docker container is down",
+          "          description: A Docker container has stopped running",
+          "EOF",
+          "curl -X POST http://localhost:9090/-/reload"
+        ],
+        "validation_commands": [
+          "curl -f http://localhost:9090/api/v1/rules",
+          "curl -f http://localhost:9090/api/v1/alerts"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "PROMETHEUS_CONFIGURATION_SKILL",
+        "name": "Prometheus Configuration",
+        "description": "Configure Prometheus with exact specifications",
+        "tools": [
+          "prometheus_setup",
+          "metrics_collection",
+          "service_discovery"
+        ],
+        "validation": "prometheus_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9090/api/v1/status/targets",
+          "curl -f http://localhost:9090/api/v1/query?query=up",
+          "curl -f http://localhost:9090/api/v1/rules"
+        ]
+      },
+      {
+        "skill_id": "GRAFANA_CONFIGURATION_SKILL",
+        "name": "Grafana Configuration",
+        "description": "Configure Grafana with exact specifications",
+        "tools": [
+          "grafana_setup",
+          "dashboard_management",
+          "data_source_setup"
+        ],
+        "validation": "grafana_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:3001/api/health",
+          "curl -f http://localhost:3001/api/datasources",
+          "curl -f http://localhost:3001/api/dashboards"
+        ]
+      },
+      {
+        "skill_id": "ALERTMANAGER_CONFIGURATION_SKILL",
+        "name": "AlertManager Configuration",
+        "description": "Configure AlertManager with exact specifications",
+        "tools": [
+          "alertmanager_setup",
+          "notification_configuration",
+          "alert_routing"
+        ],
+        "validation": "alertmanager_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9093/api/v1/status",
+          "curl -f http://localhost:9093/api/v1/alerts",
+          "curl -f http://localhost:9093/api/v1/silences"
+        ]
+      },
+      {
+        "skill_id": "NODE_EXPORTER_CONFIGURATION_SKILL",
+        "name": "Node Exporter Configuration",
+        "description": "Configure Node Exporter with exact specifications",
+        "tools": [
+          "node_exporter_setup",
+          "system_metrics",
+          "metric_collection"
+        ],
+        "validation": "node_exporter_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9100/metrics",
+          "curl -f http://localhost:9100/api/v1/query?query=node_cpu_seconds_total",
+          "curl -f http://localhost:9100/api/v1/query?query=node_memory_MemTotal_bytes"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "PROMETHEUS_SETUP_TOOL",
+        "name": "Prometheus Setup Tool",
+        "description": "Automated Prometheus installation and configuration",
+        "file_path": "scripts/monitoring/setup_prometheus.py",
+        "config": "config/monitoring/prometheus_config.json",
+        "exact_config_spec": {
+          "prometheus_version": "2.45.0",
+          "scrape_interval": "15s",
+          "evaluation_interval": "15s",
+          "retention_time": "200h",
+          "storage_path": "/prometheus"
+        }
+      },
+      {
+        "tool_id": "GRAFANA_SETUP_TOOL",
+        "name": "Grafana Setup Tool",
+        "description": "Automated Grafana installation and configuration",
+        "file_path": "scripts/monitoring/setup_grafana.py",
+        "config": "config/monitoring/grafana_config.json",
+        "exact_config_spec": {
+          "grafana_version": "10.0.0",
+          "admin_user": "admin",
+          "admin_password": "admin123",
+          "port": 3001,
+          "database_type": "sqlite3"
+        }
+      },
+      {
+        "tool_id": "ALERTMANAGER_SETUP_TOOL",
+        "name": "AlertManager Setup Tool",
+        "description": "Automated AlertManager installation and configuration",
+        "file_path": "scripts/monitoring/setup_alertmanager.py",
+        "config": "config/monitoring/alertmanager_config.json",
+        "exact_config_spec": {
+          "alertmanager_version": "0.25.0",
+          "resolve_timeout": "5m",
+          "group_wait": "10s",
+          "group_interval": "10s",
+          "repeat_interval": "1h"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "PROMETHEUS_CONFIG",
+        "name": "Prometheus Configuration",
+        "description": "Prometheus configuration with exact specifications",
+        "file_path": "/opt/ai-q/monitoring/prometheus/config/prometheus.yml",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "global": {
+              "type": "object",
+              "properties": {
+                "scrape_interval": {
+                  "type": "string"
+                },
+                "evaluation_interval": {
+                  "type": "string"
+                },
+                "external_labels": {
+                  "type": "object"
+                }
+              }
+            },
+            "rule_files": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "scrape_configs": {
+              "type": "array"
+            },
+            "alerting": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      {
+        "config_id": "GRAFANA_CONFIG",
+        "name": "Grafana Configuration",
+        "description": "Grafana configuration with exact specifications",
+        "file_path": "/opt/ai-q/monitoring/grafana/config/grafana.ini",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "server": {
+              "type": "object",
+              "properties": {
+                "http_port": {
+                  "type": "integer"
+                },
+                "domain": {
+                  "type": "string"
+                }
+              }
+            },
+            "database": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                }
+              }
+            },
+            "security": {
+              "type": "object",
+              "properties": {
+                "admin_user": {
+                  "type": "string"
+                },
+                "admin_password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:prometheus-setup:1.0.0",
+          "task:grafana-setup:1.0.0",
+          "task:alertmanager-setup:1.0.0",
+          "task:node-exporter-setup:1.0.0",
+          "task:cadvisor-setup:1.0.0",
+          "task:alert-rules-setup:1.0.0",
+          "skill:prometheus-configuration:1.0.0",
+          "skill:grafana-configuration:1.0.0",
+          "skill:alertmanager-configuration:1.0.0",
+          "skill:node-exporter-configuration:1.0.0",
+          "tool:prometheus-setup:1.0.0",
+          "tool:grafana-setup:1.0.0",
+          "tool:alertmanager-setup:1.0.0",
+          "config:prometheus:1.0.0",
+          "config:grafana:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/monitoring/setup_prometheus.py --gather-ingredients",
+          "python3 scripts/monitoring/setup_grafana.py --gather-ingredients",
+          "python3 scripts/monitoring/setup_alertmanager.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 4GB RAM available",
+          "20GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-monitoring",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_prometheus_setup",
+        "description": "Install and configure Prometheus with exact commands",
+        "sub_steps": [
+          "Create Prometheus directories",
+          "Create Prometheus configuration",
+          "Deploy Prometheus container",
+          "Validate Prometheus deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/prometheus/{config,data,rules,targets}",
+          "chmod 755 /opt/ai-q/monitoring/prometheus",
+          "tee /opt/ai-q/monitoring/prometheus/config/prometheus.yml << 'EOF'",
+          "global:",
+          "  scrape_interval: 15s",
+          "  evaluation_interval: 15s",
+          "  external_labels:",
+          "    cluster: ai-q-cluster",
+          "    environment: production",
+          "rule_files:",
+          "  - /etc/prometheus/rules/*.yml",
+          "scrape_configs:",
+          "  - job_name: prometheus",
+          "    static_configs:",
+          "      - targets: ['localhost:9090']",
+          "  - job_name: node-exporter",
+          "    static_configs:",
+          "      - targets: ['node-exporter:9100']",
+          "  - job_name: cadvisor",
+          "    static_configs:",
+          "      - targets: ['cadvisor:8080']",
+          "alerting:",
+          "  alertmanagers:",
+          "    - static_configs:",
+          "        - targets: ['alertmanager:9093']",
+          "EOF",
+          "docker run -d --name prometheus --network ai-q-monitoring -p 9090:9090 -v /opt/ai-q/monitoring/prometheus/config:/etc/prometheus -v /opt/ai-q/monitoring/prometheus/data:/prometheus prom/prometheus:latest --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/etc/prometheus/console_libraries --web.console.templates=/etc/prometheus/consoles --storage.tsdb.retention.time=200h --web.enable-lifecycle"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/monitoring/prometheus/config/",
+          "/opt/ai-q/monitoring/prometheus/data/",
+          "/opt/ai-q/monitoring/prometheus/rules/",
+          "/opt/ai-q/monitoring/prometheus/targets/",
+          "/opt/ai-q/monitoring/prometheus/config/prometheus.yml"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_grafana_setup",
+        "description": "Install and configure Grafana with exact commands",
+        "sub_steps": [
+          "Create Grafana directories",
+          "Create Grafana configuration",
+          "Deploy Grafana container",
+          "Validate Grafana deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/grafana/{config,data,provisioning}",
+          "chmod 755 /opt/ai-q/monitoring/grafana",
+          "tee /opt/ai-q/monitoring/grafana/config/grafana.ini << 'EOF'",
+          "[server]",
+          "http_port = 3001",
+          "domain = localhost",
+          "[database]",
+          "type = sqlite3",
+          "path = /var/lib/grafana/grafana.db",
+          "[security]",
+          "admin_user = admin",
+          "admin_password = admin123",
+          "EOF",
+          "docker run -d --name grafana --network ai-q-monitoring -p 3001:3001 -v /opt/ai-q/monitoring/grafana/config:/etc/grafana -v /opt/ai-q/monitoring/grafana/data:/var/lib/grafana grafana/grafana:latest"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/monitoring/grafana/config/",
+          "/opt/ai-q/monitoring/grafana/data/",
+          "/opt/ai-q/monitoring/grafana/provisioning/",
+          "/opt/ai-q/monitoring/grafana/config/grafana.ini"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_alertmanager_setup",
+        "description": "Install and configure AlertManager with exact commands",
+        "sub_steps": [
+          "Create AlertManager directories",
+          "Create AlertManager configuration",
+          "Deploy AlertManager container",
+          "Validate AlertManager deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/alertmanager/{config,data}",
+          "chmod 755 /opt/ai-q/monitoring/alertmanager",
+          "tee /opt/ai-q/monitoring/alertmanager/config/alertmanager.yml << 'EOF'",
+          "global:",
+          "  resolve_timeout: 5m",
+          "route:",
+          "  group_by: ['alertname']",
+          "  group_wait: 10s",
+          "  group_interval: 10s",
+          "  repeat_interval: 1h",
+          "  receiver: 'web.hook'",
+          "receivers:",
+          "  - name: 'web.hook'",
+          "    webhook_configs:",
+          "      - url: 'http://127.0.0.1:5001/'",
+          "EOF",
+          "docker run -d --name alertmanager --network ai-q-monitoring -p 9093:9093 -v /opt/ai-q/monitoring/alertmanager/config:/etc/alertmanager prom/alertmanager:latest --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/monitoring/alertmanager/config/",
+          "/opt/ai-q/monitoring/alertmanager/data/",
+          "/opt/ai-q/monitoring/alertmanager/config/alertmanager.yml"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "execute_exporters_setup",
+        "description": "Install Node Exporter and cAdvisor with exact commands",
+        "sub_steps": [
+          "Deploy Node Exporter container",
+          "Deploy cAdvisor container",
+          "Validate exporters deployment"
+        ],
+        "exact_commands": [
+          "docker run -d --name node-exporter --network ai-q-monitoring -p 9100:9100 -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /:/rootfs:ro prom/node-exporter:latest --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)",
+          "docker run -d --name cadvisor --network ai-q-monitoring -p 8081:8080 -v /:/rootfs:ro -v /var/run:/var/run:ro -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro -v /dev/disk/:/dev/disk:ro gcr.io/cadvisor/cadvisor:latest"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_alert_rules_setup",
+        "description": "Create comprehensive alert rules with exact commands",
+        "sub_steps": [
+          "Create alert rules file",
+          "Reload Prometheus configuration",
+          "Validate alert rules"
+        ],
+        "exact_commands": [
+          "tee /opt/ai-q/monitoring/prometheus/rules/alerts.yml << 'EOF'",
+          "groups:",
+          "  - name: ai-q-system-alerts",
+          "    rules:",
+          "      - alert: HighCPUUsage",
+          "        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100) > 80",
+          "        for: 5m",
+          "        labels:",
+          "          severity: warning",
+          "        annotations:",
+          "          summary: High CPU usage detected",
+          "          description: CPU usage is above 80% for 5 minutes",
+          "      - alert: HighMemoryUsage",
+          "        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85",
+          "        for: 5m",
+          "        labels:",
+          "          severity: warning",
+          "        annotations:",
+          "          summary: High memory usage detected",
+          "          description: Memory usage is above 85% for 5 minutes",
+          "      - alert: HighDiskUsage",
+          "        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 90",
+          "        for: 5m",
+          "        labels:",
+          "          severity: critical",
+          "        annotations:",
+          "          summary: High disk usage detected",
+          "          description: Disk usage is above 90% for 5 minutes",
+          "      - alert: DockerContainerDown",
+          "        expr: absent(container_last_seen)",
+          "        for: 1m",
+          "        labels:",
+          "          severity: critical",
+          "        annotations:",
+          "          summary: Docker container is down",
+          "          description: A Docker container has stopped running",
+          "EOF",
+          "curl -X POST http://localhost:9090/-/reload"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/monitoring/prometheus/rules/alerts.yml"
+        ]
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "validate_results",
+        "description": "Validate complete monitoring infrastructure setup",
+        "validation": "monitoring_infrastructure_validation",
+        "exact_commands": [
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+          "curl -f http://localhost:9090/api/v1/status/targets",
+          "curl -f http://localhost:3001/api/health",
+          "curl -f http://localhost:9093/api/v1/status",
+          "curl -f http://localhost:9100/metrics",
+          "curl -f http://localhost:8081/metrics",
+          "curl -f http://localhost:9090/api/v1/rules"
+        ]
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "cache_results",
+        "description": "Cache monitoring infrastructure configuration and setup",
+        "cache_key": "monitoring_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/monitoring/setup_prometheus.py --cache-results",
+          "python3 scripts/monitoring/setup_grafana.py --cache-results",
+          "python3 scripts/monitoring/setup_alertmanager.py --cache-results",
+          "tar -czf /opt/ai-q/cache/monitoring_infrastructure_cache.tar.gz /opt/ai-q/monitoring"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "monitoring_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "monitoring_update",
+      "cache_validation": "monitoring_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/monitoring/setup_prometheus.py --cache-config",
+        "python3 scripts/monitoring/setup_grafana.py --cache-config",
+        "python3 scripts/monitoring/setup_alertmanager.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "Prometheus collecting metrics from all targets",
+    "Grafana dashboard accessible at http://localhost:3001",
+    "AlertManager sending alerts properly",
+    "Node Exporter providing system metrics",
+    "cAdvisor providing container metrics",
+    "All alert rules loaded and functional",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready monitoring infrastructure with Prometheus",
+    "Grafana dashboard with comprehensive visualizations",
+    "AlertManager with configurable alerting",
+    "Node Exporter for system metrics collection",
+    "cAdvisor for container metrics collection",
+    "Complete alert rules for system monitoring",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Prometheus container fails to start",
+        "symptoms": [
+          "Container exits immediately",
+          "Port 9090 not accessible"
+        ],
+        "diagnosis": "Check configuration file syntax and permissions",
+        "solution": "Verify prometheus.yml syntax and restart container",
+        "prevention": "Validate configuration before deployment"
+      },
+      {
+        "issue": "Grafana not accessible",
+        "symptoms": [
+          "Cannot access http://localhost:3001",
+          "Container not running"
+        ],
+        "diagnosis": "Check container status and port mapping",
+        "solution": "Restart Grafana container and verify port mapping",
+        "prevention": "Ensure port 3001 is not used by other services"
+      },
+      {
+        "issue": "AlertManager not receiving alerts",
+        "symptoms": [
+          "No alerts in AlertManager UI",
+          "Prometheus alerts not firing"
+        ],
+        "diagnosis": "Check AlertManager configuration and network connectivity",
+        "solution": "Verify alertmanager.yml configuration and restart service",
+        "prevention": "Test alert routing before production deployment"
+      },
+      {
+        "issue": "Node Exporter metrics not available",
+        "symptoms": [
+          "No metrics at http://localhost:9100/metrics",
+          "Container not running"
+        ],
+        "diagnosis": "Check container permissions and volume mounts",
+        "solution": "Restart Node Exporter with proper volume mounts",
+        "prevention": "Ensure proper permissions for system access"
+      },
+      {
+        "issue": "cAdvisor metrics not available",
+        "symptoms": [
+          "No metrics at http://localhost:8081/metrics",
+          "Container not running"
+        ],
+        "diagnosis": "Check container permissions and Docker socket access",
+        "solution": "Restart cAdvisor with proper Docker socket access",
+        "prevention": "Ensure Docker socket is accessible to cAdvisor"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker ps -a",
+      "docker logs prometheus",
+      "docker logs grafana",
+      "docker logs alertmanager",
+      "docker logs node-exporter",
+      "docker logs cadvisor",
+      "curl -f http://localhost:9090/api/v1/status/targets",
+      "curl -f http://localhost:3001/api/health",
+      "curl -f http://localhost:9093/api/v1/status"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 4 hours",
+    "prometheus_startup_time": "< 30 seconds",
+    "grafana_startup_time": "< 60 seconds",
+    "alertmanager_startup_time": "< 30 seconds",
+    "node_exporter_startup_time": "< 10 seconds",
+    "cadvisor_startup_time": "< 15 seconds",
+    "metrics_collection_interval": "15 seconds",
+    "alert_evaluation_interval": "15 seconds",
+    "dashboard_load_time": "< 5 seconds"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-02-System-Monitoring",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

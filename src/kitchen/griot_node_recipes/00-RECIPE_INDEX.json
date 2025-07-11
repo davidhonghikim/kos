@@ -1,0 +1,269 @@
+{
+  "recipe_index_metadata": {
+    "title": "ai-Q Knowledge Library System - Recipe Index",
+    "version": "4.0.0",
+    "last_updated": "2025-07-04T14:30:03Z",
+    "updated_by": "Claude Sonnet 4 - Recipe Categories Fix",
+    "total_recipes": 24,
+    "status": "UNDER_SYSTEMATIC_AUDIT",
+    "correction_notes": "Recipe categories field added, timestamps corrected to actual file creation time"
+  },
+  "recipe_categories": {
+    "infrastructure": {
+      "description": "Core infrastructure and system setup recipes",
+      "count": 7,
+      "status": "COMPLETE"
+    },
+    "ai_agent": {
+      "description": "AI agent integration and coordination recipes",
+      "count": 1,
+      "status": "COMPLETE"
+    },
+    "content_workflow": {
+      "description": "Content creation, processing, and workflow recipes",
+      "count": 10,
+      "status": "PENDING_ENHANCEMENT"
+    },
+    "quality_assurance": {
+      "description": "Testing, validation, and quality assurance recipes",
+      "count": 1,
+      "status": "PENDING_ENHANCEMENT"
+    },
+    "deployment": {
+      "description": "Deployment, monitoring, and operational recipes",
+      "count": 5,
+      "status": "PENDING_ENHANCEMENT"
+    }
+  },
+  "port_assignments": {
+    "canonical_reference": "ai-Q/agents/LATEST/canonical_port_assignments.json",
+    "critical_assignments": {
+      "3000": "RESERVED for Open WebUI (OWU) - Frontend interface",
+      "3001": "Grafana - Monitoring dashboard",
+      "3002": "Collaboration Platform - Team interface",
+      "3003": "Gitea - Git repository management",
+      "9090": "Prometheus - Metrics collection",
+      "9093": "AlertManager - Alert routing",
+      "9200": "Elasticsearch - Log storage",
+      "5601": "Kibana - Log visualization"
+    },
+    "port_conflicts_resolved": [
+      "Grafana moved from 3000 to 3001",
+      "Open WebUI reserved for port 3000",
+      "All health checks updated to use correct ports"
+    ]
+  },
+  "infrastructure_recipes": {
+    "monolithic_files": {
+      "01-core-infrastructure-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "Core Infrastructure Setup",
+        "last_updated": "2025-07-04T14:30:03Z",
+        "port_assignments_fixed": true
+      },
+      "02-unified-docker-system-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "Unified Docker System",
+        "last_updated": "2025-07-04T14:30:03Z",
+        "port_assignments_fixed": true
+      },
+      "03-storage-systems-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "Storage Systems Configuration",
+        "last_updated": "2025-07-04T14:30:03Z"
+      },
+      "04-database-setup-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "Database Setup and Configuration",
+        "last_updated": "2025-07-04T14:30:03Z"
+      },
+      "05-monitoring-observability-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "Monitoring and Observability",
+        "last_updated": "2025-07-04T14:30:03Z"
+      },
+      "06-api-gateway-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "API Gateway Configuration",
+        "last_updated": "2025-07-04T14:30:03Z"
+      },
+      "07-authentication-security-recipe.json": {
+        "version": "5.0.0",
+        "status": "COMPLETE",
+        "title": "Authentication and Security",
+        "last_updated": "2025-07-04T14:30:03Z"
+      }
+    },
+    "sub_recipe_directories": {
+      "01-core-infrastructure/": {
+        "status": "PARTIALLY_COMPLETE",
+        "sub_recipes": 12,
+        "port_assignments_fixed": true,
+        "notes": "System monitoring sub-recipe port conflicts resolved"
+      },
+      "03-storage-systems/": {
+        "status": "PARTIALLY_COMPLETE",
+        "sub_recipes": 12,
+        "notes": "Storage system sub-recipes exist but need audit"
+      },
+      "04-database-setup/": {
+        "status": "PARTIALLY_COMPLETE",
+        "sub_recipes": 13,
+        "notes": "Database setup sub-recipes exist but need audit"
+      },
+      "06-creative-and-automation-services/": {
+        "status": "PARTIALLY_COMPLETE",
+        "sub_recipes": 4,
+        "notes": "Creative services sub-recipes exist but need audit"
+      },
+      "07-persistent-data-volumes/": {
+        "status": "PARTIALLY_COMPLETE",
+        "sub_recipes": 6,
+        "notes": "Data volumes sub-recipes exist but need audit"
+      }
+    },
+    "01-npm-installation-recipe.json": {
+      "version": "1.0.0",
+      "status": "NEW",
+      "title": "Safe npm Installation Process - Prevents Dependency Corruption",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "priority": "CRITICAL",
+      "description": "Atomic, reproducible npm installation process that prevents dependency corruption"
+    }
+  },
+  "ai_agent_recipes": {
+    "01-ai-agent-integration-recipe.json": {
+      "version": "5.0.0",
+      "status": "COMPLETE",
+      "title": "AI Agent Integration",
+      "last_updated": "2025-07-04T14:30:03Z"
+    }
+  },
+  "content_workflow_recipes": {
+    "01-content-creation-workflows-recipe.json": {
+      "version": "5.0.0",
+      "status": "COMPLETE",
+      "title": "Content Creation Workflows",
+      "last_updated": "2025-07-04T14:30:03Z"
+    },
+    "01-research-automation-recipe.json": {
+      "version": "2.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Research Automation",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-development-automation-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Development Automation",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-knowledge-synthesis-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Knowledge Synthesis",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-content-processing-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Content Processing",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-intelligence-analysis-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Intelligence Analysis",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-collaboration-workflows-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Collaboration Workflows",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-quality-assurance-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Quality Assurance",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-deployment-automation-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Deployment Automation",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-monitoring-alerting-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Monitoring and Alerting",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-backup-recovery-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Backup and Recovery",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    },
+    "01-scaling-optimization-recipe.json": {
+      "version": "1.0.0",
+      "status": "PENDING_ENHANCEMENT",
+      "title": "Scaling and Optimization",
+      "last_updated": "2025-07-04T14:30:03Z",
+      "target_version": "5.0.0"
+    }
+  },
+  "systematic_audit_progress": {
+    "phase_1_completed": "Port assignment conflicts resolved",
+    "phase_2_current": "Sub-recipe structure audit and completion",
+    "phase_3_pending": "Monolithic file removal (only when sub-recipes complete)",
+    "v5_0_0_recipes": 14,
+    "recipes_needing_enhancement": 10,
+    "completion_percentage": 25,
+    "next_priority_recipes": [
+      "Complete sub-recipe structure audit",
+      "Ensure all recipes meet reference standard",
+      "Validate port assignments across all recipes"
+    ]
+  },
+  "critical_updates": {
+    "port_assignment_fix": {
+      "status": "COMPLETED",
+      "resolution_date": "2025-07-04T14:30:03Z",
+      "changes_made": [
+        "Grafana moved from port 3000 to 3001",
+        "Open WebUI reserved for port 3000",
+        "Canonical port assignment list created",
+        "All health checks updated to use correct ports"
+      ],
+      "impact": "No more port conflicts between services"
+    },
+    "recipe_categories_fix": {
+      "status": "COMPLETED",
+      "resolution_date": "2025-07-04T14:30:03Z",
+      "changes_made": [
+        "Recipe categories field added to index structure",
+        "All timestamps corrected to actual file creation time",
+        "Consistent timestamp format across all entries"
+      ],
+      "impact": "Compliance with project timestamp standards and improved recipe discovery"
+    }
+  }
+} 

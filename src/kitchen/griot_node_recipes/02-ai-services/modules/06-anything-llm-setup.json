@@ -1,0 +1,206 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-AI-SERVICE-ANYTHINGLLM-SETUP-006",
+    "title": "AnythingLLM Setup (Optional)",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "difficulty_level": "intermediate",
+    "total_tasks": 1,
+    "kitchen_system": {
+      "pantry_category": "rag_solutions",
+      "cooking_time": "25 minutes",
+      "complexity": "intermediate",
+      "kitchen_tools": [
+        "rag_deployment",
+        "private_ai",
+        "document_processing"
+      ],
+      "cache_strategy": "anythingllm_service_cache",
+      "orchestrator_priority": "medium"
+    }
+  },
+  "recipe_overview": {
+    "description": "Deploys the AnythingLLM stack using Docker. This provides an all-in-one private RAG solution and can be used as an alternative front-end to Open WebUI.",
+    "technology_stack": {
+      "llm_ui": "AnythingLLM",
+      "orchestration": "Docker Compose",
+      "rag_engine": "Private_RAG",
+      "document_processing": "Multi_format_support"
+    },
+    "deliverables": [
+      "A running AnythingLLM Docker container.",
+      "A Docker Compose file for the full AnythingLLM stack.",
+      "A private RAG environment accessible to the user."
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "ANYTHINGLLM_DEPLOYMENT_TASK",
+        "name": "AnythingLLM Stack Deployment",
+        "description": "Deploy and configure AnythingLLM RAG solution",
+        "estimated_time": "25 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "rag_deployment",
+          "private_ai",
+          "document_processing"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "RAG_DEPLOYMENT_SKILL",
+        "name": "RAG Deployment",
+        "description": "Deploy and configure RAG solutions",
+        "tools": [
+          "rag_orchestration",
+          "document_indexing"
+        ],
+        "validation": "rag_deployment_validation"
+      },
+      {
+        "skill_id": "PRIVATE_AI_SKILL",
+        "name": "Private AI Setup",
+        "description": "Set up private AI environments",
+        "tools": [
+          "private_deployment",
+          "security_configuration"
+        ],
+        "validation": "private_ai_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "ANYTHINGLLM_DEPLOYMENT_TOOL",
+        "name": "AnythingLLM Deployment Tool",
+        "description": "Docker Compose configuration for AnythingLLM",
+        "file_path": "docker/compose/anything-llm.yml",
+        "config": "config/anythingllm/anythingllm_config.json"
+      },
+      {
+        "tool_id": "RAG_ORCHESTRATION_TOOL",
+        "name": "RAG Orchestration Tool",
+        "description": "Orchestrate RAG components and services",
+        "file_path": "scripts/rag/rag_orchestrator.py",
+        "config": "config/rag/rag_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "ANYTHINGLLM_CONFIG",
+        "name": "AnythingLLM Configuration",
+        "description": "Configuration for AnythingLLM service",
+        "file_path": "config/anythingllm/anythingllm_config.json",
+        "schema": "anythingllm_config_schema"
+      },
+      {
+        "config_id": "RAG_CONFIG",
+        "name": "RAG Configuration",
+        "description": "Configuration for RAG services",
+        "file_path": "config/rag/rag_config.json",
+        "schema": "rag_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "ANYTHINGLLM_DEPLOYMENT_TASK",
+          "RAG_DEPLOYMENT_SKILL",
+          "ANYTHINGLLM_DEPLOYMENT_TOOL"
+        ],
+        "description": "Gather AnythingLLM deployment ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "anythingllm_service_cache",
+        "description": "Check for existing AnythingLLM service cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "configure_rag_environment",
+        "tool": "RAG_ORCHESTRATION_TOOL",
+        "description": "Configure RAG environment for AnythingLLM"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_task",
+        "task": "ANYTHINGLLM_DEPLOYMENT_TASK",
+        "description": "Execute AnythingLLM deployment task"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "validate_results",
+        "validation": "rag_deployment_validation",
+        "description": "Validate AnythingLLM service deployment"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "cache_results",
+        "cache_key": "anythingllm_service_cache",
+        "description": "Cache AnythingLLM service configuration"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "anythingllm_service_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "rag_config_change",
+      "cache_validation": "rag_deployment_validation"
+    }
+  },
+  "tasks": [
+    {
+      "id": "40-006",
+      "title": "Deploy AnythingLLM Stack",
+      "description": "Create and configure a docker-compose.yml file to run the AnythingLLM image. This service is optional and must be enabled by the user in the configuration.",
+      "dependencies": [],
+      "estimated_time": "25 minutes",
+      "commands": [
+        "docker-compose -f docker/compose/anything-llm.yml up -d"
+      ],
+      "files_to_create": [
+        "docker/compose/anything-llm.yml"
+      ],
+      "acceptance_criteria": [
+        "The anything-llm.yml Docker Compose file is created.",
+        "The container can be started if enabled in the configuration.",
+        "The AnythingLLM web interface is accessible on its port when running."
+      ]
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "06-Anything-Llm-Setup",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

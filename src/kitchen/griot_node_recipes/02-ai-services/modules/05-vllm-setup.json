@@ -1,0 +1,213 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-AI-SERVICE-VLLM-SETUP-005",
+    "title": "vLLM Service Setup (Optional)",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "kitchen_system": {
+      "pantry_category": "high_performance_llm",
+      "cooking_time": "25 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "gpu_optimization",
+        "high_throughput_inference",
+        "openai_compatibility"
+      ],
+      "cache_strategy": "vllm_service_cache",
+      "orchestrator_priority": "medium"
+    }
+  },
+  "recipe_overview": {
+    "description": "Deploys the vLLM service using Docker. This provides a high-throughput, OpenAI-compatible server for LLM inference, available as an optional alternative to Ollama for users with suitable hardware (NVIDIA GPUs).",
+    "technology_stack": {
+      "llm_server": "vLLM",
+      "orchestration": "Docker Compose",
+      "gpu_optimization": "NVIDIA_CUDA",
+      "api_compatibility": "OpenAI_API"
+    },
+    "deliverables": [
+      "A running vLLM Docker container.",
+      "A Docker Compose file for vLLM.",
+      "Configuration to enable vLLM as the active inference engine."
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "VLLM_DEPLOYMENT_TASK",
+        "name": "vLLM Container Deployment",
+        "description": "Deploy and configure vLLM service container",
+        "estimated_time": "25 minutes",
+        "dependencies": [
+          "HARDWARE_PROFILING_TASK"
+        ],
+        "skills_required": [
+          "gpu_optimization",
+          "high_throughput_inference",
+          "openai_compatibility"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "GPU_OPTIMIZATION_SKILL",
+        "name": "GPU Optimization",
+        "description": "Optimize deployment for NVIDIA GPU acceleration",
+        "tools": [
+          "cuda_optimization",
+          "gpu_memory_management"
+        ],
+        "validation": "gpu_optimization_validation"
+      },
+      {
+        "skill_id": "HIGH_THROUGHPUT_INFERENCE_SKILL",
+        "name": "High Throughput Inference",
+        "description": "Configure high-throughput LLM inference",
+        "tools": [
+          "vllm_deployment",
+          "throughput_optimization"
+        ],
+        "validation": "high_throughput_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "VLLM_DEPLOYMENT_TOOL",
+        "name": "vLLM Deployment Tool",
+        "description": "Docker Compose configuration for vLLM",
+        "file_path": "docker/compose/vllm.yml",
+        "config": "config/vllm/vllm_config.json"
+      },
+      {
+        "tool_id": "GPU_OPTIMIZATION_TOOL",
+        "name": "GPU Optimization Tool",
+        "description": "Optimize GPU usage for vLLM",
+        "file_path": "scripts/optimization/gpu_optimizer.py",
+        "config": "config/optimization/gpu_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "VLLM_CONFIG",
+        "name": "vLLM Configuration",
+        "description": "Configuration for vLLM service",
+        "file_path": "config/vllm/vllm_config.json",
+        "schema": "vllm_config_schema"
+      },
+      {
+        "config_id": "GPU_OPTIMIZATION_CONFIG",
+        "name": "GPU Optimization Configuration",
+        "description": "Configuration for GPU optimization",
+        "file_path": "config/optimization/gpu_config.json",
+        "schema": "gpu_optimization_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "VLLM_DEPLOYMENT_TASK",
+          "GPU_OPTIMIZATION_SKILL",
+          "VLLM_DEPLOYMENT_TOOL"
+        ],
+        "description": "Gather vLLM deployment ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "vllm_service_cache",
+        "description": "Check for existing vLLM service cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "check_hardware_compatibility",
+        "validation": "gpu_compatibility_check",
+        "description": "Check if hardware supports vLLM"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "optimize_gpu_usage",
+        "tool": "GPU_OPTIMIZATION_TOOL",
+        "description": "Optimize GPU usage for vLLM deployment"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "VLLM_DEPLOYMENT_TASK",
+        "description": "Execute vLLM deployment task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "validation": "high_throughput_validation",
+        "description": "Validate vLLM service deployment"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "cache_key": "vllm_service_cache",
+        "description": "Cache vLLM service configuration"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "vllm_service_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "gpu_driver_update",
+      "cache_validation": "high_throughput_validation"
+    }
+  },
+  "tasks": [
+    {
+      "id": "40-005",
+      "title": "Deploy vLLM Container",
+      "description": "Create and configure a docker-compose.yml file to run the official vLLM image. This service will only be enabled if the user selects it and the hardware profiler detects a compatible NVIDIA GPU.",
+      "dependencies": [
+        "40-001"
+      ],
+      "estimated_time": "25 minutes",
+      "files_to_create": [
+        "docker/compose/vllm.yml"
+      ],
+      "acceptance_criteria": [
+        "The vllm.yml Docker Compose file is created.",
+        "The container can be started if enabled in the configuration.",
+        "The vLLM server is accessible on its API port when running."
+      ]
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "05-Vllm-Setup",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

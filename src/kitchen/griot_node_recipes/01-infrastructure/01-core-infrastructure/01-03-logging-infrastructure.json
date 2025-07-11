@@ -1,0 +1,954 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-03-LOGGING-INFRASTRUCTURE-COMPREHENSIVE",
+    "title": "Centralized Logging Infrastructure - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T17:46:53Z",
+    "last_updated": "2025-07-05T17:46:53Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "3-4 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 8,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-logging",
+    "description": "Complete centralized logging infrastructure with ELK stack, exact specifications, atomic tasks, and zero technical debt",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "01-01-docker-environment",
+        "01-02-system-monitoring"
+      ],
+      "required_services": [
+        "docker",
+        "docker-compose"
+      ],
+      "required_networks": [
+        "ai-q-monitoring",
+        "ai-q-logging"
+      ],
+      "required_volumes": [
+        "ai-q-data",
+        "ai-q-config"
+      ],
+      "required_ports": [
+        9200,
+        9300,
+        5601,
+        5044,
+        9600
+      ],
+      "required_files": [
+        "/opt/ai-q/logging/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "logging",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "elasticsearch_setup",
+        "logstash_configuration",
+        "kibana_setup",
+        "filebeat_setup"
+      ],
+      "cache_strategy": "logging_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Centralized Logging Infrastructure",
+    "description": "Complete ELK stack logging infrastructure with Elasticsearch, Logstash, Kibana, and Filebeat",
+    "prerequisites": [
+      "01-01-docker-environment completed",
+      "01-02-system-monitoring completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 8GB RAM available",
+      "50GB free disk space for log storage"
+    ],
+    "target_outcome": "Production-ready centralized logging infrastructure with comprehensive log collection and analysis",
+    "success_criteria": [
+      "Elasticsearch cluster operational and healthy",
+      "Logstash processing logs from all sources",
+      "Kibana dashboard accessible and functional",
+      "Filebeat collecting logs from all containers",
+      "Log retention and rotation configured",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "ELASTICSEARCH_SETUP_TASK",
+        "name": "Elasticsearch Setup",
+        "description": "Install and configure Elasticsearch with exact specifications",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "elasticsearch_configuration",
+          "cluster_management",
+          "performance_tuning"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/elasticsearch/{config,data,logs,plugins}",
+          "chmod 755 /opt/ai-q/logging/elasticsearch",
+          "tee /opt/ai-q/logging/elasticsearch/config/elasticsearch.yml << 'EOF'",
+          "cluster.name: ai-q-cluster",
+          "node.name: ai-q-node-1",
+          "path.data: /usr/share/elasticsearch/data",
+          "path.logs: /usr/share/elasticsearch/logs",
+          "network.host: 0.0.0.0",
+          "http.port: 9200",
+          "discovery.type: single-node",
+          "xpack.security.enabled: false",
+          "xpack.monitoring.enabled: true",
+          "xpack.watcher.enabled: false",
+          "cluster.routing.allocation.disk.threshold_enabled: true",
+          "cluster.routing.allocation.disk.watermark.low: 93%",
+          "cluster.routing.allocation.disk.watermark.high: 95%",
+          "cluster.routing.allocation.disk.watermark.flood_stage: 97%",
+          "EOF",
+          "tee /opt/ai-q/logging/elasticsearch/config/jvm.options << 'EOF'",
+          "-Xms2g",
+          "-Xmx2g",
+          "-XX:+UseG1GC",
+          "-XX:G1ReservePercent=25",
+          "-XX:InitiatingHeapOccupancyPercent=75",
+          "-XX:+HeapDumpOnOutOfMemoryError",
+          "-XX:HeapDumpPath=data",
+          "-XX:ErrorFile=logs/hs_err_pid%p.log",
+          "EOF",
+          "chown -R 1000:1000 /opt/ai-q/logging/elasticsearch/",
+          "docker run -d --name elasticsearch --network ai-q-logging -p 9200:9200 -p 9300:9300 -v /opt/ai-q/logging/elasticsearch/config:/usr/share/elasticsearch/config -v /opt/ai-q/logging/elasticsearch/data:/usr/share/elasticsearch/data -v /opt/ai-q/logging/elasticsearch/logs:/usr/share/elasticsearch/logs -e discovery.type=single-node -e ES_JAVA_OPTS='-Xms2g -Xmx2g' docker.elastic.co/elasticsearch/elasticsearch:8.11.0"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=elasticsearch",
+          "curl -f http://localhost:9200/_cluster/health",
+          "curl -f http://localhost:9200/_cat/nodes"
+        ]
+      },
+      {
+        "task_id": "LOGSTASH_SETUP_TASK",
+        "name": "Logstash Setup",
+        "description": "Install and configure Logstash with exact specifications",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "ELASTICSEARCH_SETUP_TASK"
+        ],
+        "skills_required": [
+          "logstash_configuration",
+          "pipeline_management",
+          "log_processing"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/logstash/{config,pipeline,logs,patterns}",
+          "chmod 755 /opt/ai-q/logging/logstash",
+          "tee /opt/ai-q/logging/logstash/config/logstash.yml << 'EOF'",
+          "http.host: 0.0.0.0",
+          "xpack.monitoring.elasticsearch.hosts: [\"http://elasticsearch:9200\"]",
+          "xpack.monitoring.enabled: true",
+          "pipeline.workers: 2",
+          "pipeline.batch.size: 125",
+          "pipeline.batch.delay: 50",
+          "queue.type: memory",
+          "queue.max_events: 1000",
+          "EOF",
+          "tee /opt/ai-q/logging/logstash/pipeline/main.conf << 'EOF'",
+          "input {",
+          "  beats {",
+          "    port => 5044",
+          "    host => \"0.0.0.0\"",
+          "  }",
+          "}",
+          "filter {",
+          "  if [fields][service] == \"docker\" {",
+          "    docker {}",
+          "  }",
+          "  grok {",
+          "    match => { \"message\" => \"%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{GREEDYDATA:message}\" }",
+          "  }",
+          "  date {",
+          "    match => [ \"timestamp\", \"ISO8601\" ]",
+          "  }",
+          "}",
+          "output {",
+          "  elasticsearch {",
+          "    hosts => [\"elasticsearch:9200\"]",
+          "    index => \"ai-q-logs-%{+YYYY.MM.dd}\"",
+          "  }",
+          "}",
+          "EOF",
+          "docker run -d --name logstash --network ai-q-logging -p 5044:5044 -p 9600:9600 -v /opt/ai-q/logging/logstash/config:/usr/share/logstash/config -v /opt/ai-q/logging/logstash/pipeline:/usr/share/logstash/pipeline -v /opt/ai-q/logging/logstash/logs:/usr/share/logstash/logs docker.elastic.co/logstash/logstash:8.11.0"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=logstash",
+          "curl -f http://localhost:9600/_node/stats",
+          "curl -f http://localhost:5044"
+        ]
+      },
+      {
+        "task_id": "KIBANA_SETUP_TASK",
+        "name": "Kibana Setup",
+        "description": "Install and configure Kibana with exact specifications",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "LOGSTASH_SETUP_TASK"
+        ],
+        "skills_required": [
+          "kibana_configuration",
+          "dashboard_management",
+          "visualization_setup"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/kibana/{config,data}",
+          "chmod 755 /opt/ai-q/logging/kibana",
+          "tee /opt/ai-q/logging/kibana/config/kibana.yml << 'EOF'",
+          "server.host: 0.0.0.0",
+          "server.port: 5601",
+          "elasticsearch.hosts: [\"http://elasticsearch:9200\"]",
+          "xpack.security.enabled: false",
+          "xpack.monitoring.enabled: true",
+          "EOF",
+          "docker run -d --name kibana --network ai-q-logging -p 5601:5601 -v /opt/ai-q/logging/kibana/config:/usr/share/kibana/config -v /opt/ai-q/logging/kibana/data:/usr/share/kibana/data docker.elastic.co/kibana/kibana:8.11.0"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=kibana",
+          "curl -f http://localhost:5601/api/status",
+          "curl -f http://localhost:5601/api/saved_objects/_find"
+        ]
+      },
+      {
+        "task_id": "FILEBEAT_SETUP_TASK",
+        "name": "Filebeat Setup",
+        "description": "Install and configure Filebeat with exact specifications",
+        "estimated_time": "30 minutes",
+        "dependencies": [
+          "KIBANA_SETUP_TASK"
+        ],
+        "skills_required": [
+          "filebeat_configuration",
+          "log_collection",
+          "agent_management"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/filebeat/{config,data,logs}",
+          "chmod 755 /opt/ai-q/logging/filebeat",
+          "tee /opt/ai-q/logging/filebeat/config/filebeat.yml << 'EOF'",
+          "filebeat.inputs:",
+          "- type: container",
+          "  paths:",
+          "    - /var/lib/docker/containers/*/*.log",
+          "  processors:",
+          "    - add_docker_metadata:",
+          "        host: \"unix:///var/run/docker.sock\"",
+          "    - add_fields:",
+          "        fields:",
+          "          service: docker",
+          "output.logstash:",
+          "  hosts: [\"logstash:5044\"]",
+          "logging.level: info",
+          "EOF",
+          "docker run -d --name filebeat --network ai-q-logging -v /opt/ai-q/logging/filebeat/config:/usr/share/filebeat/filebeat.yml -v /var/lib/docker/containers:/var/lib/docker/containers:ro -v /var/run/docker.sock:/var/run/docker.sock:ro docker.elastic.co/beats/filebeat:8.11.0"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=filebeat",
+          "docker logs filebeat | grep -i 'started'",
+          "curl -f http://localhost:9200/ai-q-logs-*/_count"
+        ]
+      },
+      {
+        "task_id": "LOG_RETENTION_SETUP_TASK",
+        "name": "Log Retention Setup",
+        "description": "Configure log retention and rotation policies",
+        "estimated_time": "30 minutes",
+        "dependencies": [
+          "FILEBEAT_SETUP_TASK"
+        ],
+        "skills_required": [
+          "retention_policy",
+          "index_management",
+          "cleanup_automation"
+        ],
+        "exact_commands": [
+          "curl -X PUT 'http://localhost:9200/_ilm/policy/ai-q-logs-policy' -H 'Content-Type: application/json' -d '{",
+          "  \"policy\": {",
+          "    \"phases\": {",
+          "      \"hot\": {",
+          "        \"actions\": {",
+          "          \"rollover\": {",
+          "            \"max_size\": \"10GB\",",
+          "            \"max_age\": \"1d\"",
+          "          }",
+          "        }",
+          "      },",
+          "      \"warm\": {",
+          "        \"min_age\": \"1d\",",
+          "        \"actions\": {",
+          "          \"forcemerge\": {",
+          "            \"max_num_segments\": 1",
+          "          }",
+          "        }",
+          "      },",
+          "      \"delete\": {",
+          "        \"min_age\": \"30d\",",
+          "        \"actions\": {",
+          "          \"delete\": {}",
+          "        }",
+          "      }",
+          "    }",
+          "  }",
+          "}'",
+          "curl -X PUT 'http://localhost:9200/_template/ai-q-logs-template' -H 'Content-Type: application/json' -d '{",
+          "  \"index_patterns\": [\"ai-q-logs-*\"],",
+          "  \"settings\": {",
+          "    \"index.lifecycle.name\": \"ai-q-logs-policy\"",
+          "  }",
+          "}'"
+        ],
+        "validation_commands": [
+          "curl -f http://localhost:9200/_ilm/policy/ai-q-logs-policy",
+          "curl -f http://localhost:9200/_template/ai-q-logs-template",
+          "curl -f http://localhost:9200/ai-q-logs-*/_settings"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "ELASTICSEARCH_CONFIGURATION_SKILL",
+        "name": "Elasticsearch Configuration",
+        "description": "Configure Elasticsearch with exact procedures",
+        "tools": [
+          "cluster_management",
+          "index_management",
+          "performance_tuning"
+        ],
+        "validation": "elasticsearch_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9200/_cluster/health",
+          "curl -f http://localhost:9200/_cat/nodes",
+          "curl -f http://localhost:9200/_cat/indices"
+        ]
+      },
+      {
+        "skill_id": "LOGSTASH_CONFIGURATION_SKILL",
+        "name": "Logstash Configuration",
+        "description": "Configure Logstash with exact procedures",
+        "tools": [
+          "pipeline_management",
+          "log_processing",
+          "filter_configuration"
+        ],
+        "validation": "logstash_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9600/_node/stats",
+          "curl -f http://localhost:5044",
+          "docker logs logstash | grep -i 'started'"
+        ]
+      },
+      {
+        "skill_id": "KIBANA_CONFIGURATION_SKILL",
+        "name": "Kibana Configuration",
+        "description": "Configure Kibana with exact procedures",
+        "tools": [
+          "dashboard_management",
+          "visualization_setup",
+          "index_pattern_management"
+        ],
+        "validation": "kibana_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:5601/api/status",
+          "curl -f http://localhost:5601/api/saved_objects/_find",
+          "curl -f http://localhost:5601/api/index_patterns"
+        ]
+      },
+      {
+        "skill_id": "FILEBEAT_CONFIGURATION_SKILL",
+        "name": "Filebeat Configuration",
+        "description": "Configure Filebeat with exact procedures",
+        "tools": [
+          "log_collection",
+          "agent_management",
+          "output_configuration"
+        ],
+        "validation": "filebeat_configuration_validation",
+        "exact_validation_commands": [
+          "docker ps --filter name=filebeat",
+          "docker logs filebeat | grep -i 'started'",
+          "curl -f http://localhost:9200/ai-q-logs-*/_count"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "ELASTICSEARCH_SETUP_TOOL",
+        "name": "Elasticsearch Setup Tool",
+        "description": "Automated Elasticsearch installation and configuration",
+        "file_path": "scripts/logging/setup_elasticsearch.py",
+        "config": "config/logging/elasticsearch_config.json",
+        "exact_config_spec": {
+          "elasticsearch_version": "8.11.0",
+          "cluster_name": "ai-q-cluster",
+          "node_name": "ai-q-node-1",
+          "http_port": 9200,
+          "transport_port": 9300,
+          "heap_size": "2g",
+          "discovery_type": "single-node"
+        }
+      },
+      {
+        "tool_id": "LOGSTASH_SETUP_TOOL",
+        "name": "Logstash Setup Tool",
+        "description": "Automated Logstash installation and configuration",
+        "file_path": "scripts/logging/setup_logstash.py",
+        "config": "config/logging/logstash_config.json",
+        "exact_config_spec": {
+          "logstash_version": "8.11.0",
+          "http_host": "0.0.0.0",
+          "beats_port": 5044,
+          "api_port": 9600,
+          "pipeline_workers": 2,
+          "pipeline_batch_size": 125,
+          "pipeline_batch_delay": 50
+        }
+      },
+      {
+        "tool_id": "KIBANA_SETUP_TOOL",
+        "name": "Kibana Setup Tool",
+        "description": "Automated Kibana installation and configuration",
+        "file_path": "scripts/logging/setup_kibana.py",
+        "config": "config/logging/kibana_config.json",
+        "exact_config_spec": {
+          "kibana_version": "8.11.0",
+          "server_host": "0.0.0.0",
+          "server_port": 5601,
+          "elasticsearch_hosts": [
+            "http://elasticsearch:9200"
+          ],
+          "xpack_security_enabled": false,
+          "xpack_monitoring_enabled": true
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "ELASTICSEARCH_CONFIG",
+        "name": "Elasticsearch Configuration",
+        "description": "Elasticsearch configuration with exact specifications",
+        "file_path": "/opt/ai-q/logging/elasticsearch/config/elasticsearch.yml",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "cluster.name": {
+              "type": "string"
+            },
+            "node.name": {
+              "type": "string"
+            },
+            "path.data": {
+              "type": "string"
+            },
+            "path.logs": {
+              "type": "string"
+            },
+            "network.host": {
+              "type": "string"
+            },
+            "http.port": {
+              "type": "integer"
+            },
+            "discovery.type": {
+              "type": "string"
+            },
+            "xpack.security.enabled": {
+              "type": "boolean"
+            },
+            "xpack.monitoring.enabled": {
+              "type": "boolean"
+            },
+            "xpack.watcher.enabled": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      {
+        "config_id": "LOGSTASH_CONFIG",
+        "name": "Logstash Configuration",
+        "description": "Logstash configuration with exact specifications",
+        "file_path": "/opt/ai-q/logging/logstash/config/logstash.yml",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "http.host": {
+              "type": "string"
+            },
+            "xpack.monitoring.elasticsearch.hosts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "xpack.monitoring.enabled": {
+              "type": "boolean"
+            },
+            "pipeline.workers": {
+              "type": "integer"
+            },
+            "pipeline.batch.size": {
+              "type": "integer"
+            },
+            "pipeline.batch.delay": {
+              "type": "integer"
+            },
+            "queue.type": {
+              "type": "string"
+            },
+            "queue.max_events": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:elasticsearch-setup:1.0.0",
+          "task:logstash-setup:1.0.0",
+          "task:kibana-setup:1.0.0",
+          "task:filebeat-setup:1.0.0",
+          "task:log-retention-setup:1.0.0",
+          "skill:elasticsearch-configuration:1.0.0",
+          "skill:logstash-configuration:1.0.0",
+          "skill:kibana-configuration:1.0.0",
+          "skill:filebeat-configuration:1.0.0",
+          "tool:elasticsearch-setup:1.0.0",
+          "tool:logstash-setup:1.0.0",
+          "tool:kibana-setup:1.0.0",
+          "config:elasticsearch:1.0.0",
+          "config:logstash:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/logging/setup_elasticsearch.py --gather-ingredients",
+          "python3 scripts/logging/setup_logstash.py --gather-ingredients",
+          "python3 scripts/logging/setup_kibana.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 8GB RAM available",
+          "50GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-logging",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_elasticsearch_setup",
+        "description": "Install and configure Elasticsearch with exact commands",
+        "sub_steps": [
+          "Create Elasticsearch directories",
+          "Create Elasticsearch configuration",
+          "Create JVM options",
+          "Set permissions",
+          "Deploy Elasticsearch container",
+          "Validate Elasticsearch deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/elasticsearch/{config,data,logs,plugins}",
+          "chmod 755 /opt/ai-q/logging/elasticsearch",
+          "tee /opt/ai-q/logging/elasticsearch/config/elasticsearch.yml << 'EOF'",
+          "cluster.name: ai-q-cluster",
+          "node.name: ai-q-node-1",
+          "path.data: /usr/share/elasticsearch/data",
+          "path.logs: /usr/share/elasticsearch/logs",
+          "network.host: 0.0.0.0",
+          "http.port: 9200",
+          "discovery.type: single-node",
+          "xpack.security.enabled: false",
+          "xpack.monitoring.enabled: true",
+          "xpack.watcher.enabled: false",
+          "cluster.routing.allocation.disk.threshold_enabled: true",
+          "cluster.routing.allocation.disk.watermark.low: 93%",
+          "cluster.routing.allocation.disk.watermark.high: 95%",
+          "cluster.routing.allocation.disk.watermark.flood_stage: 97%",
+          "EOF",
+          "tee /opt/ai-q/logging/elasticsearch/config/jvm.options << 'EOF'",
+          "-Xms2g",
+          "-Xmx2g",
+          "-XX:+UseG1GC",
+          "-XX:G1ReservePercent=25",
+          "-XX:InitiatingHeapOccupancyPercent=75",
+          "-XX:+HeapDumpOnOutOfMemoryError",
+          "-XX:HeapDumpPath=data",
+          "-XX:ErrorFile=logs/hs_err_pid%p.log",
+          "EOF",
+          "chown -R 1000:1000 /opt/ai-q/logging/elasticsearch/",
+          "docker run -d --name elasticsearch --network ai-q-logging -p 9200:9200 -p 9300:9300 -v /opt/ai-q/logging/elasticsearch/config:/usr/share/elasticsearch/config -v /opt/ai-q/logging/elasticsearch/data:/usr/share/elasticsearch/data -v /opt/ai-q/logging/elasticsearch/logs:/usr/share/elasticsearch/logs -e discovery.type=single-node -e ES_JAVA_OPTS='-Xms2g -Xmx2g' docker.elastic.co/elasticsearch/elasticsearch:8.11.0"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/logging/elasticsearch/config/",
+          "/opt/ai-q/logging/elasticsearch/data/",
+          "/opt/ai-q/logging/elasticsearch/logs/",
+          "/opt/ai-q/logging/elasticsearch/plugins/",
+          "/opt/ai-q/logging/elasticsearch/config/elasticsearch.yml",
+          "/opt/ai-q/logging/elasticsearch/config/jvm.options"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_logstash_setup",
+        "description": "Install and configure Logstash with exact commands",
+        "sub_steps": [
+          "Create Logstash directories",
+          "Create Logstash configuration",
+          "Create pipeline configuration",
+          "Deploy Logstash container",
+          "Validate Logstash deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/logstash/{config,pipeline,logs,patterns}",
+          "chmod 755 /opt/ai-q/logging/logstash",
+          "tee /opt/ai-q/logging/logstash/config/logstash.yml << 'EOF'",
+          "http.host: 0.0.0.0",
+          "xpack.monitoring.elasticsearch.hosts: [\"http://elasticsearch:9200\"]",
+          "xpack.monitoring.enabled: true",
+          "pipeline.workers: 2",
+          "pipeline.batch.size: 125",
+          "pipeline.batch.delay: 50",
+          "queue.type: memory",
+          "queue.max_events: 1000",
+          "EOF",
+          "tee /opt/ai-q/logging/logstash/pipeline/main.conf << 'EOF'",
+          "input {",
+          "  beats {",
+          "    port => 5044",
+          "    host => \"0.0.0.0\"",
+          "  }",
+          "}",
+          "filter {",
+          "  if [fields][service] == \"docker\" {",
+          "    docker {}",
+          "  }",
+          "  grok {",
+          "    match => { \"message\" => \"%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{GREEDYDATA:message}\" }",
+          "  }",
+          "  date {",
+          "    match => [ \"timestamp\", \"ISO8601\" ]",
+          "  }",
+          "}",
+          "output {",
+          "  elasticsearch {",
+          "    hosts => [\"elasticsearch:9200\"]",
+          "    index => \"ai-q-logs-%{+YYYY.MM.dd}\"",
+          "  }",
+          "}",
+          "EOF",
+          "docker run -d --name logstash --network ai-q-logging -p 5044:5044 -p 9600:9600 -v /opt/ai-q/logging/logstash/config:/usr/share/logstash/config -v /opt/ai-q/logging/logstash/pipeline:/usr/share/logstash/pipeline -v /opt/ai-q/logging/logstash/logs:/usr/share/logstash/logs docker.elastic.co/logstash/logstash:8.11.0"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/logging/logstash/config/",
+          "/opt/ai-q/logging/logstash/pipeline/",
+          "/opt/ai-q/logging/logstash/logs/",
+          "/opt/ai-q/logging/logstash/patterns/",
+          "/opt/ai-q/logging/logstash/config/logstash.yml",
+          "/opt/ai-q/logging/logstash/pipeline/main.conf"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_kibana_setup",
+        "description": "Install and configure Kibana with exact commands",
+        "sub_steps": [
+          "Create Kibana directories",
+          "Create Kibana configuration",
+          "Deploy Kibana container",
+          "Validate Kibana deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/kibana/{config,data}",
+          "chmod 755 /opt/ai-q/logging/kibana",
+          "tee /opt/ai-q/logging/kibana/config/kibana.yml << 'EOF'",
+          "server.host: 0.0.0.0",
+          "server.port: 5601",
+          "elasticsearch.hosts: [\"http://elasticsearch:9200\"]",
+          "xpack.security.enabled: false",
+          "xpack.monitoring.enabled: true",
+          "EOF",
+          "docker run -d --name kibana --network ai-q-logging -p 5601:5601 -v /opt/ai-q/logging/kibana/config:/usr/share/kibana/config -v /opt/ai-q/logging/kibana/data:/usr/share/kibana/data docker.elastic.co/kibana/kibana:8.11.0"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/logging/kibana/config/",
+          "/opt/ai-q/logging/kibana/data/",
+          "/opt/ai-q/logging/kibana/config/kibana.yml"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "execute_filebeat_setup",
+        "description": "Install and configure Filebeat with exact commands",
+        "sub_steps": [
+          "Create Filebeat directories",
+          "Create Filebeat configuration",
+          "Deploy Filebeat container",
+          "Validate Filebeat deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/logging/filebeat/{config,data,logs}",
+          "chmod 755 /opt/ai-q/logging/filebeat",
+          "tee /opt/ai-q/logging/filebeat/config/filebeat.yml << 'EOF'",
+          "filebeat.inputs:",
+          "- type: container",
+          "  paths:",
+          "    - /var/lib/docker/containers/*/*.log",
+          "  processors:",
+          "    - add_docker_metadata:",
+          "        host: \"unix:///var/run/docker.sock\"",
+          "    - add_fields:",
+          "        fields:",
+          "          service: docker",
+          "output.logstash:",
+          "  hosts: [\"logstash:5044\"]",
+          "logging.level: info",
+          "EOF",
+          "docker run -d --name filebeat --network ai-q-logging -v /opt/ai-q/logging/filebeat/config:/usr/share/filebeat/filebeat.yml -v /var/lib/docker/containers:/var/lib/docker/containers:ro -v /var/run/docker.sock:/var/run/docker.sock:ro docker.elastic.co/beats/filebeat:8.11.0"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/logging/filebeat/config/",
+          "/opt/ai-q/logging/filebeat/data/",
+          "/opt/ai-q/logging/filebeat/logs/",
+          "/opt/ai-q/logging/filebeat/config/filebeat.yml"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_log_retention_setup",
+        "description": "Configure log retention and rotation policies with exact commands",
+        "sub_steps": [
+          "Create ILM policy",
+          "Create index template",
+          "Validate retention configuration"
+        ],
+        "exact_commands": [
+          "curl -X PUT 'http://localhost:9200/_ilm/policy/ai-q-logs-policy' -H 'Content-Type: application/json' -d '{",
+          "  \"policy\": {",
+          "    \"phases\": {",
+          "      \"hot\": {",
+          "        \"actions\": {",
+          "          \"rollover\": {",
+          "            \"max_size\": \"10GB\",",
+          "            \"max_age\": \"1d\"",
+          "          }",
+          "        }",
+          "      },",
+          "      \"warm\": {",
+          "        \"min_age\": \"1d\",",
+          "        \"actions\": {",
+          "          \"forcemerge\": {",
+          "            \"max_num_segments\": 1",
+          "          }",
+          "        }",
+          "      },",
+          "      \"delete\": {",
+          "        \"min_age\": \"30d\",",
+          "        \"actions\": {",
+          "          \"delete\": {}",
+          "        }",
+          "      }",
+          "    }",
+          "  }",
+          "}'",
+          "curl -X PUT 'http://localhost:9200/_template/ai-q-logs-template' -H 'Content-Type: application/json' -d '{",
+          "  \"index_patterns\": [\"ai-q-logs-*\"],",
+          "  \"settings\": {",
+          "    \"index.lifecycle.name\": \"ai-q-logs-policy\"",
+          "  }",
+          "}'"
+        ]
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "validate_results",
+        "description": "Validate complete logging infrastructure setup",
+        "validation": "logging_infrastructure_validation",
+        "exact_commands": [
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+          "curl -f http://localhost:9200/_cluster/health",
+          "curl -f http://localhost:9600/_node/stats",
+          "curl -f http://localhost:5601/api/status",
+          "docker ps --filter name=filebeat",
+          "curl -f http://localhost:9200/_ilm/policy/ai-q-logs-policy",
+          "curl -f http://localhost:9200/ai-q-logs-*/_count"
+        ]
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "cache_results",
+        "description": "Cache logging infrastructure configuration and setup",
+        "cache_key": "logging_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/logging/setup_elasticsearch.py --cache-results",
+          "python3 scripts/logging/setup_logstash.py --cache-results",
+          "python3 scripts/logging/setup_kibana.py --cache-results",
+          "tar -czf /opt/ai-q/cache/logging_infrastructure_cache.tar.gz /opt/ai-q/logging"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "logging_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "logging_update",
+      "cache_validation": "logging_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/logging/setup_elasticsearch.py --cache-config",
+        "python3 scripts/logging/setup_logstash.py --cache-config",
+        "python3 scripts/logging/setup_kibana.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "Elasticsearch cluster operational and healthy",
+    "Logstash processing logs from all sources",
+    "Kibana dashboard accessible at http://localhost:5601",
+    "Filebeat collecting logs from all containers",
+    "Log retention and rotation configured",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready centralized logging infrastructure with ELK stack",
+    "Elasticsearch cluster with proper configuration and monitoring",
+    "Logstash pipeline for log processing and transformation",
+    "Kibana dashboard for log visualization and analysis",
+    "Filebeat agent for log collection from containers",
+    "Log retention and rotation policies",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Elasticsearch container fails to start",
+        "symptoms": [
+          "Container exits immediately",
+          "Port 9200 not accessible"
+        ],
+        "diagnosis": "Check memory allocation and JVM settings",
+        "solution": "Verify JVM options and restart container",
+        "prevention": "Ensure sufficient memory allocation"
+      },
+      {
+        "issue": "Logstash not receiving logs",
+        "symptoms": [
+          "No logs in Elasticsearch",
+          "Filebeat connection errors"
+        ],
+        "diagnosis": "Check Logstash pipeline configuration and network connectivity",
+        "solution": "Verify pipeline configuration and restart Logstash",
+        "prevention": "Test pipeline configuration before deployment"
+      },
+      {
+        "issue": "Kibana not accessible",
+        "symptoms": [
+          "Cannot access http://localhost:5601",
+          "Container not running"
+        ],
+        "diagnosis": "Check Kibana configuration and Elasticsearch connectivity",
+        "solution": "Verify Kibana configuration and restart container",
+        "prevention": "Ensure Elasticsearch is running before starting Kibana"
+      },
+      {
+        "issue": "Filebeat not collecting logs",
+        "symptoms": [
+          "No logs in Elasticsearch",
+          "Filebeat container errors"
+        ],
+        "diagnosis": "Check Filebeat configuration and Docker socket access",
+        "solution": "Verify Filebeat configuration and restart container",
+        "prevention": "Ensure proper Docker socket access and configuration"
+      },
+      {
+        "issue": "Log retention not working",
+        "symptoms": [
+          "Old logs not deleted",
+          "Index growth unchecked"
+        ],
+        "diagnosis": "Check ILM policy and index template configuration",
+        "solution": "Verify ILM policy and index template",
+        "prevention": "Test ILM policy before production deployment"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker ps -a",
+      "docker logs elasticsearch",
+      "docker logs logstash",
+      "docker logs kibana",
+      "docker logs filebeat",
+      "curl -f http://localhost:9200/_cluster/health",
+      "curl -f http://localhost:9600/_node/stats",
+      "curl -f http://localhost:5601/api/status"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 4 hours",
+    "elasticsearch_startup_time": "< 60 seconds",
+    "logstash_startup_time": "< 30 seconds",
+    "kibana_startup_time": "< 45 seconds",
+    "filebeat_startup_time": "< 15 seconds",
+    "log_processing_latency": "< 5 seconds",
+    "index_creation_time": "< 10 seconds",
+    "dashboard_load_time": "< 3 seconds"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-03-Logging-Infrastructure",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

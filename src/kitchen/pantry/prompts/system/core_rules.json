@@ -1,0 +1,186 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-07-07T01:25:00Z",
+  "created_by": "AI-Q Agent - Claude Sonnet 4 - Sonnet 4",
+  "converted_from": "E:\\kos\\ai-Q\\prompts\\system\\core_rules.yml",
+  "conversion_timestamp": "2025-07-07T01:25:00Z",
+  "converter": "RobustYAMLToJSONConverter v1.0",
+  "purpose": "Core rules and standards extracted from existing documentation to ensure consistent behavior across all AI-Q agents and components.\n",
+  "agent_workflow": {
+    "introduction_requirements": {
+      "mandatory_elements": [
+        "Agent name and model identification",
+        "Mission statement and objectives",
+        "Current timestamp and session start",
+        "Acknowledgement of previous agent's work",
+        "Commitment to error checking and validation"
+      ],
+      "introduction_template": "\"I am [AGENT_NAME], [MODEL_VERSION], taking over the AI-Q Knowledge Library System \nproject. My mission is to [MISSION_STATEMENT] ensuring zero technical debt and \nproduction-only testing.\n\nI acknowledge the work of the previous agent and will thoroughly review and validate \nall existing work before proceeding. I will document all my actions and include my \nagent identification in all files I create or modify.\n\nSession started: [TIMESTAMP]\"\n"
+    },
+    "critical_assumptions": {
+      "previous_agent_errors": [
+        "Assume the previous agent made errors that need correction",
+        "Double-check all existing work for issues and inconsistencies",
+        "Validate all documentation and configurations",
+        "Verify all standards compliance and policy adherence",
+        "Identify and fix any technical debt or violations"
+      ],
+      "quality_standards": [
+        "Zero technical debt: no TODOs, temporary code, or manual steps",
+        "All tests must use production data, services, and servers",
+        "All documentation must be in YAML/JSON format (no markdown)",
+        "All code must be production-ready and fully tested",
+        "All changes must be versioned, immutable, and peer-reviewed"
+      ]
+    }
+  },
+  "documentation_standards": {
+    "file_headers": {
+      "template": "# [Document Title]\n---\nversion: \"[VERSION]\"\nlast_updated: \"[TIMESTAMP]\"\ncreated_by: \"[AGENT_NAME] - [MODEL_VERSION]\"\npurpose: >\n  [Document purpose and description]\n"
+    },
+    "agent_identification": [
+      "Include agent name and model in all files created",
+      "Add creation timestamp to all documents",
+      "Document all actions and decisions",
+      "Maintain audit trail of all changes"
+    ],
+    "handoff_documentation": [
+      "Complete project status report",
+      "All technical decisions documented",
+      "All configuration changes recorded",
+      "All issues and resolutions documented",
+      "Next steps and recommendations"
+    ]
+  },
+  "error_handling": {
+    "detection": [
+      "Automated error detection in all processes",
+      "Real-time validation of all changes",
+      "Continuous monitoring of system health",
+      "Immediate alerting for any issues"
+    ],
+    "recovery": [
+      "Instant rollback on any failure",
+      "Root cause analysis for all issues",
+      "Process improvement to prevent recurrence",
+      "Documentation of lessons learned"
+    ],
+    "validation": [
+      "Double-check all previous agent work",
+      "Verify all configurations and settings",
+      "Test all functionality thoroughly",
+      "Validate against all standards and policies"
+    ]
+  },
+  "success_criteria": {
+    "technical": [
+      "100% of features implemented and tested",
+      "All tests using production data and services",
+      "Zero critical security vulnerabilities",
+      "99.9% uptime SLA achieved",
+      "All performance benchmarks met"
+    ],
+    "quality": [
+      "All code follows zero-debt policies",
+      "Complete documentation coverage",
+      "All compliance requirements met",
+      "All handoff docs current",
+      "Maintenance procedures established"
+    ],
+    "operational": [
+      "All monitoring and alerting active",
+      "All backup and recovery procedures tested",
+      "All security controls operational",
+      "All compliance monitoring active",
+      "All maintenance procedures documented"
+    ]
+  },
+  "development_standards": {
+    "code_quality": [
+      "All code must be production-ready",
+      "No temporary or placeholder code",
+      "Comprehensive error handling",
+      "Proper logging and monitoring",
+      "Security best practices followed"
+    ],
+    "testing_requirements": [
+      "All tests must use production data",
+      "No mock or fake data in tests",
+      "Comprehensive test coverage",
+      "Performance testing included",
+      "Security testing mandatory"
+    ],
+    "configuration_management": [
+      "All configuration in version control",
+      "Environment-specific configurations",
+      "Secure credential management",
+      "Configuration validation",
+      "Documentation of all settings"
+    ]
+  },
+  "project_organization": {
+    "directory_structure": [
+      "Clear separation of concerns",
+      "Logical grouping of related files",
+      "Consistent naming conventions",
+      "Documentation alongside code",
+      "Version control best practices"
+    ],
+    "file_management": [
+      "YAML/JSON for all specifications",
+      "Markdown only for user-facing docs",
+      "Consistent file naming",
+      "Proper file permissions",
+      "Backup and recovery procedures"
+    ]
+  },
+  "security_standards": {
+    "data_protection": [
+      "Encryption at rest and in transit",
+      "Secure credential management",
+      "Access control and authentication",
+      "Audit logging and monitoring",
+      "Compliance with security standards"
+    ],
+    "code_security": [
+      "No hardcoded secrets",
+      "Input validation and sanitization",
+      "SQL injection prevention",
+      "XSS and CSRF protection",
+      "Regular security audits"
+    ]
+  },
+  "performance_standards": {
+    "response_times": [
+      "API response time < 200ms",
+      "Database query time < 50ms",
+      "Search response time < 100ms",
+      "File upload time < 5s",
+      "System startup time < 30s"
+    ],
+    "resource_usage": [
+      "Memory usage < 80% of available",
+      "CPU usage < 70% under normal load",
+      "Disk usage < 85% of available",
+      "Network bandwidth optimization",
+      "Efficient caching strategies"
+    ]
+  },
+  "compliance_governance": {
+    "regulatory_compliance": [
+      "GDPR compliance for data handling",
+      "SOX compliance for financial data",
+      "HIPAA compliance for health data",
+      "Industry-specific regulations",
+      "Regular compliance audits"
+    ],
+    "governance_framework": [
+      "Clear decision-making processes",
+      "Change management procedures",
+      "Risk assessment and mitigation",
+      "Stakeholder communication",
+      "Performance monitoring and reporting"
+    ]
+  },
+  "conclusion": "These core rules and standards ensure consistent, high-quality development across the AI-Q project. All agents must follow these rules without exception to maintain the integrity and reliability of the system. "
+}

@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "title": "DevOps Engineer User Stories",
+    "version": "1.0.0",
+    "created_by": "Q-Assist",
+    "creation_timestamp": "2025-07-08T12:00:00Z",
+    "category": "developers",
+    "subcategory": "devops_engineering"
+  },
+  "user_stories": [
+    {
+      "id": "DEVOPS-001",
+      "title": "Automated Infrastructure Provisioning",
+      "user": "DevOps Engineer",
+      "story": "As a DevOps engineer, I want automated infrastructure provisioning that can create, configure, and manage cloud resources based on application requirements so that I can deploy environments consistently and quickly.",
+      "acceptance_criteria": [
+        "Create cloud infrastructure from configuration files",
+        "Automatically configure networking, security, and scaling",
+        "Support multiple cloud providers (AWS, Azure, GCP)",
+        "Implement infrastructure as code best practices",
+        "Provide rollback capabilities for failed deployments"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "HIGH",
+      "ingredients_needed": ["terraform_runner", "cloud_provider_api", "config_validator", "rollback_manager"]
+    },
+    {
+      "id": "DEVOPS-002",
+      "title": "Intelligent CI/CD Pipeline",
+      "user": "CI/CD Engineer",
+      "story": "As a CI/CD engineer, I want an intelligent pipeline that can automatically detect changes, run appropriate tests, and deploy to the correct environments so that I can ensure reliable and fast deployments.",
+      "acceptance_criteria": [
+        "Automatically detect code changes and trigger builds",
+        "Run tests based on changed components",
+        "Deploy to staging/production based on branch/PR",
+        "Provide deployment status and rollback options",
+        "Integrate with monitoring and alerting systems"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "HIGH",
+      "ingredients_needed": ["git_monitor", "test_runner", "deployment_manager", "status_tracker"]
+    },
+    {
+      "id": "DEVOPS-003",
+      "title": "Automated Monitoring and Alerting",
+      "user": "Site Reliability Engineer",
+      "story": "As an SRE, I want automated monitoring that can detect anomalies, predict issues, and automatically resolve common problems so that I can maintain high system availability with minimal manual intervention.",
+      "acceptance_criteria": [
+        "Monitor system metrics, logs, and application performance",
+        "Detect anomalies using machine learning",
+        "Automatically resolve common issues (restart services, scale resources)",
+        "Escalate complex issues to human operators",
+        "Provide detailed incident reports and root cause analysis"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "HIGH",
+      "ingredients_needed": ["metrics_collector", "anomaly_detector", "auto_remediation", "incident_manager"]
+    },
+    {
+      "id": "DEVOPS-004",
+      "title": "Database Management Automation",
+      "user": "Database Administrator",
+      "story": "As a DBA, I want automated database management that can handle backups, migrations, performance tuning, and scaling so that I can ensure data integrity and optimal performance.",
+      "acceptance_criteria": [
+        "Automated database backups and point-in-time recovery",
+        "Schema migration management and rollback",
+        "Performance monitoring and query optimization",
+        "Automatic scaling based on load",
+        "Security compliance and access management"
+      ],
+      "priority": "MEDIUM",
+      "estimated_effort": "HIGH",
+      "ingredients_needed": ["db_backup_manager", "migration_runner", "performance_analyzer", "scaling_manager"]
+    },
+    {
+      "id": "DEVOPS-005",
+      "title": "Security Compliance Automation",
+      "user": "Security Engineer",
+      "story": "As a security engineer, I want automated compliance checking that can scan infrastructure, applications, and configurations for security vulnerabilities so that I can maintain security standards across all environments.",
+      "acceptance_criteria": [
+        "Scan infrastructure for security misconfigurations",
+        "Check application code for vulnerabilities",
+        "Validate compliance with security standards (SOC2, ISO27001)",
+        "Generate compliance reports and remediation plans",
+        "Automatically fix low-risk security issues"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["security_scanner", "compliance_checker", "vulnerability_assessor", "remediation_planner"]
+    }
+  ]
+} 

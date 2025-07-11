@@ -1,0 +1,190 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-TESTING-FRAMEWORK-012",
+    "title": "Comprehensive Database Testing Framework",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 8000,
+    "estimated_execution_time": "5-7 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "100%",
+    "compliance_standards": [],
+    "architecture_tier": "enterprise-qa"
+  },
+  "recipe_overview": {
+    "description": "Establish a comprehensive, automated testing framework to ensure the reliability, performance, and correctness of the polyglot database infrastructure. This recipe covers unit testing for data access logic, integration testing between services, and load testing to validate performance and scalability.",
+    "technology_stack": {
+      "load_testing": "k6, JMeter",
+      "integration_testing": "Pytest, Testcontainers",
+      "unit_testing": "Pytest, unittest"
+    },
+    "deliverables": [
+      "A suite of automated tests covering functionality, performance, and reliability",
+      "Integration of tests into the CI/CD pipeline",
+      "A framework for easily adding new tests",
+      "Regularly generated reports on test coverage and success rates"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-testing-framework-012",
+      "title": "Comprehensive Database Testing Framework Implementation",
+      "description": "Establish a comprehensive, automated testing framework to ensure the reliability, performance, and correctness of the polyglot database infrastructure. This recipe covers unit testing for data access logic, integration testing between services, and load testing to validate performance and scalability.",
+      "category": "testing",
+      "estimated_tokens": 8000,
+      "estimated_duration": "5-7 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Software testing principles",
+          "Pytest",
+          "Load testing concepts",
+          "Testcontainers"
+        ],
+        "tools_required": [
+          "Python",
+          "Pytest",
+          "k6",
+          "Docker"
+        ],
+        "environment_setup": [
+          "A CI/CD environment",
+          "A dedicated testing environment"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "tests/"
+        ],
+        "config_dependencies": [],
+        "environment_variables": []
+      },
+      "outputs": {
+        "files_created": [
+          "tests/ - Root directory for all tests",
+          "tests/unit/ - Unit tests for individual components",
+          "tests/integration/ - Integration tests for service interactions",
+          "tests/load/ - Load testing scripts (e.g., for k6)"
+        ],
+        "files_modified": [
+          "cicd_pipeline.yml - Add a 'test' stage to the pipeline"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-migration-schema-010"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task sets up a `tests` directory with subdirectories for different types of tests. It uses Pytest for unit and integration tests, leveraging Testcontainers to spin up ephemeral database instances for isolated testing. For load testing, it uses k6.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Set Up Testing Directory Structure",
+            "description": "Create the standard directory layout for storing test files.",
+            "commands": [
+              "mkdir -p tests/{unit,integration,load}"
+            ],
+            "expected_output": "Directory structure for tests is created.",
+            "troubleshooting": ""
+          },
+          {
+            "step": 2,
+            "title": "Implement Integration Tests with Testcontainers",
+            "description": "Write integration tests that use Testcontainers to test interactions with real databases in a clean, isolated environment.",
+            "commands": [
+              "# Example test using pytest and testcontainers-python for PostgreSQL",
+              "cat > tests/integration/test_postgres.py << 'EOF'",
+              "from testcontainers.postgres import PostgresContainer",
+              "import sqlalchemy",
+              "def test_postgres_connection():",
+              "    with PostgresContainer('postgres:15-alpine') as postgres:",
+              "        engine = sqlalchemy.create_engine(postgres.get_connection_url())",
+              "        with engine.connect() as connection:",
+              "            result = connection.execute(sqlalchemy.text('select version()'))",
+              "            assert 'PostgreSQL 15' in result.fetchone()[0]",
+              "EOF"
+            ],
+            "expected_output": "An integration test file is created.",
+            "troubleshooting": "Testcontainers requires a running Docker daemon."
+          },
+          {
+            "step": 3,
+            "title": "Develop Load Testing Scripts",
+            "description": "Create scripts for the load testing tool (k6) to simulate user traffic and measure performance.",
+            "commands": [
+              "cat > tests/load/simple_test.js << 'EOF'",
+              "import http from 'k6/http';",
+              "import { sleep } from 'k6';",
+              "export default function () {",
+              "  http.get('http://api-gateway/status');",
+              "  sleep(1);",
+              "}",
+              "EOF"
+            ],
+            "expected_output": "A k6 load test script is created.",
+            "troubleshooting": ""
+          },
+          {
+            "step": 4,
+            "title": "Integrate Tests into CI/CD Pipeline",
+            "description": "Add a new stage to the CI/CD pipeline to run all tests automatically on every commit or merge request.",
+            "commands": [
+              "# Add a 'test' stage to .gitlab-ci.yml",
+              "echo 'run_tests:' >> .gitlab-ci.yml",
+              "echo '  stage: test' >> .gitlab-ci.yml",
+              "echo '  script:' >> .gitlab-ci.yml",
+              "echo '    - pytest tests/unit tests/integration' >> .gitlab-ci.yml",
+              "echo '    - k6 run tests/load/simple_test.js' >> .gitlab-ci.yml"
+            ],
+            "expected_output": "The CI/CD pipeline is updated to include a testing stage.",
+            "troubleshooting": "Ensure the CI/CD runner has all the necessary tools (pytest, k6, Docker) installed."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "A comprehensive suite of automated tests exists.",
+          "Tests are run automatically as part of the development workflow.",
+          "Test failures block defective code from being merged or deployed."
+        ],
+        "performance_requirements": [
+          "Load tests validate that the system meets its performance and scalability targets."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "12-Testing-Framework",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

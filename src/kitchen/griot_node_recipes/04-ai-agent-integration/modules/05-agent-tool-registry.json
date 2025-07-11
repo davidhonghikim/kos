@@ -1,0 +1,292 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-AGENT-TOOL-REGISTRY-001",
+    "title": "Agent Tool Registry Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T15:00:00Z",
+    "last_updated": "2025-01-28T15:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 6,
+    "estimated_time": "3-4 hours"
+  },
+  "recipe_overview": {
+    "description": "Implement a comprehensive agent tool registry and discovery system that enables AI agents to find, register, and use available tools with proper metadata, validation, and access control.",
+    "technology_stack": {
+      "language": "TypeScript",
+      "runtime": "Node.js",
+      "database": "PostgreSQL",
+      "cache": "Redis",
+      "api": "REST, GraphQL"
+    },
+    "deliverables": [
+      "Tool registry and discovery system",
+      "Tool metadata management",
+      "Tool validation and compatibility checking",
+      "Tool access control and permissions",
+      "Tool usage analytics and monitoring"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "ATR-001",
+      "title": "Create Tool Registry Core",
+      "description": "Build the core tool registry system with registration and discovery capabilities",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/tools/registry",
+        "mkdir -p src/tools/discovery",
+        "mkdir -p src/tools/types"
+      ],
+      "files_to_create": [
+        "src/tools/registry/tool-registry.ts",
+        "src/tools/registry/tool-catalog.ts",
+        "src/tools/discovery/tool-discovery.ts",
+        "src/tools/discovery/search-engine.ts",
+        "src/tools/types/tool-types.ts"
+      ],
+      "acceptance_criteria": [
+        "Tool registry can register and unregister tools",
+        "Tool discovery returns complete tool information",
+        "Search functionality works efficiently",
+        "Tool catalog maintains accurate metadata"
+      ]
+    },
+    {
+      "id": "ATR-002",
+      "title": "Implement Tool Metadata Management",
+      "description": "Create comprehensive metadata management for tools including descriptions, parameters, and usage examples",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/tools/metadata"
+      ],
+      "files_to_create": [
+        "src/tools/metadata/metadata-manager.ts",
+        "src/tools/metadata/schema-validator.ts",
+        "src/tools/metadata/version-control.ts",
+        "src/tools/metadata/documentation-generator.ts"
+      ],
+      "acceptance_criteria": [
+        "Tool metadata is properly managed",
+        "Schema validation ensures data integrity",
+        "Version control tracks tool changes",
+        "Documentation is automatically generated"
+      ]
+    },
+    {
+      "id": "ATR-003",
+      "title": "Build Tool Validation System",
+      "description": "Implement tool validation and compatibility checking mechanisms",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/tools/validation"
+      ],
+      "files_to_create": [
+        "src/tools/validation/tool-validator.ts",
+        "src/tools/validation/compatibility-checker.ts",
+        "src/tools/validation/security-scanner.ts",
+        "src/tools/validation/performance-analyzer.ts"
+      ],
+      "acceptance_criteria": [
+        "Tool validation ensures compatibility",
+        "Security scanning prevents vulnerabilities",
+        "Performance analysis provides insights",
+        "Compatibility checking prevents conflicts"
+      ]
+    },
+    {
+      "id": "ATR-004",
+      "title": "Create Access Control System",
+      "description": "Implement tool access control and permission management",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/tools/access"
+      ],
+      "files_to_create": [
+        "src/tools/access/access-control.ts",
+        "src/tools/access/permission-manager.ts",
+        "src/tools/access/role-based-access.ts",
+        "src/tools/access/audit-logger.ts"
+      ],
+      "acceptance_criteria": [
+        "Access control prevents unauthorized use",
+        "Permission management is flexible",
+        "Role-based access works correctly",
+        "Audit logging tracks all access"
+      ]
+    },
+    {
+      "id": "ATR-005",
+      "title": "Implement Usage Analytics",
+      "description": "Create usage analytics and monitoring for tool performance and usage patterns",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/tools/analytics"
+      ],
+      "files_to_create": [
+        "src/tools/analytics/usage-tracker.ts",
+        "src/tools/analytics/performance-monitor.ts",
+        "src/tools/analytics/trend-analyzer.ts",
+        "src/tools/analytics/report-generator.ts"
+      ],
+      "acceptance_criteria": [
+        "Usage tracking provides detailed metrics",
+        "Performance monitoring identifies bottlenecks",
+        "Trend analysis reveals usage patterns",
+        "Report generation is automated"
+      ]
+    },
+    {
+      "id": "ATR-006",
+      "title": "Create Tool Registry Configuration",
+      "description": "Set up configuration management and deployment for the tool registry",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p config/tools",
+        "mkdir -p docker/tools"
+      ],
+      "files_to_create": [
+        "config/tools/registry-config.json",
+        "config/tools/access-config.json",
+        "docker/tools/Dockerfile",
+        "docker/tools/docker-compose.yml",
+        "scripts/tool-registry-start.sh"
+      ],
+      "acceptance_criteria": [
+        "Configuration is properly structured",
+        "Docker deployment works correctly",
+        "Startup script functions properly",
+        "Configuration validation prevents errors"
+      ]
+    }
+  ],
+  "tool_categories": {
+    "development_tools": {
+      "description": "Tools for code development and automation",
+      "examples": [
+        "Code generators",
+        "Linters and formatters",
+        "Testing frameworks",
+        "Build tools"
+      ]
+    },
+    "data_processing": {
+      "description": "Tools for data manipulation and analysis",
+      "examples": [
+        "Data transformers",
+        "Analytics engines",
+        "Visualization tools",
+        "ETL pipelines"
+      ]
+    },
+    "communication_tools": {
+      "description": "Tools for agent communication and collaboration",
+      "examples": [
+        "Message handlers",
+        "API clients",
+        "Webhook processors",
+        "Notification systems"
+      ]
+    },
+    "ai_ml_tools": {
+      "description": "Tools for AI/ML operations",
+      "examples": [
+        "Model trainers",
+        "Inference engines",
+        "Data preprocessing",
+        "Model evaluation"
+      ]
+    }
+  },
+  "dependencies": {
+    "infrastructure": [
+      "01-core-infrastructure-recipe.json",
+      "06-api-gateway-recipe.json",
+      "07-authentication-security-recipe.json"
+    ],
+    "external_packages": [
+      "express (HTTP server)",
+      "pg (PostgreSQL)",
+      "redis (Redis cache)",
+      "graphql (GraphQL)",
+      "winston (Logging)"
+    ]
+  },
+  "testing_requirements": {
+    "unit_tests": [
+      "Tool registry functionality tests",
+      "Discovery and search tests",
+      "Validation and compatibility tests",
+      "Access control tests"
+    ],
+    "integration_tests": [
+      "End-to-end tool registration tests",
+      "Tool discovery and usage tests",
+      "Performance and scalability tests",
+      "Security and access control tests"
+    ]
+  },
+  "security_considerations": {
+    "authentication": [
+      "Tool access authentication",
+      "API key validation",
+      "Certificate-based authentication",
+      "Multi-factor authentication"
+    ],
+    "authorization": [
+      "Tool-specific permissions",
+      "Role-based access control",
+      "Resource access control",
+      "Audit logging"
+    ]
+  },
+  "performance_requirements": {
+    "response_times": [
+      "Tool discovery: < 100ms",
+      "Tool registration: < 200ms",
+      "Search queries: < 150ms",
+      "Validation checks: < 100ms"
+    ],
+    "scalability": [
+      "Support 10000+ registered tools",
+      "Handle 1000+ concurrent searches",
+      "Process 10000+ tool executions per minute",
+      "Maintain performance under load"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "05-Agent-Tool-Registry",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

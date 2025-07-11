@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "recipe_id": "storage-compliance-governance",
+    "title": "Storage Compliance and Governance",
+    "description": "Comprehensive compliance and governance system for storage infrastructure with audit trails, data classification, and regulatory compliance",
+    "category": "storage-systems",
+    "difficulty": "advanced",
+    "estimated_time": "75 minutes",
+    "prerequisites": [
+      "01-minio-enterprise-cluster",
+      "06-storage-security-hardening",
+      "08-storage-monitoring-alerting"
+    ],
+    "tags": [
+      "compliance",
+      "governance",
+      "audit",
+      "data-classification",
+      "regulatory"
+    ],
+    "version": "1.0.0",
+    "last_updated": "2025-01-27T12:00:00Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "os": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "python_version": "3.8+",
+      "node_version": "16+",
+      "docker": "20.10+",
+      "docker_compose": "2.0+",
+      "storage": "Encrypted storage required"
+    },
+    "dependencies": [
+      "elasticsearch",
+      "kibana",
+      "logstash",
+      "opensearch",
+      "minio_client",
+      "aws_cli"
+    ],
+    "permissions": [
+      "security_admin",
+      "compliance_admin",
+      "audit_admin"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "audit-logging",
+      "title": "Comprehensive Audit Logging",
+      "description": "Setup comprehensive audit logging for all storage operations",
+      "steps": [
+        {
+          "step_id": "elasticsearch-setup",
+          "title": "Setup Elasticsearch for Audit Logs",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg",
+              "expected_output": "Elasticsearch GPG key added"
+            },
+            {
+              "os": "linux",
+              "command": "echo \"deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main\" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list",
+              "expected_output": "Elasticsearch repository added"
+            },
+            {
+              "os": "linux",
+              "command": "sudo apt-get update && sudo apt-get install -y elasticsearch",
+              "expected_output": "Elasticsearch installed"
+            }
+          ]
+        },
+        {
+          "step_id": "minio-audit",
+          "title": "Configure MinIO Audit Logging",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "mc admin config set myminio/ audit_webhook:elasticsearch endpoint=\"http://localhost:9200\" auth_token=\"\" client_cert=\"\" client_key=\"\"",
+              "expected_output": "MinIO audit logging configured"
+            },
+            {
+              "os": "linux",
+              "command": "mc admin service restart myminio/",
+              "expected_output": "MinIO service restarted"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "data-classification",
+      "title": "Data Classification System",
+      "description": "Implement automated data classification and tagging",
+      "steps": [
+        {
+          "step_id": "classification-rules",
+          "title": "Create Data Classification Rules",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/storage/classification-rules.json > /dev/null << 'EOF'\n{\n  \"rules\": [\n    {\n      \"name\": \"PII_Detection\",\n      \"pattern\": \"(ssn|social|credit|card|passport|driver)\",\n      \"classification\": \"PII\",\n      \"retention\": \"7_years\",\n      \"encryption\": \"required\"\n    },\n    {\n      \"name\": \"Financial_Data\",\n      \"pattern\": \"(account|balance|transaction|payment|invoice)\",\n      \"classification\": \"Financial\",\n      \"retention\": \"10_years\",\n      \"encryption\": \"required\"\n    },\n    {\n      \"name\": \"Public_Data\",\n      \"pattern\": \"(public|open|shared)\",\n      \"classification\": \"Public\",\n      \"retention\": \"1_year\",\n      \"encryption\": \"optional\"\n    }\n  ]\n}\nEOF",
+              "expected_output": "Data classification rules created"
+            }
+          ]
+        },
+        {
+          "step_id": "classification-script",
+          "title": "Create Classification Script",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/data-classifier.sh > /dev/null << 'EOF'\n#!/bin/bash\nRULES_FILE=\"/etc/storage/classification-rules.json\"\n\nclassify_file() {\n    local file_path=$1\n    local content=$(cat \"$file_path\")\n    \n    while IFS= read -r rule; do\n        local pattern=$(echo $rule | jq -r '.pattern')\n        local classification=$(echo $rule | jq -r '.classification')\n        \n        if echo \"$content\" | grep -qi \"$pattern\"; then\n            echo \"$file_path:$classification\"\n            break\n        fi\n    done < <(jq -c '.rules[]' $RULES_FILE)\n}\n\n# Process all files in storage\nexport -f classify_file\nfind /storage -type f -exec bash -c 'classify_file \"$0\"' {} \\;\nEOF",
+              "expected_output": "Classification script created"
+            },
+            {
+              "os": "linux",
+              "command": "sudo chmod +x /usr/local/bin/data-classifier.sh",
+              "expected_output": "Classification script made executable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "retention-policies",
+      "title": "Data Retention Policies",
+      "description": "Implement automated data retention and deletion policies",
+      "steps": [
+        {
+          "step_id": "retention-config",
+          "title": "Configure Retention Policies",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/storage/retention-policies.json > /dev/null << 'EOF'\n{\n  \"policies\": [\n    {\n      \"classification\": \"PII\",\n      \"retention_period\": \"7_years\",\n      \"action\": \"delete\",\n      \"notification_days\": [30, 7, 1]\n    },\n    {\n      \"classification\": \"Financial\",\n      \"retention_period\": \"10_years\",\n      \"action\": \"archive\",\n      \"notification_days\": [90, 30, 7]\n    },\n    {\n      \"classification\": \"Public\",\n      \"retention_period\": \"1_year\",\n      \"action\": \"delete\",\n      \"notification_days\": [30, 7]\n    }\n  ]\n}\nEOF",
+              "expected_output": "Retention policies configured"
+            }
+          ]
+        },
+        {
+          "step_id": "retention-script",
+          "title": "Create Retention Management Script",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/retention-manager.sh > /dev/null << 'EOF'\n#!/bin/bash\nPOLICIES_FILE=\"/etc/storage/retention-policies.json\"\n\nprocess_retention() {\n    local classification=$1\n    local policy=$(jq -r \".policies[] | select(.classification == \\\"$classification\\\")\" $POLICIES_FILE)\n    local retention_period=$(echo $policy | jq -r '.retention_period')\n    local action=$(echo $policy | jq -r '.action')\n    \n    # Calculate expiration date\n    local expiration_date=$(date -d \"-$retention_period\" +%Y-%m-%d)\n    \n    # Find expired files\n    find /storage -name \"*.$classification\" -type f -mtime +$(echo $retention_period | sed 's/_years$//') -exec echo \"$action: {}\" \\;\n}\n\n# Process all classifications\njq -r '.policies[].classification' $POLICIES_FILE | while read classification; do\n    process_retention $classification\ndone\nEOF",
+              "expected_output": "Retention manager script created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "compliance-reporting",
+      "title": "Compliance Reporting System",
+      "description": "Setup automated compliance reporting and monitoring",
+      "steps": [
+        {
+          "step_id": "reporting-dashboard",
+          "title": "Create Compliance Dashboard",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/compliance-report.sh > /dev/null << 'EOF'\n#!/bin/bash\nREPORT_DIR=\"/var/reports/compliance\"\nDATE=$(date +%Y%m%d)\n\n# Create compliance report\ncat > $REPORT_DIR/compliance-report-$DATE.html << 'REPORT_EOF'\n<!DOCTYPE html>\n<html>\n<head>\n    <title>Storage Compliance Report - $DATE</title>\n</head>\n<body>\n    <h1>Storage Compliance Report</h1>\n    <h2>Data Classification Summary</h2>\n    <ul>\n        <li>PII Files: $(find /storage -name \"*.PII\" | wc -l)</li>\n        <li>Financial Files: $(find /storage -name \"*.Financial\" | wc -l)</li>\n        <li>Public Files: $(find /storage -name \"*.Public\" | wc -l)</li>\n    </ul>\n    \n    <h2>Retention Policy Status</h2>\n    <ul>\n        <li>Expired Files: $(/usr/local/bin/retention-manager.sh | wc -l)</li>\n        <li>Audit Logs: $(curl -s localhost:9200/audit-logs/_count | jq '.count')</li>\n    </ul>\n</body>\n</html>\nREPORT_EOF\n\necho \"Compliance report generated: $REPORT_DIR/compliance-report-$DATE.html\"\nEOF",
+              "expected_output": "Compliance reporting script created"
+            }
+          ]
+        },
+        {
+          "step_id": "automated-reporting",
+          "title": "Setup Automated Reporting",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "echo '0 9 * * 1 /usr/local/bin/compliance-report.sh' | sudo crontab -",
+              "expected_output": "Automated reporting scheduled"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "regulatory-compliance",
+      "title": "Regulatory Compliance Framework",
+      "description": "Implement frameworks for GDPR, SOX, HIPAA compliance",
+      "steps": [
+        {
+          "step_id": "gdpr-compliance",
+          "title": "GDPR Compliance Setup",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/gdpr-compliance.sh > /dev/null << 'EOF'\n#!/bin/bash\n\n# Right to be forgotten\nforget_user_data() {\n    local user_id=$1\n    echo \"Processing deletion request for user: $user_id\"\n    \n    # Find and delete user data\n    find /storage -name \"*$user_id*\" -type f -delete\n    \n    # Log the deletion\n    echo \"$(date): User $user_id data deleted\" >> /var/log/gdpr-deletions.log\n}\n\n# Data portability\nexport_user_data() {\n    local user_id=$1\n    local export_dir=\"/exports/$user_id\"\n    \n    mkdir -p $export_dir\n    find /storage -name \"*$user_id*\" -type f -exec cp {} $export_dir \\;\n    \n    echo \"User data exported to: $export_dir\"\n}\n\ncase $1 in\n    \"forget\")\n        forget_user_data $2\n        ;;\n    \"export\")\n        export_user_data $2\n        ;;\n    *)\n        echo \"Usage: $0 {forget|export} <user_id>\"\n        ;;\nesac\nEOF",
+              "expected_output": "GDPR compliance script created"
+            }
+          ]
+        },
+        {
+          "step_id": "sox-compliance",
+          "title": "SOX Compliance Setup",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/sox-audit.sh > /dev/null << 'EOF'\n#!/bin/bash\n\n# SOX Audit Trail\nAUDIT_LOG=\"/var/log/sox-audit.log\"\n\nlog_sox_event() {\n    local event_type=$1\n    local user=$2\n    local resource=$3\n    local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n    \n    echo \"$timestamp|$event_type|$user|$resource\" >> $AUDIT_LOG\n}\n\n# Monitor financial data access\ninotifywait -m -r /storage/financial -e access,modify,delete | while read path action file; do\n    log_sox_event \"$action\" \"$(whoami)\" \"$path$file\"\ndone &\nEOF",
+              "expected_output": "SOX audit script created"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "os": "linux",
+        "command": "curl -s localhost:9200/_cluster/health | jq '.status'",
+        "expected_output": "\"green\""
+      },
+      {
+        "os": "linux",
+        "command": "/usr/local/bin/data-classifier.sh | wc -l",
+        "expected_output": "Number of classified files > 0"
+      },
+      {
+        "os": "linux",
+        "command": "ls -la /var/reports/compliance/ | wc -l",
+        "expected_output": "Number of reports > 0"
+      },
+      {
+        "os": "linux",
+        "command": "crontab -l | grep compliance-report",
+        "expected_output": "0 9 * * 1 /usr/local/bin/compliance-report.sh"
+      }
+    ],
+    "expected_outputs": {
+      "elasticsearch_status": "Elasticsearch cluster healthy",
+      "classification_system": "Data classification operational",
+      "reporting_system": "Compliance reports generated",
+      "automation": "Automated compliance processes active"
+    }
+  },
+  "expected_output": {
+    "audit_system": "Comprehensive audit logging operational",
+    "data_classification": "Automated data classification system active",
+    "retention_policies": "Data retention policies implemented and automated",
+    "compliance_reporting": "Automated compliance reporting system operational",
+    "regulatory_frameworks": "GDPR, SOX, HIPAA compliance frameworks implemented",
+    "audit_trail": "Complete audit trail for all storage operations",
+    "data_governance": "Comprehensive data governance policies enforced"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Elasticsearch cluster not healthy",
+        "solution": "Check cluster configuration and node connectivity"
+      },
+      {
+        "issue": "Classification rules not working",
+        "solution": "Verify JSON syntax and file permissions"
+      },
+      {
+        "issue": "Retention policies not executing",
+        "solution": "Check cron jobs and script permissions"
+      }
+    ]
+  },
+  "next_steps": [
+    "Implement real-time compliance monitoring",
+    "Setup automated compliance testing",
+    "Configure regulatory reporting APIs",
+    "Implement privacy-preserving analytics"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

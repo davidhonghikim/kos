@@ -1,0 +1,835 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-04-API-GATEWAY-COMPREHENSIVE",
+    "title": "API Gateway Infrastructure - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T20:00:00Z",
+    "last_updated": "2025-01-28T20:00:00Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "2-3 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 8,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-api-gateway",
+    "description": "Complete API gateway infrastructure with Kong, authentication, rate limiting, and API management",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "01-01-docker-environment",
+        "01-02-system-monitoring",
+        "01-03-logging-infrastructure",
+        "01-04-load-balancing"
+      ],
+      "required_services": [
+        "docker",
+        "docker-compose",
+        "postgresql"
+      ],
+      "required_networks": [
+        "ai-q-network",
+        "ai-q-services"
+      ],
+      "required_volumes": [
+        "ai-q-data",
+        "ai-q-config"
+      ],
+      "required_ports": [
+        8000,
+        8001,
+        8443,
+        8444
+      ],
+      "required_files": [
+        "/opt/ai-q/api-gateway/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "api_gateway",
+      "cooking_time": "180 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "kong_setup",
+        "authentication_configuration",
+        "rate_limiting",
+        "api_management"
+      ],
+      "cache_strategy": "api_gateway_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "API Gateway Infrastructure",
+    "description": "Complete Kong API gateway infrastructure with authentication, rate limiting, and API management",
+    "prerequisites": [
+      "01-01-docker-environment completed",
+      "01-02-system-monitoring completed",
+      "01-03-logging-infrastructure completed",
+      "01-04-load-balancing completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "PostgreSQL database available",
+      "Minimum 4GB RAM available",
+      "20GB free disk space for API gateway"
+    ],
+    "target_outcome": "Production-ready API gateway infrastructure with comprehensive API management",
+    "success_criteria": [
+      "Kong API gateway operational and healthy",
+      "Authentication and authorization working",
+      "Rate limiting configured and functional",
+      "API documentation accessible",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "KONG_SETUP_TASK",
+        "name": "Kong Setup",
+        "description": "Install and configure Kong API gateway with exact specifications",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "kong_configuration",
+          "api_gateway_management",
+          "database_setup"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/api-gateway/kong/{config,logs,ssl}",
+          "chmod 755 /opt/ai-q/api-gateway/kong",
+          "tee /opt/ai-q/api-gateway/kong/config/kong.yml << 'EOF'",
+          "version: 1",
+          "services:",
+          "  - name: ai-q-api",
+          "    url: http://backend:8000",
+          "    routes:",
+          "      - name: api-route",
+          "        paths:",
+          "          - /api",
+          "        protocols:",
+          "          - http",
+          "          - https",
+          "    plugins:",
+          "      - name: rate-limiting",
+          "        config:",
+          "          minute: 100",
+          "          hour: 1000",
+          "          day: 10000",
+          "      - name: key-auth",
+          "        config:",
+          "          key_names:",
+          "            - apikey",
+          "          hide_credentials: true",
+          "EOF",
+          "docker run -d --name kong-database --network ai-q-services -e POSTGRES_DB=kong -e POSTGRES_USER=kong -e POSTGRES_PASSWORD=kong postgres:13",
+          "sleep 30",
+          "docker run --rm --network ai-q-services -e KONG_DATABASE=postgres -e KONG_PG_HOST=kong-database -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_DATABASE=kong kong:3.4 kong migrations bootstrap",
+          "docker run -d --name kong --network ai-q-services -e KONG_DATABASE=postgres -e KONG_PG_HOST=kong-database -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_DATABASE=kong -e KONG_PROXY_ACCESS_LOG=/dev/stdout -e KONG_ADMIN_ACCESS_LOG=/dev/stdout -e KONG_PROXY_ERROR_LOG=/dev/stderr -e KONG_ADMIN_ERROR_LOG=/dev/stderr -e KONG_ADMIN_LISTEN=0.0.0.0:8001 -e KONG_PROXY_LISTEN=0.0.0.0:8000,0.0.0.0:8443 ssl -p 8000:8000 -p 8443:8443 -p 8001:8001 -p 8444:8444 kong:3.4"
+        ],
+        "validation_commands": [
+          "docker ps --filter name=kong",
+          "curl -f http://localhost:8001/status",
+          "curl -f http://localhost:8000/",
+          "docker logs kong | grep -i 'started'"
+        ]
+      },
+      {
+        "task_id": "AUTHENTICATION_SETUP_TASK",
+        "name": "Authentication Setup",
+        "description": "Configure authentication and authorization with exact specifications",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "KONG_SETUP_TASK"
+        ],
+        "skills_required": [
+          "authentication_configuration",
+          "jwt_setup",
+          "oauth_integration"
+        ],
+        "exact_commands": [
+          "curl -X POST http://localhost:8001/consumers/ -d 'name=ai-q-consumer'",
+          "curl -X POST http://localhost:8001/consumers/ai-q-consumer/key-auth -d 'key=ai-q-api-key-12345'",
+          "curl -X POST http://localhost:8001/consumers/ai-q-consumer/jwt -d 'algorithm=HS256' -d 'key=ai-q-jwt-secret'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=jwt' -d 'config.secret=ai-q-jwt-secret' -d 'config.key_claim_name=iss' -d 'config.claims_to_verify=exp'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=acl' -d 'config.allow=admin,user' -d 'config.hide_groups_header=true'"
+        ],
+        "validation_commands": [
+          "curl -f http://localhost:8001/consumers/",
+          "curl -f http://localhost:8001/consumers/ai-q-consumer/key-auth",
+          "curl -f http://localhost:8001/consumers/ai-q-consumer/jwt",
+          "curl -f http://localhost:8001/services/ai-q-api/plugins"
+        ]
+      },
+      {
+        "task_id": "RATE_LIMITING_SETUP_TASK",
+        "name": "Rate Limiting Setup",
+        "description": "Configure rate limiting and throttling with exact specifications",
+        "estimated_time": "30 minutes",
+        "dependencies": [
+          "AUTHENTICATION_SETUP_TASK"
+        ],
+        "skills_required": [
+          "rate_limiting",
+          "throttling",
+          "traffic_management"
+        ],
+        "exact_commands": [
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=rate-limiting' -d 'config.minute=100' -d 'config.hour=1000' -d 'config.day=10000' -d 'config.policy=local'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=request-size-limiting' -d 'config.allowed_payload_size=10'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=request-termination' -d 'config.status_code=429' -d 'config.message=Rate limit exceeded' -d 'config.content_type=application/json'"
+        ],
+        "validation_commands": [
+          "curl -f http://localhost:8001/services/ai-q-api/plugins",
+          "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health",
+          "for i in {1..110}; do curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health; done"
+        ]
+      },
+      {
+        "task_id": "API_DOCUMENTATION_TASK",
+        "name": "API Documentation Setup",
+        "description": "Configure API documentation and developer portal with exact specifications",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "RATE_LIMITING_SETUP_TASK"
+        ],
+        "skills_required": [
+          "api_documentation",
+          "swagger_setup",
+          "developer_portal"
+        ],
+        "exact_commands": [
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=correlation-id' -d 'config.header_name=X-Correlation-ID' -d 'config.generator=uuid'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=request-transformer' -d 'config.add.headers=X-API-Version:1.0'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=response-transformer' -d 'config.add.headers=X-Response-Time:${latency}'",
+          "mkdir -p /opt/ai-q/api-gateway/docs",
+          "tee /opt/ai-q/api-gateway/docs/swagger.json << 'EOF'",
+          "{",
+          "  \"openapi\": \"3.0.0\",",
+          "  \"info\": {",
+          "    \"title\": \"AI-Q API\",",
+          "    \"version\": \"1.0.0\",",
+          "    \"description\": \"AI-Q API Documentation\"",
+          "  },",
+          "  \"servers\": [",
+          "    {",
+          "      \"url\": \"https://api.ai-q.local\",",
+          "      \"description\": \"Production server\"",
+          "    }",
+          "  ],",
+          "  \"paths\": {",
+          "    \"/api/health\": {",
+          "      \"get\": {",
+          "        \"summary\": \"Health check\",",
+          "        \"responses\": {",
+          "          \"200\": {",
+          "            \"description\": \"OK\"",
+          "          }",
+          "        }",
+          "      }",
+          "    }",
+          "  }",
+          "}",
+          "EOF"
+        ],
+        "validation_commands": [
+          "curl -f http://localhost:8001/services/ai-q-api/plugins",
+          "cat /opt/ai-q/api-gateway/docs/swagger.json",
+          "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "KONG_CONFIGURATION_SKILL",
+        "name": "Kong Configuration",
+        "description": "Configure Kong API gateway with exact procedures",
+        "tools": [
+          "kong_setup",
+          "api_gateway_management",
+          "database_configuration"
+        ],
+        "validation": "kong_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:8001/status",
+          "curl -f http://localhost:8000/",
+          "docker ps --filter name=kong"
+        ]
+      },
+      {
+        "skill_id": "AUTHENTICATION_CONFIGURATION_SKILL",
+        "name": "Authentication Configuration",
+        "description": "Configure authentication with exact procedures",
+        "tools": [
+          "jwt_setup",
+          "oauth_integration",
+          "key_auth"
+        ],
+        "validation": "authentication_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:8001/consumers/",
+          "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health",
+          "curl -H 'Authorization: Bearer <jwt-token>' http://localhost:8000/api/health"
+        ]
+      },
+      {
+        "skill_id": "RATE_LIMITING_CONFIGURATION_SKILL",
+        "name": "Rate Limiting Configuration",
+        "description": "Configure rate limiting with exact procedures",
+        "tools": [
+          "rate_limiting",
+          "throttling",
+          "traffic_management"
+        ],
+        "validation": "rate_limiting_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:8001/services/ai-q-api/plugins",
+          "for i in {1..110}; do curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health; done",
+          "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health"
+        ]
+      },
+      {
+        "skill_id": "API_DOCUMENTATION_SKILL",
+        "name": "API Documentation",
+        "description": "Configure API documentation with exact procedures",
+        "tools": [
+          "swagger_setup",
+          "developer_portal",
+          "api_specification"
+        ],
+        "validation": "api_documentation_validation",
+        "exact_validation_commands": [
+          "cat /opt/ai-q/api-gateway/docs/swagger.json",
+          "curl -f http://localhost:8000/api/docs",
+          "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "KONG_SETUP_TOOL",
+        "name": "Kong Setup Tool",
+        "description": "Automated Kong API gateway installation and configuration",
+        "file_path": "scripts/api-gateway/setup_kong.py",
+        "config": "config/api-gateway/kong_config.json",
+        "exact_config_spec": {
+          "kong_version": "3.4.0",
+          "database": "postgres",
+          "postgres_version": "13",
+          "admin_port": 8001,
+          "proxy_port": 8000,
+          "ssl_proxy_port": 8443,
+          "ssl_admin_port": 8444
+        }
+      },
+      {
+        "tool_id": "AUTHENTICATION_SETUP_TOOL",
+        "name": "Authentication Setup Tool",
+        "description": "Automated authentication configuration",
+        "file_path": "scripts/api-gateway/setup_authentication.py",
+        "config": "config/api-gateway/auth_config.json",
+        "exact_config_spec": {
+          "jwt_algorithm": "HS256",
+          "jwt_secret": "ai-q-jwt-secret",
+          "key_auth_header": "apikey",
+          "acl_groups": [
+            "admin",
+            "user"
+          ],
+          "oauth_providers": [
+            "google",
+            "github"
+          ]
+        }
+      },
+      {
+        "tool_id": "RATE_LIMITING_SETUP_TOOL",
+        "name": "Rate Limiting Setup Tool",
+        "description": "Automated rate limiting configuration",
+        "file_path": "scripts/api-gateway/setup_rate_limiting.py",
+        "config": "config/api-gateway/rate_limiting_config.json",
+        "exact_config_spec": {
+          "minute_limit": 100,
+          "hour_limit": 1000,
+          "day_limit": 10000,
+          "policy": "local",
+          "request_size_limit": "10MB",
+          "termination_status_code": 429
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "KONG_CONFIG",
+        "name": "Kong Configuration",
+        "description": "Kong configuration with exact specifications",
+        "file_path": "/opt/ai-q/api-gateway/kong/config/kong.yml",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "services": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "routes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "paths": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "protocols": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "plugins": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "config": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "config_id": "AUTHENTICATION_CONFIG",
+        "name": "Authentication Configuration",
+        "description": "Authentication configuration with exact specifications",
+        "file_path": "/opt/ai-q/api-gateway/config/auth.yml",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "jwt": {
+              "type": "object",
+              "properties": {
+                "algorithm": {
+                  "type": "string"
+                },
+                "secret": {
+                  "type": "string"
+                },
+                "key_claim_name": {
+                  "type": "string"
+                },
+                "claims_to_verify": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "key_auth": {
+              "type": "object",
+              "properties": {
+                "key_names": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "hide_credentials": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "acl": {
+              "type": "object",
+              "properties": {
+                "allow": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "hide_groups_header": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:kong-setup:1.0.0",
+          "task:authentication-setup:1.0.0",
+          "task:rate-limiting-setup:1.0.0",
+          "task:api-documentation:1.0.0",
+          "skill:kong-configuration:1.0.0",
+          "skill:authentication-configuration:1.0.0",
+          "skill:rate-limiting-configuration:1.0.0",
+          "skill:api-documentation:1.0.0",
+          "tool:kong-setup:1.0.0",
+          "tool:authentication-setup:1.0.0",
+          "tool:rate-limiting-setup:1.0.0",
+          "config:kong:1.0.0",
+          "config:authentication:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/api-gateway/setup_kong.py --gather-ingredients",
+          "python3 scripts/api-gateway/setup_authentication.py --gather-ingredients",
+          "python3 scripts/api-gateway/setup_rate_limiting.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "PostgreSQL database available",
+          "Minimum 4GB RAM available",
+          "20GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "docker ps --filter name=postgres",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_kong_setup",
+        "description": "Install and configure Kong API gateway with exact commands",
+        "sub_steps": [
+          "Create Kong directories",
+          "Create Kong configuration",
+          "Deploy PostgreSQL database",
+          "Run Kong migrations",
+          "Deploy Kong container",
+          "Validate Kong deployment"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/api-gateway/kong/{config,logs,ssl}",
+          "chmod 755 /opt/ai-q/api-gateway/kong",
+          "tee /opt/ai-q/api-gateway/kong/config/kong.yml << 'EOF'",
+          "version: 1",
+          "services:",
+          "  - name: ai-q-api",
+          "    url: http://backend:8000",
+          "    routes:",
+          "      - name: api-route",
+          "        paths:",
+          "          - /api",
+          "        protocols:",
+          "          - http",
+          "          - https",
+          "    plugins:",
+          "      - name: rate-limiting",
+          "        config:",
+          "          minute: 100",
+          "          hour: 1000",
+          "          day: 10000",
+          "      - name: key-auth",
+          "        config:",
+          "          key_names:",
+          "            - apikey",
+          "          hide_credentials: true",
+          "EOF",
+          "docker run -d --name kong-database --network ai-q-services -e POSTGRES_DB=kong -e POSTGRES_USER=kong -e POSTGRES_PASSWORD=kong postgres:13",
+          "sleep 30",
+          "docker run --rm --network ai-q-services -e KONG_DATABASE=postgres -e KONG_PG_HOST=kong-database -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_DATABASE=kong kong:3.4 kong migrations bootstrap",
+          "docker run -d --name kong --network ai-q-services -e KONG_DATABASE=postgres -e KONG_PG_HOST=kong-database -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_DATABASE=kong -e KONG_PROXY_ACCESS_LOG=/dev/stdout -e KONG_ADMIN_ACCESS_LOG=/dev/stdout -e KONG_PROXY_ERROR_LOG=/dev/stderr -e KONG_ADMIN_ERROR_LOG=/dev/stderr -e KONG_ADMIN_LISTEN=0.0.0.0:8001 -e KONG_PROXY_LISTEN=0.0.0.0:8000,0.0.0.0:8443 ssl -p 8000:8000 -p 8443:8443 -p 8001:8001 -p 8444:8444 kong:3.4"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/api-gateway/kong/config/",
+          "/opt/ai-q/api-gateway/kong/logs/",
+          "/opt/ai-q/api-gateway/kong/ssl/",
+          "/opt/ai-q/api-gateway/kong/config/kong.yml"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_authentication_setup",
+        "description": "Configure authentication and authorization with exact commands",
+        "sub_steps": [
+          "Create consumers",
+          "Configure key authentication",
+          "Configure JWT authentication",
+          "Configure ACL",
+          "Validate authentication"
+        ],
+        "exact_commands": [
+          "curl -X POST http://localhost:8001/consumers/ -d 'name=ai-q-consumer'",
+          "curl -X POST http://localhost:8001/consumers/ai-q-consumer/key-auth -d 'key=ai-q-api-key-12345'",
+          "curl -X POST http://localhost:8001/consumers/ai-q-consumer/jwt -d 'algorithm=HS256' -d 'key=ai-q-jwt-secret'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=jwt' -d 'config.secret=ai-q-jwt-secret' -d 'config.key_claim_name=iss' -d 'config.claims_to_verify=exp'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=acl' -d 'config.allow=admin,user' -d 'config.hide_groups_header=true'"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_rate_limiting_setup",
+        "description": "Configure rate limiting and throttling with exact commands",
+        "sub_steps": [
+          "Configure rate limiting",
+          "Configure request size limiting",
+          "Configure request termination",
+          "Validate rate limiting"
+        ],
+        "exact_commands": [
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=rate-limiting' -d 'config.minute=100' -d 'config.hour=1000' -d 'config.day=10000' -d 'config.policy=local'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=request-size-limiting' -d 'config.allowed_payload_size=10'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=request-termination' -d 'config.status_code=429' -d 'config.message=Rate limit exceeded' -d 'config.content_type=application/json'"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "execute_api_documentation_setup",
+        "description": "Configure API documentation and developer portal with exact commands",
+        "sub_steps": [
+          "Configure correlation ID",
+          "Configure request transformer",
+          "Configure response transformer",
+          "Create API documentation",
+          "Validate API documentation"
+        ],
+        "exact_commands": [
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=correlation-id' -d 'config.header_name=X-Correlation-ID' -d 'config.generator=uuid'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=request-transformer' -d 'config.add.headers=X-API-Version:1.0'",
+          "curl -X POST http://localhost:8001/services/ai-q-api/plugins -d 'name=response-transformer' -d 'config.add.headers=X-Response-Time:${latency}'",
+          "mkdir -p /opt/ai-q/api-gateway/docs",
+          "tee /opt/ai-q/api-gateway/docs/swagger.json << 'EOF'",
+          "{",
+          "  \"openapi\": \"3.0.0\",",
+          "  \"info\": {",
+          "    \"title\": \"AI-Q API\",",
+          "    \"version\": \"1.0.0\",",
+          "    \"description\": \"AI-Q API Documentation\"",
+          "  },",
+          "  \"servers\": [",
+          "    {",
+          "      \"url\": \"https://api.ai-q.local\",",
+          "      \"description\": \"Production server\"",
+          "    }",
+          "  ],",
+          "  \"paths\": {",
+          "    \"/api/health\": {",
+          "      \"get\": {",
+          "        \"summary\": \"Health check\",",
+          "        \"responses\": {",
+          "          \"200\": {",
+          "            \"description\": \"OK\"",
+          "          }",
+          "        }",
+          "      }",
+          "    }",
+          "  }",
+          "}",
+          "EOF"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/api-gateway/docs/",
+          "/opt/ai-q/api-gateway/docs/swagger.json"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "validate_results",
+        "description": "Validate complete API gateway infrastructure setup",
+        "validation": "api_gateway_infrastructure_validation",
+        "exact_commands": [
+          "docker ps --filter name=kong",
+          "curl -f http://localhost:8001/status",
+          "curl -f http://localhost:8000/",
+          "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health",
+          "curl -f http://localhost:8001/consumers/",
+          "curl -f http://localhost:8001/services/ai-q-api/plugins",
+          "cat /opt/ai-q/api-gateway/docs/swagger.json"
+        ]
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "cache_results",
+        "description": "Cache API gateway infrastructure configuration and setup",
+        "cache_key": "api_gateway_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/api-gateway/setup_kong.py --cache-results",
+          "python3 scripts/api-gateway/setup_authentication.py --cache-results",
+          "python3 scripts/api-gateway/setup_rate_limiting.py --cache-results",
+          "tar -czf /opt/ai-q/cache/api_gateway_infrastructure_cache.tar.gz /opt/ai-q/api-gateway"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "api_gateway_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "api_gateway_update",
+      "cache_validation": "api_gateway_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/api-gateway/setup_kong.py --cache-config",
+        "python3 scripts/api-gateway/setup_authentication.py --cache-config",
+        "python3 scripts/api-gateway/setup_rate_limiting.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "Kong API gateway operational and healthy",
+    "Authentication and authorization working",
+    "Rate limiting configured and functional",
+    "API documentation accessible",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready API gateway infrastructure with Kong",
+    "Authentication and authorization system",
+    "Rate limiting and throttling configuration",
+    "API documentation and developer portal",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Kong container fails to start",
+        "symptoms": [
+          "Container exits immediately",
+          "Port 8000/8001 not accessible"
+        ],
+        "diagnosis": "Check Kong configuration and database connectivity",
+        "solution": "Verify configuration and restart container",
+        "prevention": "Test configuration before deployment"
+      },
+      {
+        "issue": "Authentication not working",
+        "symptoms": [
+          "401 Unauthorized",
+          "Invalid API key"
+        ],
+        "diagnosis": "Check authentication configuration and consumer setup",
+        "solution": "Verify authentication configuration and restart Kong",
+        "prevention": "Test authentication before deployment"
+      },
+      {
+        "issue": "Rate limiting too aggressive",
+        "symptoms": [
+          "429 Too Many Requests",
+          "Legitimate traffic blocked"
+        ],
+        "diagnosis": "Check rate limiting configuration",
+        "solution": "Adjust rate limiting parameters",
+        "prevention": "Test rate limiting with realistic traffic"
+      },
+      {
+        "issue": "Database connection issues",
+        "symptoms": [
+          "Kong cannot connect to database",
+          "Migration failures"
+        ],
+        "diagnosis": "Check PostgreSQL database and network connectivity",
+        "solution": "Verify database configuration and restart Kong",
+        "prevention": "Ensure database is running before starting Kong"
+      },
+      {
+        "issue": "API routes not working",
+        "symptoms": [
+          "404 Not Found",
+          "Wrong service responses"
+        ],
+        "diagnosis": "Check service and route configuration",
+        "solution": "Verify service and route configuration",
+        "prevention": "Test routes before deployment"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker ps --filter name=kong",
+      "curl -f http://localhost:8001/status",
+      "curl -f http://localhost:8000/",
+      "curl -H 'apikey: ai-q-api-key-12345' http://localhost:8000/api/health",
+      "curl -f http://localhost:8001/consumers/",
+      "curl -f http://localhost:8001/services/ai-q-api/plugins",
+      "docker logs kong"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 3 hours",
+    "kong_startup_time": "< 30 seconds",
+    "database_migration_time": "< 60 seconds",
+    "authentication_response_time": "< 10ms",
+    "rate_limiting_overhead": "< 5ms",
+    "api_response_time": "< 50ms",
+    "max_concurrent_requests": 10000,
+    "request_throughput": "1000 req/s"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-04-Api-Gateway",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

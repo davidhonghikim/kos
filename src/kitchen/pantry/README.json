@@ -1,0 +1,51 @@
+{
+  "title": "Pantry System - Modular Operations & Context Management",
+  "version": "2.0.0",
+  "last_updated": "2025-07-05T23:53:23Z",
+  "description": "The pantry system provides modular, scalable management of tools, skills, modules, and tasks for the kOS kitchen system. This version enforces strict, minimal, dependency-driven context and on-demand loading.",
+  "core_principles": [
+    "Atomic, modular ingredient and operation files",
+    "No monolithic or global imports",
+    "Only load what is required for the current recipe or task",
+    "Protect the context window: never inject unnecessary data or code",
+    "Prune context after each step to keep it minimal",
+    "Explicit dependency declaration in every recipe/task"
+  ],
+  "architecture": {
+    "ingredients": "JSON metadata for tools, skills, modules, tasks, configs, schemas.",
+    "operations": "Python modules implementing actual functionality, organized by category and subcategory.",
+    "registry": "Dynamic loader that discovers and loads only required operations on demand.",
+    "context": "Execution context is built per recipe/task, containing only what is needed."
+  },
+  "usage_pattern": {
+    "recipe_example": {
+      "id": "kos.recipe.deploy.frontend",
+      "required_tools": ["tools.image_editing.image_editor_operations", "tools.social_media.social_media_operations"],
+      "required_skills": ["skills.content_creator_skill"],
+      "required_modules": ["modules.content_creation_module"]
+    },
+    "loader": "The runner reads the recipe, loads only the listed dependencies using the registry, and builds a minimal context."
+  },
+  "context_window_protection": {
+    "rules": [
+      "Never load or inject unused operations, skills, or tools.",
+      "No global state or caches in context.",
+      "Prune context after each step to remove unneeded data.",
+      "Validate context size and warn if it grows too large.",
+      "For LLMs: truncate, summarize, and validate all context data before prompt injection."
+    ]
+  },
+  "scalability": {
+    "directory_structure": "Operations are organized in subdirectories by category and subcategory. The registry discovers and loads only what is needed.",
+    "dynamic_import": "No hardcoded imports. All loading is on-demand via registry."
+  },
+  "handoff_for_next_agent": {
+    "status": "Context window is full. All code and docs now enforce strict, minimal, dependency-driven context. Only required operations, tools, and skills are loaded per recipe/task. Context pruning and protection are documented and implemented. Ready for next agent to continue with this pattern.",
+    "next_steps": [
+      "Continue enforcing minimal context in all new code.",
+      "Expand registry and loader utilities as needed.",
+      "Document any new context rules or patterns.",
+      "Validate all recipes/tasks for explicit dependency declaration."
+    ]
+  }
+}

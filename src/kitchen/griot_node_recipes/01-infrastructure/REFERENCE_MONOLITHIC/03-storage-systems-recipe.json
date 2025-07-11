@@ -1,0 +1,831 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-STORAGE-SYSTEMS-COMPREHENSIVE",
+    "title": "Enterprise Storage Systems - Multi-Backend Object Storage Architecture",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:37:00Z",
+    "last_updated": "2025-07-06T16:37:00Z",
+    "estimated_tokens": 75000,
+    "estimated_execution_time": "20-24 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 12,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "SOC 2",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA"
+    ],
+    "architecture_tier": "enterprise-distributed",
+    "description": "Master recipe orchestrating comprehensive enterprise storage systems with exact specifications, atomic tasks, and zero technical debt",
+    "is_master_recipe": true,
+    "kitchen_system": {
+      "pantry_category": "storage_systems",
+      "cooking_time": "1440 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "object_storage",
+        "multi_backend",
+        "data_management",
+        "security_hardening"
+      ],
+      "cache_strategy": "storage_systems_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Enterprise Storage Systems",
+    "description": "Complete enterprise-grade storage systems implementation featuring multi-backend object storage architecture with MinIO, AWS S3, and high-performance local storage",
+    "prerequisites": [
+      "Ubuntu 22.04 LTS or Windows 11 with WSL2",
+      "Minimum 32GB RAM, 16 CPU cores",
+      "500GB free disk space for storage",
+      "Docker Engine 24.0+ installed",
+      "Docker Compose 2.20+ installed",
+      "AWS CLI configured (for S3 integration)",
+      "Network connectivity for cloud services"
+    ],
+    "target_outcome": "Production-ready enterprise storage system with zero technical debt",
+    "success_criteria": [
+      "All storage backends operational with 99.99% uptime SLA",
+      "Unified API achieving sub-50ms response times for metadata operations",
+      "Data durability exceeding 99.999999999% (11 9's) with cross-backend replication",
+      "Storage throughput exceeding 10GB/s for large file operations",
+      "Encryption and security policies enforced across all backends",
+      "Automated backup completing with 100% success rate and verification",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "STORAGE_ARCHITECTURE_TASK",
+        "name": "Storage Architecture Setup",
+        "description": "Design and implement core storage architecture with exact specifications",
+        "estimated_time": "120 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "system_architecture",
+          "storage_design",
+          "unified_management"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/storage/{minio,s3,local,backups,logs}",
+          "mkdir -p /opt/ai-q/config/storage/{minio,s3,local}",
+          "chmod 755 /opt/ai-q/storage",
+          "docker network create ai-q-storage --subnet=172.23.0.0/16"
+        ]
+      },
+      {
+        "task_id": "MINIO_DEPLOYMENT_TASK",
+        "name": "MinIO Enterprise Cluster Deployment",
+        "description": "Deploy MinIO distributed storage cluster with exact configurations",
+        "estimated_time": "180 minutes",
+        "dependencies": [
+          "STORAGE_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "minio_deployment",
+          "cluster_configuration",
+          "erasure_coding"
+        ],
+        "exact_commands": [
+          "docker run -d --name minio --network ai-q-storage -p 9000:9000 -p 9001:9001 -v /opt/ai-q/storage/minio:/data -e MINIO_ROOT_USER=admin -e MINIO_ROOT_PASSWORD=minio123 minio/minio:latest server /data --console-address :9001",
+          "sleep 60",
+          "curl -f http://localhost:9001/api/v1/health",
+          "mc alias set local http://localhost:9000 admin minio123",
+          "mc mb local/ai-q-data"
+        ]
+      },
+      {
+        "task_id": "S3_INTEGRATION_TASK",
+        "name": "AWS S3 Integration Setup",
+        "description": "Configure AWS S3 integration with exact configurations",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "MINIO_DEPLOYMENT_TASK"
+        ],
+        "skills_required": [
+          "aws_s3",
+          "cloud_integration",
+          "tiering_configuration"
+        ],
+        "exact_commands": [
+          "aws configure set aws_access_key_id YOUR_ACCESS_KEY",
+          "aws configure set aws_secret_access_key YOUR_SECRET_KEY",
+          "aws configure set default.region us-east-1",
+          "aws s3 mb s3://ai-q-storage-backup",
+          "aws s3api put-bucket-encryption --bucket ai-q-storage-backup --server-side-encryption-configuration '{\"Rules\": [{\"ApplyServerSideEncryptionByDefault\": {\"SSEAlgorithm\": \"AES256\"}}]}'"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "STORAGE_MANAGEMENT_SKILL",
+        "name": "Storage Management",
+        "description": "Manage enterprise storage systems with exact procedures",
+        "tools": [
+          "storage_engine",
+          "data_lifecycle",
+          "tiering_management"
+        ],
+        "validation": "storage_management_validation",
+        "exact_validation_commands": [
+          "docker exec minio mc admin info local",
+          "aws s3 ls s3://ai-q-storage-backup",
+          "df -h /opt/ai-q/storage"
+        ]
+      },
+      {
+        "skill_id": "MINIO_CONFIGURATION_SKILL",
+        "name": "MinIO Configuration",
+        "description": "Configure MinIO distributed clusters with exact specifications",
+        "tools": [
+          "minio_cli",
+          "cluster_management",
+          "erasure_coding"
+        ],
+        "validation": "minio_configuration_validation",
+        "exact_validation_commands": [
+          "mc admin info local",
+          "mc ls local/ai-q-data",
+          "curl -f http://localhost:9001/api/v1/health"
+        ]
+      },
+      {
+        "skill_id": "S3_INTEGRATION_SKILL",
+        "name": "S3 Integration",
+        "description": "Integrate AWS S3 with intelligent tiering and cost optimization",
+        "tools": [
+          "aws_cli",
+          "s3_operations",
+          "tiering_policies"
+        ],
+        "validation": "s3_integration_validation",
+        "exact_validation_commands": [
+          "aws s3 ls s3://ai-q-storage-backup",
+          "aws s3api get-bucket-encryption --bucket ai-q-storage-backup",
+          "aws s3api get-bucket-lifecycle-configuration --bucket ai-q-storage-backup"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "STORAGE_SYSTEMS_TOOL",
+        "name": "Storage Systems Engine",
+        "description": "Core storage systems orchestration",
+        "file_path": "src/services/storage/core.py",
+        "config": "config/storage/storage_config.json",
+        "exact_config_spec": {
+          "minio_version": "latest",
+          "s3_region": "us-east-1",
+          "local_storage_path": "/opt/ai-q/storage/local",
+          "backup_retention_days": 30,
+          "encryption_enabled": true
+        }
+      },
+      {
+        "tool_id": "MINIO_MANAGER_TOOL",
+        "name": "MinIO Manager",
+        "description": "MinIO cluster management and configuration",
+        "file_path": "src/services/storage/minio_manager.py",
+        "config": "config/storage/minio_config.json",
+        "exact_config_spec": {
+          "cluster_size": 4,
+          "erasure_coding": true,
+          "console_port": 9001,
+          "api_port": 9000,
+          "data_dir": "/opt/ai-q/storage/minio"
+        }
+      },
+      {
+        "tool_id": "S3_MANAGER_TOOL",
+        "name": "S3 Manager",
+        "description": "AWS S3 integration and management",
+        "file_path": "src/services/storage/s3_manager.py",
+        "config": "config/storage/s3_config.json",
+        "exact_config_spec": {
+          "bucket_name": "ai-q-storage-backup",
+          "region": "us-east-1",
+          "encryption": "AES256",
+          "lifecycle_policy": true,
+          "cross_region_replication": false
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "STORAGE_CONFIG",
+        "name": "Storage Configuration",
+        "description": "Configuration for storage systems",
+        "file_path": "config/storage/storage_config.json",
+        "schema": "storage_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "minio_version": {
+              "type": "string",
+              "pattern": "^latest|[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "s3_region": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "local_storage_path": {
+              "type": "string",
+              "pattern": "^/[a-zA-Z0-9/_-]+$"
+            },
+            "backup_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            },
+            "encryption_enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "minio_version",
+            "s3_region",
+            "local_storage_path",
+            "backup_retention_days",
+            "encryption_enabled"
+          ]
+        }
+      },
+      {
+        "config_id": "MINIO_CONFIG",
+        "name": "MinIO Configuration",
+        "description": "Configuration for MinIO cluster",
+        "file_path": "config/storage/minio_config.json",
+        "schema": "minio_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "cluster_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16
+            },
+            "erasure_coding": {
+              "type": "boolean"
+            },
+            "console_port": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535
+            },
+            "api_port": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535
+            },
+            "data_dir": {
+              "type": "string",
+              "pattern": "^/[a-zA-Z0-9/_-]+$"
+            }
+          },
+          "required": [
+            "cluster_size",
+            "erasure_coding",
+            "console_port",
+            "api_port",
+            "data_dir"
+          ]
+        }
+      },
+      {
+        "config_id": "S3_CONFIG",
+        "name": "S3 Configuration",
+        "description": "Configuration for AWS S3 integration",
+        "file_path": "config/storage/s3_config.json",
+        "schema": "s3_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "bucket_name": {
+              "type": "string",
+              "pattern": "^[a-z0-9.-]+$"
+            },
+            "region": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "encryption": {
+              "type": "string",
+              "enum": [
+                "AES256",
+                "aws:kms"
+              ]
+            },
+            "lifecycle_policy": {
+              "type": "boolean"
+            },
+            "cross_region_replication": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "bucket_name",
+            "region",
+            "encryption",
+            "lifecycle_policy",
+            "cross_region_replication"
+          ]
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step": 1,
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:setup-storage-system:1.0.0",
+          "task:deploy-minio-cluster:1.0.0",
+          "task:configure-s3-integration:1.0.0",
+          "task:setup-local-storage:1.0.0",
+          "task:configure-unified-api:1.0.0",
+          "task:setup-backup-system:1.0.0",
+          "task:configure-monitoring:1.0.0",
+          "task:setup-security-policies:1.0.0",
+          "skill:manage-storage:1.0.0",
+          "skill:configure-minio:1.0.0",
+          "skill:manage-s3-integration:1.0.0",
+          "skill:optimize-storage-performance:1.0.0",
+          "skill:manage-storage-security:1.0.0",
+          "tool:minio:latest",
+          "tool:s3-compatible:1.0.0",
+          "tool:fastapi:0.100.0",
+          "tool:redis:7.2.0",
+          "tool:prometheus:2.45.0",
+          "tool:grafana:10.0.0",
+          "tool:haproxy:2.6.0",
+          "tool:openssl:3.0.0",
+          "config:storage-config:1.0.0",
+          "config:minio-cluster-config:1.0.0",
+          "config:s3-integration-config:1.0.0",
+          "config:storage-api-config:1.0.0",
+          "config:storage-security-config:1.0.0"
+        ]
+      },
+      {
+        "step": 2,
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Storage hardware is available and configured",
+          "Network connectivity for distributed storage",
+          "SSL certificates are available",
+          "AWS credentials are configured",
+          "Monitoring infrastructure is ready"
+        ]
+      },
+      {
+        "step": 3,
+        "action": "execute_storage_deployment",
+        "description": "Execute storage system deployment with all backends",
+        "sub_steps": [
+          "Deploy MinIO distributed cluster",
+          "Configure S3 integration and tiering",
+          "Setup local high-performance storage",
+          "Configure unified storage API",
+          "Setup backup and disaster recovery",
+          "Configure monitoring and alerting",
+          "Apply security policies and encryption"
+        ]
+      },
+      {
+        "step": 4,
+        "action": "cache_results",
+        "description": "Cache successful deployment results for future use",
+        "cache_items": [
+          "Storage configurations and policies",
+          "MinIO cluster settings",
+          "S3 integration configurations",
+          "API gateway configurations",
+          "Security policies and certificates",
+          "Monitoring dashboards and alerts"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "ingredient_caching": "aggressive",
+      "result_caching": "aggressive",
+      "cache_validation": "content_hash",
+      "cache_ttl": 604800,
+      "cache_location": "local"
+    }
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "operating_system": "Linux (Ubuntu 20.04/22.04 LTS, CentOS 8+, RHEL 8+) or Windows Server 2019/2022",
+      "memory": "128GB RAM minimum for distributed storage cluster, 256GB recommended",
+      "storage": "10TB NVMe SSD minimum, 50TB recommended for production deployment",
+      "cpu": "32 cores minimum (Intel Xeon Scalable or AMD EPYC), 64 cores recommended",
+      "network": "10Gbps ethernet minimum, 25Gbps recommended for storage network",
+      "disk_io": "100k IOPS minimum, 500k IOPS recommended for high-performance workloads"
+    },
+    "software_prerequisites": [
+      "Docker Engine 23.0+ with containerd runtime",
+      "Docker Compose V2.15+ with BuildKit support",
+      "Kubernetes 1.26+ for container orchestration (optional)",
+      "Python 3.10+ with asyncio and aiohttp support",
+      "Node.js 18.0+ with TypeScript support for monitoring dashboard",
+      "MinIO Client (mc) for administration and configuration",
+      "AWS CLI 2.0+ with proper IAM credentials configured",
+      "OpenSSL 3.0+ for certificate generation and encryption",
+      "HashiCorp Vault 1.13+ for secrets management",
+      "Prometheus 2.42+ and Grafana 9.4+ for monitoring",
+      "Redis 7.0+ for caching and session management",
+      "HAProxy 2.6+ for load balancing and SSL termination"
+    ],
+    "knowledge_requirements": [
+      "Expert-level understanding of distributed storage systems and consistency models",
+      "Advanced knowledge of object storage protocols (S3 API, MinIO architecture)",
+      "Deep understanding of data encryption, key management, and security best practices",
+      "Proficiency in async Python programming with FastAPI and SQLAlchemy",
+      "Experience with cloud storage services (AWS S3, Azure Blob, GCP Cloud Storage)",
+      "Knowledge of storage networking, protocols (NFS, iSCSI, S3), and performance tuning",
+      "Understanding of database replication, sharding, and backup strategies",
+      "Familiarity with monitoring systems (Prometheus, Grafana) and alerting strategies",
+      "Experience with CI/CD pipelines and infrastructure automation",
+      "Knowledge of compliance frameworks (SOC 2, GDPR, HIPAA) and audit requirements"
+    ],
+    "environment_preparation": [
+      "Configure storage network with dedicated VLANs for storage traffic",
+      "Set up hardware RAID arrays or software-defined storage pools",
+      "Configure firewall rules for storage protocols and management interfaces",
+      "Install and configure NTP for time synchronization across storage nodes",
+      "Set up dedicated storage user accounts with appropriate permissions",
+      "Configure storage monitoring with SMART monitoring for disk health",
+      "Set up backup storage location with sufficient capacity and network bandwidth",
+      "Configure DNS resolution for storage service discovery",
+      "Set up SSL certificates for secure storage communication",
+      "Configure log aggregation for centralized storage logging"
+    ],
+    "pantry_dependencies": [
+      "tool:docker:24.0.0",
+      "tool:docker-compose:2.20.0",
+      "tool:python:3.10.0",
+      "tool:nodejs:18.0.0",
+      "tool:aws-cli:2.0.0",
+      "tool:openssl:3.0.0",
+      "config:storage-config:1.0.0"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "02-storage-minio-enterprise-001",
+      "title": "Enterprise MinIO Distributed Storage Cluster Implementation",
+      "description": "Deploy and configure a production-ready MinIO distributed storage cluster with multi-site replication, advanced security, performance optimization, and comprehensive monitoring using the kitchen analogy system. This implementation includes erasure coding for data protection, intelligent load balancing, automated healing, and enterprise-grade management capabilities. The cluster will support high availability, horizontal scaling, and seamless integration with existing infrastructure while maintaining strict security and compliance requirements.",
+      "category": "infrastructure",
+      "estimated_tokens": 12000,
+      "estimated_duration": "4-6 hours",
+      "difficulty_level": "expert",
+      "kitchen_system": {
+        "pantry_ingredients_used": [
+          "task:deploy-minio-cluster:1.0.0",
+          "skill:configure-minio:1.0.0",
+          "skill:manage-storage:1.0.0",
+          "tool:minio:latest",
+          "tool:openssl:3.0.0",
+          "config:minio-cluster-config:1.0.0"
+        ],
+        "caching_benefits": [
+          "MinIO cluster configuration cached",
+          "SSL certificates cached for reuse",
+          "Monitoring configuration cached",
+          "Security policies cached"
+        ]
+      },
+      "prerequisites": {
+        "knowledge_required": [
+          "MinIO architecture and deployment",
+          "Distributed storage systems",
+          "Erasure coding principles",
+          "Load balancing and high availability",
+          "Kitchen analogy system"
+        ],
+        "tools_required": [
+          "Docker/Kubernetes",
+          "MinIO client (mc)",
+          "OpenSSL",
+          "Network monitoring tools",
+          "Pantry system"
+        ],
+        "environment_setup": [
+          "Storage network configured",
+          "SSL certificates available",
+          "Monitoring infrastructure ready",
+          "Kitchen system operational"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker-compose.yml",
+          "config/minio/cluster-config.yaml",
+          "config/security/certificates.yaml"
+        ],
+        "pantry_ingredients": [
+          "task:deploy-minio-cluster:1.0.0",
+          "skill:configure-minio:1.0.0",
+          "tool:minio:latest",
+          "config:minio-cluster-config:1.0.0"
+        ],
+        "config_dependencies": [
+          "Network configuration",
+          "Security policies",
+          "Monitoring setup"
+        ],
+        "environment_variables": [
+          "MINIO_ROOT_USER",
+          "MINIO_ROOT_PASSWORD",
+          "MINIO_SERVER_URL",
+          "MINIO_CONSOLE_ADDRESS"
+        ],
+        "external_services": [
+          "Load balancer",
+          "Certificate authority",
+          "Monitoring systems"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/minio/distributed-cluster.yaml - MinIO cluster configuration",
+          "scripts/minio/deploy-cluster.sh - Automated deployment script",
+          "config/minio/erasure-coding.yaml - Erasure coding configuration",
+          "config/minio/security-policies.yaml - Security and access policies",
+          "monitoring/minio/dashboards.json - Grafana dashboards",
+          "scripts/minio/health-check.sh - Health monitoring script",
+          "config/minio/backup-policies.yaml - Backup configuration",
+          "docs/minio/cluster-architecture.md - Architecture documentation"
+        ],
+        "files_modified": [
+          "docker-compose.yml - MinIO cluster services",
+          "config/prometheus/minio-targets.yaml - Monitoring targets",
+          "config/grafana/datasources.yaml - Grafana data sources"
+        ],
+        "database_changes": [
+          "None for this task"
+        ],
+        "api_endpoints": [
+          "GET /minio/health - Cluster health status",
+          "GET /minio/metrics - Performance metrics",
+          "POST /minio/admin/info - Administrative information"
+        ],
+        "configuration_updates": [
+          "Cluster topology",
+          "Security policies",
+          "Monitoring configuration"
+        ],
+        "cached_results": [
+          "MinIO cluster configuration",
+          "SSL certificates and security policies",
+          "Monitoring dashboards and alerts",
+          "Deployment scripts and documentation"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "01-infra-verification-001"
+        ],
+        "optional_tasks": [
+          "monitoring-setup",
+          "security-hardening"
+        ],
+        "blocked_tasks": [
+          "02-storage-api-gateway-002",
+          "02-storage-unified-api-003"
+        ],
+        "pantry_dependencies": [
+          "task:deploy-minio-cluster:1.0.0",
+          "skill:configure-minio:1.0.0",
+          "tool:minio:latest",
+          "config:minio-cluster-config:1.0.0"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task implements a production-ready MinIO distributed storage cluster that serves as the foundation for enterprise object storage capabilities using the kitchen analogy system. The implementation includes advanced features such as erasure coding for data protection, intelligent load balancing, automated healing, and comprehensive monitoring. The cluster is designed for high availability, horizontal scaling, and seamless integration with existing infrastructure while maintaining strict security and compliance requirements.",
+        "kitchen_execution_flow": [
+          {
+            "step": 1,
+            "action": "gather_ingredients",
+            "description": "Load all required pantry ingredients with aggressive caching",
+            "ingredients": [
+              "task:deploy-minio-cluster:1.0.0",
+              "skill:configure-minio:1.0.0",
+              "skill:manage-storage:1.0.0",
+              "tool:minio:latest",
+              "tool:openssl:3.0.0",
+              "config:minio-cluster-config:1.0.0"
+            ]
+          },
+          {
+            "step": 2,
+            "action": "validate_dependencies",
+            "description": "Verify all ingredient dependencies are satisfied",
+            "checks": [
+              "Storage hardware is available and configured",
+              "Network connectivity for distributed storage",
+              "SSL certificates are available",
+              "Monitoring infrastructure is ready"
+            ]
+          },
+          {
+            "step": 3,
+            "action": "execute_cluster_deployment",
+            "description": "Execute MinIO cluster deployment with all features",
+            "sub_steps": [
+              "Deploy MinIO distributed cluster",
+              "Configure erasure coding and replication",
+              "Setup security policies and encryption",
+              "Configure monitoring and alerting",
+              "Setup backup and disaster recovery"
+            ]
+          },
+          {
+            "step": 4,
+            "action": "cache_results",
+            "description": "Cache successful deployment results for future use",
+            "cache_items": [
+              "MinIO cluster configuration",
+              "SSL certificates and security policies",
+              "Monitoring dashboards and alerts",
+              "Deployment scripts and documentation"
+            ]
+          }
+        ],
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "MinIO Cluster Architecture Planning",
+            "description": "Design and plan the MinIO distributed cluster architecture including node layout, storage allocation, and network configuration using pantry ingredients",
+            "kitchen_commands": [
+              "# Use pantry ingredient to plan cluster architecture",
+              "task:plan-minio-cluster:1.0.0 --nodes=4 --drives=16 --parity=8",
+              "",
+              "# Calculate erasure coding parameters",
+              "echo 'Planning MinIO cluster with erasure coding...'",
+              "# For 4 nodes, recommend 2 parity drives per node",
+              "TOTAL_DRIVES=16",
+              "PARITY_DRIVES=8",
+              "DATA_DRIVES=8",
+              "echo \"Data drives: $DATA_DRIVES, Parity drives: $PARITY_DRIVES\"",
+              "# Verify storage capacity requirements",
+              "df -h | grep -E '(nvme|ssd)' | awk '{print $1, $2, $4}'"
+            ],
+            "expected_output": "Cluster architecture planned with optimal erasure coding configuration",
+            "troubleshooting": "Ensure sufficient storage capacity and network bandwidth for distributed deployment",
+            "caching_benefit": "Cluster planning configuration cached for reuse"
+          },
+          {
+            "step": 2,
+            "title": "MinIO Cluster Deployment",
+            "description": "Deploy the MinIO distributed cluster with proper configuration and security settings using pantry ingredients",
+            "kitchen_commands": [
+              "# Use pantry ingredient to deploy MinIO cluster",
+              "task:deploy-minio-cluster:1.0.0 --config=config/minio/cluster-config.yaml",
+              "",
+              "# Create MinIO cluster configuration",
+              "mkdir -p config/minio/{certs,policies,data}",
+              "# Generate SSL certificates for secure communication",
+              "openssl req -new -x509 -days 3650 -nodes -out config/minio/certs/public.crt -keyout config/minio/certs/private.key",
+              "# Deploy MinIO cluster",
+              "docker-compose -f docker-compose.minio.yml up -d",
+              "# Wait for cluster initialization",
+              "sleep 30",
+              "# Verify cluster health",
+              "mc admin info minio-cluster"
+            ],
+            "expected_output": "MinIO cluster deployed successfully with all nodes healthy",
+            "troubleshooting": "Check network connectivity and storage permissions if deployment fails",
+            "caching_benefit": "Deployment configuration and certificates cached"
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "MinIO cluster deployed with all nodes operational",
+          "Erasure coding configured and protecting data",
+          "SSL/TLS encryption enabled for all communications",
+          "Access control policies properly configured and enforced",
+          "Administrative interface accessible and functional",
+          "Kitchen system integration providing atomic, reusable ingredients"
+        ],
+        "performance_requirements": [
+          "Cluster achieving 99.9% uptime with automated healing",
+          "Object operations completing within 100ms for small files",
+          "Throughput exceeding 1GB/s for large file operations",
+          "Erasure coding protection against 50% node failures",
+          "Healing operations completing within 24 hours for failed drives",
+          "Cache hit rate > 80% for frequently accessed data"
+        ],
+        "security_requirements": [
+          "All data encrypted at rest using AES-256",
+          "TLS 1.3 encryption for all network communications",
+          "Access control policies enforced with proper authentication",
+          "Audit logging enabled for all administrative operations",
+          "Security scanning passes with zero critical vulnerabilities"
+        ],
+        "integration_requirements": [
+          "Cluster integrated with monitoring systems (Prometheus/Grafana)",
+          "API endpoints responding correctly to health checks",
+          "Backup integration working with automated scheduling",
+          "Load balancer integration distributing traffic properly",
+          "Service discovery working for cluster nodes",
+          "Kitchen system providing atomic, reusable storage ingredients"
+        ],
+        "code_quality_requirements": [
+          "All configuration files properly validated and formatted",
+          "Deployment scripts include comprehensive error handling",
+          "Documentation complete with architecture diagrams",
+          "Automated testing covering all deployment scenarios",
+          "Configuration management follows infrastructure-as-code principles"
+        ]
+      }
+    }
+  ],
+  "global_configuration": {
+    "storage_backends": {
+      "minio": {
+        "cluster_mode": true,
+        "erasure_coding": "4+4",
+        "replication_sites": 2,
+        "ssl_enabled": true,
+        "compression": true
+      },
+      "s3": {
+        "regions": [
+          "us-east-1",
+          "us-west-2",
+          "eu-west-1"
+        ],
+        "storage_classes": [
+          "STANDARD",
+          "STANDARD_IA",
+          "GLACIER"
+        ],
+        "encryption": "AES256",
+        "versioning": true
+      },
+      "local": {
+        "storage_path": "/data/local-storage",
+        "compression": "lz4",
+        "deduplication": true,
+        "backup_enabled": true
+      }
+    },
+    "api_configuration": {
+      "unified_api_port": 8080,
+      "authentication": "JWT",
+      "rate_limiting": "1000/minute",
+      "ssl_termination": true
+    },
+    "monitoring_configuration": {
+      "prometheus_port": 9090,
+      "grafana_port": 3000,
+      "alert_manager_port": 9093,
+      "retention_days": 30
+    },
+    "kitchen_system": {
+      "caching_strategy": "aggressive",
+      "cache_ttl": 604800,
+      "cache_validation": "content_hash",
+      "cache_location": "local"
+    }
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-Storage-Systems-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

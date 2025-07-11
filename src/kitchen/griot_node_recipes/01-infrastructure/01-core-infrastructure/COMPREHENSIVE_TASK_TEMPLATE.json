@@ -1,0 +1,551 @@
+{
+  "metadata": {
+    "template_id": "comprehensive-task-template",
+    "title": "Comprehensive Task Template for All Sub-Recipes",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T17:48:45Z",
+    "purpose": "Exact template structure for all remaining sub-recipes with zero ambiguity",
+    "usage": "Use this template for creating all remaining sub-recipes with exact specifications",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "template_structure": {
+    "metadata_section": {
+      "required_fields": [
+        "sub_recipe_id",
+        "title",
+        "version",
+        "created_by",
+        "last_updated",
+        "purpose",
+        "total_tasks",
+        "estimated_duration",
+        "complexity",
+        "dependencies",
+        "components"
+      ],
+      "example": {
+        "sub_recipe_id": "01-XX-COMPONENT",
+        "title": "Component Name - Complete Implementation",
+        "version": "1.0.0",
+        "created_by": "Claude Sonnet 4",
+        "last_updated": "2025-07-05T17:48:45Z",
+        "purpose": "Exact step-by-step component implementation with zero ambiguity",
+        "total_tasks": "XX",
+        "estimated_duration": "X-X days",
+        "complexity": "Advanced",
+        "dependencies": [
+          "01-01-docker-environment",
+          "01-02-system-monitoring"
+        ],
+        "components": [
+          "Component1",
+          "Component2",
+          "Component3"
+        ]
+      }
+    },
+    "prerequisites_section": {
+      "required_fields": [
+        "completed_tasks",
+        "system_requirements"
+      ],
+      "example": {
+        "completed_tasks": [
+          "01-01-01: Docker Engine installed",
+          "01-01-02: Docker daemon configured",
+          "01-XX-XX: Previous component installed"
+        ],
+        "system_requirements": {
+          "cpu": "Minimum X cores for component",
+          "ram": "Minimum XGB for component",
+          "storage": "Minimum XGB for component data",
+          "network": "Access to required networks"
+        }
+      }
+    },
+    "task_structure": {
+      "task_format": {
+        "task_id": "01-XX-XX",
+        "title": "Task Title",
+        "description": "Detailed task description",
+        "estimated_duration": "XX minutes",
+        "critical": true,
+        "steps": [
+          {
+            "step_id": "01-XX-XX-XX",
+            "title": "Step Title",
+            "description": "Detailed step description",
+            "commands": {
+              "ubuntu": [
+                "command1",
+                "command2"
+              ],
+              "windows": [
+                "command1",
+                "command2"
+              ],
+              "macos": [
+                "command1",
+                "command2"
+              ]
+            },
+            "verification": "What to check after step",
+            "expected_output": "Expected result of step"
+          }
+        ],
+        "verification_commands": [
+          "command1",
+          "command2"
+        ],
+        "expected_outputs": {
+          "output1": "Expected result 1",
+          "output2": "Expected result 2"
+        }
+      }
+    }
+  },
+  "remaining_sub_recipes": {
+    "01-05-service-discovery": {
+      "title": "Service Discovery and Configuration",
+      "components": [
+        "Consul",
+        "Service Registry",
+        "Configuration Management"
+      ],
+      "total_tasks": 12,
+      "duration": "1-2 days",
+      "tasks": [
+        {
+          "task_id": "01-05-01",
+          "title": "Install Consul Server",
+          "description": "Install Consul server with exact configuration",
+          "steps": [
+            "Create Consul configuration directory",
+            "Create consul.json configuration",
+            "Set Consul permissions",
+            "Create Consul service file"
+          ]
+        },
+        {
+          "task_id": "01-05-02",
+          "title": "Configure Service Registry",
+          "description": "Configure service registry with health checks",
+          "steps": [
+            "Create service definitions",
+            "Configure health check endpoints",
+            "Set up service discovery",
+            "Configure DNS resolution"
+          ]
+        },
+        {
+          "task_id": "01-05-03",
+          "title": "Setup Configuration Management",
+          "description": "Setup key-value store for configuration",
+          "steps": [
+            "Create configuration keys",
+            "Set up configuration templates",
+            "Configure configuration updates",
+            "Setup configuration validation"
+          ]
+        }
+      ]
+    },
+    "01-06-message-queue": {
+      "title": "Message Queue Infrastructure",
+      "components": [
+        "RabbitMQ",
+        "Clustering",
+        "Management UI",
+        "Monitoring"
+      ],
+      "total_tasks": 16,
+      "duration": "2-3 days",
+      "tasks": [
+        {
+          "task_id": "01-06-01",
+          "title": "Install RabbitMQ Server",
+          "description": "Install RabbitMQ with exact configuration",
+          "steps": [
+            "Create RabbitMQ configuration directory",
+            "Create rabbitmq.conf configuration",
+            "Set RabbitMQ permissions",
+            "Configure RabbitMQ plugins"
+          ]
+        },
+        {
+          "task_id": "01-06-02",
+          "title": "Setup RabbitMQ Clustering",
+          "description": "Setup RabbitMQ clustering for high availability",
+          "steps": [
+            "Configure cluster nodes",
+            "Setup node communication",
+            "Configure cluster policies",
+            "Setup cluster monitoring"
+          ]
+        },
+        {
+          "task_id": "01-06-03",
+          "title": "Configure Management UI",
+          "description": "Configure RabbitMQ Management UI",
+          "steps": [
+            "Enable management plugin",
+            "Configure admin user",
+            "Setup access controls",
+            "Configure monitoring"
+          ]
+        }
+      ]
+    },
+    "01-07-cache-layer": {
+      "title": "Distributed Caching Layer",
+      "components": [
+        "Redis",
+        "Clustering",
+        "Persistence",
+        "Sentinel"
+      ],
+      "total_tasks": 14,
+      "duration": "2 days",
+      "tasks": [
+        {
+          "task_id": "01-07-01",
+          "title": "Install Redis Server",
+          "description": "Install Redis with exact configuration",
+          "steps": [
+            "Create Redis configuration directory",
+            "Create redis.conf configuration",
+            "Set Redis permissions",
+            "Configure Redis persistence"
+          ]
+        },
+        {
+          "task_id": "01-07-02",
+          "title": "Setup Redis Clustering",
+          "description": "Setup Redis clustering for scalability",
+          "steps": [
+            "Configure cluster nodes",
+            "Setup cluster communication",
+            "Configure cluster policies",
+            "Setup cluster monitoring"
+          ]
+        },
+        {
+          "task_id": "01-07-03",
+          "title": "Configure Redis Sentinel",
+          "description": "Configure Redis Sentinel for high availability",
+          "steps": [
+            "Setup Sentinel configuration",
+            "Configure failover detection",
+            "Setup Sentinel monitoring",
+            "Configure Sentinel communication"
+          ]
+        }
+      ]
+    },
+    "01-08-backup-infrastructure": {
+      "title": "Backup and Recovery System",
+      "components": [
+        "Backup Scripts",
+        "Versioning",
+        "Recovery Procedures"
+      ],
+      "total_tasks": 12,
+      "duration": "1-2 days",
+      "tasks": [
+        {
+          "task_id": "01-08-01",
+          "title": "Create Backup Scripts",
+          "description": "Create automated backup scripts",
+          "steps": [
+            "Create database backup scripts",
+            "Create file system backup scripts",
+            "Create configuration backup scripts",
+            "Setup backup scheduling"
+          ]
+        },
+        {
+          "task_id": "01-08-02",
+          "title": "Setup Backup Versioning",
+          "description": "Setup backup versioning and retention",
+          "steps": [
+            "Configure backup retention policies",
+            "Setup backup compression",
+            "Configure backup encryption",
+            "Setup backup verification"
+          ]
+        },
+        {
+          "task_id": "01-08-03",
+          "title": "Create Recovery Procedures",
+          "description": "Create detailed recovery procedures",
+          "steps": [
+            "Create database recovery procedures",
+            "Create file system recovery procedures",
+            "Create configuration recovery procedures",
+            "Setup recovery testing"
+          ]
+        }
+      ]
+    },
+    "01-09-security-hardening": {
+      "title": "Security Hardening and Compliance",
+      "components": [
+        "Firewall",
+        "Security Policies",
+        "Compliance Checks"
+      ],
+      "total_tasks": 18,
+      "duration": "2-3 days",
+      "tasks": [
+        {
+          "task_id": "01-09-01",
+          "title": "Configure Firewall Rules",
+          "description": "Configure comprehensive firewall rules",
+          "steps": [
+            "Setup UFW firewall",
+            "Configure inbound rules",
+            "Configure outbound rules",
+            "Setup firewall monitoring"
+          ]
+        },
+        {
+          "task_id": "01-09-02",
+          "title": "Implement Security Policies",
+          "description": "Implement security policies and controls",
+          "steps": [
+            "Create access control policies",
+            "Setup authentication policies",
+            "Configure encryption policies",
+            "Setup audit policies"
+          ]
+        },
+        {
+          "task_id": "01-09-03",
+          "title": "Setup Compliance Monitoring",
+          "description": "Setup compliance monitoring and reporting",
+          "steps": [
+            "Configure compliance checks",
+            "Setup compliance reporting",
+            "Configure compliance alerts",
+            "Setup compliance documentation"
+          ]
+        }
+      ]
+    },
+    "01-10-performance-optimization": {
+      "title": "Performance Optimization and Tuning",
+      "components": [
+        "Resource Limits",
+        "Performance Tuning",
+        "Optimization"
+      ],
+      "total_tasks": 15,
+      "duration": "2 days",
+      "tasks": [
+        {
+          "task_id": "01-10-01",
+          "title": "Configure Resource Limits",
+          "description": "Configure system resource limits",
+          "steps": [
+            "Setup CPU limits",
+            "Configure memory limits",
+            "Setup disk I/O limits",
+            "Configure network limits"
+          ]
+        },
+        {
+          "task_id": "01-10-02",
+          "title": "Optimize System Performance",
+          "description": "Optimize system performance settings",
+          "steps": [
+            "Configure kernel parameters",
+            "Optimize file system settings",
+            "Configure network optimization",
+            "Setup performance monitoring"
+          ]
+        },
+        {
+          "task_id": "01-10-03",
+          "title": "Setup Performance Monitoring",
+          "description": "Setup comprehensive performance monitoring",
+          "steps": [
+            "Configure performance metrics",
+            "Setup performance alerts",
+            "Configure performance reporting",
+            "Setup performance analysis"
+          ]
+        }
+      ]
+    },
+    "01-11-disaster-recovery": {
+      "title": "Disaster Recovery and High Availability",
+      "components": [
+        "Failover",
+        "Recovery Procedures",
+        "Business Continuity"
+      ],
+      "total_tasks": 10,
+      "duration": "1-2 days",
+      "tasks": [
+        {
+          "task_id": "01-11-01",
+          "title": "Setup Failover Mechanisms",
+          "description": "Setup automatic failover mechanisms",
+          "steps": [
+            "Configure service failover",
+            "Setup database failover",
+            "Configure network failover",
+            "Setup monitoring failover"
+          ]
+        },
+        {
+          "task_id": "01-11-02",
+          "title": "Create Recovery Procedures",
+          "description": "Create detailed recovery procedures",
+          "steps": [
+            "Create service recovery procedures",
+            "Create database recovery procedures",
+            "Create network recovery procedures",
+            "Create monitoring recovery procedures"
+          ]
+        },
+        {
+          "task_id": "01-11-03",
+          "title": "Setup Business Continuity",
+          "description": "Setup business continuity planning",
+          "steps": [
+            "Create business continuity plan",
+            "Setup disaster recovery testing",
+            "Configure business continuity monitoring",
+            "Setup business continuity documentation"
+          ]
+        }
+      ]
+    },
+    "01-12-documentation-and-handover": {
+      "title": "Documentation and Handover",
+      "components": [
+        "System Documentation",
+        "User Guides",
+        "Handover Procedures"
+      ],
+      "total_tasks": 10,
+      "duration": "1 day",
+      "tasks": [
+        {
+          "task_id": "01-12-01",
+          "title": "Create System Documentation",
+          "description": "Create comprehensive system documentation",
+          "steps": [
+            "Create system overview documentation",
+            "Create architecture documentation",
+            "Create configuration documentation",
+            "Create maintenance documentation"
+          ]
+        },
+        {
+          "task_id": "01-12-02",
+          "title": "Create User Guides",
+          "description": "Create user guides for system administration",
+          "steps": [
+            "Create administration guide",
+            "Create troubleshooting guide",
+            "Create maintenance guide",
+            "Create upgrade guide"
+          ]
+        },
+        {
+          "task_id": "01-12-03",
+          "title": "Create Handover Documentation",
+          "description": "Create handover documentation and procedures",
+          "steps": [
+            "Create handover checklist",
+            "Create contact information",
+            "Create escalation procedures",
+            "Create follow-up schedule"
+          ]
+        }
+      ]
+    }
+  },
+  "implementation_guidelines": {
+    "task_creation_rules": [
+      "Every task must have exact step-by-step commands",
+      "All commands must specify OS-specific variations",
+      "Every step must have verification criteria",
+      "Every task must have expected outputs",
+      "All file paths must be absolute and exact",
+      "All configuration files must have complete content",
+      "All permissions must be specified exactly",
+      "All network configurations must be detailed",
+      "All service dependencies must be explicit",
+      "All verification commands must be provided"
+    ],
+    "verification_requirements": [
+      "Every sub-recipe must have comprehensive testing",
+      "All services must be verified as running",
+      "All configurations must be validated",
+      "All network connectivity must be tested",
+      "All security measures must be verified",
+      "All performance metrics must be checked",
+      "All backup procedures must be tested",
+      "All recovery procedures must be validated"
+    ],
+    "documentation_requirements": [
+      "Every sub-recipe must have complete troubleshooting section",
+      "All common issues must be documented with solutions",
+      "All error messages must be explained",
+      "All recovery procedures must be detailed",
+      "All maintenance procedures must be documented",
+      "All upgrade procedures must be specified",
+      "All rollback procedures must be detailed"
+    ]
+  },
+  "quality_assurance": {
+    "review_checklist": [
+      "All commands are exact and complete",
+      "All file paths are correct and absolute",
+      "All configurations are complete and valid",
+      "All dependencies are explicitly listed",
+      "All verification steps are comprehensive",
+      "All troubleshooting scenarios are covered",
+      "All security measures are implemented",
+      "All performance optimizations are included",
+      "All backup procedures are detailed",
+      "All recovery procedures are complete"
+    ],
+    "testing_requirements": [
+      "All sub-recipes must be tested in isolation",
+      "All sub-recipes must be tested in sequence",
+      "All integration points must be validated",
+      "All failure scenarios must be tested",
+      "All recovery scenarios must be validated",
+      "All performance requirements must be met",
+      "All security requirements must be satisfied"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-AI-SERVICE-MODEL-MANAGEMENT-004",
+    "title": "LLM Model Management",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 2,
+    "kitchen_system": {
+      "pantry_category": "model_management",
+      "cooking_time": "60 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "model_optimization",
+        "hardware_mapping",
+        "api_integration"
+      ],
+      "cache_strategy": "model_management_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "description": "Manages the local LLMs. This includes pulling default models, selecting the optimal model based on the hardware profile, and allowing user overrides. It will fetch standard, function-calling, and hardware-optimal models.",
+    "technology_stack": {
+      "language": "Python",
+      "llm_server": "Ollama",
+      "api_integration": "REST_API",
+      "hardware_optimization": "GPU_CPU_mapping"
+    },
+    "deliverables": [
+      "A configuration file for model management.",
+      "Scripts to interact with the Ollama API to pull and list models.",
+      "Logic to select the best model based on hardware constraints and user preferences."
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "MODEL_CONFIGURATION_TASK",
+        "name": "Model Configuration Setup",
+        "description": "Create model configuration and management system",
+        "estimated_time": "15 minutes",
+        "dependencies": [
+          "HARDWARE_PROFILING_TASK"
+        ],
+        "skills_required": [
+          "model_configuration",
+          "hardware_mapping"
+        ]
+      },
+      {
+        "task_id": "MODEL_MANAGEMENT_TASK",
+        "name": "Model Management Implementation",
+        "description": "Implement model management scripts and API integration",
+        "estimated_time": "45 minutes",
+        "dependencies": [
+          "OLLAMA_DEPLOYMENT_TASK",
+          "MODEL_CONFIGURATION_TASK"
+        ],
+        "skills_required": [
+          "api_integration",
+          "model_optimization"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "MODEL_CONFIGURATION_SKILL",
+        "name": "Model Configuration",
+        "description": "Configure and manage LLM models",
+        "tools": [
+          "model_config_manager",
+          "hardware_mapper"
+        ],
+        "validation": "model_configuration_validation"
+      },
+      {
+        "skill_id": "API_INTEGRATION_SKILL",
+        "name": "API Integration",
+        "description": "Integrate with Ollama API for model management",
+        "tools": [
+          "ollama_api_client",
+          "model_puller"
+        ],
+        "validation": "api_integration_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "MODEL_CONFIG_MANAGER_TOOL",
+        "name": "Model Configuration Manager",
+        "description": "Manage model configurations and hardware mappings",
+        "file_path": "scripts/system/model_manager.py",
+        "config": "config/ai_services/model_config.yml"
+      },
+      {
+        "tool_id": "OLLAMA_API_CLIENT_TOOL",
+        "name": "Ollama API Client",
+        "description": "Client for interacting with Ollama API",
+        "file_path": "scripts/api/ollama_client.py",
+        "config": "config/api/ollama_api_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "MODEL_CONFIG",
+        "name": "Model Configuration",
+        "description": "Configuration for model management",
+        "file_path": "config/ai_services/model_config.yml",
+        "schema": "model_config_schema"
+      },
+      {
+        "config_id": "OLLAMA_API_CONFIG",
+        "name": "Ollama API Configuration",
+        "description": "Configuration for Ollama API integration",
+        "file_path": "config/api/ollama_api_config.json",
+        "schema": "ollama_api_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "MODEL_CONFIGURATION_TASK",
+          "MODEL_CONFIGURATION_SKILL",
+          "MODEL_CONFIG_MANAGER_TOOL"
+        ],
+        "description": "Gather model configuration ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "model_management_cache",
+        "description": "Check for existing model management cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "MODEL_CONFIGURATION_TASK",
+        "description": "Execute model configuration task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "MODEL_MANAGEMENT_TASK",
+          "API_INTEGRATION_SKILL",
+          "OLLAMA_API_CLIENT_TOOL"
+        ],
+        "description": "Gather model management ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "MODEL_MANAGEMENT_TASK",
+        "description": "Execute model management task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "validation": "model_configuration_validation",
+        "description": "Validate model configuration and management"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "cache_key": "model_management_cache",
+        "description": "Cache model management configuration"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "model_management_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "model_update",
+      "cache_validation": "model_configuration_validation"
+    }
+  },
+  "tasks": [
+    {
+      "id": "40-04A",
+      "title": "Create Model Configuration",
+      "description": "Create a configuration file that defines the default models, function-calling models, and maps hardware profiles to optimal models.",
+      "dependencies": [
+        "40-001"
+      ],
+      "estimated_time": "15 minutes",
+      "files_to_create": [
+        "config/ai_services/model_config.yml"
+      ],
+      "acceptance_criteria": [
+        "The model_config.yml is created with sections for default, function-calling, and hardware-specific models."
+      ]
+    },
+    {
+      "id": "40-04B",
+      "title": "Implement Model Management Scripts",
+      "description": "Develop a Python script to read the hardware profile and model config, then interact with the Ollama API to pull the required models.",
+      "dependencies": [
+        "40-002",
+        "40-04A"
+      ],
+      "estimated_time": "45 minutes",
+      "commands": [
+        "python scripts/system/model_manager.py --pull-defaults"
+      ],
+      "files_to_create": [
+        "scripts/system/model_manager.py"
+      ],
+      "acceptance_criteria": [
+        "Script correctly reads hardware_profile.json and model_config.yml.",
+        "Script pulls the default base model (e.g., 'llama3').",
+        "Script pulls a default function-calling model (e.g., 'gemma2').",
+        "Script pulls the optimal model based on the detected hardware.",
+        "User-defined models in the config are also pulled."
+      ]
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "04-Model-Management",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

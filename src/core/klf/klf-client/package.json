@@ -1,0 +1,21 @@
+{
+  "name": "@kos/klf-client",
+  "version": "1.0.0",
+  "description": "KLF (Kind Link Framework) client for kOS frontends",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["kos", "klf", "kind-link-framework"],
+  "author": "kOS Team",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}

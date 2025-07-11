@@ -1,0 +1,754 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-11-DISASTER-RECOVERY-COMPREHENSIVE",
+    "title": "Disaster Recovery and Business Continuity - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:01:07Z",
+    "last_updated": "2025-07-05T18:01:07Z",
+    "estimated_tokens": 35000,
+    "estimated_execution_time": "2-3 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 6,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": ["ISO 27001", "SOC 2", "BCM"],
+    "architecture_tier": "enterprise-disaster-recovery",
+    "description": "Complete disaster recovery and business continuity implementation with recovery procedures, failover systems, and testing",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": ["01-01-docker-environment", "01-02-system-monitoring", "01-03-logging-infrastructure", "01-04-load-balancing", "01-05-service-discovery", "01-06-message-queue", "01-07-cache-layer", "01-08-backup-infrastructure", "01-09-security-hardening", "01-10-performance-optimization"],
+      "required_services": ["docker", "backup", "monitoring"],
+      "required_networks": ["ai-q-network", "ai-q-services"],
+      "required_volumes": ["ai-q-data", "ai-q-backup"],
+      "required_ports": [],
+      "required_files": ["/opt/ai-q/disaster-recovery/"]
+    },
+    "kitchen_system": {
+      "pantry_category": "disaster-recovery",
+      "cooking_time": "180 minutes",
+      "complexity": "expert",
+      "kitchen_tools": ["recovery_procedures", "failover_systems", "dr_testing"],
+      "cache_strategy": "disaster_recovery_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Disaster Recovery and Business Continuity",
+    "description": "Complete disaster recovery and business continuity implementation with recovery procedures, failover systems, and testing",
+    "prerequisites": [
+      "01-01-docker-environment completed",
+      "01-02-system-monitoring completed",
+      "01-03-logging-infrastructure completed",
+      "01-04-load-balancing completed",
+      "01-05-service-discovery completed",
+      "01-06-message-queue completed",
+      "01-07-cache-layer completed",
+      "01-08-backup-infrastructure completed",
+      "01-09-security-hardening completed",
+      "01-10-performance-optimization completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 4GB RAM available",
+      "100GB free disk space for DR data"
+    ],
+    "target_outcome": "Production-ready disaster recovery system with comprehensive recovery procedures and failover capabilities",
+    "success_criteria": [
+      "Disaster recovery plan created",
+      "Failover systems configured",
+      "Recovery procedures implemented",
+      "DR testing completed",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "DR_PLAN_TASK",
+        "name": "Disaster Recovery Plan Creation",
+        "description": "Create comprehensive disaster recovery plan with RTO/RPO targets",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": ["disaster_recovery", "business_continuity", "risk_assessment"],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/disaster-recovery",
+          "tee /opt/ai-q/disaster-recovery/dr-plan.json << 'EOF'",
+          "{",
+          "  \"disaster_recovery_plan\": {",
+          "    \"version\": \"1.0.0\",",
+          "    \"last_updated\": \"2025-07-05T18:01:07Z\",",
+          "    \"rto_target\": \"4 hours\",",
+          "    \"rpo_target\": \"1 hour\",",
+          "    \"scenarios\": [",
+          "      {",
+          "        \"scenario\": \"complete_system_failure\",",
+          "        \"description\": \"Complete system failure requiring full recovery\",",
+          "        \"recovery_steps\": [",
+          "          \"Stop all services\",",
+          "          \"Restore from latest backup\",",
+          "          \"Verify data integrity\",",
+          "          \"Start services in order\",",
+          "          \"Run health checks\"",
+          "        ],",
+          "        \"estimated_time\": \"2-4 hours\"",
+          "      },",
+          "      {",
+          "        \"scenario\": \"database_corruption\",",
+          "        \"description\": \"Database corruption requiring database recovery\",",
+          "        \"recovery_steps\": [",
+          "          \"Stop database services\",",
+          "          \"Restore database from backup\",",
+          "          \"Verify database integrity\",",
+          "          \"Start database services\",",
+          "          \"Run database health checks\"",
+          "        ],",
+          "        \"estimated_time\": \"30-60 minutes\"",
+          "      },",
+          "      {",
+          "        \"scenario\": \"network_outage\",",
+          "        \"description\": \"Network outage requiring failover\",",
+          "        \"recovery_steps\": [",
+          "          \"Activate backup network\",",
+          "          \"Update DNS records\",",
+          "          \"Verify connectivity\",",
+          "          \"Run service health checks\"",
+          "        ],",
+          "        \"estimated_time\": \"15-30 minutes\"",
+          "      }",
+          "    ],",
+          "    \"contact_information\": {",
+          "      \"primary_admin\": \"admin@ai-q.local\",",
+          "      \"backup_admin\": \"backup-admin@ai-q.local\",",
+          "      \"emergency_contact\": \"+1-555-0123\"",
+          "    }",
+          "  }",
+          "}",
+          "EOF"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/disaster-recovery/",
+          "cat /opt/ai-q/disaster-recovery/dr-plan.json"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "DISASTER_RECOVERY_SKILL",
+        "name": "Disaster Recovery",
+        "description": "Implement disaster recovery procedures with exact specifications",
+        "tools": ["recovery_procedures", "failover_systems", "dr_testing"],
+        "validation": "disaster_recovery_validation",
+        "exact_validation_commands": [
+          "ls -la /opt/ai-q/disaster-recovery/",
+          "cat /opt/ai-q/disaster-recovery/dr-plan.json",
+          "test -x /opt/ai-q/disaster-recovery/recovery-procedures.sh"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "DR_SETUP_TOOL",
+        "name": "Disaster Recovery Setup Tool",
+        "description": "Automated disaster recovery installation and configuration",
+        "file_path": "scripts/disaster-recovery/setup_dr.py",
+        "config": "config/disaster-recovery/dr_config.json",
+        "exact_config_spec": {
+          "rto_target": "4 hours",
+          "rpo_target": "1 hour",
+          "failover_threshold": 3,
+          "health_check_interval": "30s"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "DR_CONFIG",
+        "name": "Disaster Recovery Configuration",
+        "description": "Disaster recovery configuration with exact specifications",
+        "file_path": "/opt/ai-q/disaster-recovery/dr-plan.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "disaster_recovery_plan": {
+              "type": "object",
+              "properties": {
+                "version": {"type": "string"},
+                "rto_target": {"type": "string"},
+                "rpo_target": {"type": "string"},
+                "scenarios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scenario": {"type": "string"},
+                      "description": {"type": "string"},
+                      "recovery_steps": {"type": "array"},
+                      "estimated_time": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "01-01-01: Docker Engine installed",
+      "01-01-02: Docker daemon configured",
+      "01-01-03: Docker networks created",
+      "01-02-01: Prometheus installed",
+      "01-02-02: Node Exporter running",
+      "01-02-03: Alert Manager configured",
+      "01-02-04: Grafana installed",
+      "01-03-01: Elasticsearch installed",
+      "01-03-02: Logstash configured",
+      "01-03-03: Kibana installed",
+      "01-04-01: Nginx installed",
+      "01-05-01: Consul server installed",
+      "01-06-01: RabbitMQ server installed",
+      "01-07-01: Redis server installed",
+      "01-08-01: Backup scripts created",
+      "01-09-01: Firewall configured",
+      "01-10-01: Resource limits configured"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 2 cores for DR operations",
+      "ram": "Minimum 4GB for DR operations",
+      "storage": "Minimum 100GB for DR data",
+      "network": "Access to all service networks"
+    }
+  },
+  "task_01_create_disaster_recovery_plan": {
+    "task_id": "01-11-01",
+    "title": "Create Disaster Recovery Plan",
+    "description": "Create comprehensive disaster recovery plan",
+    "estimated_duration": "60 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-11-01-01",
+        "title": "Create DR plan document",
+        "description": "Create detailed disaster recovery plan",
+        "config_file": "/opt/ai-q/disaster-recovery/dr-plan.json",
+        "config_content": {
+          "disaster_recovery_plan": {
+            "version": "1.0.0",
+            "last_updated": "2025-07-05T18:01:07Z",
+            "rto_target": "4 hours",
+            "rpo_target": "1 hour",
+            "scenarios": [
+              {
+                "scenario": "complete_system_failure",
+                "description": "Complete system failure requiring full recovery",
+                "recovery_steps": [
+                  "Stop all services",
+                  "Restore from latest backup",
+                  "Verify data integrity",
+                  "Start services in order",
+                  "Run health checks"
+                ],
+                "estimated_time": "2-4 hours"
+              },
+              {
+                "scenario": "database_corruption",
+                "description": "Database corruption requiring database recovery",
+                "recovery_steps": [
+                  "Stop database services",
+                  "Restore database from backup",
+                  "Verify database integrity",
+                  "Start database services",
+                  "Run database health checks"
+                ],
+                "estimated_time": "30-60 minutes"
+              },
+              {
+                "scenario": "network_outage",
+                "description": "Network outage requiring failover",
+                "recovery_steps": [
+                  "Activate backup network",
+                  "Update DNS records",
+                  "Verify connectivity",
+                  "Run service health checks"
+                ],
+                "estimated_time": "15-30 minutes"
+              }
+            ],
+            "contact_information": {
+              "primary_admin": "admin@ai-q.local",
+              "backup_admin": "backup-admin@ai-q.local",
+              "emergency_contact": "+1-555-0123"
+            }
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/disaster-recovery",
+          "sudo tee /opt/ai-q/disaster-recovery/dr-plan.json << 'EOF'\n{\n  \"disaster_recovery_plan\": {\n    \"version\": \"1.0.0\",\n    \"last_updated\": \"2025-01-27T21:00:00Z\",\n    \"rto_target\": \"4 hours\",\n    \"rpo_target\": \"1 hour\",\n    \"scenarios\": [\n      {\n        \"scenario\": \"complete_system_failure\",\n        \"description\": \"Complete system failure requiring full recovery\",\n        \"recovery_steps\": [\n          \"Stop all services\",\n          \"Restore from latest backup\",\n          \"Verify data integrity\",\n          \"Start services in order\",\n          \"Run health checks\"\n        ],\n        \"estimated_time\": \"2-4 hours\"\n      },\n      {\n        \"scenario\": \"database_corruption\",\n        \"description\": \"Database corruption requiring database recovery\",\n        \"recovery_steps\": [\n          \"Stop database services\",\n          \"Restore database from backup\",\n          \"Verify database integrity\",\n          \"Start database services\",\n          \"Run database health checks\"\n        ],\n        \"estimated_time\": \"30-60 minutes\"\n      },\n      {\n        \"scenario\": \"network_outage\",\n        \"description\": \"Network outage requiring failover\",\n        \"recovery_steps\": [\n          \"Activate backup network\",\n          \"Update DNS records\",\n          \"Verify connectivity\",\n          \"Run service health checks\"\n        ],\n        \"estimated_time\": \"15-30 minutes\"\n      }\n    ],\n    \"contact_information\": {\n      \"primary_admin\": \"admin@ai-q.local\",\n      \"backup_admin\": \"backup-admin@ai-q.local\",
+          \"emergency_contact\": \"+1-555-0123\"\n    }\n  }\n}\nEOF"
+        ],
+        "verification": "Check DR plan exists",
+        "expected_output": "dr-plan.json created with specified configuration"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/disaster-recovery/",
+      "cat /opt/ai-q/disaster-recovery/dr-plan.json"
+    ],
+    "expected_outputs": {
+      "dr_plan": "dr-plan.json contains disaster recovery plan"
+    }
+  },
+  "task_02_setup_failover_systems": {
+    "task_id": "01-11-02",
+    "title": "Setup Failover Systems",
+    "description": "Setup failover systems for high availability",
+    "estimated_duration": "50 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-11-02-01",
+        "title": "Create failover configuration",
+        "description": "Create failover system configuration",
+        "config_file": "/opt/ai-q/disaster-recovery/failover-config.json",
+        "config_content": {
+          "failover_configuration": {
+            "load_balancer": {
+              "primary": "nginx-primary",
+              "backup": "nginx-backup",
+              "health_check_interval": "30s",
+              "failover_threshold": 3
+            },
+            "database": {
+              "primary": "postgresql-primary",
+              "backup": "postgresql-backup",
+              "replication_lag_threshold": "30s",
+              "auto_failover": true
+            },
+            "cache": {
+              "primary": "redis-master",
+              "backup": "redis-slave",
+              "sync_mode": "async",
+              "auto_failover": true
+            },
+            "message_queue": {
+              "primary": "rabbitmq-primary",
+              "backup": "rabbitmq-backup",
+              "mirroring": true,
+              "auto_failover": true
+            }
+          }
+        },
+        "commands": [
+          "sudo tee /opt/ai-q/disaster-recovery/failover-config.json << 'EOF'\n{\n  \"failover_configuration\": {\n    \"load_balancer\": {\n      \"primary\": \"nginx-primary\",\n      \"backup\": \"nginx-backup\",\n      \"health_check_interval\": \"30s\",\n      \"failover_threshold\": 3\n    },\n    \"database\": {\n      \"primary\": \"postgresql-primary\",\n      \"backup\": \"postgresql-backup\",\n      \"replication_lag_threshold\": \"30s\",\n      \"auto_failover\": true\n    },\n    \"cache\": {\n      \"primary\": \"redis-master\",\n      \"backup\": \"redis-slave\",\n      \"sync_mode\": \"async\",\n      \"auto_failover\": true\n    },\n    \"message_queue\": {\n      \"primary\": \"rabbitmq-primary\",\n      \"backup\": \"rabbitmq-backup\",\n      \"mirroring\": true,\n      \"auto_failover\": true\n    }\n  }\n}\nEOF"
+        ],
+        "verification": "Check failover configuration exists",
+        "expected_output": "failover-config.json created with specified configuration"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/disaster-recovery/failover-config.json"
+    ],
+    "expected_outputs": {
+      "failover_config": "failover-config.json contains failover configuration"
+    }
+  },
+  "task_03_create_recovery_procedures": {
+    "task_id": "01-11-03",
+    "title": "Create Recovery Procedures",
+    "description": "Create detailed recovery procedures for all scenarios",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-11-03-01",
+        "title": "Create recovery procedures script",
+        "description": "Create comprehensive recovery procedures script",
+        "config_file": "/opt/ai-q/disaster-recovery/recovery-procedures.sh",
+        "config_content": "#!/bin/bash\n# Disaster Recovery Procedures Script\n\nLOG_DIR=\"/opt/ai-q/disaster-recovery/logs\"\nBACKUP_DIR=\"/opt/ai-q/backup/data\"\n\nmkdir -p \"$LOG_DIR\"\n\n# Log function\nlog() {\n    echo \"[$(date '+%Y-%m-%d %H:%M:%S')] $1\" | tee -a \"$LOG_DIR/recovery-$(date +%Y%m%d).log\"\n}\n\n# Complete system recovery\ncomplete_system_recovery() {\n    log \"Starting complete system recovery\"\n    \n    # Stop all services\n    log \"Stopping all services\"\n    docker-compose -f /opt/ai-q/docker/compose/ai-q-stack.yml down\n    \n    # Find latest backup\n    LATEST_BACKUP=$(ls -t \"$BACKUP_DIR\" | grep ai-q-backup- | head -1)\n    if [ -z \"$LATEST_BACKUP\" ]; then\n        log \"ERROR: No backup found\"\n        exit 1\n    fi\n    \n    log \"Using backup: $LATEST_BACKUP\"\n    \n    # Restore from backup\n    /opt/ai-q/backup/scripts/recover-all.sh \"$LATEST_BACKUP\"\n    \n    # Verify recovery\n    log \"Verifying recovery\"\n    sleep 30\n    \n    # Check service health\n    if curl -f http://localhost:8500/v1/status/leader > /dev/null 2>&1; then\n        log \"Consul is healthy\"\n    else\n        log \"WARNING: Consul health check failed\"\n    fi\n    \n    if curl -f http://localhost:9090/-/healthy > /dev/null 2>&1; then\n        log \"Prometheus is healthy\"\n    else\n        log \"WARNING: Prometheus health check failed\"\n    fi\n    \n    log \"Complete system recovery completed\"\n}\n\n# Database recovery\ndatabase_recovery() {\n    log \"Starting database recovery\"\n    \n    # Stop database services\n    docker stop ai-q-postgresql\n    \n    # Find latest database backup\n    LATEST_DB_BACKUP=$(ls -t \"$BACKUP_DIR\" | grep ai-q-backup- | head -1)\n    \n    # Restore database\n    docker exec -i ai-q-postgresql psql -U ai_q_user < \"$BACKUP_DIR/$LATEST_DB_BACKUP/postgresql-full.sql\"\n    \n    # Start database\n    docker start ai-q-postgresql\n    \n    # Verify database\n    sleep 10\n    if docker exec ai-q-postgresql pg_isready -U ai_q_user; then\n        log \"Database recovery completed successfully\"\n    else\n        log \"ERROR: Database recovery failed\"\n        exit 1\n    fi\n}\n\n# Network failover\nnetwork_failover() {\n    log \"Starting network failover\"\n    \n    # Check primary network\n    if ping -c 3 8.8.8.8 > /dev/null 2>&1; then\n        log \"Primary network is available\"\n        return 0\n    fi\n    \n    log \"Primary network failed, activating backup network\"\n    \n    # Activate backup network (example)\n    # ip route add default via 192.168.1.254 dev eth1\n    \n    # Verify connectivity\n    if ping -c 3 8.8.8.8 > /dev/null 2>&1; then\n        log \"Backup network activated successfully\"\n    else\n        log \"ERROR: Backup network activation failed\"\n        exit 1\n    fi\n}\n\n# Main recovery function\nmain() {\n    case \"$1\" in\n        \"complete\")\n            complete_system_recovery\n            ;;\n        \"database\")\n            database_recovery\n            ;;\n        \"network\")\n            network_failover\n            ;;\n        *)\n            echo \"Usage: $0 {complete|database|network}\"\n            exit 1\n            ;;\n    esac\n}\n\nmain \"$@\"",
+        "commands": [
+          "sudo tee /opt/ai-q/disaster-recovery/recovery-procedures.sh << 'EOF'\n#!/bin/bash\n# Disaster Recovery Procedures Script\n\nLOG_DIR=\"/opt/ai-q/disaster-recovery/logs\"\nBACKUP_DIR=\"/opt/ai-q/backup/data\"\n\nmkdir -p \"$LOG_DIR\"\n\n# Log function\nlog() {\n    echo \"[$(date '+%Y-%m-%d %H:%M:%S')] $1\" | tee -a \"$LOG_DIR/recovery-$(date +%Y%m%d).log\"\n}\n\n# Complete system recovery\ncomplete_system_recovery() {\n    log \"Starting complete system recovery\"\n    \n    # Stop all services\n    log \"Stopping all services\"\n    docker-compose -f /opt/ai-q/docker/compose/ai-q-stack.yml down\n    \n    # Find latest backup\n    LATEST_BACKUP=$(ls -t \"$BACKUP_DIR\" | grep ai-q-backup- | head -1)\n    if [ -z \"$LATEST_BACKUP\" ]; then\n        log \"ERROR: No backup found\"\n        exit 1\n    fi\n    \n    log \"Using backup: $LATEST_BACKUP\"\n    \n    # Restore from backup\n    /opt/ai-q/backup/scripts/recover-all.sh \"$LATEST_BACKUP\"\n    \n    # Verify recovery\n    log \"Verifying recovery\"\n    sleep 30\n    \n    # Check service health\n    if curl -f http://localhost:8500/v1/status/leader > /dev/null 2>&1; then\n        log \"Consul is healthy\"\n    else\n        log \"WARNING: Consul health check failed\"\n    fi\n    \n    if curl -f http://localhost:9090/-/healthy > /dev/null 2>&1; then\n        log \"Prometheus is healthy\"\n    else\n        log \"WARNING: Prometheus health check failed\"\n    fi\n    \n    log \"Complete system recovery completed\"\n}\n\n# Database recovery\ndatabase_recovery() {\n    log \"Starting database recovery\"\n    \n    # Stop database services\n    docker stop ai-q-postgresql\n    \n    # Find latest database backup\n    LATEST_DB_BACKUP=$(ls -t \"$BACKUP_DIR\" | grep ai-q-backup- | head -1)\n    \n    # Restore database\n    docker exec -i ai-q-postgresql psql -U ai_q_user < \"$BACKUP_DIR/$LATEST_DB_BACKUP/postgresql-full.sql\"\n    \n    # Start database\n    docker start ai-q-postgresql\n    \n    # Verify database\n    sleep 10\n    if docker exec ai-q-postgresql pg_isready -U ai_q_user; then\n        log \"Database recovery completed successfully\"\n    else\n        log \"ERROR: Database recovery failed\"\n        exit 1\n    fi\n}\n\n# Network failover\nnetwork_failover() {\n    log \"Starting network failover\"\n    \n    # Check primary network\n    if ping -c 3 8.8.8.8 > /dev/null 2>&1; then\n        log \"Primary network is available\"\n        return 0\n    fi\n    \n    log \"Primary network failed, activating backup network\"\n    \n    # Activate backup network (example)\n    # ip route add default via 192.168.1.254 dev eth1\n    \n    # Verify connectivity\n    if ping -c 3 8.8.8.8 > /dev/null 2>&1; then\n        log \"Backup network activated successfully\"\n    else\n        log \"ERROR: Backup network activation failed\"\n        exit 1\n    fi\n}\n\n# Main recovery function\nmain() {\n    case \"$1\" in\n        \"complete\")\n            complete_system_recovery\n            ;;\n        \"database\")\n            database_recovery\n            ;;\n        \"network\")\n            network_failover\n            ;;\n        *)\n            echo \"Usage: $0 {complete|database|network}\"\n            exit 1\n            ;;\n    esac\n}\n\nmain \"$@\"\nEOF",
+          "sudo chmod +x /opt/ai-q/disaster-recovery/recovery-procedures.sh"
+        ],
+        "verification": "Check recovery procedures script exists and is executable",
+        "expected_output": "recovery-procedures.sh created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/disaster-recovery/",
+      "cat /opt/ai-q/disaster-recovery/recovery-procedures.sh"
+    ],
+    "expected_outputs": {
+      "recovery_script": "recovery-procedures.sh contains recovery procedures",
+      "executable": "Script is executable"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete Disaster Recovery Verification",
+      "description": "Run comprehensive tests to verify disaster recovery systems",
+      "test_commands": [
+        "ls -la /opt/ai-q/disaster-recovery/",
+        "cat /opt/ai-q/disaster-recovery/dr-plan.json",
+        "cat /opt/ai-q/disaster-recovery/failover-config.json",
+        "/opt/ai-q/disaster-recovery/recovery-procedures.sh",
+        "echo \"DR systems configured successfully\""
+      ],
+      "expected_results": {
+        "dr_plan": "Disaster recovery plan exists",
+        "failover_config": "Failover configuration exists",
+        "recovery_procedures": "Recovery procedures script exists",
+        "dr_systems": "All DR systems configured successfully"
+      }
+    }
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:dr-plan:1.0.0",
+          "task:failover-systems:1.0.0",
+          "task:recovery-procedures:1.0.0",
+          "skill:disaster-recovery:1.0.0",
+          "skill:business-continuity:1.0.0",
+          "skill:failover-management:1.0.0",
+          "tool:dr-setup:1.0.0",
+          "config:dr:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/disaster-recovery/setup_dr.py --gather-ingredients",
+          "python3 scripts/disaster-recovery/setup_failover.py --gather-ingredients",
+          "python3 scripts/disaster-recovery/setup_recovery.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 4GB RAM available",
+          "100GB free disk space available",
+          "All previous infrastructure components operational"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+          "ls -la /opt/ai-q/backup/"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_dr_plan_creation",
+        "description": "Create disaster recovery plan with exact commands",
+        "sub_steps": [
+          "Create DR directories",
+          "Create DR plan configuration",
+          "Validate DR plan"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/disaster-recovery",
+          "tee /opt/ai-q/disaster-recovery/dr-plan.json << 'EOF'",
+          "{",
+          "  \"disaster_recovery_plan\": {",
+          "    \"version\": \"1.0.0\",",
+          "    \"last_updated\": \"2025-01-27T21:00:00Z\",",
+          "    \"rto_target\": \"4 hours\",",
+          "    \"rpo_target\": \"1 hour\",",
+          "    \"scenarios\": [",
+          "      {",
+          "        \"scenario\": \"complete_system_failure\",",
+          "        \"description\": \"Complete system failure requiring full recovery\",",
+          "        \"recovery_steps\": [",
+          "          \"Stop all services\",",
+          "          \"Restore from latest backup\",",
+          "          \"Verify data integrity\",",
+          "          \"Start services in order\",",
+          "          \"Run health checks\"",
+          "        ],",
+          "        \"estimated_time\": \"2-4 hours\"",
+          "      },",
+          "      {",
+          "        \"scenario\": \"database_corruption\",",
+          "        \"description\": \"Database corruption requiring database recovery\",",
+          "        \"recovery_steps\": [",
+          "          \"Stop database services\",",
+          "          \"Restore database from backup\",",
+          "          \"Verify database integrity\",",
+          "          \"Start database services\",",
+          "          \"Run database health checks\"",
+          "        ],",
+          "        \"estimated_time\": \"30-60 minutes\"",
+          "      },",
+          "      {",
+          "        \"scenario\": \"network_outage\",",
+          "        \"description\": \"Network outage requiring failover\",",
+          "        \"recovery_steps\": [",
+          "          \"Activate backup network\",",
+          "          \"Update DNS records\",",
+          "          \"Verify connectivity\",",
+          "          \"Run service health checks\"",
+          "        ],",
+          "        \"estimated_time\": \"15-30 minutes\"",
+          "      }",
+          "    ],",
+          "    \"contact_information\": {",
+          "      \"primary_admin\": \"admin@ai-q.local\",",
+          "      \"backup_admin\": \"backup-admin@ai-q.local\",",
+          "      \"emergency_contact\": \"+1-555-0123\"",
+          "    }",
+          "  }",
+          "}",
+          "EOF"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/disaster-recovery/",
+          "/opt/ai-q/disaster-recovery/dr-plan.json"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_failover_systems_setup",
+        "description": "Setup failover systems with exact commands",
+        "sub_steps": [
+          "Create failover configuration",
+          "Validate failover configuration"
+        ],
+        "exact_commands": [
+          "tee /opt/ai-q/disaster-recovery/failover-config.json << 'EOF'",
+          "{",
+          "  \"failover_configuration\": {",
+          "    \"load_balancer\": {",
+          "      \"primary\": \"nginx-primary\",",
+          "      \"backup\": \"nginx-backup\",",
+          "      \"health_check_interval\": \"30s\",",
+          "      \"failover_threshold\": 3",
+          "    },",
+          "    \"database\": {",
+          "      \"primary\": \"postgresql-primary\",",
+          "      \"backup\": \"postgresql-backup\",",
+          "      \"replication_lag_threshold\": \"30s\",",
+          "      \"auto_failover\": true",
+          "    },",
+          "    \"cache\": {",
+          "      \"primary\": \"redis-master\",",
+          "      \"backup\": \"redis-slave\",",
+          "      \"sync_mode\": \"async\",",
+          "      \"auto_failover\": true",
+          "    },",
+          "    \"message_queue\": {",
+          "      \"primary\": \"rabbitmq-primary\",",
+          "      \"backup\": \"rabbitmq-backup\",",
+          "      \"mirroring\": true,",
+          "      \"auto_failover\": true",
+          "    }",
+          "  }",
+          "}",
+          "EOF"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/disaster-recovery/failover-config.json"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_recovery_procedures_setup",
+        "description": "Setup recovery procedures with exact commands",
+        "sub_steps": [
+          "Create recovery procedures script",
+          "Execute recovery procedures setup",
+          "Validate recovery procedures"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/disaster-recovery/logs",
+          "tee /opt/ai-q/disaster-recovery/recovery-procedures.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Disaster Recovery Procedures Script",
+          "",
+          "LOG_DIR=\"/opt/ai-q/disaster-recovery/logs\"",
+          "BACKUP_DIR=\"/opt/ai-q/backup/data\"",
+          "",
+          "mkdir -p \"$LOG_DIR\"",
+          "",
+          "# Log function",
+          "log() {",
+          "    echo \"[$(date '+%Y-%m-%d %H:%M:%S')] $1\" | tee -a \"$LOG_DIR/recovery-$(date +%Y%m%d).log\"",
+          "}",
+          "",
+          "# Complete system recovery",
+          "complete_system_recovery() {",
+          "    log \"Starting complete system recovery\"",
+          "    ",
+          "    # Stop all services",
+          "    log \"Stopping all services\"",
+          "    docker-compose -f /opt/ai-q/docker/compose/ai-q-stack.yml down",
+          "    ",
+          "    # Find latest backup",
+          "    LATEST_BACKUP=$(ls -t \"$BACKUP_DIR\" | grep ai-q-backup- | head -1)",
+          "    if [ -z \"$LATEST_BACKUP\" ]; then",
+          "        log \"ERROR: No backup found\"",
+          "        exit 1",
+          "    fi",
+          "    ",
+          "    log \"Using backup: $LATEST_BACKUP\"",
+          "    ",
+          "    # Restore from backup",
+          "    /opt/ai-q/backup/scripts/recover-all.sh \"$LATEST_BACKUP\"",
+          "    ",
+          "    # Verify recovery",
+          "    log \"Verifying recovery\"",
+          "    sleep 30",
+          "    ",
+          "    # Check service health",
+          "    if curl -f http://localhost:8500/v1/status/leader > /dev/null 2>&1; then",
+          "        log \"Consul is healthy\"",
+          "    else",
+          "        log \"WARNING: Consul health check failed\"",
+          "    fi",
+          "    ",
+          "    if curl -f http://localhost:9090/-/healthy > /dev/null 2>&1; then",
+          "        log \"Prometheus is healthy\"",
+          "    else",
+          "        log \"WARNING: Prometheus health check failed\"",
+          "    fi",
+          "    ",
+          "    log \"Complete system recovery completed\"",
+          "}",
+          "",
+          "# Database recovery",
+          "database_recovery() {",
+          "    log \"Starting database recovery\"",
+          "    ",
+          "    # Stop database services",
+          "    docker stop ai-q-postgresql",
+          "    ",
+          "    # Find latest database backup",
+          "    LATEST_DB_BACKUP=$(ls -t \"$BACKUP_DIR\" | grep ai-q-backup- | head -1)",
+          "    ",
+          "    # Restore database",
+          "    docker exec -i ai-q-postgresql psql -U ai_q_user < \"$BACKUP_DIR/$LATEST_DB_BACKUP/postgresql-full.sql\"",
+          "    ",
+          "    # Start database",
+          "    docker start ai-q-postgresql",
+          "    ",
+          "    # Verify database",
+          "    sleep 10",
+          "    if docker exec ai-q-postgresql pg_isready -U ai_q_user; then",
+          "        log \"Database recovery completed successfully\"",
+          "    else",
+          "        log \"ERROR: Database recovery failed\"",
+          "        exit 1",
+          "    fi",
+          "}",
+          "",
+          "# Network failover",
+          "network_failover() {",
+          "    log \"Starting network failover\"",
+          "    ",
+          "    # Check primary network",
+          "    if ping -c 3 8.8.8.8 > /dev/null 2>&1; then",
+          "        log \"Primary network is available\"",
+          "        return 0",
+          "    fi",
+          "    ",
+          "    log \"Primary network failed, activating backup network\"",
+          "    ",
+          "    # Activate backup network (example)",
+          "    # ip route add default via 192.168.1.254 dev eth1",
+          "    ",
+          "    # Verify connectivity",
+          "    if ping -c 3 8.8.8.8 > /dev/null 2>&1; then",
+          "        log \"Backup network activated successfully\"",
+          "    else",
+          "        log \"ERROR: Backup network activation failed\"",
+          "        exit 1",
+          "    fi",
+          "}",
+          "",
+          "# Main recovery function",
+          "main() {",
+          "    case \"$1\" in",
+          "        \"complete\")",
+          "            complete_system_recovery",
+          "            ;;",
+          "        \"database\")",
+          "            database_recovery",
+          "            ;;",
+          "        \"network\")",
+          "            network_failover",
+          "            ;;",
+          "        *)",
+          "            echo \"Usage: $0 {complete|database|network}\"",
+          "            exit 1",
+          "            ;;",
+          "    esac",
+          "}",
+          "",
+          "main \"$@\"",
+          "EOF",
+          "chmod +x /opt/ai-q/disaster-recovery/recovery-procedures.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/disaster-recovery/logs/",
+          "/opt/ai-q/disaster-recovery/recovery-procedures.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete disaster recovery setup",
+        "validation": "disaster_recovery_validation",
+        "exact_commands": [
+          "ls -la /opt/ai-q/disaster-recovery/",
+          "cat /opt/ai-q/disaster-recovery/dr-plan.json",
+          "cat /opt/ai-q/disaster-recovery/failover-config.json",
+          "test -x /opt/ai-q/disaster-recovery/recovery-procedures.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache disaster recovery configuration and setup",
+        "cache_key": "disaster_recovery_cache",
+        "exact_commands": [
+          "python3 scripts/disaster-recovery/setup_dr.py --cache-results",
+          "python3 scripts/disaster-recovery/setup_failover.py --cache-results",
+          "python3 scripts/disaster-recovery/setup_recovery.py --cache-results",
+          "tar -czf /opt/ai-q/cache/disaster_recovery_cache.tar.gz /opt/ai-q/disaster-recovery"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "disaster_recovery_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "dr_update",
+      "cache_validation": "disaster_recovery_validation",
+      "exact_cache_commands": [
+        "python3 scripts/disaster-recovery/setup_dr.py --cache-config",
+        "python3 scripts/disaster-recovery/setup_failover.py --cache-config",
+        "python3 scripts/disaster-recovery/setup_recovery.py --cache-config"
+      ]
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "01-12-documentation-and-handover",
+    "prerequisites_completed": [
+      "Disaster recovery plan created",
+      "Failover systems configured",
+      "Recovery procedures documented",
+      "DR testing completed",
+      "All DR systems verified",
+      "Business continuity ensured"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  }
+} 

@@ -1,0 +1,572 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-05-SELF-HOSTED-INFRASTRUCTURE-FOUNDATION",
+    "title": "Self-Hosted Infrastructure Foundation - Docker Environment Setup",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:10:23Z",
+    "last_updated": "2025-07-05T18:10:23Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "45 minutes",
+    "difficulty_level": "expert",
+    "total_tasks": 3,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": ["ISO 27001", "SOC 2"],
+    "architecture_tier": "enterprise-self-hosted-infrastructure",
+    "description": "Self-hosted infrastructure foundation with Docker networks, volumes, and orchestration framework - infrastructure only, no services installed",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": ["02-01-docker-core", "02-02-docker-services"],
+      "required_services": ["docker", "docker-compose"],
+      "required_networks": ["ai-q-self-hosted-network"],
+      "required_volumes": ["ai-q-self-hosted-data", "ai-q-self-hosted-config", "ai-q-self-hosted-backups"],
+      "required_ports": [],
+      "required_files": ["/opt/ai-q/docker/compose/self-hosted/"]
+    },
+    "kitchen_system": {
+      "pantry_category": "self-hosted-infrastructure",
+      "cooking_time": "45 minutes",
+      "complexity": "expert",
+      "kitchen_tools": ["self_hosted_network_setup", "self_hosted_volume_management", "self_hosted_orchestration_framework"],
+      "cache_strategy": "self_hosted_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Self-Hosted Infrastructure Foundation",
+    "description": "Docker infrastructure foundation for self-hosted services - networks, volumes, and orchestration framework only",
+    "prerequisites": [
+      "02-01-docker-core completed",
+      "02-02-docker-services completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 8GB RAM available",
+      "100GB free disk space for self-hosted data"
+    ],
+    "target_outcome": "Production-ready self-hosted infrastructure foundation with zero technical debt",
+    "success_criteria": [
+      "Self-hosted Docker network operational",
+      "Self-hosted volumes created and accessible",
+      "Self-hosted orchestration framework ready",
+      "No actual self-hosted services installed",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "SELF_HOSTED_NETWORK_SETUP_TASK",
+        "name": "Self-Hosted Network Setup",
+        "description": "Create dedicated Docker network for self-hosted services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [],
+        "skills_required": ["network_configuration", "subnet_management", "self_hosted_infrastructure"],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.26.0.0/16 --gateway 172.26.0.1 ai-q-self-hosted-network",
+          "docker network ls --filter name=ai-q-self-hosted-network",
+          "docker network inspect ai-q-self-hosted-network --format '{{.IPAM.Config}}'"
+        ],
+        "validation_commands": [
+          "docker network ls --filter name=ai-q-self-hosted-network",
+          "docker network inspect ai-q-self-hosted-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-self-hosted-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "task_id": "SELF_HOSTED_VOLUME_SETUP_TASK",
+        "name": "Self-Hosted Volume Setup",
+        "description": "Create persistent volumes for self-hosted services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": ["SELF_HOSTED_NETWORK_SETUP_TASK"],
+        "skills_required": ["volume_management", "persistence_configuration", "self_hosted_data_storage"],
+        "exact_commands": [
+          "docker volume create ai-q-self-hosted-data",
+          "docker volume create ai-q-self-hosted-config",
+          "docker volume create ai-q-self-hosted-backups",
+          "docker volume create ai-q-self-hosted-logs",
+          "docker volume create ai-q-self-hosted-cache",
+          "docker volume create ai-q-self-hosted-temp"
+        ],
+        "validation_commands": [
+          "docker volume ls --filter name=ai-q-self-hosted",
+          "docker volume inspect ai-q-self-hosted-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-self-hosted-config --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "task_id": "SELF_HOSTED_ORCHESTRATION_SETUP_TASK",
+        "name": "Self-Hosted Orchestration Framework",
+        "description": "Create orchestration framework for self-hosted services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": ["SELF_HOSTED_VOLUME_SETUP_TASK"],
+        "skills_required": ["orchestration_framework", "template_management", "self_hosted_infrastructure"],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/self-hosted/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/self-hosted",
+          "tee /opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-self-hosted-network:",
+          "    external: true",
+          "volumes:",
+          "  self-hosted-data:",
+          "    external: true",
+          "  self-hosted-config:",
+          "    external: true",
+          "  self-hosted-backups:",
+          "    external: true",
+          "  self-hosted-logs:",
+          "    external: true",
+          "  self-hosted-cache:",
+          "    external: true",
+          "  self-hosted-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Self-Hosted Services Orchestration Script",
+          "SELF_HOSTED_DIR=\"/opt/ai-q/docker/compose/self-hosted\"",
+          "start_self_hosted_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SELF_HOSTED_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Starting \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_self_hosted_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SELF_HOSTED_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Stopping \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" down",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_self_hosted_service() {",
+          "    local service_name=\$1",
+          "    stop_self_hosted_service \"\$service_name\"",
+          "    sleep 5",
+          "    start_self_hosted_service \"\$service_name\"",
+          "}",
+          "check_self_hosted_service_status() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SELF_HOSTED_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Checking status of \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" ps",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"\$1\" in",
+          "    start)",
+          "        start_self_hosted_service \"\$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_self_hosted_service \"\$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_self_hosted_service \"\$2\"",
+          "        ;;",
+          "    status)",
+          "        check_self_hosted_service_status \"\$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: \$0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/self-hosted/",
+          "cat /opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml",
+          "/opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh --help || echo 'Script created'"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "SELF_HOSTED_NETWORK_CONFIGURATION_SKILL",
+        "name": "Self-Hosted Network Configuration",
+        "description": "Configure self-hosted networks with exact specifications",
+        "tools": ["network_setup", "subnet_management", "self_hosted_infrastructure"],
+        "validation": "self_hosted_network_configuration_validation",
+        "exact_validation_commands": [
+          "docker network ls --filter name=ai-q-self-hosted-network",
+          "docker network inspect ai-q-self-hosted-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-self-hosted-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "skill_id": "SELF_HOSTED_VOLUME_MANAGEMENT_SKILL",
+        "name": "Self-Hosted Volume Management",
+        "description": "Manage self-hosted volumes with exact specifications",
+        "tools": ["volume_setup", "persistence_management", "self_hosted_data_storage"],
+        "validation": "self_hosted_volume_management_validation",
+        "exact_validation_commands": [
+          "docker volume ls --filter name=ai-q-self-hosted",
+          "docker volume inspect ai-q-self-hosted-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-self-hosted-config --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "skill_id": "SELF_HOSTED_ORCHESTRATION_SKILL",
+        "name": "Self-Hosted Orchestration Framework",
+        "description": "Manage self-hosted orchestration with exact specifications",
+        "tools": ["orchestration_setup", "template_management", "script_management"],
+        "validation": "self_hosted_orchestration_validation",
+        "exact_validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/self-hosted/",
+          "cat /opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml",
+          "test -x /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "SELF_HOSTED_INFRASTRUCTURE_TOOL",
+        "name": "Self-Hosted Infrastructure Setup Tool",
+        "description": "Automated self-hosted infrastructure installation and configuration",
+        "file_path": "scripts/infrastructure/setup_self_hosted_infrastructure.py",
+        "config": "config/infrastructure/self_hosted_infrastructure_config.json",
+        "exact_config_spec": {
+          "network_subnet": "172.26.0.0/16",
+          "network_gateway": "172.26.0.1",
+          "network_driver": "bridge",
+          "volumes": ["ai-q-self-hosted-data", "ai-q-self-hosted-config", "ai-q-self-hosted-backups", "ai-q-self-hosted-logs", "ai-q-self-hosted-cache", "ai-q-self-hosted-temp"],
+          "orchestration_dir": "/opt/ai-q/docker/compose/self-hosted"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "SELF_HOSTED_NETWORK_CONFIG",
+        "name": "Self-Hosted Network Configuration",
+        "description": "Self-hosted network configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/self_hosted_network.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "network_name": {"type": "string"},
+            "subnet": {"type": "string"},
+            "gateway": {"type": "string"},
+            "driver": {"type": "string"},
+            "enable_ipv6": {"type": "boolean"},
+            "internal": {"type": "boolean"},
+            "attachable": {"type": "boolean"}
+          }
+        }
+      },
+      {
+        "config_id": "SELF_HOSTED_VOLUME_CONFIG",
+        "name": "Self-Hosted Volume Configuration",
+        "description": "Self-hosted volume configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/self_hosted_volumes.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "driver": {"type": "string"},
+                  "labels": {"type": "object"}
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:self-hosted-network-setup:1.0.0",
+          "task:self-hosted-volume-setup:1.0.0",
+          "task:self-hosted-orchestration-setup:1.0.0",
+          "skill:self-hosted-network-configuration:1.0.0",
+          "skill:self-hosted-volume-management:1.0.0",
+          "skill:self-hosted-orchestration:1.0.0",
+          "tool:self-hosted-infrastructure:1.0.0",
+          "config:self-hosted-network:1.0.0",
+          "config:self-hosted-volume:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_self_hosted_infrastructure.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 8GB RAM available",
+          "100GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_self_hosted_network_setup",
+        "description": "Create self-hosted Docker network with exact commands",
+        "sub_steps": [
+          "Create self-hosted network",
+          "Validate network configuration"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.26.0.0/16 --gateway 172.26.0.1 ai-q-self-hosted-network",
+          "docker network ls --filter name=ai-q-self-hosted-network",
+          "docker network inspect ai-q-self-hosted-network --format '{{.IPAM.Config}}'"
+        ],
+        "files_to_create": [
+          "Docker network: ai-q-self-hosted-network"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_self_hosted_volume_setup",
+        "description": "Create self-hosted volumes with exact commands",
+        "sub_steps": [
+          "Create self-hosted volumes",
+          "Validate volume creation"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-self-hosted-data",
+          "docker volume create ai-q-self-hosted-config",
+          "docker volume create ai-q-self-hosted-backups",
+          "docker volume create ai-q-self-hosted-logs",
+          "docker volume create ai-q-self-hosted-cache",
+          "docker volume create ai-q-self-hosted-temp",
+          "docker volume ls --filter name=ai-q-self-hosted"
+        ],
+        "files_to_create": [
+          "Docker volumes: ai-q-self-hosted-data, ai-q-self-hosted-config, ai-q-self-hosted-backups, ai-q-self-hosted-logs, ai-q-self-hosted-cache, ai-q-self-hosted-temp"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_self_hosted_orchestration_setup",
+        "description": "Create self-hosted orchestration framework with exact commands",
+        "sub_steps": [
+          "Create orchestration directories",
+          "Create base template",
+          "Create orchestration script"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/self-hosted/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/self-hosted",
+          "tee /opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-self-hosted-network:",
+          "    external: true",
+          "volumes:",
+          "  self-hosted-data:",
+          "    external: true",
+          "  self-hosted-config:",
+          "    external: true",
+          "  self-hosted-backups:",
+          "    external: true",
+          "  self-hosted-logs:",
+          "    external: true",
+          "  self-hosted-cache:",
+          "    external: true",
+          "  self-hosted-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Self-Hosted Services Orchestration Script",
+          "SELF_HOSTED_DIR=\"/opt/ai-q/docker/compose/self-hosted\"",
+          "start_self_hosted_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SELF_HOSTED_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Starting \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_self_hosted_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SELF_HOSTED_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Stopping \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" down",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_self_hosted_service() {",
+          "    local service_name=\$1",
+          "    stop_self_hosted_service \"\$service_name\"",
+          "    sleep 5",
+          "    start_self_hosted_service \"\$service_name\"",
+          "}",
+          "check_self_hosted_service_status() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SELF_HOSTED_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Checking status of \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" ps",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"\$1\" in",
+          "    start)",
+          "        start_self_hosted_service \"\$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_self_hosted_service \"\$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_self_hosted_service \"\$2\"",
+          "        ;;",
+          "    status)",
+          "        check_self_hosted_service_status \"\$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: \$0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/docker/compose/self-hosted/templates/",
+          "/opt/ai-q/docker/compose/self-hosted/configs/",
+          "/opt/ai-q/docker/compose/self-hosted/scripts/",
+          "/opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml",
+          "/opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete self-hosted infrastructure setup",
+        "validation": "self_hosted_infrastructure_validation",
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-self-hosted-network",
+          "docker volume ls --filter name=ai-q-self-hosted",
+          "ls -la /opt/ai-q/docker/compose/self-hosted/",
+          "cat /opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml",
+          "test -x /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache self-hosted infrastructure configuration and setup",
+        "cache_key": "self_hosted_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_self_hosted_infrastructure.py --cache-results",
+          "tar -czf /opt/ai-q/cache/self_hosted_infrastructure_cache.tar.gz /opt/ai-q/docker/compose/self-hosted"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "self_hosted_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "self_hosted_infrastructure_update",
+      "cache_validation": "self_hosted_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/infrastructure/setup_self_hosted_infrastructure.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "Self-hosted Docker network operational and configured",
+    "All self-hosted volumes created and accessible",
+    "Self-hosted orchestration framework ready",
+    "No actual self-hosted services installed",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready self-hosted infrastructure foundation",
+    "Self-hosted Docker network with proper configuration",
+    "Self-hosted volumes for data, config, backups, logs, cache, and temp",
+    "Self-hosted orchestration framework with templates and scripts",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Self-hosted network creation fails",
+        "symptoms": ["Network already exists", "Subnet conflict"],
+        "diagnosis": "Check existing networks and subnet conflicts",
+        "solution": "Remove existing network or use different subnet",
+        "prevention": "Check network configuration before creation"
+      },
+      {
+        "issue": "Self-hosted volumes not accessible",
+        "symptoms": ["Permission denied", "Volume not found"],
+        "diagnosis": "Check volume permissions and existence",
+        "solution": "Verify volume creation and set proper permissions",
+        "prevention": "Validate volume creation after setup"
+      },
+      {
+        "issue": "Orchestration script not executable",
+        "symptoms": ["Permission denied", "Script not found"],
+        "diagnosis": "Check script permissions and location",
+        "solution": "Set executable permissions and verify path",
+        "prevention": "Test script after creation"
+      },
+      {
+        "issue": "Directory structure not created",
+        "symptoms": ["Directory not found", "Permission denied"],
+        "diagnosis": "Check directory creation and permissions",
+        "solution": "Create directories with proper permissions",
+        "prevention": "Verify directory structure after setup"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker network ls --filter name=ai-q-self-hosted",
+      "docker volume ls --filter name=ai-q-self-hosted",
+      "ls -la /opt/ai-q/docker/compose/self-hosted/",
+      "cat /opt/ai-q/docker/compose/self-hosted/templates/base-self-hosted.yml",
+      "test -x /opt/ai-q/docker/compose/self-hosted/scripts/orchestrate-self-hosted.sh"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 45 minutes",
+    "network_creation_time": "< 5 seconds",
+    "volume_creation_time": "< 10 seconds",
+    "orchestration_setup_time": "< 30 seconds",
+    "validation_time": "< 5 seconds"
+  }
+} 

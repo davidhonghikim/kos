@@ -1,0 +1,180 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-DOCUMENTATION-013",
+    "title": "Comprehensive Database Documentation",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 4000,
+    "estimated_execution_time": "4-6 hours (ongoing)",
+    "difficulty_level": "intermediate",
+    "total_tasks": 1,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "100%",
+    "compliance_standards": [],
+    "architecture_tier": "enterprise-documentation"
+  },
+  "recipe_overview": {
+    "description": "Create and maintain comprehensive documentation for the entire polyglot database infrastructure. This includes architectural diagrams, operational runbooks, disaster recovery procedures, and API documentation, ensuring that the system is understandable, maintainable, and operable by the team.",
+    "technology_stack": {
+      "documentation_format": "Markdown",
+      "diagramming_tool": "Mermaid.js, diagrams.net",
+      "version_control": "Git"
+    },
+    "deliverables": [
+      "A version-controlled `docs/database` directory",
+      "High-level architectural diagrams",
+      "Detailed runbooks for common operational tasks (e.g., backups, restores, scaling)",
+      "A comprehensive disaster recovery plan",
+      "API documentation for the unified gateway"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-documentation-013",
+      "title": "Comprehensive Database Documentation Implementation",
+      "description": "Create and maintain comprehensive documentation for the entire polyglot database infrastructure. This includes architectural diagrams, operational runbooks, disaster recovery procedures, and API documentation, ensuring that the system is understandable, maintainable, and operable by the team.",
+      "category": "documentation",
+      "estimated_tokens": 4000,
+      "estimated_duration": "4-6 hours (ongoing)",
+      "difficulty_level": "intermediate",
+      "prerequisites": {
+        "knowledge_required": [
+          "Technical writing",
+          "Markdown",
+          "Diagramming",
+          "Deep understanding of the implemented system"
+        ],
+        "tools_required": [
+          "Git",
+          "Markdown editor"
+        ],
+        "environment_setup": []
+      },
+      "inputs": {
+        "files_to_read": [
+          "All previously created recipes and configuration files"
+        ],
+        "config_dependencies": [],
+        "environment_variables": []
+      },
+      "outputs": {
+        "files_created": [
+          "docs/database/architecture.md",
+          "docs/database/runbook-backups.md",
+          "docs/database/runbook-scaling.md",
+          "docs/database/disaster-recovery.md",
+          "docs/database/api-gateway.md"
+        ],
+        "files_modified": []
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-postgresql-cluster-001",
+          "03-database-redis-cluster-002",
+          "03-database-neo4j-cluster-003",
+          "03-database-weaviate-cluster-004",
+          "03-database-elasticsearch-cluster-005",
+          "03-database-unified-api-006",
+          "03-database-backup-recovery-007"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task involves creating a set of Markdown files to document the database system. Documentation is as critical as code and should be treated as such, living in version control and updated as the system evolves.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Create Documentation Directory",
+            "description": "Create a dedicated directory for database-related documentation.",
+            "commands": [
+              "mkdir -p docs/database"
+            ],
+            "expected_output": "Directory `docs/database` is created.",
+            "troubleshooting": ""
+          },
+          {
+            "step": 2,
+            "title": "Draft Architectural Diagram",
+            "description": "Create a high-level diagram showing all the database components and how they interact. Use a tool like Mermaid.js for a text-based, version-controllable diagram.",
+            "commands": [
+              "cat > docs/database/architecture.md << 'EOF'",
+              "```mermaid",
+              "graph TD",
+              "  App --> Gateway",
+              "  Gateway --> PG[PostgreSQL HA]",
+              "  Gateway --> Redis[Redis Cluster]",
+              "  Gateway --> Neo4j[Neo4j Cluster]",
+              "  Gateway --> Weaviate[Weaviate Cluster]",
+              "  Gateway --> Elastic[Elasticsearch Cluster]",
+              "```",
+              "EOF"
+            ],
+            "expected_output": "An architecture diagram is created.",
+            "troubleshooting": ""
+          },
+          {
+            "step": 3,
+            "title": "Write Operational Runbooks",
+            "description": "Document the step-by-step procedures for common operational tasks.",
+            "commands": [
+              "# Create docs/database/runbook-backups.md",
+              "# Document how to trigger manual backups and verify them.",
+              "# Create docs/database/runbook-scaling.md",
+              "# Document how to add a new node to each database cluster."
+            ],
+            "expected_output": "Runbook documents are created.",
+            "troubleshooting": ""
+          },
+          {
+            "step": 4,
+            "title": "Write Disaster Recovery Plan",
+            "description": "Create a detailed plan that documents the process of recovering the entire database platform from a catastrophic failure, using the backups.",
+            "commands": [
+              "# Create docs/database/disaster-recovery.md",
+              "# Detail the order of restoration for each database and the steps to validate data consistency."
+            ],
+            "expected_output": "A disaster recovery plan is created.",
+            "troubleshooting": ""
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Documentation is clear, concise, and accurate.",
+          "All major components and operational procedures are documented.",
+          "Documentation is stored in version control alongside the code."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "13-Documentation",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

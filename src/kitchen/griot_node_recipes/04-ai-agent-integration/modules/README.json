@@ -1,0 +1,73 @@
+{
+  "index_metadata": {
+    "index_id": "03-AI-AGENT-INTEGRATION-SUB-RECIPE-INDEX",
+    "title": "Index of AI Agent Integration Sub-Recipes",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "description": "This index lists all the modular sub-recipes for integrating various AI agent tools and services."
+  },
+  "sub_recipes": [
+    {
+      "id": "01-module-manager",
+      "title": "AI Agent Module Manager",
+      "path": "01-module-manager.json"
+    },
+    {
+      "id": "02-ra-aid-integration",
+      "title": "RA.Aid Integration Module",
+      "path": "02-ra-aid-integration.json"
+    },
+    {
+      "id": "03-browser-use-integration",
+      "title": "Browser-Use Integration Module",
+      "path": "03-browser-use-integration.json"
+    },
+    {
+      "id": "04-archivebox-integration",
+      "title": "ArchiveBox Integration Module",
+      "path": "04-archivebox-integration.json"
+    },
+    {
+      "id": "05-aider-integration",
+      "title": "Aider Integration Module",
+      "path": "05-aider-integration.json"
+    },
+    {
+      "id": "06-self-hosted-llm-integration",
+      "title": "Self-Hosted LLM Integration (Ollama)",
+      "path": "06-self-hosted-llm-integration.json"
+    }
+  ],
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:22.936095Z",
+    "last_updated": "2025-07-07T14:50:22.936095Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "metadata": {
+    "recipe_id": "storage-monitoring-alerting",
+    "title": "Storage Monitoring and Alerting System",
+    "description": "Comprehensive monitoring and alerting system for storage infrastructure with real-time metrics, automated alerts, and performance dashboards",
+    "category": "storage-systems",
+    "difficulty": "advanced",
+    "estimated_time": "45 minutes",
+    "prerequisites": [
+      "01-minio-enterprise-cluster",
+      "02-aws-s3-integration",
+      "03-local-storage-optimization"
+    ],
+    "tags": [
+      "monitoring",
+      "alerting",
+      "metrics",
+      "dashboard",
+      "prometheus",
+      "grafana"
+    ],
+    "version": "1.0.0",
+    "last_updated": "2025-07-05T18:28:00Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "os": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "python_version": "3.8+",
+      "node_version": "16+",
+      "docker": "20.10+",
+      "docker_compose": "2.0+"
+    },
+    "dependencies": [
+      "prometheus",
+      "grafana",
+      "alertmanager",
+      "node_exporter",
+      "minio_client",
+      "aws_cli"
+    ],
+    "permissions": [
+      "docker_admin",
+      "system_monitoring",
+      "network_access"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "monitoring-setup",
+      "title": "Setup Monitoring Infrastructure",
+      "description": "Install and configure Prometheus, Grafana, and AlertManager for storage monitoring",
+      "steps": [
+        {
+          "step_id": "prometheus-install",
+          "title": "Install Prometheus",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "wget https://github.com/prometheus/prometheus/releases/download/v2.45.0/prometheus-2.45.0.linux-amd64.tar.gz && tar -xzf prometheus-2.45.0.linux-amd64.tar.gz && sudo mv prometheus-2.45.0.linux-amd64 /opt/prometheus",
+              "expected_output": "Prometheus extracted to /opt/prometheus"
+            },
+            {
+              "os": "windows",
+              "command": "Invoke-WebRequest -Uri 'https://github.com/prometheus/prometheus/releases/download/v2.45.0/prometheus-2.45.0.windows-amd64.zip' -OutFile 'prometheus.zip' && Expand-Archive -Path 'prometheus.zip' -DestinationPath 'C:\\prometheus'",
+              "expected_output": "Prometheus extracted to C:\\prometheus"
+            }
+          ]
+        },
+        {
+          "step_id": "grafana-install",
+          "title": "Install Grafana",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo apt-get install -y software-properties-common && sudo add-apt-repository 'deb https://packages.grafana.com/oss/deb stable main' && sudo apt-get update && sudo apt-get install -y grafana",
+              "expected_output": "Grafana installed successfully"
+            },
+            {
+              "os": "windows",
+              "command": "choco install grafana -y",
+              "expected_output": "Grafana installed successfully"
+            }
+          ]
+        },
+        {
+          "step_id": "alertmanager-install",
+          "title": "Install AlertManager",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "wget https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz && tar -xzf alertmanager-0.25.0.linux-amd64.tar.gz && sudo mv alertmanager-0.25.0.linux-amd64 /opt/alertmanager",
+              "expected_output": "AlertManager extracted to /opt/alertmanager"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "metrics-configuration",
+      "title": "Configure Storage Metrics Collection",
+      "description": "Setup metrics collection for MinIO, S3, and local storage systems",
+      "steps": [
+        {
+          "step_id": "prometheus-config",
+          "title": "Configure Prometheus for Storage Metrics",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /opt/prometheus/prometheus.yml > /dev/null << 'EOF'\nglobal:\n  scrape_interval: 15s\n  evaluation_interval: 15s\n\nrule_files:\n  - 'storage_alerts.yml'\n\nscrape_configs:\n  - job_name: 'minio'\n    static_configs:\n      - targets: ['localhost:9000']\n    metrics_path: '/minio/v2/metrics/cluster'\n    scrape_interval: 30s\n\n  - job_name: 'node_exporter'\n    static_configs:\n      - targets: ['localhost:9100']\n\n  - job_name: 'storage_metrics'\n    static_configs:\n      - targets: ['localhost:9090']\nEOF",
+              "expected_output": "Prometheus configuration created"
+            }
+          ]
+        },
+        {
+          "step_id": "minio-metrics",
+          "title": "Enable MinIO Metrics",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "mc admin config set myminio/ metrics prometheus",
+              "expected_output": "MinIO metrics enabled"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "alerting-configuration",
+      "title": "Configure Alerting Rules",
+      "description": "Setup comprehensive alerting rules for storage systems",
+      "steps": [
+        {
+          "step_id": "storage-alerts",
+          "title": "Create Storage Alert Rules",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /opt/prometheus/storage_alerts.yml > /dev/null << 'EOF'\ngroups:\n- name: storage_alerts\n  rules:\n  - alert: HighDiskUsage\n    expr: (node_filesystem_avail_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"}) * 100 < 10\n    for: 5m\n    labels:\n      severity: warning\n    annotations:\n      summary: \"High disk usage on {{ $labels.instance }}\"\n      description: \"Disk usage is above 90%\"\n\n  - alert: MinIODown\n    expr: up{job=\"minio\"} == 0\n    for: 1m\n    labels:\n      severity: critical\n    annotations:\n      summary: \"MinIO service is down\"\n\n  - alert: StorageLatencyHigh\n    expr: histogram_quantile(0.95, rate(minio_http_requests_duration_seconds_bucket[5m])) > 1\n    for: 2m\n    labels:\n      severity: warning\nEOF",
+              "expected_output": "Storage alert rules created"
+            }
+          ]
+        },
+        {
+          "step_id": "alertmanager-config",
+          "title": "Configure AlertManager",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /opt/alertmanager/alertmanager.yml > /dev/null << 'EOF'\nglobal:\n  smtp_smarthost: 'localhost:587'\n  smtp_from: 'alertmanager@storage.local'\n\nroute:\n  group_by: ['alertname']\n  group_wait: 10s\n  group_interval: 10s\n  repeat_interval: 1h\n  receiver: 'storage-team'\n\nreceivers:\n- name: 'storage-team'\n  email_configs:\n  - to: 'storage-alerts@company.com'\nEOF",
+              "expected_output": "AlertManager configuration created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "dashboard-setup",
+      "title": "Setup Grafana Dashboards",
+      "description": "Create comprehensive dashboards for storage monitoring",
+      "steps": [
+        {
+          "step_id": "grafana-config",
+          "title": "Configure Grafana Data Sources",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo systemctl start grafana-server && sleep 10 && curl -X POST http://admin:admin@localhost:3000/api/datasources -H 'Content-Type: application/json' -d '{\"name\":\"Prometheus\",\"type\":\"prometheus\",\"url\":\"http://localhost:9090\",\"access\":\"proxy\"}'",
+              "expected_output": "Grafana data source configured"
+            }
+          ]
+        },
+        {
+          "step_id": "storage-dashboard",
+          "title": "Create Storage Dashboard",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "curl -X POST http://admin:admin@localhost:3000/api/dashboards/db -H 'Content-Type: application/json' -d @storage_dashboard.json",
+              "expected_output": "Storage dashboard created"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "os": "linux",
+        "command": "curl -s http://localhost:9090/api/v1/status/targets | jq '.data.activeTargets | length'",
+        "expected_output": "3"
+      },
+      {
+        "os": "linux",
+        "command": "curl -s http://localhost:3000/api/health",
+        "expected_output": "{\"database\":\"ok\",\"version\":\"*\"}"
+      },
+      {
+        "os": "linux",
+        "command": "curl -s http://localhost:9093/api/v1/status",
+        "expected_output": "{\"cluster\":{\"peers\":[]},\"config\":{\"original\":\"*\"}}"
+      }
+    ],
+    "expected_outputs": {
+      "prometheus_targets": "3 active targets",
+      "grafana_health": "Database and API healthy",
+      "alertmanager_status": "AlertManager running"
+    }
+  },
+  "expected_output": {
+    "monitoring_infrastructure": "Prometheus, Grafana, and AlertManager installed and configured",
+    "metrics_collection": "Storage metrics being collected from all systems",
+    "alerting_system": "Comprehensive alerting rules configured and active",
+    "dashboards": "Real-time storage monitoring dashboards available",
+    "access_urls": {
+      "prometheus": "http://localhost:9090",
+      "grafana": "http://localhost:3000",
+      "alertmanager": "http://localhost:9093"
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Prometheus cannot scrape MinIO metrics",
+        "solution": "Verify MinIO metrics endpoint is accessible and authentication is configured"
+      },
+      {
+        "issue": "Grafana cannot connect to Prometheus",
+        "solution": "Check network connectivity and Prometheus URL configuration"
+      },
+      {
+        "issue": "Alerts not firing",
+        "solution": "Verify alert rules syntax and Prometheus configuration"
+      }
+    ]
+  },
+  "next_steps": [
+    "Configure additional metrics exporters",
+    "Setup custom alerting channels",
+    "Create performance baselines",
+    "Implement automated remediation"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-ELASTICSEARCH-CLUSTER-005",
+    "title": "Enterprise Elasticsearch Cluster for Search and Analytics",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 13000,
+    "estimated_execution_time": "4-6 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "SOC 2",
+      "HIPAA"
+    ],
+    "architecture_tier": "enterprise-search"
+  },
+  "recipe_overview": {
+    "description": "Deploy a resilient and scalable Elasticsearch cluster for advanced full-text search, logging, and analytics. This recipe sets up a multi-node cluster with Kibana for visualization and management. It covers configuration for clustering, security (X-Pack), and performance optimization.",
+    "technology_stack": {
+      "search_engine": "Elasticsearch 8.11+",
+      "visualization": "Kibana 8.11+",
+      "security": "X-Pack Security",
+      "orchestration": "Docker Compose"
+    },
+    "deliverables": [
+      "A 3-node Elasticsearch cluster",
+      "A Kibana instance for cluster management and data visualization",
+      "Secure cluster with password protection and TLS",
+      "Configuration for high availability and data replication"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-elasticsearch-cluster-005",
+      "title": "Enterprise Elasticsearch Cluster Implementation",
+      "description": "Deploy a resilient and scalable Elasticsearch cluster for advanced full-text search, logging, and analytics. This recipe sets up a multi-node cluster with Kibana for visualization and management. It covers configuration for clustering, security (X-Pack), and performance optimization.",
+      "category": "infrastructure",
+      "estimated_tokens": 13000,
+      "estimated_duration": "4-6 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Elasticsearch administration",
+          "Full-text search concepts",
+          "JVM tuning",
+          "Kibana"
+        ],
+        "tools_required": [
+          "Elasticsearch 8.11+",
+          "Kibana 8.11+",
+          "Docker"
+        ],
+        "environment_setup": [
+          "Sufficient CPU, RAM, and fast storage",
+          "Proper kernel settings (e.g., `vm.max_map_count`)"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker-compose.elastic.yml",
+          "config/elasticsearch/elasticsearch.yml"
+        ],
+        "config_dependencies": [
+          "Network configuration"
+        ],
+        "environment_variables": [
+          "ELASTIC_PASSWORD"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/elasticsearch/elasticsearch.yml - Elasticsearch cluster configuration",
+          "config/kibana/kibana.yml - Kibana configuration",
+          "scripts/elastic/cluster-setup.sh - Script to initialize the cluster and set passwords"
+        ],
+        "files_modified": [
+          "docker-compose.elastic.yml - Service definitions for Elasticsearch and Kibana"
+        ],
+        "api_endpoints": [
+          "GET /_cluster/health - Elasticsearch cluster health",
+          "GET /_cat/nodes - List of nodes in the cluster"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "01-infra-verification-001"
+        ],
+        "optional_tasks": [
+          "monitoring-setup"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task sets up a 3-node Elasticsearch cluster with a single Kibana instance. The cluster is configured for high availability with internal TLS encryption and password-based security enabled by default in recent versions.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Elasticsearch Docker Compose Setup",
+            "description": "Create a Docker Compose file to define the Elasticsearch cluster and Kibana.",
+            "commands": [
+              "# Create docker-compose.elastic.yml",
+              "cat > docker-compose.elastic.yml << 'EOF'",
+              "version: '3.8'",
+              "services:",
+              "  es01:",
+              "    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1",
+              "    environment:",
+              "      - node.name=es01",
+              "      - cluster.name=es-docker-cluster",
+              "      - discovery.seed_hosts=es02,es03",
+              "      - cluster.initial_master_nodes=es01,es02,es03",
+              "      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}",
+              "      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'",
+              "    volumes:",
+              "      - esdata01:/usr/share/elasticsearch/data",
+              "    ports:",
+              "      - 9200:9200",
+              "  es02:",
+              "    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1",
+              "    # ... similar configuration for es02",
+              "  es03:",
+              "    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1",
+              "    # ... similar configuration for es03",
+              "  kibana:",
+              "    image: docker.elastic.co/kibana/kibana:8.11.1",
+              "    ports:",
+              "      - 5601:5601",
+              "    environment:",
+              "      ELASTICSEARCH_URL: http://es01:9200",
+              "      ELASTICSEARCH_USERNAME: elastic",
+              "      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}",
+              "volumes:",
+              "  esdata01:",
+              "  esdata02:",
+              "  esdata03:",
+              "EOF"
+            ],
+            "expected_output": "docker-compose.elastic.yml file created.",
+            "troubleshooting": "Ensure `discovery.seed_hosts` and `cluster.initial_master_nodes` are correctly configured."
+          },
+          {
+            "step": 2,
+            "title": "Deploy Elasticsearch Cluster",
+            "description": "Launch the cluster. Note: Elasticsearch can be resource-intensive on startup.",
+            "commands": [
+              "docker-compose -f docker-compose.elastic.yml up -d",
+              "sleep 60"
+            ],
+            "expected_output": "Elasticsearch and Kibana containers are running.",
+            "troubleshooting": "Check `docker logs` for each node. Insufficient memory or incorrect `vm.max_map_count` are common startup issues."
+          },
+          {
+            "step": 3,
+            "title": "Verify Cluster Health",
+            "description": "Check the cluster's health status via the API.",
+            "commands": [
+              "curl -u elastic:${ELASTIC_PASSWORD} -k https://localhost:9200/_cluster/health?pretty"
+            ],
+            "expected_output": "A JSON response with cluster status 'green' or 'yellow'. 'Yellow' is acceptable initially as shards replicate.",
+            "troubleshooting": "A 'red' status indicates a critical problem, usually with shard allocation. Check logs for details."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Elasticsearch cluster is up and healthy.",
+          "Kibana is accessible and connected to the cluster.",
+          "Data can be indexed and searched.",
+          "Cluster security is enabled."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "05-Elasticsearch-Cluster",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "04-RESEARCH-WEB-SCRAPING-001",
+    "title": "Web Scraping Infrastructure",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "difficulty_level": "advanced",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Establishes a comprehensive web scraping infrastructure with multiple engines (Scrapy, Selenium, Playwright), proxy management, rate limiting, and intelligent content extraction capabilities.",
+    "technology_stack": {
+      "web_scraping": "Scrapy, Selenium, Playwright, BeautifulSoup",
+      "data_processing": "Pandas, NumPy"
+    },
+    "deliverables": [
+      "A robust and scalable web scraping setup",
+      "Intelligent content extraction pipelines",
+      "Effective proxy and user-agent rotation"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "08-001",
+      "title": "Web Scraping Infrastructure Setup",
+      "description": "Establish comprehensive web scraping infrastructure with multiple engines, proxy management, rate limiting, and intelligent content extraction capabilities.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2200,
+      "commands": [
+        "pip install scrapy selenium playwright beautifulsoup4 pandas numpy",
+        "playwright install"
+      ],
+      "files_to_create": [
+        "src/modules/research/scraping/scrapy_engine.py",
+        "src/modules/research/scraping/selenium_engine.py",
+        "src/modules/research/scraping/playwright_engine.py",
+        "src/modules/research/scraping/proxy_manager.py",
+        "src/modules/research/scraping/content_extractor.py",
+        "config/scraping_rules.json"
+      ],
+      "acceptance_criteria": [
+        "All scraping engines are installed and configurable.",
+        "Proxy management is functional and rotates IPs.",
+        "Content extraction correctly parses target websites."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Web-Scraping-Infrastructure",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

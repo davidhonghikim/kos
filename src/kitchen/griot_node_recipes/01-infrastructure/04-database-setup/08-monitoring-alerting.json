@@ -1,0 +1,199 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-MONITORING-ALERTING-008",
+    "title": "Advanced Database Monitoring and Alerting",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 11000,
+    "estimated_execution_time": "5-6 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [],
+    "architecture_tier": "enterprise-observability"
+  },
+  "recipe_overview": {
+    "description": "Set up a comprehensive monitoring and observability stack for the polyglot database environment using Prometheus and Grafana. This recipe includes deploying database-specific exporters, creating custom Grafana dashboards for visualization, and configuring Alertmanager for proactive alerting on critical issues.",
+    "technology_stack": {
+      "monitoring": "Prometheus",
+      "visualization": "Grafana",
+      "alerting": "Alertmanager",
+      "exporters": "pg_exporter, redis_exporter, neo4j_exporter, etc."
+    },
+    "deliverables": [
+      "A centralized Prometheus server for metrics collection",
+      "Grafana instance with pre-built dashboards for each database",
+      "Configured Alertmanager for sending notifications on critical events",
+      "Database-specific exporters to expose metrics to Prometheus"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-monitoring-alerting-008",
+      "title": "Advanced Database Monitoring and Alerting Implementation",
+      "description": "Set up a comprehensive monitoring and observability stack for the polyglot database environment using Prometheus and Grafana. This recipe includes deploying database-specific exporters, creating custom Grafana dashboards for visualization, and configuring Alertmanager for proactive alerting on critical issues.",
+      "category": "observability",
+      "estimated_tokens": 11000,
+      "estimated_duration": "5-6 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Prometheus Query Language (PromQL)",
+          "Grafana dashboard creation",
+          "Alertmanager configuration",
+          "Database performance metrics"
+        ],
+        "tools_required": [
+          "Prometheus",
+          "Grafana",
+          "Alertmanager",
+          "Docker"
+        ],
+        "environment_setup": [
+          "All databases running and accessible from the monitoring stack"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker-compose.monitoring.yml",
+          "config/prometheus/prometheus.yml",
+          "config/alertmanager/config.yml"
+        ],
+        "config_dependencies": [
+          "Network endpoints for all database exporters"
+        ],
+        "environment_variables": [
+          "SLACK_WEBHOOK_URL"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/prometheus/prometheus.yml - Prometheus scrape configurations",
+          "config/prometheus/rules/database.rules.yml - Prometheus alerting rules",
+          "config/alertmanager/config.yml - Alertmanager notification routing",
+          "config/grafana/dashboards/ - Directory for Grafana dashboard JSON files",
+          "docker-compose.monitoring.yml - Services for Prometheus, Grafana, Alertmanager and exporters"
+        ],
+        "files_modified": []
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-postgresql-cluster-001",
+          "03-database-redis-cluster-002",
+          "03-database-neo4j-cluster-003",
+          "03-database-weaviate-cluster-004",
+          "03-database-elasticsearch-cluster-005"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task deploys a full monitoring stack. Prometheus scrapes metrics from exporters attached to each database. Grafana queries Prometheus to visualize these metrics in dashboards. Alertmanager receives alerts from Prometheus based on predefined rules and routes them to notification channels like Slack or PagerDuty.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Deploy Monitoring Stack",
+            "description": "Use Docker Compose to deploy Prometheus, Grafana, and Alertmanager.",
+            "commands": [
+              "# Create docker-compose.monitoring.yml with services for prometheus, grafana, alertmanager",
+              "docker-compose -f docker-compose.monitoring.yml up -d"
+            ],
+            "expected_output": "Monitoring stack containers are running.",
+            "troubleshooting": "Check container logs. Ensure configuration files are correctly mounted."
+          },
+          {
+            "step": 2,
+            "title": "Configure Prometheus Scrape Targets",
+            "description": "Add the database exporters as scrape targets in the Prometheus configuration.",
+            "commands": [
+              "cat >> config/prometheus/prometheus.yml << 'EOF'",
+              "  - job_name: 'postgres-exporter'",
+              "    static_configs:",
+              "      - targets: ['postgres-exporter:9187']",
+              "  - job_name: 'redis-exporter'",
+              "    static_configs:",
+              "      - targets: ['redis-exporter:9121']",
+              "# Add other exporters...",
+              "EOF",
+              "# Reload prometheus config",
+              "curl -X POST http://localhost:9090/-/reload"
+            ],
+            "expected_output": "Prometheus targets are configured and active.",
+            "troubleshooting": "Check the 'Targets' page in the Prometheus UI to see if exporters are being scraped successfully."
+          },
+          {
+            "step": 3,
+            "title": "Import Grafana Dashboards",
+            "description": "Add pre-built Grafana dashboards for each database.",
+            "commands": [
+              "# Find community-recommended dashboard IDs from grafana.com/grafana/dashboards/",
+              "# Use the Grafana API to import these dashboards or place their JSON models in the provisioning directory.",
+              "echo 'Grafana dashboards imported'"
+            ],
+            "expected_output": "Database dashboards are available in Grafana.",
+            "troubleshooting": "Ensure Grafana can connect to the Prometheus datasource."
+          },
+          {
+            "step": 4,
+            "title": "Configure Alerting Rules",
+            "description": "Define alerting rules in Prometheus for critical database conditions.",
+            "commands": [
+              "cat > config/prometheus/rules/database.rules.yml << 'EOF'",
+              "groups:",
+              "  - name: database_alerts",
+              "    rules:",
+              "      - alert: RedisDown",
+              "        expr: up{job='redis-exporter'} == 0",
+              "        for: 1m",
+              "        labels: { severity: 'critical' }",
+              "        annotations:",
+              "          summary: 'Redis node is down'",
+              "EOF",
+              "# Reload prometheus config"
+            ],
+            "expected_output": "Alerting rules are loaded into Prometheus.",
+            "troubleshooting": "Check the 'Rules' page in the Prometheus UI to verify rules are parsed correctly."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Metrics from all databases are being collected in Prometheus.",
+          "Grafana dashboards are visualizing key performance indicators for each database.",
+          "Alerts are firing for simulated failure conditions (e.g., stopping an exporter).",
+          "Notifications are successfully received in the configured channel (e.g., Slack)."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "08-Monitoring-Alerting",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

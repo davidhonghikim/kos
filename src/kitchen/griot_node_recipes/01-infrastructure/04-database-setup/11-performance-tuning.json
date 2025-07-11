@@ -1,0 +1,184 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-PERFORMANCE-TUNING-011",
+    "title": "Database Performance Optimization and Tuning",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 10000,
+    "estimated_execution_time": "10-12 hours (ongoing)",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "95%",
+    "compliance_standards": [],
+    "architecture_tier": "enterprise-optimization"
+  },
+  "recipe_overview": {
+    "description": "Establish a continuous process for monitoring, analyzing, and optimizing the performance of the polyglot database infrastructure. This recipe covers query analysis, indexing strategies, caching optimization, and resource tuning for each database system to ensure sustained performance under load.",
+    "technology_stack": {
+      "analysis_tools": "pg_stat_statements, EXPLAIN ANALYZE, Redis slow log, Neo4j query logging, Elasticsearch Profile API",
+      "caching": "Redis, Application-level caching",
+      "indexing": "B-Tree, Hash, GIN, GiST, HNSW, Inverted Index"
+    },
+    "deliverables": [
+      "A documented methodology for database performance tuning",
+      "Optimized configurations for each database",
+      "A set of key performance indicators (KPIs) and benchmarks",
+      "Optimized indexes and query patterns for critical workloads"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-performance-tuning-011",
+      "title": "Database Performance Optimization and Tuning Implementation",
+      "description": "Establish a continuous process for monitoring, analyzing, and optimizing the performance of the polyglot database infrastructure. This recipe covers query analysis, indexing strategies, caching optimization, and resource tuning for each database system to ensure sustained performance under load.",
+      "category": "performance",
+      "estimated_tokens": 10000,
+      "estimated_duration": "10-12 hours (ongoing)",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Deep knowledge of each database's internals",
+          "Query optimization",
+          "Indexing",
+          "Caching strategies",
+          "Performance benchmarking"
+        ],
+        "tools_required": [
+          "Database-specific performance tools",
+          "Load testing tools (e.g., k6, JMeter)"
+        ],
+        "environment_setup": [
+          "A staging environment that mirrors production",
+          "Monitoring stack fully deployed"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "logs/slow-queries.log",
+          "performance_reports/"
+        ],
+        "config_dependencies": [
+          "Application workload characteristics"
+        ],
+        "environment_variables": []
+      },
+      "outputs": {
+        "files_created": [
+          "docs/performance/TuningGuide.md - A comprehensive guide to tuning each database",
+          "scripts/performance/run_benchmarks.sh - Scripts to execute load tests"
+        ],
+        "files_modified": [
+          "Database configuration files with optimized settings",
+          "Application code with optimized queries or caching logic"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-monitoring-alerting-008"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "Performance tuning is an iterative process. This task outlines the general workflow: establish a baseline, identify bottlenecks using monitoring data and diagnostic tools, form a hypothesis, apply a change, and measure the impact. This cycle is repeated for each database.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Establish Performance Baselines",
+            "description": "Run a standardized set of load tests against the system to establish baseline performance metrics (e.g., latency, throughput, error rate).",
+            "commands": [
+              "bash scripts/performance/run_benchmarks.sh baseline"
+            ],
+            "expected_output": "A baseline performance report is generated.",
+            "troubleshooting": "Ensure the load testing tool is correctly configured to target the system."
+          },
+          {
+            "step": 2,
+            "title": "Identify Bottlenecks",
+            "description": "Use monitoring dashboards (Grafana) and database-specific tools (e.g., slow query logs, `pg_stat_statements`) to identify the most expensive queries and operations.",
+            "commands": [
+              "# Example for PostgreSQL",
+              "docker exec postgresql-master psql -U postgres -c 'SELECT * FROM pg_stat_statements ORDER BY total_exec_time DESC LIMIT 10;'"
+            ],
+            "expected_output": "A list of performance bottlenecks is identified.",
+            "troubleshooting": "Ensure the necessary statistics extensions or settings are enabled in each database."
+          },
+          {
+            "step": 3,
+            "title": "Optimize Queries and Indexes",
+            "description": "Analyze the execution plans of slow queries and add or modify indexes to improve performance. Refactor queries where necessary.",
+            "commands": [
+              "# Example for PostgreSQL",
+              "docker exec postgresql-master psql -U postgres -c 'EXPLAIN ANALYZE SELECT ...'",
+              "docker exec postgresql-master psql -U postgres -c 'CREATE INDEX ...'"
+            ],
+            "expected_output": "Queries are optimized and new indexes are created.",
+            "troubleshooting": "Be cautious when adding indexes, as they can slow down write operations. Test the impact thoroughly."
+          },
+          {
+            "step": 4,
+            "title": "Tune Caching and Configuration",
+            "description": "Adjust caching strategies (e.g., in Redis or at the application level) and tune database server configuration parameters (e.g., memory allocation, parallelism) based on workload.",
+            "commands": [
+              "# Example: Adjusting work_mem in PostgreSQL",
+              "sed -i 's/work_mem = .*/work_mem = 512MB/' config/postgresql/postgresql.conf",
+              "# Restart/reload the service"
+            ],
+            "expected_output": "Caching and server configurations are optimized.",
+            "troubleshooting": "Changes to configuration should be made one at a time and their impact measured carefully."
+          },
+          {
+            "step": 5,
+            "title": "Measure and Repeat",
+            "description": "Re-run the benchmark tests to measure the impact of the changes against the baseline. Document the results and continue the cycle.",
+            "commands": [
+              "bash scripts/performance/run_benchmarks.sh optimized-run-1"
+            ],
+            "expected_output": "A new performance report showing the impact of the optimizations.",
+            "troubleshooting": ""
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "A documented and repeatable process for performance tuning is in place.",
+          "Key performance bottlenecks have been identified and addressed."
+        ],
+        "performance_requirements": [
+          "The system meets or exceeds the defined performance targets (e.g., 99th percentile latency < 200ms).",
+          "Performance does not degrade over time."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "11-Performance-Tuning",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

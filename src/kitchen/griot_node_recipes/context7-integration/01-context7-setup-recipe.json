@@ -1,0 +1,371 @@
+{
+  "metadata": {
+    "id": "context7_setup_recipe",
+    "name": "Context7 MCP Server Setup Recipe",
+    "description": "Recipe for setting up Context7 MCP server integration in kOS kitchen system",
+    "version": "1.0.0",
+    "category": "ai_services",
+    "dependencies": ["kitchen_core", "pantry_manager"],
+    "tags": ["context7", "mcp", "documentation", "upstash", "integration"],
+    "author": "kOS Kitchen System",
+    "created": "2025-07-08T10:30:00Z",
+    "updated": "2025-07-08T10:30:00Z",
+    "status": "ACTIVE"
+  },
+  "inputs": {
+    "package_manager": {
+      "type": "string",
+      "required": false,
+      "default": "auto",
+      "description": "Package manager to use (auto, npx, bunx, yarn, pnpm)",
+      "validation": {
+        "allowed_values": ["auto", "npx", "bunx", "yarn", "pnpm"]
+      }
+    },
+    "cache_enabled": {
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Enable caching for Context7 documentation"
+    },
+    "rate_limiting": {
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Enable rate limiting for API calls"
+    },
+    "auto_start": {
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Auto-start Context7 server"
+    }
+  },
+  "outputs": {
+    "context7_status": {
+      "type": "object",
+      "description": "Status of Context7 integration"
+    },
+    "configuration_path": {
+      "type": "string",
+      "description": "Path to Context7 configuration file"
+    },
+    "tool_registration": {
+      "type": "object",
+      "description": "Registration status of Context7 tool"
+    }
+  },
+  "steps": [
+    {
+      "id": "step_01",
+      "name": "Validate System Requirements",
+      "description": "Check system requirements for Context7 integration",
+      "operation": "system_validation",
+      "parameters": {
+        "requirements": [
+          "node.js >= 16.0.0",
+          "npm >= 8.0.0",
+          "network_access",
+          "kitchen_core_initialized"
+        ]
+      },
+      "expected_output": {
+        "status": "success",
+        "requirements_met": true
+      },
+      "error_handling": {
+        "on_failure": "stop_execution",
+        "retry_attempts": 0
+      }
+    },
+    {
+      "id": "step_02",
+      "name": "Create Context7 Configuration",
+      "description": "Create Context7 integration configuration file",
+      "operation": "file_creation",
+      "parameters": {
+        "file_path": "kitchen/config/context7_integration.json",
+        "content_source": "context7_integration_config",
+        "overwrite": false
+      },
+      "expected_output": {
+        "status": "success",
+        "file_created": true,
+        "file_path": "kitchen/config/context7_integration.json"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_03",
+      "name": "Create Context7 Tool Ingredient",
+      "description": "Create Context7 tool ingredient for pantry system",
+      "operation": "file_creation",
+      "parameters": {
+        "file_path": "kitchen/pantry/ingredients/base/tools/context7_tool.json",
+        "content_source": "context7_tool_ingredient",
+        "overwrite": false
+      },
+      "expected_output": {
+        "status": "success",
+        "file_created": true,
+        "file_path": "kitchen/pantry/ingredients/base/tools/context7_tool.json"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_04",
+      "name": "Create Context7 Client Operation",
+      "description": "Create Context7 client operation for pantry system",
+      "operation": "file_creation",
+      "parameters": {
+        "file_path": "kitchen/pantry/operations/tools/context7/context7_client.py",
+        "content_source": "context7_client_operation",
+        "overwrite": false
+      },
+      "expected_output": {
+        "status": "success",
+        "file_created": true,
+        "file_path": "kitchen/pantry/operations/tools/context7/context7_client.py"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_05",
+      "name": "Create Context7 Recipe",
+      "description": "Create Context7 setup recipe",
+      "operation": "file_creation",
+      "parameters": {
+        "file_path": "kitchen/recipes/context7-integration/01-context7-setup-recipe.json",
+        "content_source": "context7_setup_recipe",
+        "overwrite": false
+      },
+      "expected_output": {
+        "status": "success",
+        "file_created": true,
+        "file_path": "kitchen/recipes/context7-integration/01-context7-setup-recipe.json"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_06",
+      "name": "Register Context7 Tool",
+      "description": "Register Context7 tool in pantry system",
+      "operation": "pantry_registration",
+      "parameters": {
+        "tool_id": "context7_documentation_tool",
+        "tool_path": "kitchen/pantry/ingredients/base/tools/context7_tool.json",
+        "category": "tools",
+        "auto_discover": true
+      },
+      "expected_output": {
+        "status": "success",
+        "tool_registered": true,
+        "tool_id": "context7_documentation_tool"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 2
+      }
+    },
+    {
+      "id": "step_07",
+      "name": "Test Context7 Installation",
+      "description": "Test Context7 MCP server installation",
+      "operation": "context7_test",
+      "parameters": {
+        "test_type": "installation",
+        "package_manager": "{{inputs.package_manager}}"
+      },
+      "expected_output": {
+        "status": "success",
+        "installation_valid": true,
+        "package_manager": "{{inputs.package_manager}}"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 2
+      }
+    },
+    {
+      "id": "step_08",
+      "name": "Test Context7 Functionality",
+      "description": "Test Context7 library resolution and documentation fetching",
+      "operation": "context7_test",
+      "parameters": {
+        "test_type": "functionality",
+        "test_library": "react",
+        "test_topic": "hooks"
+      },
+      "expected_output": {
+        "status": "success",
+        "functionality_valid": true,
+        "test_results": {
+          "library_resolution": true,
+          "documentation_fetching": true
+        }
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_09",
+      "name": "Configure Caching",
+      "description": "Configure caching for Context7 documentation",
+      "operation": "cache_configuration",
+      "parameters": {
+        "cache_enabled": "{{inputs.cache_enabled}}",
+        "cache_location": "kitchen/cache/context7",
+        "cache_duration": "24_hours"
+      },
+      "expected_output": {
+        "status": "success",
+        "cache_configured": true,
+        "cache_location": "kitchen/cache/context7"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_10",
+      "name": "Configure Rate Limiting",
+      "description": "Configure rate limiting for Context7 API calls",
+      "operation": "rate_limit_configuration",
+      "parameters": {
+        "rate_limiting_enabled": "{{inputs.rate_limiting}}",
+        "requests_per_minute": 60,
+        "burst_limit": 10
+      },
+      "expected_output": {
+        "status": "success",
+        "rate_limiting_configured": true,
+        "requests_per_minute": 60
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_11",
+      "name": "Update Kitchen Configuration",
+      "description": "Update kitchen configuration to include Context7 integration",
+      "operation": "config_update",
+      "parameters": {
+        "config_file": "kitchen/config/kitchen_config.json",
+        "updates": {
+          "integration.context7": {
+            "enabled": true,
+            "auto_start": "{{inputs.auto_start}}",
+            "config_path": "kitchen/config/context7_integration.json"
+          }
+        }
+      },
+      "expected_output": {
+        "status": "success",
+        "config_updated": true,
+        "context7_enabled": true
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_12",
+      "name": "Create Integration Documentation",
+      "description": "Create documentation for Context7 integration",
+      "operation": "documentation_creation",
+      "parameters": {
+        "doc_type": "integration_guide",
+        "title": "Context7 Integration Guide",
+        "content_sections": [
+          "installation",
+          "configuration",
+          "usage_examples",
+          "troubleshooting"
+        ]
+      },
+      "expected_output": {
+        "status": "success",
+        "documentation_created": true,
+        "doc_path": "docs/integrations/context7.md"
+      },
+      "error_handling": {
+        "on_failure": "continue_execution",
+        "retry_attempts": 1
+      }
+    },
+    {
+      "id": "step_13",
+      "name": "Final Validation",
+      "description": "Perform final validation of Context7 integration",
+      "operation": "integration_validation",
+      "parameters": {
+        "validation_checks": [
+          "configuration_valid",
+          "tool_registered",
+          "client_operational",
+          "cache_functional",
+          "rate_limiting_active"
+        ]
+      },
+      "expected_output": {
+        "status": "success",
+        "integration_valid": true,
+        "all_checks_passed": true
+      },
+      "error_handling": {
+        "on_failure": "stop_execution",
+        "retry_attempts": 0
+      }
+    }
+  ],
+  "error_handling": {
+    "global_strategy": "continue_on_error",
+    "max_retries": 3,
+    "rollback_enabled": true,
+    "notification_on_failure": true
+  },
+  "success_criteria": {
+    "required_outputs": [
+      "context7_status.status = 'healthy'",
+      "configuration_path exists",
+      "tool_registration.tool_registered = true"
+    ],
+    "validation_checks": [
+      "Context7 MCP server can be installed",
+      "Library resolution works",
+      "Documentation fetching works",
+      "Caching is functional",
+      "Rate limiting is active"
+    ]
+  },
+  "post_execution": {
+    "cleanup": [
+      "Remove temporary files",
+      "Clear test cache",
+      "Log integration completion"
+    ],
+    "notifications": [
+      "Context7 integration completed successfully",
+      "Documentation available at docs/integrations/context7.md",
+      "Tool registered in pantry system"
+    ]
+  }
+} 

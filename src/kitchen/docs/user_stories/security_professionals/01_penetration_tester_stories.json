@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "title": "Penetration Tester User Stories",
+    "version": "1.0.0",
+    "created_by": "Q-Assist",
+    "creation_timestamp": "2025-07-08T12:00:00Z",
+    "category": "security_professionals",
+    "subcategory": "penetration_testing"
+  },
+  "user_stories": [
+    {
+      "id": "PENTEST-001",
+      "title": "Automated Vulnerability Scanning",
+      "user": "Penetration Tester",
+      "story": "As a penetration tester, I want automated vulnerability scanning that can identify security weaknesses across networks, applications, and infrastructure so that I can focus on manual testing of complex vulnerabilities.",
+      "acceptance_criteria": [
+        "Scan networks for open ports and services",
+        "Identify common vulnerabilities (CVE, OWASP Top 10)",
+        "Generate detailed vulnerability reports",
+        "Prioritize findings by severity and exploitability",
+        "Integrate with popular security tools (Nmap, Nessus, Burp)"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["network_scanner", "vulnerability_detector", "report_generator", "tool_integrator"]
+    },
+    {
+      "id": "PENTEST-002",
+      "title": "Web Application Security Testing",
+      "user": "Web Security Specialist",
+      "story": "As a web security specialist, I want automated web application testing that can detect SQL injection, XSS, CSRF, and other web vulnerabilities so that I can ensure comprehensive security coverage.",
+      "acceptance_criteria": [
+        "Detect SQL injection vulnerabilities",
+        "Identify XSS and CSRF vulnerabilities",
+        "Test authentication and authorization",
+        "Validate input validation and output encoding",
+        "Generate proof-of-concept exploits"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "HIGH",
+      "ingredients_needed": ["web_scanner", "injection_detector", "auth_tester", "exploit_generator"]
+    },
+    {
+      "id": "PENTEST-003",
+      "title": "Social Engineering Campaign Automation",
+      "user": "Social Engineering Specialist",
+      "story": "As a social engineering specialist, I want automated tools that can help design and execute phishing campaigns and social engineering tests so that I can assess human security awareness.",
+      "acceptance_criteria": [
+        "Generate realistic phishing emails",
+        "Create fake websites and landing pages",
+        "Track email open rates and click-through rates",
+        "Simulate phone-based social engineering",
+        "Generate awareness training recommendations"
+      ],
+      "priority": "MEDIUM",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["phishing_generator", "website_cloner", "tracking_system", "training_recommender"]
+    },
+    {
+      "id": "PENTEST-004",
+      "title": "Wireless Network Security Assessment",
+      "user": "Wireless Security Expert",
+      "story": "As a wireless security expert, I want automated wireless network assessment tools that can identify weak encryption, rogue access points, and other wireless vulnerabilities.",
+      "acceptance_criteria": [
+        "Scan for wireless networks and access points",
+        "Test encryption strength (WEP, WPA, WPA2, WPA3)",
+        "Identify rogue access points",
+        "Test for wireless-specific attacks",
+        "Generate wireless security reports"
+      ],
+      "priority": "MEDIUM",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["wifi_scanner", "encryption_tester", "rogue_detector", "wireless_attacker"]
+    },
+    {
+      "id": "PENTEST-005",
+      "title": "Physical Security Assessment",
+      "user": "Physical Security Specialist",
+      "story": "As a physical security specialist, I want tools that can assess physical security controls, access systems, and environmental security so that I can provide comprehensive security assessments.",
+      "acceptance_criteria": [
+        "Test physical access controls",
+        "Assess surveillance system effectiveness",
+        "Evaluate environmental security (HVAC, power)",
+        "Test RFID and proximity card systems",
+        "Generate physical security recommendations"
+      ],
+      "priority": "LOW",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["access_tester", "surveillance_analyzer", "environmental_scanner", "rfid_tester"]
+    }
+  ]
+} 

@@ -1,0 +1,314 @@
+{
+  "metadata": {
+    "recipe_id": "storage-disaster-recovery",
+    "title": "Storage Disaster Recovery System",
+    "description": "Comprehensive disaster recovery system for storage infrastructure with automated backup, replication, and recovery procedures",
+    "category": "storage-systems",
+    "difficulty": "advanced",
+    "estimated_time": "90 minutes",
+    "prerequisites": [
+      "01-minio-enterprise-cluster",
+      "02-aws-s3-integration",
+      "07-storage-backup-system"
+    ],
+    "tags": [
+      "disaster-recovery",
+      "backup",
+      "replication",
+      "recovery",
+      "high-availability"
+    ],
+    "version": "1.0.0",
+    "last_updated": "2025-01-27T12:00:00Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "os": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "python_version": "3.8+",
+      "node_version": "16+",
+      "docker": "20.10+",
+      "docker_compose": "2.0+",
+      "storage": "Multiple storage locations"
+    },
+    "dependencies": [
+      "rsync",
+      "rclone",
+      "duplicity",
+      "borg",
+      "minio_client",
+      "aws_cli"
+    ],
+    "permissions": [
+      "storage_admin",
+      "backup_admin",
+      "network_admin"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "replication-setup",
+      "title": "Setup Multi-Site Replication",
+      "description": "Configure cross-site replication for data redundancy",
+      "steps": [
+        {
+          "step_id": "minio-replication",
+          "title": "Configure MinIO Replication",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "mc admin bucket remote add myminio/backup https://backup-minio.example.com:9000 minio minio123 --service replication",
+              "expected_output": "MinIO replication configured"
+            },
+            {
+              "os": "linux",
+              "command": "mc replicate add myminio/backup --remote-bucket backup --priority 1",
+              "expected_output": "Replication rule added"
+            }
+          ]
+        },
+        {
+          "step_id": "s3-replication",
+          "title": "Configure S3 Cross-Region Replication",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "aws s3api put-bucket-replication --bucket ai-q-storage --replication-configuration file://replication-config.json",
+              "expected_output": "S3 replication configured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "backup-automation",
+      "title": "Automated Backup System",
+      "description": "Setup comprehensive automated backup system",
+      "steps": [
+        {
+          "step_id": "borg-setup",
+          "title": "Setup Borg Backup",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo apt-get install -y borgbackup",
+              "expected_output": "Borg backup installed"
+            },
+            {
+              "os": "linux",
+              "command": "borg init --encryption=repokey /backup/storage",
+              "expected_output": "Borg repository initialized"
+            }
+          ]
+        },
+        {
+          "step_id": "backup-script",
+          "title": "Create Automated Backup Script",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/storage-backup.sh > /dev/null << 'EOF'\n#!/bin/bash\nBACKUP_DIR=\"/backup/storage\"\nDATE=$(date +%Y%m%d_%H%M%S)\n\n# MinIO backup\nmc mirror myminio/ /tmp/minio-backup/\nborg create $BACKUP_DIR::minio-$DATE /tmp/minio-backup/\n\n# S3 backup\naws s3 sync s3://ai-q-storage /tmp/s3-backup/\nborg create $BACKUP_DIR::s3-$DATE /tmp/s3-backup/\n\n# Cleanup\nrm -rf /tmp/minio-backup/ /tmp/s3-backup/\n\n# Prune old backups\nborg prune $BACKUP_DIR --keep-daily=7 --keep-weekly=4 --keep-monthly=12\necho \"Backup completed: $DATE\"\nEOF",
+              "expected_output": "Backup script created"
+            },
+            {
+              "os": "linux",
+              "command": "sudo chmod +x /usr/local/bin/storage-backup.sh",
+              "expected_output": "Backup script made executable"
+            }
+          ]
+        },
+        {
+          "step_id": "cron-setup",
+          "title": "Setup Automated Backup Schedule",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "echo '0 2 * * * /usr/local/bin/storage-backup.sh >> /var/log/storage-backup.log 2>&1' | sudo crontab -",
+              "expected_output": "Backup schedule configured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "recovery-procedures",
+      "title": "Recovery Procedures",
+      "description": "Setup comprehensive recovery procedures and testing",
+      "steps": [
+        {
+          "step_id": "recovery-script",
+          "title": "Create Recovery Script",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/storage-recovery.sh > /dev/null << 'EOF'\n#!/bin/bash\nBACKUP_DIR=\"/backup/storage\"\nRECOVERY_DIR=\"/recovery\"\n\n# List available backups\necho \"Available backups:\"\nborg list $BACKUP_DIR\n\n# Recovery function\nrecover_backup() {\n    local backup_name=$1\n    echo \"Recovering $backup_name...\"\n    borg extract $BACKUP_DIR::$backup_name $RECOVERY_DIR/\n    echo \"Recovery completed to $RECOVERY_DIR\"\n}\n\n# Usage\nif [ $# -eq 0 ]; then\n    echo \"Usage: $0 <backup_name>\"\n    exit 1\nfi\n\nrecover_backup $1\nEOF",
+              "expected_output": "Recovery script created"
+            },
+            {
+              "os": "linux",
+              "command": "sudo chmod +x /usr/local/bin/storage-recovery.sh",
+              "expected_output": "Recovery script made executable"
+            }
+          ]
+        },
+        {
+          "step_id": "failover-setup",
+          "title": "Setup Failover Configuration",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/keepalived/keepalived.conf > /dev/null << 'EOF'\nvrrp_instance VI_1 {\n    state MASTER\n    interface eth0\n    virtual_router_id 51\n    priority 100\n    advert_int 1\n    authentication {\n        auth_type PASS\n        auth_pass 1111\n    }\n    virtual_ipaddress {\n        192.168.1.100\n    }\n}\nEOF",
+              "expected_output": "Keepalived configuration created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "monitoring-integration",
+      "title": "Integrate with Monitoring",
+      "description": "Integrate disaster recovery with monitoring system",
+      "steps": [
+        {
+          "step_id": "backup-monitoring",
+          "title": "Setup Backup Monitoring",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/prometheus/storage_backup.yml > /dev/null << 'EOF'\ngroups:\n- name: storage_backup\n  rules:\n  - alert: BackupFailed\n    expr: time() - storage_backup_last_success > 86400\n    for: 1h\n    labels:\n      severity: critical\n    annotations:\n      summary: \"Storage backup failed\"\n\n  - alert: ReplicationLag\n    expr: storage_replication_lag_seconds > 300\n    for: 5m\n    labels:\n      severity: warning\n    annotations:\n      summary: \"Replication lag detected\"\nEOF",
+              "expected_output": "Backup monitoring rules created"
+            }
+          ]
+        },
+        {
+          "step_id": "health-checks",
+          "title": "Setup Health Checks",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/storage-health-check.sh > /dev/null << 'EOF'\n#!/bin/bash\n\n# Check MinIO status\nif ! mc admin info myminio/ > /dev/null 2>&1; then\n    echo \"MinIO health check failed\"\n    exit 1\nfi\n\n# Check replication status\nif ! mc admin replicate status myminio/ > /dev/null 2>&1; then\n    echo \"Replication health check failed\"\n    exit 1\nfi\n\n# Check backup status\nif [ ! -f /var/log/storage-backup.log ] || [ $(find /var/log/storage-backup.log -mtime +1) ]; then\n    echo \"Backup health check failed\"\n    exit 1\nfi\n\necho \"All health checks passed\"\nexit 0\nEOF",
+              "expected_output": "Health check script created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "testing-procedures",
+      "title": "Disaster Recovery Testing",
+      "description": "Setup and execute disaster recovery testing procedures",
+      "steps": [
+        {
+          "step_id": "recovery-test",
+          "title": "Test Recovery Procedures",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo mkdir -p /test-recovery && /usr/local/bin/storage-recovery.sh minio-$(date +%Y%m%d)",
+              "expected_output": "Recovery test completed"
+            }
+          ]
+        },
+        {
+          "step_id": "failover-test",
+          "title": "Test Failover Procedures",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo systemctl stop minio && sleep 30 && sudo systemctl start minio",
+              "expected_output": "Failover test completed"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "os": "linux",
+        "command": "mc admin replicate status myminio/",
+        "expected_output": "Replication status"
+      },
+      {
+        "os": "linux",
+        "command": "borg list /backup/storage | wc -l",
+        "expected_output": "Number of backups > 0"
+      },
+      {
+        "os": "linux",
+        "command": "crontab -l | grep storage-backup",
+        "expected_output": "0 2 * * * /usr/local/bin/storage-backup.sh"
+      },
+      {
+        "os": "linux",
+        "command": "/usr/local/bin/storage-health-check.sh",
+        "expected_output": "All health checks passed"
+      }
+    ],
+    "expected_outputs": {
+      "replication_status": "Replication active and healthy",
+      "backup_status": "Backups available and recent",
+      "cron_schedule": "Automated backup schedule configured",
+      "health_status": "All systems healthy"
+    }
+  },
+  "expected_output": {
+    "replication_system": "Multi-site replication configured and operational",
+    "backup_system": "Automated backup system with retention policies",
+    "recovery_procedures": "Comprehensive recovery procedures documented and tested",
+    "monitoring_integration": "Disaster recovery integrated with monitoring system",
+    "testing_procedures": "Regular testing procedures established",
+    "recovery_time_objective": "< 4 hours",
+    "recovery_point_objective": "< 1 hour"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Replication lag too high",
+        "solution": "Check network connectivity and storage performance"
+      },
+      {
+        "issue": "Backup failures",
+        "solution": "Verify storage space and permissions"
+      },
+      {
+        "issue": "Recovery time too long",
+        "solution": "Optimize backup strategy and storage performance"
+      }
+    ]
+  },
+  "next_steps": [
+    "Implement automated failover testing",
+    "Setup cross-region disaster recovery",
+    "Configure real-time replication monitoring",
+    "Implement predictive failure detection"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-GROUP-CHAT-PLATFORM-001",
+    "title": "Group Chat Platform Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T15:00:00Z",
+    "last_updated": "2025-01-28T15:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 7,
+    "estimated_time": "3-4 hours"
+  },
+  "recipe_overview": {
+    "description": "Implement a comprehensive group chat platform that enables multiple AI agents to participate in collaborative conversations with real-time messaging, role management, conversation threading, and moderation capabilities.",
+    "technology_stack": {
+      "language": "TypeScript",
+      "runtime": "Node.js",
+      "communication": "WebSocket, Socket.io",
+      "database": "PostgreSQL",
+      "cache": "Redis",
+      "message_queue": "RabbitMQ"
+    },
+    "deliverables": [
+      "Real-time messaging system",
+      "Agent role management",
+      "Conversation threading",
+      "Context preservation",
+      "Moderation and governance"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "GCP-001",
+      "title": "Create Real-time Messaging System",
+      "description": "Build the core real-time messaging system with WebSocket support",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/chat/messaging",
+        "mkdir -p src/chat/websocket",
+        "mkdir -p src/chat/types"
+      ],
+      "files_to_create": [
+        "src/chat/messaging/message-handler.ts",
+        "src/chat/messaging/message-queue.ts",
+        "src/chat/websocket/websocket-server.ts",
+        "src/chat/websocket/connection-manager.ts",
+        "src/chat/types/chat-types.ts"
+      ],
+      "acceptance_criteria": [
+        "Real-time messaging works without delays",
+        "WebSocket connections are stable",
+        "Message delivery is reliable",
+        "Connection management handles multiple clients"
+      ]
+    },
+    {
+      "id": "GCP-002",
+      "title": "Implement Agent Role Management",
+      "description": "Create role-based access control and permission system for agents",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/chat/roles",
+        "mkdir -p src/chat/permissions"
+      ],
+      "files_to_create": [
+        "src/chat/roles/role-manager.ts",
+        "src/chat/roles/role-assignment.ts",
+        "src/chat/permissions/permission-checker.ts",
+        "src/chat/permissions/access-control.ts"
+      ],
+      "acceptance_criteria": [
+        "Role-based permissions function correctly",
+        "Agent role assignment works",
+        "Permission checking is efficient",
+        "Access control prevents unauthorized actions"
+      ]
+    },
+    {
+      "id": "GCP-003",
+      "title": "Build Conversation Threading",
+      "description": "Implement conversation threading and topic management",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/chat/threading"
+      ],
+      "files_to_create": [
+        "src/chat/threading/thread-manager.ts",
+        "src/chat/threading/topic-organizer.ts",
+        "src/chat/threading/conversation-tree.ts",
+        "src/chat/threading/thread-navigator.ts"
+      ],
+      "acceptance_criteria": [
+        "Conversation threading works correctly",
+        "Topic organization is logical",
+        "Thread navigation is intuitive",
+        "Conversation trees are properly structured"
+      ]
+    },
+    {
+      "id": "GCP-004",
+      "title": "Implement Context Preservation",
+      "description": "Create context preservation and conversation history system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/chat/context"
+      ],
+      "files_to_create": [
+        "src/chat/context/context-preserver.ts",
+        "src/chat/context/conversation-history.ts",
+        "src/chat/context/context-search.ts",
+        "src/chat/context/memory-manager.ts"
+      ],
+      "acceptance_criteria": [
+        "Conversation history is preserved",
+        "Context search works efficiently",
+        "Memory management is optimized",
+        "Context sharing between agents works"
+      ]
+    },
+    {
+      "id": "GCP-005",
+      "title": "Create Moderation System",
+      "description": "Implement moderation and governance tools for group conversations",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/chat/moderation"
+      ],
+      "files_to_create": [
+        "src/chat/moderation/content-filter.ts",
+        "src/chat/moderation/spam-detector.ts",
+        "src/chat/moderation/abuse-prevention.ts",
+        "src/chat/moderation/moderation-tools.ts"
+      ],
+      "acceptance_criteria": [
+        "Content filtering works effectively",
+        "Spam detection prevents abuse",
+        "Abuse prevention mechanisms work",
+        "Moderation tools are accessible"
+      ]
+    },
+    {
+      "id": "GCP-006",
+      "title": "Add Advanced Features",
+      "description": "Implement advanced features like reactions, mentions, and notifications",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/chat/features"
+      ],
+      "files_to_create": [
+        "src/chat/features/reaction-system.ts",
+        "src/chat/features/mention-handler.ts",
+        "src/chat/features/notification-manager.ts",
+        "src/chat/features/emoji-support.ts"
+      ],
+      "acceptance_criteria": [
+        "Reaction system works correctly",
+        "Mentions trigger proper notifications",
+        "Notification delivery is reliable",
+        "Emoji support is comprehensive"
+      ]
+    },
+    {
+      "id": "GCP-007",
+      "title": "Create Chat Platform Configuration",
+      "description": "Set up configuration management and deployment for the group chat platform",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p config/chat",
+        "mkdir -p docker/chat"
+      ],
+      "files_to_create": [
+        "config/chat/chat-config.json",
+        "config/chat/role-config.json",
+        "docker/chat/Dockerfile",
+        "docker/chat/docker-compose.yml",
+        "scripts/chat-platform-start.sh"
+      ],
+      "acceptance_criteria": [
+        "Configuration is properly structured",
+        "Docker deployment works correctly",
+        "Startup script functions properly",
+        "Configuration validation prevents errors"
+      ]
+    }
+  ],
+  "features": {
+    "multi_agent_conversations": {
+      "description": "Support for multiple agents in the same conversation",
+      "components": [
+        "Agent identification",
+        "Message attribution",
+        "Agent presence indicators",
+        "Collaborative editing"
+      ]
+    },
+    "role_based_permissions": {
+      "description": "Role-based access control for different agent types",
+      "components": [
+        "Admin roles",
+        "Moderator roles",
+        "Participant roles",
+        "Guest roles"
+      ]
+    },
+    "conversation_history": {
+      "description": "Comprehensive conversation history and search",
+      "components": [
+        "Message persistence",
+        "Search functionality",
+        "History export",
+        "Archive management"
+      ]
+    },
+    "context_sharing": {
+      "description": "Shared context and knowledge between agents",
+      "components": [
+        "Context preservation",
+        "Knowledge sharing",
+        "Memory synchronization",
+        "Learning from conversations"
+      ]
+    },
+    "moderation_tools": {
+      "description": "Tools for conversation moderation and governance",
+      "components": [
+        "Content filtering",
+        "Spam detection",
+        "Abuse prevention",
+        "Moderation actions"
+      ]
+    }
+  },
+  "dependencies": {
+    "infrastructure": [
+      "01-core-infrastructure-recipe.json",
+      "06-api-gateway-recipe.json",
+      "07-authentication-security-recipe.json"
+    ],
+    "external_packages": [
+      "socket.io (WebSocket)",
+      "express (HTTP server)",
+      "pg (PostgreSQL)",
+      "redis (Redis cache)",
+      "amqplib (RabbitMQ)",
+      "winston (Logging)"
+    ]
+  },
+  "testing_requirements": {
+    "unit_tests": [
+      "Message handling tests",
+      "Role management tests",
+      "Threading functionality tests",
+      "Moderation system tests"
+    ],
+    "integration_tests": [
+      "Multi-agent conversation tests",
+      "Real-time messaging tests",
+      "Role-based permission tests",
+      "Performance and scalability tests"
+    ]
+  },
+  "security_considerations": {
+    "authentication": [
+      "Agent identity verification",
+      "Message encryption",
+      "Conversation privacy",
+      "Access control enforcement"
+    ],
+    "authorization": [
+      "Role-based permissions",
+      "Conversation access control",
+      "Moderation rights",
+      "Administrative privileges"
+    ]
+  },
+  "performance_requirements": {
+    "response_times": [
+      "Message delivery: < 50ms",
+      "Role checking: < 100ms",
+      "Context search: < 200ms",
+      "Notification delivery: < 100ms"
+    ],
+    "scalability": [
+      "Support 1000+ concurrent conversations",
+      "Handle 10000+ messages per minute",
+      "Process multiple agent interactions",
+      "Maintain performance under load"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "04-Group-Chat-Platform",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}
