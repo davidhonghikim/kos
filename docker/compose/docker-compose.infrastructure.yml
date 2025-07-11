@@ -2,189 +2,184 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
-    container_name: kos-postgres
+    image: ${KOS_POSTGRES_IMAGE}:${KOS_POSTGRES_VERSION}
+    container_name: ${KOS_POSTGRES_CONTAINER_NAME}
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-aiq_knowledge}
-      POSTGRES_USER: ${POSTGRES_USER:-aiq_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aiq_password}
-      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS:---auth-host=scram-sha-256}
+      POSTGRES_DB: ${KOS_POSTGRES_DB}
+      POSTGRES_USER: ${KOS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${KOS_POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: ${KOS_POSTGRES_INITDB_ARGS}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ${KOS_POSTGRES_VOLUME}:/var/lib/postgresql/data
+      - ${KOS_INIT_SCRIPTS_PATH}:/docker-entrypoint-initdb.d
     ports:
-      - "${KOS_POSTGRES_EXTERNAL_PORT:-5432}:${KOS_POSTGRES_INTERNAL_PORT:-5432}"
+      - "${KOS_POSTGRES_EXTERNAL_PORT}:${KOS_POSTGRES_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aiq_user} -d ${POSTGRES_DB:-aiq_knowledge}"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "pg_isready -U ${KOS_POSTGRES_USER} -d ${KOS_POSTGRES_DB}"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   redis:
-    image: redis:7-alpine
-    container_name: kos-redis
-    command: >
-      sh -c "if [ -n '${KOS_REDIS_PASSWORD:-}' ]; then 
-               redis-server --appendonly yes --requirepass '${KOS_REDIS_PASSWORD}'; 
-             else 
-               redis-server --appendonly yes; 
-             fi"
+    image: ${KOS_REDIS_IMAGE}:${KOS_REDIS_VERSION}
+    container_name: ${KOS_REDIS_CONTAINER_NAME}
+    command: ${KOS_REDIS_COMMAND}
     volumes:
-      - redis_data:/data
+      - ${KOS_REDIS_VOLUME}:/data
     ports:
-      - "${KOS_REDIS_EXTERNAL_PORT:-6379}:${KOS_REDIS_INTERNAL_PORT:-6379}"
+      - "${KOS_REDIS_EXTERNAL_PORT}:${KOS_REDIS_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: kos-elasticsearch
+    image: ${KOS_ELASTICSEARCH_IMAGE}:${KOS_ELASTICSEARCH_VERSION}
+    container_name: ${KOS_ELASTICSEARCH_CONTAINER_NAME}
     environment:
-      - discovery.type=${KOS_ELASTICSEARCH_DISCOVERY_TYPE:-single-node}
-      - xpack.security.enabled=${KOS_ELASTICSEARCH_XPACK_SECURITY_ENABLED:-false}
-      - ES_JAVA_OPTS=${KOS_ELASTICSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
-      - ELASTIC_PASSWORD=${KOS_ELASTICSEARCH_PASSWORD:-}
+      - discovery.type=${KOS_ELASTICSEARCH_DISCOVERY_TYPE}
+      - xpack.security.enabled=${KOS_ELASTICSEARCH_XPACK_SECURITY_ENABLED}
+      - ES_JAVA_OPTS=${KOS_ELASTICSEARCH_JAVA_OPTS}
+      - ELASTIC_PASSWORD=${KOS_ELASTICSEARCH_PASSWORD}
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
+      - ${KOS_ELASTICSEARCH_VOLUME}:/usr/share/elasticsearch/data
     ports:
-      - "${KOS_ELASTICSEARCH_EXTERNAL_PORT:-9200}:${KOS_ELASTICSEARCH_INTERNAL_PORT:-9200}"
-      - "${KOS_ELASTICSEARCH_CLUSTER_EXTERNAL_PORT:-9300}:${KOS_ELASTICSEARCH_CLUSTER_INTERNAL_PORT:-9300}"
+      - "${KOS_ELASTICSEARCH_EXTERNAL_PORT}:${KOS_ELASTICSEARCH_INTERNAL_PORT}"
+      - "${KOS_ELASTICSEARCH_CLUSTER_EXTERNAL_PORT}:${KOS_ELASTICSEARCH_CLUSTER_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: ["CMD-SHELL", "curl -f http://${KOS_ELASTICSEARCH_HOST}:${KOS_ELASTICSEARCH_INTERNAL_PORT}/_cluster/health || exit 1"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   neo4j:
-    image: neo4j:5.15.0
-    container_name: kos-neo4j
+    image: ${KOS_NEO4J_IMAGE}:${KOS_NEO4J_VERSION}
+    container_name: ${KOS_NEO4J_CONTAINER_NAME}
     environment:
-      NEO4J_AUTH: ${KOS_NEO4J_USER:-neo4j}/${KOS_NEO4J_PASSWORD:-none}
-      NEO4J_PLUGINS: ${NEO4J_PLUGINS:-apoc,graph-data-science}
-      NEO4J_dbms_security_procedures_unrestricted: ${NEO4J_PROCEDURES_UNRESTRICTED:-gds.*,apoc.*}
-      NEO4J_dbms_memory_heap_initial__size: ${NEO4J_HEAP_INITIAL_SIZE:-512m}
-      NEO4J_dbms_memory_heap_max__size: ${NEO4J_HEAP_MAX_SIZE:-1G}
-      NEO4J_dbms_memory_pagecache_size: ${NEO4J_PAGECACHE_SIZE:-512m}
+      NEO4J_AUTH: ${KOS_NEO4J_USER}/${KOS_NEO4J_PASSWORD}
+      NEO4J_PLUGINS: ${KOS_NEO4J_PLUGINS}
+      NEO4J_dbms_security_procedures_unrestricted: ${KOS_NEO4J_PROCEDURES_UNRESTRICTED}
+      NEO4J_dbms_memory_heap_initial__size: ${KOS_NEO4J_HEAP_INITIAL_SIZE}
+      NEO4J_dbms_memory_heap_max__size: ${KOS_NEO4J_HEAP_MAX_SIZE}
+      NEO4J_dbms_memory_pagecache_size: ${KOS_NEO4J_PAGECACHE_SIZE}
     volumes:
-      - neo4j_data:/data
-      - neo4j_logs:/logs
-      - neo4j_import:/var/lib/neo4j/import
-      - neo4j_plugins:/plugins
+      - ${KOS_NEO4J_DATA_VOLUME}:/data
+      - ${KOS_NEO4J_LOGS_VOLUME}:/logs
+      - ${KOS_NEO4J_IMPORT_VOLUME}:/var/lib/neo4j/import
+      - ${KOS_NEO4J_PLUGINS_VOLUME}:/plugins
     ports:
-      - "${KOS_NEO4J_HTTP_EXTERNAL_PORT:-7474}:${KOS_NEO4J_HTTP_INTERNAL_PORT:-7474}"
-      - "${KOS_NEO4J_EXTERNAL_PORT:-7687}:${KOS_NEO4J_INTERNAL_PORT:-7687}"
+      - "${KOS_NEO4J_HTTP_EXTERNAL_PORT}:${KOS_NEO4J_HTTP_INTERNAL_PORT}"
+      - "${KOS_NEO4J_EXTERNAL_PORT}:${KOS_NEO4J_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474/browser/ || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://${KOS_NEO4J_HOST}:${KOS_NEO4J_HTTP_INTERNAL_PORT}/browser/ || exit 1"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   weaviate:
-    image: semitechnologies/weaviate:1.22.4
-    container_name: kos-weaviate
+    image: ${KOS_WEAVIATE_IMAGE}:${KOS_WEAVIATE_VERSION}
+    container_name: ${KOS_WEAVIATE_CONTAINER_NAME}
     environment:
-      QUERY_DEFAULTS_LIMIT: ${WEAVIATE_QUERY_DEFAULTS_LIMIT:-25}
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: ${WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED:-true}
-      PERSISTENCE_DATA_PATH: ${WEAVIATE_PERSISTENCE_DATA_PATH:-/var/lib/weaviate}
-      DEFAULT_VECTORIZER_MODULE: ${WEAVIATE_DEFAULT_VECTORIZER_MODULE:-text2vec-transformers}
-      ENABLE_MODULES: ${WEAVIATE_ENABLE_MODULES:-text2vec-transformers,ref2vec-centroid,generative-openai,qna-openai}
-      TRANSFORMERS_INFERENCE_API: ${WEAVIATE_TRANSFORMERS_INFERENCE_API:-http://t2v-transformers:8080}
-      CLUSTER_HOSTNAME: ${WEAVIATE_CLUSTER_HOSTNAME:-node1}
+      QUERY_DEFAULTS_LIMIT: ${KOS_WEAVIATE_QUERY_DEFAULTS_LIMIT}
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: ${KOS_WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED}
+      PERSISTENCE_DATA_PATH: ${KOS_WEAVIATE_PERSISTENCE_DATA_PATH}
+      DEFAULT_VECTORIZER_MODULE: ${KOS_WEAVIATE_DEFAULT_VECTORIZER_MODULE}
+      ENABLE_MODULES: ${KOS_WEAVIATE_ENABLE_MODULES}
+      TRANSFORMERS_INFERENCE_API: ${KOS_WEAVIATE_TRANSFORMERS_INFERENCE_API}
+      CLUSTER_HOSTNAME: ${KOS_WEAVIATE_CLUSTER_HOSTNAME}
     volumes:
-      - weaviate_data:/var/lib/weaviate
+      - ${KOS_WEAVIATE_VOLUME}:/var/lib/weaviate
     ports:
-      - "${KOS_WEAVIATE_EXTERNAL_PORT:-8080}:${KOS_WEAVIATE_INTERNAL_PORT:-8080}"
+      - "${KOS_WEAVIATE_EXTERNAL_PORT}:${KOS_WEAVIATE_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/.well-known/ready"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_WEAVIATE_HOST}:${KOS_WEAVIATE_INTERNAL_PORT}/v1/.well-known/ready"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   minio:
-    image: minio/minio:RELEASE.2023-11-15T20-43-25Z
-    container_name: kos-minio
+    image: ${KOS_MINIO_IMAGE}:${KOS_MINIO_VERSION}
+    container_name: ${KOS_MINIO_CONTAINER_NAME}
     environment:
-      MINIO_ROOT_USER: ${KOS_MINIO_ROOT_USER:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${KOS_MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_ROOT_USER: ${KOS_MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${KOS_MINIO_ROOT_PASSWORD}
     volumes:
-      - minio_data:/data
+      - ${KOS_MINIO_VOLUME}:/data
     ports:
-      - "${KOS_MINIO_EXTERNAL_PORT:-9000}:${KOS_MINIO_INTERNAL_PORT:-9000}"
-      - "${KOS_MINIO_CONSOLE_EXTERNAL_PORT:-9001}:${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
+      - "${KOS_MINIO_EXTERNAL_PORT}:${KOS_MINIO_INTERNAL_PORT}"
+      - "${KOS_MINIO_CONSOLE_EXTERNAL_PORT}:${KOS_MINIO_CONSOLE_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
-    command: server /data --console-address ":${KOS_MINIO_CONSOLE_INTERNAL_PORT:-9001}"
+    command: server /data --console-address ":${KOS_MINIO_CONSOLE_INTERNAL_PORT}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_MINIO_HOST}:${KOS_MINIO_INTERNAL_PORT}/minio/health/live"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   grafana:
-    image: grafana/grafana:10.2.0
-    container_name: kos-grafana
+    image: ${KOS_GRAFANA_IMAGE}:${KOS_GRAFANA_VERSION}
+    container_name: ${KOS_GRAFANA_CONTAINER_NAME}
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${KOS_GRAFANA_ADMIN_PASSWORD:-}
+      - GF_SECURITY_ADMIN_PASSWORD=${KOS_GRAFANA_ADMIN_PASSWORD}
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./config/grafana/provisioning:/etc/grafana/provisioning
+      - ${KOS_GRAFANA_VOLUME}:/var/lib/grafana
+      - ${KOS_GRAFANA_CONFIG_PATH}:/etc/grafana/provisioning
     ports:
-      - "${KOS_GRAFANA_EXTERNAL_PORT:-3001}:${KOS_GRAFANA_INTERNAL_PORT:-3000}"
+      - "${KOS_GRAFANA_EXTERNAL_PORT}:${KOS_GRAFANA_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "curl -f http://${KOS_GRAFANA_HOST}:${KOS_GRAFANA_INTERNAL_PORT}/api/health || exit 1"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   prometheus:
-    image: prom/prometheus:v2.48.0
-    container_name: kos-prometheus
+    image: ${KOS_PROMETHEUS_IMAGE}:${KOS_PROMETHEUS_VERSION}
+    container_name: ${KOS_PROMETHEUS_CONTAINER_NAME}
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
+      - '--storage.tsdb.retention.time=${KOS_PROMETHEUS_RETENTION_TIME}'
       - '--web.enable-lifecycle'
     volumes:
-      - prometheus_data:/prometheus
-      - ./config/prometheus:/etc/prometheus
+      - ${KOS_PROMETHEUS_VOLUME}:/prometheus
+      - ${KOS_PROMETHEUS_CONFIG_PATH}:/etc/prometheus
     ports:
-      - "${KOS_PROMETHEUS_EXTERNAL_PORT:-9090}:${KOS_PROMETHEUS_INTERNAL_PORT:-9090}"
+      - "${KOS_PROMETHEUS_EXTERNAL_PORT}:${KOS_PROMETHEUS_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://${KOS_PROMETHEUS_HOST}:${KOS_PROMETHEUS_INTERNAL_PORT}/-/healthy || exit 1"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.2
-    container_name: kos-cadvisor
+    image: ${KOS_CADVISOR_IMAGE}:${KOS_CADVISOR_VERSION}
+    container_name: ${KOS_CADVISOR_CONTAINER_NAME}
     privileged: true
     devices:
       - /dev/kmsg:/dev/kmsg
@@ -195,32 +190,93 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
     ports:
-      - "${KOS_CADVISOR_EXTERNAL_PORT:-8080}:${KOS_CADVISOR_INTERNAL_PORT:-8080}"
+      - "${KOS_CADVISOR_EXTERNAL_PORT}:${KOS_CADVISOR_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://${KOS_CADVISOR_HOST}:${KOS_CADVISOR_INTERNAL_PORT}/healthz || exit 1"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
+
+  # Redis Commander - Web UI for Redis
+  redis-commander:
+    image: ${KOS_REDIS_COMMANDER_IMAGE}:${KOS_REDIS_COMMANDER_VERSION}
+    container_name: ${KOS_REDIS_COMMANDER_CONTAINER_NAME}
+    environment:
+      - REDIS_HOSTS=${KOS_REDIS_COMMANDER_HOSTS}
+      - HTTP_USER=${KOS_REDIS_COMMANDER_USER}
+      - HTTP_PASSWORD=${KOS_REDIS_COMMANDER_PASSWORD}
+      - REDIS_LABEL_ENABLE=${KOS_REDIS_COMMANDER_LABEL_ENABLE}
+      - REDIS_SENTINEL_MASTER_NAME=${KOS_REDIS_COMMANDER_SENTINEL_MASTER_NAME}
+      - REDIS_SENTINEL_PASSWORD=${KOS_REDIS_COMMANDER_SENTINEL_PASSWORD}
+    ports:
+      - "${KOS_REDIS_COMMANDER_EXTERNAL_PORT}:${KOS_REDIS_COMMANDER_INTERNAL_PORT}"
+    networks:
+      - ${KOS_CONTAINER_NETWORK}
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${KOS_REDIS_COMMANDER_HOST}:${KOS_REDIS_COMMANDER_INTERNAL_PORT}/health"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
+
+  # pgAdmin - Web UI for PostgreSQL
+  pgadmin:
+    image: ${KOS_PGADMIN_IMAGE}:${KOS_PGADMIN_VERSION}
+    container_name: ${KOS_PGADMIN_CONTAINER_NAME}
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${KOS_PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${KOS_PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_CONFIG_SERVER_MODE=${KOS_PGADMIN_CONFIG_SERVER_MODE}
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=${KOS_PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED}
+      - PGADMIN_CONFIG_LOGIN_BANNER=${KOS_PGADMIN_CONFIG_LOGIN_BANNER}
+      - PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED=${KOS_PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED}
+      - PGADMIN_CONFIG_CHECK_SAME_PASSWORD=${KOS_PGADMIN_CONFIG_CHECK_SAME_PASSWORD}
+      - PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION=${KOS_PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION}
+      - PGADMIN_CONFIG_FILE_SESSION_STORAGE_PATH=${KOS_PGADMIN_CONFIG_FILE_SESSION_STORAGE_PATH}
+      - PGADMIN_CONFIG_SESSION_EXPIRATION_TIME=${KOS_PGADMIN_CONFIG_SESSION_EXPIRATION_TIME}
+      - PGADMIN_CONFIG_SESSION_EXPIRATION_WARNING=${KOS_PGADMIN_CONFIG_SESSION_EXPIRATION_WARNING}
+      - PGADMIN_CONFIG_SESSION_REFRESH=${KOS_PGADMIN_CONFIG_SESSION_REFRESH}
+      - PGADMIN_CONFIG_SESSION_INVALIDITY_TIMEOUT=${KOS_PGADMIN_CONFIG_SESSION_INVALIDITY_TIMEOUT}
+      - PGADMIN_CONFIG_SESSION_PERSISTENCE=${KOS_PGADMIN_CONFIG_SESSION_PERSISTENCE}
+      - PGADMIN_CONFIG_SESSION_UNLOAD_ON_LOGOUT=${KOS_PGADMIN_CONFIG_SESSION_UNLOAD_ON_LOGOUT}
+    volumes:
+      - ${KOS_PGADMIN_VOLUME}:/var/lib/pgadmin
+      - ${KOS_PGADMIN_CONFIG_PATH}:/pgadmin4/servers.json
+    ports:
+      - "${KOS_PGADMIN_EXTERNAL_PORT}:${KOS_PGADMIN_INTERNAL_PORT}"
+    networks:
+      - ${KOS_CONTAINER_NETWORK}
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${KOS_PGADMIN_HOST}:${KOS_PGADMIN_INTERNAL_PORT}/misc/ping"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
 volumes:
-  postgres_data:
-  redis_data:
-  elasticsearch_data:
-  neo4j_data:
-  neo4j_logs:
-  neo4j_import:
-  neo4j_plugins:
-  weaviate_data:
-  minio_data:
-  grafana_data:
-  prometheus_data:
+  kos-postgres-data:
+  kos-redis-data:
+  kos-elasticsearch-data:
+  kos-neo4j-data:
+  kos-neo4j-logs:
+  kos-neo4j-import:
+  kos-neo4j-plugins:
+  kos-weaviate-data:
+  kos-minio-data:
+  kos-grafana-data:
+  kos-prometheus-data:
+  kos-pgadmin-data:
 
 networks:
   kos-network:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/16 
+        - subnet: ${KOS_NETWORK_SUBNET} 

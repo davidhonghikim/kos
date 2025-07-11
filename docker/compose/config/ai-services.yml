@@ -3,124 +3,124 @@ version: '3.8'
 services:
   # Automatic1111 Stable Diffusion WebUI
   automatic1111:
-    image: automatic1111/stable-diffusion-webui:latest
-    container_name: ai-q-automatic1111
+    image: ${KOS_AUTOMATIC1111_IMAGE}:${KOS_AUTOMATIC1111_VERSION}
+    container_name: ${KOS_AUTOMATIC1111_CONTAINER_NAME}
     environment:
-      - COMMANDLINE_ARGS=--api --listen --port 7860 --enable-insecure-extension-access
-      - REQS_FILE=requirements.txt
+      - COMMANDLINE_ARGS=${KOS_AUTOMATIC1111_COMMANDLINE_ARGS}
+      - REQS_FILE=${KOS_AUTOMATIC1111_REQS_FILE}
     volumes:
-      - automatic1111_models:/app/models
-      - automatic1111_outputs:/app/outputs
-      - automatic1111_extensions:/app/extensions
+      - ${KOS_AUTOMATIC1111_MODELS_VOLUME}:/app/models
+      - ${KOS_AUTOMATIC1111_OUTPUTS_VOLUME}:/app/outputs
+      - ${KOS_AUTOMATIC1111_EXTENSIONS_VOLUME}:/app/extensions
     ports:
-      - "${AUTOMATIC1111_PORT:-7860}:7860"
+      - "${KOS_AUTOMATIC1111_EXTERNAL_PORT}:${KOS_AUTOMATIC1111_INTERNAL_PORT}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7860/sdapi/v1/samplers"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_AUTOMATIC1111_HOST}:${KOS_AUTOMATIC1111_INTERNAL_PORT}/sdapi/v1/samplers"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: ${KOS_GPU_COUNT}
               capabilities: [gpu]
 
   # ComfyUI Node-Based Workflow
   comfyui:
-    image: comfyanonymous/comfyui:latest
-    container_name: ai-q-comfyui
+    image: ${KOS_COMFYUI_IMAGE}:${KOS_COMFYUI_VERSION}
+    container_name: ${KOS_COMFYUI_CONTAINER_NAME}
     environment:
-      - COMFYUI_PORT=8188
+      - COMFYUI_PORT=${KOS_COMFYUI_INTERNAL_PORT}
     volumes:
-      - comfyui_models:/app/models
-      - comfyui_outputs:/app/output
-      - comfyui_custom_nodes:/app/custom_nodes
+      - ${KOS_COMFYUI_MODELS_VOLUME}:/app/models
+      - ${KOS_COMFYUI_OUTPUTS_VOLUME}:/app/output
+      - ${KOS_COMFYUI_CUSTOM_NODES_VOLUME}:/app/custom_nodes
     ports:
-      - "${COMFYUI_PORT:-8188}:8188"
+      - "${KOS_COMFYUI_EXTERNAL_PORT}:${KOS_COMFYUI_INTERNAL_PORT}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8188/system_stats"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_COMFYUI_HOST}:${KOS_COMFYUI_INTERNAL_PORT}/system_stats"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: ${KOS_GPU_COUNT}
               capabilities: [gpu]
 
   # n8n Workflow Automation
   n8n:
-    image: n8nio/n8n:latest
-    container_name: ai-q-n8n
+    image: ${KOS_N8N_IMAGE}:${KOS_N8N_VERSION}
+    container_name: ${KOS_N8N_CONTAINER_NAME}
     environment:
-      - N8N_HOST=${N8N_HOST:-localhost}
-      - N8N_PORT=${N8N_PORT:-5678}
-      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
-      - N8N_USER_MANAGEMENT_DISABLED=${N8N_USER_MANAGEMENT_DISABLED:-false}
-      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-false}
-      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-admin}
-      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678/}
-      - GENERIC_TIMEZONE=${N8N_TIMEZONE:-UTC}
-      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-your-encryption-key}
+      - N8N_HOST=${KOS_N8N_HOST}
+      - N8N_PORT=${KOS_N8N_INTERNAL_PORT}
+      - N8N_PROTOCOL=${KOS_N8N_PROTOCOL}
+      - N8N_USER_MANAGEMENT_DISABLED=${KOS_N8N_USER_MANAGEMENT_DISABLED}
+      - N8N_BASIC_AUTH_ACTIVE=${KOS_N8N_BASIC_AUTH_ACTIVE}
+      - N8N_BASIC_AUTH_USER=${KOS_N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${KOS_N8N_BASIC_AUTH_PASSWORD}
+      - WEBHOOK_URL=${KOS_N8N_WEBHOOK_URL}
+      - GENERIC_TIMEZONE=${KOS_N8N_TIMEZONE}
+      - N8N_ENCRYPTION_KEY=${KOS_N8N_ENCRYPTION_KEY}
     volumes:
-      - n8n_data:/home/node/.n8n
+      - ${KOS_N8N_VOLUME}:/home/node/.n8n
     ports:
-      - "${N8N_PORT:-5678}:5678"
+      - "${KOS_N8N_EXTERNAL_PORT}:${KOS_N8N_INTERNAL_PORT}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5678/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_N8N_HOST}:${KOS_N8N_INTERNAL_PORT}/healthz"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   # Penpot Design and Prototyping
   penpot:
-    image: penpot/penpot:latest
-    container_name: ai-q-penpot
+    image: ${KOS_PENPOT_IMAGE}:${KOS_PENPOT_VERSION}
+    container_name: ${KOS_PENPOT_CONTAINER_NAME}
     environment:
-      - PENPOT_DATABASE_URI=${PENPOT_DATABASE_URI:-postgresql://penpot:penpot@postgres:5432/penpot}
-      - PENPOT_REDIS_URI=${PENPOT_REDIS_URI:-redis://redis:6379/0}
-      - PENPOT_SECRET_KEY=${PENPOT_SECRET_KEY:-your-secret-key}
-      - PENPOT_PUBLIC_URI=${PENPOT_PUBLIC_URI:-http://localhost:9001}
+      - PENPOT_DATABASE_URI=${KOS_PENPOT_DATABASE_URI}
+      - PENPOT_REDIS_URI=${KOS_PENPOT_REDIS_URI}
+      - PENPOT_SECRET_KEY=${KOS_PENPOT_SECRET_KEY}
+      - PENPOT_PUBLIC_URI=${KOS_PENPOT_PUBLIC_URI}
     volumes:
-      - penpot_data:/app/data
+      - ${KOS_PENPOT_VOLUME}:/app/data
     ports:
-      - "${PENPOT_PORT:-9001}:80"
+      - "${KOS_PENPOT_EXTERNAL_PORT}:${KOS_PENPOT_INTERNAL_PORT}"
     networks:
-      - ai-q-network
+      - ${KOS_CONTAINER_NETWORK}
     depends_on:
       - postgres
       - redis
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_PENPOT_HOST}:${KOS_PENPOT_INTERNAL_PORT}/api/health"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
 volumes:
-  automatic1111_models:
-  automatic1111_outputs:
-  automatic1111_extensions:
-  comfyui_models:
-  comfyui_outputs:
-  comfyui_custom_nodes:
-  n8n_data:
-  penpot_data:
+  ${KOS_AUTOMATIC1111_MODELS_VOLUME}:
+  ${KOS_AUTOMATIC1111_OUTPUTS_VOLUME}:
+  ${KOS_AUTOMATIC1111_EXTENSIONS_VOLUME}:
+  ${KOS_COMFYUI_MODELS_VOLUME}:
+  ${KOS_COMFYUI_OUTPUTS_VOLUME}:
+  ${KOS_COMFYUI_CUSTOM_NODES_VOLUME}:
+  ${KOS_N8N_VOLUME}:
+  ${KOS_PENPOT_VOLUME}:
 
 networks:
-  ai-q-network:
+  ${KOS_CONTAINER_NETWORK}:
     external: true 

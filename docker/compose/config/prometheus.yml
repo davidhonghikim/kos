@@ -1,14 +1,14 @@
 global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
+  scrape_interval: ${KOS_PROMETHEUS_SCRAPE_INTERVAL}
+  evaluation_interval: ${KOS_PROMETHEUS_EVALUATION_INTERVAL}
 
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['${KOS_PROMETHEUS_HOST}:${KOS_PROMETHEUS_INTERNAL_PORT}']
   - job_name: 'docker'
     static_configs:
-      - targets: ['ai-q-cadvisor:8080']
+      - targets: ['${KOS_CADVISOR_CONTAINER_NAME}:${KOS_CADVISOR_INTERNAL_PORT}']
   - job_name: 'node'
     static_configs:
-      - targets: ['ai-q-redis:6379', 'ai-q-postgres:5432', 'ai-q-elasticsearch:9200', 'ai-q-neo4j:7474', 'ai-q-minio:9000', 'ai-q-weaviate:8080'] 
+      - targets: ['${KOS_REDIS_CONTAINER_NAME}:${KOS_REDIS_INTERNAL_PORT}', '${KOS_POSTGRES_CONTAINER_NAME}:${KOS_POSTGRES_INTERNAL_PORT}', '${KOS_ELASTICSEARCH_CONTAINER_NAME}:${KOS_ELASTICSEARCH_INTERNAL_PORT}', '${KOS_NEO4J_CONTAINER_NAME}:${KOS_NEO4J_HTTP_INTERNAL_PORT}', '${KOS_MINIO_CONTAINER_NAME}:${KOS_MINIO_INTERNAL_PORT}', '${KOS_WEAVIATE_CONTAINER_NAME}:${KOS_WEAVIATE_INTERNAL_PORT}'] 

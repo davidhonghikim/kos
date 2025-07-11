@@ -3,84 +3,89 @@ version: '3.8'
 services:
   # Gitea Git Server
   gitea:
-    image: gitea/gitea:1.21.0
-    container_name: kos-gitea
+    image: ${KOS_GITEA_IMAGE}:${KOS_GITEA_VERSION}
+    container_name: ${KOS_GITEA_CONTAINER_NAME}
     restart: unless-stopped
     environment:
-      - USER_UID=1000
-      - USER_GID=1000
+      - USER_UID=${KOS_GITEA_USER_UID}
+      - USER_GID=${KOS_GITEA_USER_GID}
     ports:
-      - "3002:3000"
-      - "222:22"
+      - "${KOS_GITEA_EXTERNAL_PORT}:${KOS_GITEA_INTERNAL_PORT}"
+      - "${KOS_GITEA_SSH_EXTERNAL_PORT}:${KOS_GITEA_SSH_INTERNAL_PORT}"
     volumes:
-      - /opt/ai-q/self-hosted/gitea:/data
-      - /opt/ai-q/self-hosted/configs/gitea-app.ini:/data/gitea/conf/app.ini
+      - ${KOS_GITEA_DATA_VOLUME}:/data
+      - ${KOS_GITEA_CONFIG_VOLUME}:/data/gitea/conf/app.ini
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_GITEA_HOST}:${KOS_GITEA_INTERNAL_PORT}"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   # NextCloud File Storage
   nextcloud:
-    image: nextcloud:25.0.0
-    container_name: kos-nextcloud
+    image: ${KOS_NEXTCLOUD_IMAGE}:${KOS_NEXTCLOUD_VERSION}
+    container_name: ${KOS_NEXTCLOUD_CONTAINER_NAME}
     restart: unless-stopped
     environment:
-      - NEXTCLOUD_ADMIN_USER=admin
-      - NEXTCLOUD_ADMIN_PASSWORD=admin123
+      - NEXTCLOUD_ADMIN_USER=${KOS_NEXTCLOUD_ADMIN_USER}
+      - NEXTCLOUD_ADMIN_PASSWORD=${KOS_NEXTCLOUD_ADMIN_PASSWORD}
     ports:
-      - "8080:80"
+      - "${KOS_NEXTCLOUD_EXTERNAL_PORT}:${KOS_NEXTCLOUD_INTERNAL_PORT}"
     volumes:
-      - /opt/ai-q/self-hosted/nextcloud:/var/www/html
-      - /opt/ai-q/self-hosted/configs/nextcloud-config.php:/var/www/html/config/config.php
+      - ${KOS_NEXTCLOUD_DATA_VOLUME}:/var/www/html
+      - ${KOS_NEXTCLOUD_CONFIG_VOLUME}:/var/www/html/config/config.php
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_NEXTCLOUD_HOST}/status.php"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   # Admin Panel
   admin-panel:
     build:
-      context: /opt/ai-q/self-hosted/admin-panel
-      dockerfile: Dockerfile
-    container_name: kos-admin-panel
+      context: ${KOS_ADMIN_PANEL_BUILD_CONTEXT}
+      dockerfile: ${KOS_ADMIN_PANEL_DOCKERFILE}
+    container_name: ${KOS_ADMIN_PANEL_CONTAINER_NAME}
     restart: unless-stopped
     ports:
-      - "9000:80"
+      - "${KOS_ADMIN_PANEL_EXTERNAL_PORT}:${KOS_ADMIN_PANEL_INTERNAL_PORT}"
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_ADMIN_PANEL_HOST}/health"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
 
   # Local Docker Registry
   registry:
-    image: registry:2.8.2
-    container_name: kos-registry
+    image: ${KOS_REGISTRY_IMAGE}:${KOS_REGISTRY_VERSION}
+    container_name: ${KOS_REGISTRY_CONTAINER_NAME}
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "${KOS_REGISTRY_EXTERNAL_PORT}:${KOS_REGISTRY_INTERNAL_PORT}"
     volumes:
-      - /opt/ai-q/data/registry:/var/lib/registry
+      - ${KOS_REGISTRY_VOLUME}:/var/lib/registry
     networks:
-      - kos-network
+      - ${KOS_CONTAINER_NETWORK}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/v2/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://${KOS_REGISTRY_HOST}:${KOS_REGISTRY_INTERNAL_PORT}/v2/"]
+      interval: ${KOS_HEALTH_CHECK_INTERVAL}
+      timeout: ${KOS_HEALTH_CHECK_TIMEOUT}
+      retries: ${KOS_HEALTH_CHECK_RETRIES}
+
+volumes:
+  kos-gitea-data:
+  kos-nextcloud-data:
+  kos-registry-data:
 
 networks:
   kos-network:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/16 
+        - subnet: ${KOS_NETWORK_SUBNET} 

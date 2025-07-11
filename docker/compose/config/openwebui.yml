@@ -33,4 +33,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.22.0.0/16 
+        - subnet: ${KOS_OPENWEBUI_NETWORK_SUBNET} 
