@@ -1,0 +1,202 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-WEAVIATE-CLUSTER-004",
+    "title": "Enterprise Weaviate Vector Database Cluster",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 10000,
+    "estimated_execution_time": "3-5 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "GDPR"
+    ],
+    "architecture_tier": "enterprise-vector"
+  },
+  "recipe_overview": {
+    "description": "Deploy a scalable and resilient Weaviate cluster for vector search and AI-powered applications. This recipe sets up a multi-node Weaviate instance with a separate transformer model container, enabling efficient semantic search and data classification. It includes configuration for persistence, authentication, and high availability.",
+    "technology_stack": {
+      "vector_database": "Weaviate 1.22+",
+      "indexing": "HNSW",
+      "transformers": "Hugging Face models (e.g., sentence-transformers)",
+      "orchestration": "Docker Compose"
+    },
+    "deliverables": [
+      "A multi-node Weaviate cluster",
+      "Integration with a dedicated transformer model service",
+      "Persistent storage for vector data",
+      "Secure API endpoint with authentication"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-weaviate-cluster-004",
+      "title": "Enterprise Weaviate Vector Database Cluster Implementation",
+      "description": "Deploy a scalable and resilient Weaviate cluster for vector search and AI-powered applications. This recipe sets up a multi-node Weaviate instance with a separate transformer model container, enabling efficient semantic search and data classification. It includes configuration for persistence, authentication, and high availability.",
+      "category": "infrastructure",
+      "estimated_tokens": 10000,
+      "estimated_duration": "3-5 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Weaviate",
+          "Vector databases",
+          "Docker",
+          "AI/ML model deployment"
+        ],
+        "tools_required": [
+          "Weaviate 1.22+",
+          "Docker",
+          "Python"
+        ],
+        "environment_setup": [
+          "Sufficient RAM for Weaviate and transformer models",
+          "Fast storage (SSD recommended)"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker-compose.weaviate.yml"
+        ],
+        "config_dependencies": [
+          "Transformer model selection (e.g., 'sentence-transformers/all-MiniLM-L6-v2')"
+        ],
+        "environment_variables": [
+          "WEAVIATE_API_KEY"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/weaviate/schema.json - Initial Weaviate schema definition",
+          "scripts/weaviate/cluster-setup.sh - Script to deploy and configure Weaviate"
+        ],
+        "files_modified": [
+          "docker-compose.weaviate.yml - Service definitions for Weaviate and transformer model"
+        ],
+        "api_endpoints": [
+          "GET /v1/.well-known/ready - Weaviate readiness probe",
+          "POST /v1/schema - Endpoint to create schema",
+          "POST /v1/batch/objects - Endpoint for bulk data import"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "01-infra-verification-001"
+        ],
+        "optional_tasks": [
+          "04-AI-SERVICE-ANYTHING-LLM-001"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task sets up a Weaviate cluster using Docker Compose. It consists of the Weaviate server nodes and a separate container for the language model that generates vectors (embeddings). This separation of concerns allows for independent scaling and updating of the model and the database.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Weaviate Docker Compose Setup",
+            "description": "Create a Docker Compose file to define the Weaviate cluster and its dependencies.",
+            "commands": [
+              "# Create docker-compose.weaviate.yml with services for 'weaviate' and 't2v-transformers'",
+              "cat > docker-compose.weaviate.yml << 'EOF'",
+              "version: '3.4'",
+              "services:",
+              "  weaviate:",
+              "    image: semitechnologies/weaviate:1.22.2",
+              "    ports:",
+              "      - 8080:8080",
+              "    restart: on-failure:0",
+              "    volumes:",
+              "      - weaviate_data:/var/lib/weaviate",
+              "    environment:",
+              "      TRANSFORMERS_INFERENCE_API: 'http://t2v-transformers:8080'",
+              "      QUERY_DEFAULTS_LIMIT: 25",
+              "      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'false'",
+              "      AUTHENTICATION_APIKEY_ENABLED: 'true'",
+              "      AUTHENTICATION_APIKEY_ALLOWED_KEYS: '${WEAVIATE_API_KEY}'",
+              "      AUTHENTICATION_APIKEY_USERS: 'user@example.com'",
+              "      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'",
+              "      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'",
+              "      ENABLE_MODULES: 'text2vec-transformers'",
+              "      CLUSTER_HOSTNAME: 'node1'",
+              "  t2v-transformers:",
+              "    image: semitechnologies/transformers-inference:sentence-transformers-all-MiniLM-L6-v2",
+              "    environment:",
+              "      ENABLE_CUDA: '0'",
+              "volumes:",
+              "  weaviate_data:",
+              "EOF"
+            ],
+            "expected_output": "docker-compose.weaviate.yml file created.",
+            "troubleshooting": "Ensure the `TRANSFORMERS_INFERENCE_API` points to the correct service name."
+          },
+          {
+            "step": 2,
+            "title": "Deploy Weaviate Cluster",
+            "description": "Launch the Weaviate cluster using Docker Compose.",
+            "commands": [
+              "docker-compose -f docker-compose.weaviate.yml up -d",
+              "sleep 20"
+            ],
+            "expected_output": "Weaviate and transformer containers are running.",
+            "troubleshooting": "Check container logs for errors. GPU-enabled images may require `nvidia-docker`."
+          },
+          {
+            "step": 3,
+            "title": "Verify Weaviate Health",
+            "description": "Check the health and readiness of the Weaviate instance.",
+            "commands": [
+              "curl -H 'X-API-KEY: ${WEAVIATE_API_KEY}' http://localhost:8080/v1/.well-known/ready"
+            ],
+            "expected_output": "A 200 OK response from the Weaviate API.",
+            "troubleshooting": "If the endpoint is not ready, inspect the logs of the `weaviate` container for initialization errors."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Weaviate cluster is running and accessible.",
+          "Vectorization module is connected and operational.",
+          "Schema can be created and objects can be imported.",
+          "API key authentication is working."
+        ]
+      },
+      "context_information": {
+        "business_rationale": "Weaviate provides the vector search capability required for AI features like semantic search, question-answering, and RAG.",
+        "technical_rationale": "A containerized, clustered Weaviate deployment provides scalability and resilience for production AI workloads.",
+        "integration_notes": "Weaviate is a supported vector database for AnythingLLM. To integrate, configure AnythingLLM to point to this Weaviate instance's API endpoint (http://weaviate:8080 by default in Docker) and provide the configured API key. See recipe 04-AI-SERVICE-ANYTHING-LLM-001 for details."
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "04-Weaviate-Cluster",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

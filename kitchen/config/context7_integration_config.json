@@ -1,0 +1,238 @@
+{
+  "metadata": {
+    "title": "Context7 MCP Server Integration Configuration",
+    "version": "1.0.0",
+    "created_by": "Q-Assist (GPT-4.1)",
+    "creation_timestamp": "2025-07-08T10:15:00Z",
+    "status": "ACTIVE",
+    "purpose": "Configuration for Context7 MCP server integration in kOS kitchen system",
+    "reference": "https://github.com/upstash/context7"
+  },
+  "context7_server": {
+    "enabled": true,
+    "description": "Context7 MCP Server for up-to-date code documentation",
+    "version": "latest",
+    "package": "@upstash/context7-mcp",
+    "transport": "stdio",
+    "port": 3000,
+    "auto_start": true,
+    "health_check": true
+  },
+  "installation_configs": {
+    "vs_code": {
+      "enabled": true,
+      "config": {
+        "command": "npx",
+        "args": ["-y", "@upstash/context7-mcp@latest"]
+      },
+      "description": "VS Code MCP server configuration"
+    },
+    "cursor": {
+      "enabled": true,
+      "config": {
+        "command": "npx",
+        "args": ["-y", "@upstash/context7-mcp@latest"]
+      },
+      "description": "Cursor MCP server configuration"
+    },
+    "amazon_q": {
+      "enabled": true,
+      "config": {
+        "mcpServers": {
+          "context7": {
+            "command": "npx",
+            "args": ["-y", "@upstash/context7-mcp@latest"]
+          }
+        }
+      },
+      "description": "Amazon Q Developer CLI configuration"
+    },
+    "jetbrains": {
+      "enabled": true,
+      "config": {
+        "mcpServers": {
+          "context7": {
+            "command": "npx",
+            "args": ["-y", "@upstash/context7-mcp"]
+          }
+        }
+      },
+      "description": "JetBrains AI Assistant configuration"
+    },
+    "warp": {
+      "enabled": true,
+      "config": {
+        "Context7": {
+          "command": "npx",
+          "args": ["-y", "@upstash/context7-mcp"],
+          "env": {},
+          "working_directory": null,
+          "start_on_launch": true
+        }
+      },
+      "description": "Warp MCP server configuration"
+    },
+    "opencode": {
+      "enabled": true,
+      "remote_config": {
+        "mcp": {
+          "context7": {
+            "type": "remote",
+            "url": "https://mcp.context7.com/mcp",
+            "enabled": true
+          }
+        }
+      },
+      "local_config": {
+        "mcp": {
+          "context7": {
+            "type": "local",
+            "command": ["npx", "-y", "@upstash/context7-mcp"],
+            "enabled": true
+          }
+        }
+      },
+      "description": "Opencode MCP server configuration"
+    }
+  },
+  "available_tools": {
+    "resolve_library_id": {
+      "name": "resolve-library-id",
+      "description": "Resolves a general library name into a Context7-compatible library ID",
+      "parameters": {
+        "libraryName": {
+          "type": "string",
+          "required": true,
+          "description": "The name of the library to search for"
+        }
+      },
+      "enabled": true
+    },
+    "get_library_docs": {
+      "name": "get-library-docs",
+      "description": "Fetches documentation for a library using a Context7-compatible library ID",
+      "parameters": {
+        "context7CompatibleLibraryID": {
+          "type": "string",
+          "required": true,
+          "description": "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js')"
+        },
+        "topic": {
+          "type": "string",
+          "required": false,
+          "description": "Focus the docs on a specific topic (e.g., 'routing', 'hooks')"
+        },
+        "tokens": {
+          "type": "number",
+          "required": false,
+          "default": 10000,
+          "description": "Max number of tokens to return. Values less than 10000 are automatically increased to 10000"
+        }
+      },
+      "enabled": true
+    }
+  },
+  "integration_with_kitchen": {
+    "prompt_manager": {
+      "enabled": true,
+      "description": "Integrate Context7 with kitchen prompt manager for enhanced documentation",
+      "auto_invoke": true,
+      "rules": [
+        "Auto-invoke Context7 when code examples are requested",
+        "Auto-invoke Context7 when setup or configuration steps are requested",
+        "Auto-invoke Context7 when library/API documentation is requested"
+      ]
+    },
+    "recipe_execution": {
+      "enabled": true,
+      "description": "Use Context7 during recipe execution for up-to-date documentation",
+      "use_cases": [
+        "Fetch library documentation during recipe validation",
+        "Get setup instructions for new libraries",
+        "Resolve library dependencies with current documentation"
+      ]
+    },
+    "development_workflow": {
+      "enabled": true,
+      "description": "Integrate Context7 into development workflow",
+      "features": [
+        "Real-time documentation lookup during development",
+        "Library compatibility checking",
+        "Best practices suggestions from current documentation"
+      ]
+    }
+  },
+  "troubleshooting": {
+    "module_not_found": {
+      "solution": "Use bunx instead of npx",
+      "config": {
+        "command": "bunx",
+        "args": ["-y", "@upstash/context7-mcp"]
+      }
+    },
+    "esm_resolution": {
+      "solution": "Use --experimental-vm-modules flag",
+      "config": {
+        "command": "npx",
+        "args": ["-y", "--node-options=--experimental-vm-modules", "@upstash/context7-mcp@1.0.6"]
+      }
+    },
+    "tls_certificate": {
+      "solution": "Use --experimental-fetch flag",
+      "config": {
+        "command": "npx",
+        "args": ["-y", "--node-options=--experimental-fetch", "@upstash/context7-mcp"]
+      }
+    }
+  },
+  "usage_examples": {
+    "basic_usage": {
+      "description": "Basic Context7 usage in kitchen system",
+      "examples": [
+        "resolve-library-id: Search for library documentation",
+        "get-library-docs: Fetch specific library documentation",
+        "Auto-invoke: Automatic documentation lookup during development"
+      ]
+    },
+    "advanced_usage": {
+      "description": "Advanced Context7 integration patterns",
+      "examples": [
+        "Library ID syntax: /supabase/supabase for direct library access",
+        "Topic focus: Get specific documentation topics",
+        "Token management: Control documentation size"
+      ]
+    }
+  },
+  "security_considerations": {
+    "network_access": {
+      "description": "Context7 requires network access to fetch documentation",
+      "requirements": [
+        "Internet connection for documentation fetching",
+        "HTTPS for secure communication",
+        "Rate limiting for API calls"
+      ]
+    },
+    "content_validation": {
+      "description": "Validate Context7 content before use",
+      "requirements": [
+        "Review documentation accuracy",
+        "Verify library compatibility",
+        "Check for security vulnerabilities"
+      ]
+    }
+  },
+  "performance_optimization": {
+    "caching": {
+      "enabled": true,
+      "description": "Cache Context7 documentation for performance",
+      "cache_duration": "24_hours",
+      "cache_location": "kitchen/cache/context7"
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "description": "Rate limiting for Context7 API calls",
+      "requests_per_minute": 60,
+      "burst_limit": 10
+    }
+  }
+} 

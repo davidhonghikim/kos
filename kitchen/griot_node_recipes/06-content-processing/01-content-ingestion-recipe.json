@@ -1,0 +1,939 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "12-content-ingestion",
+    "title": "Content Ingestion System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:10:00Z",
+    "last_updated": "2025-07-06T16:10:00Z",
+    "purpose": "Implement comprehensive content ingestion system with multi-format upload, validation, and modular processors for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "content_processing",
+    "priority": "HIGH",
+    "kitchen_system": {
+      "pantry_category": "content_processing",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "file_upload",
+        "content_validation",
+        "processing_pipeline",
+        "metadata_extraction"
+      ],
+      "cache_strategy": "content_ingestion_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "name": "Content Ingestion System",
+    "description": "Implement production-ready content ingestion with multi-format support, validation, and modular processing pipeline",
+    "prerequisites": [
+      "01-core-infrastructure-recipe.json completed",
+      "02-storage-systems-recipe.json completed",
+      "03-database-setup-recipe.json completed",
+      "04-api-gateway-recipe.json completed",
+      "05-authentication-security-recipe.json completed",
+      "Python 3.9+ and Node.js 18+ installed"
+    ],
+    "target_outcome": "Complete content ingestion system with multi-format support and validation",
+    "success_criteria": [
+      "Multi-format file upload support",
+      "Content validation and sanitization",
+      "Modular processing pipeline",
+      "Metadata extraction and indexing",
+      "Progress tracking and error handling",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "CONTENT_ARCHITECTURE_TASK",
+        "name": "Content Ingestion Architecture",
+        "description": "Design and implement core content ingestion architecture",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "content_architecture",
+          "system_design",
+          "unified_management"
+        ]
+      },
+      {
+        "task_id": "FILE_UPLOAD_TASK",
+        "name": "File Upload System Implementation",
+        "description": "Create comprehensive file upload system",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "CONTENT_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "file_upload",
+          "chunk_processing",
+          "progress_tracking"
+        ]
+      },
+      {
+        "task_id": "MULTI_FORMAT_TASK",
+        "name": "Multi-Format Support Implementation",
+        "description": "Create support for multiple file formats",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "FILE_UPLOAD_TASK"
+        ],
+        "skills_required": [
+          "format_detection",
+          "multi_format_processing",
+          "content_types"
+        ]
+      },
+      {
+        "task_id": "CONTENT_VALIDATION_TASK",
+        "name": "Content Validation Implementation",
+        "description": "Create comprehensive content validation system",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "MULTI_FORMAT_TASK"
+        ],
+        "skills_required": [
+          "content_validation",
+          "sanitization",
+          "virus_scanning"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "FILE_UPLOAD_SKILL",
+        "name": "File Upload Management",
+        "description": "Handle file uploads and processing",
+        "tools": [
+          "upload_manager",
+          "chunk_processor",
+          "progress_tracker"
+        ],
+        "validation": "file_upload_validation"
+      },
+      {
+        "skill_id": "CONTENT_VALIDATION_SKILL",
+        "name": "Content Validation",
+        "description": "Validate and sanitize content",
+        "tools": [
+          "validation_engine",
+          "sanitizer",
+          "virus_scanner"
+        ],
+        "validation": "content_validation_validation"
+      },
+      {
+        "skill_id": "PROCESSING_PIPELINE_SKILL",
+        "name": "Processing Pipeline",
+        "description": "Manage content processing pipeline",
+        "tools": [
+          "pipeline_manager",
+          "processor_registry",
+          "orchestrator"
+        ],
+        "validation": "processing_pipeline_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "CONTENT_INGESTION_TOOL",
+        "name": "Content Ingestion Engine",
+        "description": "Core content ingestion system",
+        "file_path": "src/services/content/core.py",
+        "config": "config/content/ingestion_config.json"
+      },
+      {
+        "tool_id": "FILE_UPLOAD_TOOL",
+        "name": "File Upload Manager",
+        "description": "Manage file uploads and processing",
+        "file_path": "src/services/content/ingestion/upload/manager.py",
+        "config": "config/content/upload_config.json"
+      },
+      {
+        "tool_id": "CONTENT_VALIDATION_TOOL",
+        "name": "Content Validation Engine",
+        "description": "Validate and sanitize content",
+        "file_path": "src/services/content/validation/engine.py",
+        "config": "config/content/validation_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "CONTENT_INGESTION_CONFIG",
+        "name": "Content Ingestion Configuration",
+        "description": "Configuration for content ingestion system",
+        "file_path": "config/content/ingestion_config.json",
+        "schema": "content_ingestion_config_schema"
+      },
+      {
+        "config_id": "FILE_UPLOAD_CONFIG",
+        "name": "File Upload Configuration",
+        "description": "Configuration for file upload system",
+        "file_path": "config/content/upload_config.json",
+        "schema": "file_upload_config_schema"
+      },
+      {
+        "config_id": "CONTENT_VALIDATION_CONFIG",
+        "name": "Content Validation Configuration",
+        "description": "Configuration for content validation",
+        "file_path": "config/content/validation_config.json",
+        "schema": "content_validation_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "CONTENT_ARCHITECTURE_TASK",
+          "FILE_UPLOAD_SKILL",
+          "CONTENT_INGESTION_TOOL"
+        ],
+        "description": "Gather content ingestion architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "content_ingestion_cache",
+        "description": "Check for existing content ingestion cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "CONTENT_ARCHITECTURE_TASK",
+        "description": "Execute content ingestion architecture task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "FILE_UPLOAD_TASK",
+          "CONTENT_VALIDATION_SKILL",
+          "FILE_UPLOAD_TOOL"
+        ],
+        "description": "Gather file upload ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "FILE_UPLOAD_TASK",
+        "description": "Execute file upload task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "MULTI_FORMAT_TASK",
+          "PROCESSING_PIPELINE_SKILL"
+        ],
+        "description": "Gather multi-format support ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "MULTI_FORMAT_TASK",
+        "description": "Execute multi-format support task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "CONTENT_VALIDATION_TASK",
+          "CONTENT_VALIDATION_SKILL",
+          "CONTENT_VALIDATION_TOOL"
+        ],
+        "description": "Gather content validation ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "CONTENT_VALIDATION_TASK",
+        "description": "Execute content validation task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "content_ingestion_validation",
+        "description": "Validate complete content ingestion system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "content_ingestion_cache",
+        "description": "Cache content ingestion configuration and processors"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "content_ingestion_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "processor_update",
+      "cache_validation": "content_ingestion_validation"
+    }
+  },
+  "content_ingestion_architecture": {
+    "upload_system": {
+      "purpose": "Multi-format file upload and handling",
+      "features": [
+        "Drag-and-drop file upload",
+        "Batch file processing",
+        "Large file handling",
+        "Resumable uploads"
+      ],
+      "modular_components": [
+        "upload-manager",
+        "file-handler",
+        "chunk-processor",
+        "progress-tracker"
+      ]
+    },
+    "validation_system": {
+      "purpose": "Content validation and sanitization",
+      "features": [
+        "File type validation",
+        "Content sanitization",
+        "Virus scanning",
+        "Size and format limits"
+      ],
+      "modular_components": [
+        "validator-engine",
+        "sanitizer",
+        "virus-scanner",
+        "format-checker"
+      ]
+    },
+    "processing_pipeline": {
+      "purpose": "Modular content processing pipeline",
+      "features": [
+        "Plugin-based processors",
+        "Parallel processing",
+        "Pipeline orchestration",
+        "Error recovery"
+      ],
+      "modular_components": [
+        "pipeline-manager",
+        "processor-registry",
+        "orchestrator",
+        "error-handler"
+      ]
+    },
+    "metadata_extraction": {
+      "purpose": "Automatic metadata extraction and indexing",
+      "features": [
+        "File metadata extraction",
+        "Content analysis",
+        "Tag generation",
+        "Relationship mapping"
+      ],
+      "modular_components": [
+        "metadata-extractor",
+        "content-analyzer",
+        "tag-generator",
+        "relationship-mapper"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "12-001",
+      "title": "Create Content Ingestion Architecture",
+      "description": "Design and implement the core content ingestion architecture with unified management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/services/content",
+        "mkdir -p src/services/content/ingestion",
+        "mkdir -p src/services/content/validation",
+        "mkdir -p src/services/content/processing",
+        "mkdir -p src/services/content/metadata",
+        "mkdir -p src/services/content/common"
+      ],
+      "files_to_create": [
+        "src/services/content/__init__.py",
+        "src/services/content/core.py",
+        "src/services/content/manager.py",
+        "src/services/content/config.py",
+        "src/services/content/types.py"
+      ],
+      "acceptance_criteria": [
+        "Content ingestion base classes defined with unified interface",
+        "Configuration system supports all content types",
+        "Type definitions for all content operations",
+        "Manager class can handle multiple content providers"
+      ]
+    },
+    {
+      "task_id": "12-002",
+      "title": "Implement File Upload System",
+      "description": "Create comprehensive file upload system with drag-and-drop and batch processing",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/services/content/ingestion/upload",
+        "mkdir -p src/services/content/ingestion/chunks"
+      ],
+      "files_to_create": [
+        "src/services/content/ingestion/upload/__init__.py",
+        "src/services/content/ingestion/upload/manager.py",
+        "src/services/content/ingestion/upload/handler.py",
+        "src/services/content/ingestion/upload/progress.py",
+        "src/services/content/ingestion/chunks/__init__.py",
+        "src/services/content/ingestion/chunks/processor.py",
+        "src/services/content/ingestion/chunks/assembler.py"
+      ],
+      "acceptance_criteria": [
+        "File upload manager working",
+        "Chunked upload processing",
+        "Progress tracking functional",
+        "Resumable upload support"
+      ]
+    },
+    {
+      "task_id": "12-003",
+      "title": "Implement Multi-Format Support",
+      "description": "Create support for multiple file formats and content types",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install python-magic pillow PyPDF2 openpyxl",
+        "mkdir -p src/services/content/ingestion/formats"
+      ],
+      "files_to_create": [
+        "src/services/content/ingestion/formats/__init__.py",
+        "src/services/content/ingestion/formats/detector.py",
+        "src/services/content/ingestion/formats/text.py",
+        "src/services/content/ingestion/formats/image.py",
+        "src/services/content/ingestion/formats/document.py",
+        "src/services/content/ingestion/formats/video.py",
+        "src/services/content/ingestion/formats/audio.py"
+      ],
+      "acceptance_criteria": [
+        "File format detection working",
+        "Text file processing functional",
+        "Image file processing operational",
+        "Document file processing working"
+      ]
+    },
+    {
+      "task_id": "12-004",
+      "title": "Implement Content Validation",
+      "description": "Create comprehensive content validation and sanitization system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install python-magic bleach",
+        "mkdir -p src/services/content/validation"
+      ],
+      "files_to_create": [
+        "src/services/content/validation/__init__.py",
+        "src/services/content/validation/engine.py",
+        "src/services/content/validation/sanitizer.py",
+        "src/services/content/validation/scanner.py",
+        "src/services/content/validation/rules.py"
+      ],
+      "acceptance_criteria": [
+        "Content validation engine working",
+        "Content sanitization functional",
+        "Virus scanning integration",
+        "Validation rules enforcement"
+      ]
+    },
+    {
+      "task_id": "12-005",
+      "title": "Implement Processing Pipeline",
+      "description": "Create modular content processing pipeline with plugin support",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/services/content/processing",
+        "mkdir -p src/services/content/processing/plugins"
+      ],
+      "files_to_create": [
+        "src/services/content/processing/__init__.py",
+        "src/services/content/processing/pipeline.py",
+        "src/services/content/processing/orchestrator.py",
+        "src/services/content/processing/registry.py",
+        "src/services/content/processing/plugins/__init__.py",
+        "src/services/content/processing/plugins/base.py",
+        "src/services/content/processing/plugins/text_processor.py",
+        "src/services/content/processing/plugins/image_processor.py"
+      ],
+      "acceptance_criteria": [
+        "Processing pipeline working",
+        "Plugin system functional",
+        "Parallel processing operational",
+        "Error handling and recovery"
+      ]
+    },
+    {
+      "task_id": "12-006",
+      "title": "Implement Metadata Extraction",
+      "description": "Create automatic metadata extraction and indexing system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install exifread python-docx",
+        "mkdir -p src/services/content/metadata"
+      ],
+      "files_to_create": [
+        "src/services/content/metadata/__init__.py",
+        "src/services/content/metadata/extractor.py",
+        "src/services/content/metadata/analyzer.py",
+        "src/services/content/metadata/indexer.py",
+        "src/services/content/metadata/schema.py"
+      ],
+      "acceptance_criteria": [
+        "Metadata extraction working",
+        "Content analysis functional",
+        "Metadata indexing operational",
+        "Schema validation working"
+      ]
+    },
+    {
+      "task_id": "12-007",
+      "title": "Implement Content Storage",
+      "description": "Create content storage system with versioning and organization",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/content/storage"
+      ],
+      "files_to_create": [
+        "src/services/content/storage/__init__.py",
+        "src/services/content/storage/manager.py",
+        "src/services/content/storage/organizer.py",
+        "src/services/content/storage/versioning.py",
+        "src/services/content/storage/backup.py"
+      ],
+      "acceptance_criteria": [
+        "Content storage manager working",
+        "File organization functional",
+        "Versioning system operational",
+        "Backup and recovery working"
+      ]
+    },
+    {
+      "task_id": "12-008",
+      "title": "Implement Content API",
+      "description": "Create comprehensive API for content ingestion operations",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/api/routes/content",
+        "mkdir -p tests/content"
+      ],
+      "files_to_create": [
+        "src/api/routes/content/__init__.py",
+        "src/api/routes/content/upload.py",
+        "src/api/routes/content/processing.py",
+        "src/api/routes/content/metadata.py",
+        "tests/content/test_upload.py",
+        "tests/content/test_processing.py",
+        "tests/content/test_metadata.py"
+      ],
+      "acceptance_criteria": [
+        "Upload API endpoints working",
+        "Processing status endpoints functional",
+        "Metadata retrieval endpoints",
+        "Comprehensive test coverage"
+      ]
+    },
+    {
+      "task_id": "12-009",
+      "title": "Implement Progress Tracking",
+      "description": "Create real-time progress tracking for content processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/content/tracking"
+      ],
+      "files_to_create": [
+        "src/services/content/tracking/__init__.py",
+        "src/services/content/tracking/progress.py",
+        "src/services/content/tracking/status.py",
+        "src/services/content/tracking/notifications.py"
+      ],
+      "acceptance_criteria": [
+        "Progress tracking working",
+        "Status updates functional",
+        "Real-time notifications",
+        "Progress persistence"
+      ]
+    },
+    {
+      "task_id": "12-010",
+      "title": "Implement Error Handling",
+      "description": "Create comprehensive error handling and recovery system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/content/errors"
+      ],
+      "files_to_create": [
+        "src/services/content/errors/__init__.py",
+        "src/services/content/errors/handler.py",
+        "src/services/content/errors/recovery.py",
+        "src/services/content/errors/reporting.py"
+      ],
+      "acceptance_criteria": [
+        "Error handling middleware working",
+        "Error recovery mechanisms",
+        "Error reporting system",
+        "Error logging and monitoring"
+      ]
+    },
+    {
+      "task_id": "12-011",
+      "title": "Implement Content Queuing",
+      "description": "Create content processing queue system for background processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "pip install celery redis",
+        "mkdir -p src/services/content/queue"
+      ],
+      "files_to_create": [
+        "src/services/content/queue/__init__.py",
+        "src/services/content/queue/manager.py",
+        "src/services/content/queue/workers.py",
+        "src/services/content/queue/tasks.py"
+      ],
+      "acceptance_criteria": [
+        "Queue management working",
+        "Background processing functional",
+        "Task scheduling operational",
+        "Queue monitoring and metrics"
+      ]
+    },
+    {
+      "task_id": "12-012",
+      "title": "Implement Content Testing",
+      "description": "Create comprehensive testing framework for content ingestion",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p tests/content/integration",
+        "mkdir -p tests/content/performance"
+      ],
+      "files_to_create": [
+        "tests/content/integration/test_content_integration.py",
+        "tests/content/performance/test_content_performance.py",
+        "tests/content/conftest.py",
+        "tests/content/test_data/",
+        "config/testing/content_test_config.json"
+      ],
+      "acceptance_criteria": [
+        "Integration tests for content processing",
+        "Performance benchmarks working",
+        "Test data and fixtures available",
+        "Automated content validation"
+      ]
+    },
+    {
+      "task_id": "12-013",
+      "title": "Implement Content Monitoring",
+      "description": "Create monitoring and analytics for content ingestion",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/content/monitoring"
+      ],
+      "files_to_create": [
+        "src/services/content/monitoring/__init__.py",
+        "src/services/content/monitoring/metrics.py",
+        "src/services/content/monitoring/analytics.py",
+        "src/services/content/monitoring/dashboard.py"
+      ],
+      "acceptance_criteria": [
+        "Content processing metrics collection",
+        "Analytics and reporting working",
+        "Monitoring dashboard functional",
+        "Performance tracking operational"
+      ]
+    },
+    {
+      "task_id": "12-014",
+      "title": "Implement Content Documentation",
+      "description": "Create comprehensive documentation for content ingestion system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/content",
+        "mkdir -p examples/content"
+      ],
+      "files_to_create": [
+        "docs/content/README.md",
+        "docs/content/upload.md",
+        "docs/content/processing.md",
+        "docs/content/api.md",
+        "examples/content/upload_examples.py",
+        "examples/content/processing_examples.py",
+        "examples/content/api_examples.py"
+      ],
+      "acceptance_criteria": [
+        "Complete content ingestion documentation",
+        "API usage examples",
+        "Processing pipeline guide",
+        "Troubleshooting documentation"
+      ]
+    },
+    {
+      "task_id": "12-015",
+      "title": "Implement Content Optimization",
+      "description": "Create performance optimizations for content ingestion",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/content/optimization"
+      ],
+      "files_to_create": [
+        "src/services/content/optimization/__init__.py",
+        "src/services/content/optimization/caching.py",
+        "src/services/content/optimization/compression.py",
+        "src/services/content/optimization/streaming.py"
+      ],
+      "acceptance_criteria": [
+        "Content caching system working",
+        "Compression optimization functional",
+        "Streaming upload support",
+        "Performance monitoring"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "CONTENT_UPLOAD_MAX_SIZE": "100MB",
+      "CONTENT_ALLOWED_FORMATS": "txt,pdf,doc,docx,jpg,png,mp4,mp3",
+      "CONTENT_STORAGE_PATH": "/data/content",
+      "CONTENT_PROCESSING_WORKERS": "4",
+      "CONTENT_QUEUE_REDIS_URL": "redis://localhost:6379/1",
+      "CONTENT_VIRUS_SCAN_ENABLED": "true",
+      "CONTENT_METADATA_EXTRACTION": "true"
+    },
+    "supported_formats": {
+      "text": [
+        "txt",
+        "md",
+        "rst",
+        "html",
+        "xml",
+        "json",
+        "csv"
+      ],
+      "documents": [
+        "pdf",
+        "doc",
+        "docx",
+        "odt",
+        "rtf"
+      ],
+      "images": [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "tiff",
+        "webp"
+      ],
+      "videos": [
+        "mp4",
+        "avi",
+        "mov",
+        "wmv",
+        "flv",
+        "webm"
+      ],
+      "audio": [
+        "mp3",
+        "wav",
+        "flac",
+        "aac",
+        "ogg"
+      ],
+      "archives": [
+        "zip",
+        "rar",
+        "7z",
+        "tar",
+        "gz"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test file upload functionality",
+      "Test content validation",
+      "Test processing pipeline",
+      "Test metadata extraction",
+      "Test error handling"
+    ],
+    "integration_tests": [
+      "Test end-to-end content ingestion",
+      "Test multi-format processing",
+      "Test background processing",
+      "Test error recovery"
+    ],
+    "performance_tests": [
+      "Upload speed tests",
+      "Processing throughput tests",
+      "Memory usage optimization",
+      "Concurrent upload testing"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Python 3.9+ with required packages",
+      "Redis for queue management",
+      "Storage system configured",
+      "Database system running"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the project directory",
+      "2. Copy configuration templates and update with your settings",
+      "3. Install Python dependencies: pip install -r requirements.txt",
+      "4. Start Redis for queue management",
+      "5. Run content system tests: python -m pytest tests/content/",
+      "6. Start content processing workers: celery -A src.services.content.queue.manager worker"
+    ],
+    "verification": [
+      "Test file upload via API",
+      "Verify content processing pipeline",
+      "Check metadata extraction",
+      "Confirm background processing"
+    ]
+  },
+  "caching_strategy": {
+    "cache_key": "content_ingestion_cache",
+    "cache_components": [
+      "upload_configurations",
+      "validation_rules",
+      "processing_pipelines",
+      "metadata_templates"
+    ],
+    "invalidation_triggers": [
+      "upload_configuration_changes",
+      "validation_rule_updates",
+      "pipeline_modifications",
+      "metadata_template_changes"
+    ],
+    "cache_duration": "24 hours",
+    "validation_mechanism": "content_ingestion_validation"
+  },
+  "atomic_tasks": [
+    {
+      "task_id": "CI-001",
+      "title": "Content Architecture Setup",
+      "description": "Set up core content ingestion architecture",
+      "estimated_time": "60 minutes",
+      "dependencies": [],
+      "exact_commands": [
+        "mkdir -p src/services/content",
+        "mkdir -p src/services/content/ingestion",
+        "mkdir -p src/services/content/validation",
+        "touch src/services/content/__init__.py"
+      ]
+    },
+    {
+      "task_id": "CI-002",
+      "title": "File Upload System",
+      "description": "Implement comprehensive file upload system",
+      "estimated_time": "60 minutes",
+      "dependencies": [
+        "CI-001"
+      ],
+      "exact_commands": [
+        "pip install python-magic pillow",
+        "mkdir -p src/services/content/ingestion/upload",
+        "touch src/services/content/ingestion/upload/__init__.py"
+      ]
+    },
+    {
+      "task_id": "CI-003",
+      "title": "Multi-Format Support",
+      "description": "Implement support for multiple file formats",
+      "estimated_time": "60 minutes",
+      "dependencies": [
+        "CI-002"
+      ],
+      "exact_commands": [
+        "pip install PyPDF2 openpyxl",
+        "mkdir -p src/services/content/ingestion/formats",
+        "touch src/services/content/ingestion/formats/__init__.py"
+      ]
+    },
+    {
+      "task_id": "CI-004",
+      "title": "Content Validation",
+      "description": "Implement comprehensive content validation",
+      "estimated_time": "60 minutes",
+      "dependencies": [
+        "CI-003"
+      ],
+      "exact_commands": [
+        "pip install python-magic bleach",
+        "mkdir -p src/services/content/validation",
+        "touch src/services/content/validation/__init__.py"
+      ]
+    },
+    {
+      "task_id": "CI-005",
+      "title": "Processing Pipeline",
+      "description": "Create content processing pipeline",
+      "estimated_time": "60 minutes",
+      "dependencies": [
+        "CI-004"
+      ],
+      "exact_commands": [
+        "mkdir -p src/services/content/processing",
+        "mkdir -p src/services/content/processing/plugins",
+        "touch src/services/content/processing/__init__.py"
+      ]
+    }
+  ],
+  "success_criteria": [
+    "Multi-format file upload support",
+    "Content validation and sanitization",
+    "Modular processing pipeline",
+    "Metadata extraction and indexing",
+    "Progress tracking and error handling",
+    "All components can be safely installed/uninstalled",
+    "Background processing with queue management",
+    "Comprehensive testing framework",
+    "Performance monitoring and optimization",
+    "Complete documentation and examples"
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Content-Ingestion-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

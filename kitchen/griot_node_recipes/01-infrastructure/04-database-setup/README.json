@@ -1,0 +1,108 @@
+{
+  "index_metadata": {
+    "index_id": "03-DATABASE-SETUP-SUB-RECIPE-INDEX",
+    "title": "Index of Database Setup Sub-Recipes",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T21:22:27Z",
+    "description": "This index lists all the modular sub-recipes that constitute the comprehensive database setup."
+  },
+  "sub_recipes": [
+    {
+      "id": "01-postgresql-cluster",
+      "title": "Enterprise PostgreSQL High-Availability Cluster",
+      "path": "01-postgresql-cluster.json"
+    },
+    {
+      "id": "02-redis-cluster",
+      "title": "Enterprise Redis High-Availability Cluster",
+      "path": "02-redis-cluster.json"
+    },
+    {
+      "id": "03-neo4j-cluster",
+      "title": "Enterprise Neo4j Graph Database Cluster",
+      "path": "03-neo4j-cluster.json"
+    },
+    {
+      "id": "04-weaviate-cluster",
+      "title": "Enterprise Weaviate Vector Database Cluster",
+      "path": "04-weaviate-cluster.json"
+    },
+    {
+      "id": "05-elasticsearch-cluster",
+      "title": "Enterprise Elasticsearch Cluster for Search and Analytics",
+      "path": "05-elasticsearch-cluster.json"
+    },
+    {
+      "id": "06-unified-api-gateway",
+      "title": "Unified Database API Gateway",
+      "path": "06-unified-api-gateway.json"
+    },
+    {
+      "id": "07-backup-recovery",
+      "title": "Comprehensive Database Backup and Recovery System",
+      "path": "07-backup-recovery.json"
+    },
+    {
+      "id": "08-monitoring-alerting",
+      "title": "Advanced Database Monitoring and Alerting",
+      "path": "08-monitoring-alerting.json"
+    },
+    {
+      "id": "09-security-hardening",
+      "title": "Enterprise Database Security and Hardening",
+      "path": "09-security-hardening.json"
+    },
+    {
+      "id": "10-migration-schema-management",
+      "title": "Automated Database Migration and Schema Management",
+      "path": "10-migration-schema-management.json"
+    },
+    {
+      "id": "11-performance-tuning",
+      "title": "Database Performance Optimization and Tuning",
+      "path": "11-performance-tuning.json"
+    },
+    {
+      "id": "12-testing-framework",
+      "title": "Comprehensive Database Testing Framework",
+      "path": "12-testing-framework.json"
+    },
+    {
+      "id": "13-documentation",
+      "title": "Comprehensive Database Documentation",
+      "path": "13-documentation.json"
+    }
+  ],
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:22.636322Z",
+    "last_updated": "2025-07-07T14:50:22.636322Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

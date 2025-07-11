@@ -1,0 +1,23 @@
+{
+  "id": "tool.calendar",
+  "type": "tool",
+  "name": "Calendar Manager",
+  "description": "Modular calendar operations for scheduling events and checking availability",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["calendar", "event", "schedule", "availability", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for calendar operations in recipes",
+  "operations": {
+    "schedule_event": "Schedule calendar events",
+    "check_availability": "Check calendar availability"
+  },
+  "validation": {
+    "required_fields": ["operation", "start_time", "end_time"],
+    "operations": ["schedule", "check"]
+  }
+} 

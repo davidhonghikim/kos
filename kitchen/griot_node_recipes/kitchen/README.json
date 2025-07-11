@@ -1,0 +1,68 @@
+{
+  "title": "Kitchen & Orchestrator System Documentation",
+  "version": "2.0.0",
+  "last_updated": "2025-07-05T23:53:27Z",
+  "purpose": "Defines the runtime environment and logic for orchestrating recipe execution using pantry ingredients with intelligent caching.",
+  "orchestrator_agent": {
+    "role": "Chef (user or node agent)",
+    "responsibilities": [
+      "Load a recipe",
+      "Query pantry for all required ingredients (tasks, modules, skills, tools, configs)",
+      "Check cache for existing ingredient results",
+      "Validate dependencies and environment",
+      "Execute each step in order, invoking skills/tools as needed",
+      "Cache successful results for future use",
+      "Log all actions, results, and errors to kitchen_log.json",
+      "Delegate subtasks to sous-chef agents if needed"
+    ]
+  },
+  "caching_system": {
+    "description": "Intelligent caching system for pantry ingredients and recipe results",
+    "features": [
+      "Cache ingredient results based on inputs and version",
+      "Support for local, shared, and remote cache locations",
+      "Multiple validation methods (signature, timestamp, content hash)",
+      "Automatic cache cleanup and size management",
+      "Cache invalidation on ingredient updates"
+    ],
+    "cache_strategies": {
+      "aggressive": "Cache everything with long TTL",
+      "conservative": "Cache only stable ingredients with short TTL",
+      "smart": "Adaptive caching based on usage patterns"
+    }
+  },
+  "kitchen_config": "Defines environment, available tools, agent roles, execution policies, and cache configuration.",
+  "cache_manager": "Manages cache operations, validation, and cleanup for optimal performance.",
+  "logging": "All actions and results are logged for traceability and debugging.",
+  "extensibility": "Supports distributed/parallel execution, agent delegation, and flexible caching strategies.",
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:23.594493Z",
+    "last_updated": "2025-07-07T14:50:23.594493Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

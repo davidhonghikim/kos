@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # OpenWebUI Service
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: ai-q-openwebui
+    restart: unless-stopped
+    ports:
+      - "${OPENWEBUI_PORT:-3000}:8080"
+    volumes:
+      - /opt/ai-q/data/openwebui/data:/app/backend/data
+      - /opt/ai-q/data/openwebui/config:/app/backend/config
+    environment:
+      - OLLAMA_BASE_URL=http://${AIQ_EXTERNAL_ADDRESS:-192.168.1.180}:${OLLAMA_PORT:-11000}
+      - WEBUI_SECRET_KEY=your-super-secret-openwebui-key-change-in-production
+      - DEFAULT_MODELS=gemma3:2b,codellama:7b
+      - DEFAULT_USER_ROLE=admin
+      - ENABLE_SIGNUP=true
+      - ENABLE_LOGIN_FORM=true
+    networks:
+      - ai-q-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - ollama
+
+networks:
+  ai-q-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16 

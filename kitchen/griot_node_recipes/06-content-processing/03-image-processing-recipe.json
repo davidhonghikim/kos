@@ -1,0 +1,815 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "14-image-processing",
+    "title": "Image Processing System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "last_updated": "2025-07-06T16:10:00Z",
+    "created_by": "Claude Sonnet 4",
+    "purpose": "Implement comprehensive image processing system with computer vision, face recognition, and object detection for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "content_processing",
+    "priority": "HIGH",
+    "kitchen_system": {
+      "pantry_category": "content_processing",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "computer_vision",
+        "face_recognition",
+        "image_enhancement",
+        "metadata_extraction"
+      ],
+      "cache_strategy": "image_processing_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "name": "Image Processing System",
+    "description": "Implement production-ready image processing with computer vision, face recognition, object detection, and image analysis",
+    "prerequisites": [
+      "13-text-processing-recipe.json completed",
+      "Python 3.9+ and Node.js 18+ installed",
+      "Computer vision models and GPU support available"
+    ],
+    "target_outcome": "Complete image processing system with advanced computer vision capabilities",
+    "success_criteria": [
+      "Computer vision with object detection and recognition",
+      "Face recognition and facial analysis",
+      "Image classification and tagging",
+      "Image enhancement and preprocessing",
+      "Image metadata extraction and analysis",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "IMAGE_ARCHITECTURE_TASK",
+        "name": "Image Processing Architecture",
+        "description": "Design and implement core image processing architecture",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "image_architecture",
+          "system_design",
+          "unified_management"
+        ]
+      },
+      {
+        "task_id": "COMPUTER_VISION_TASK",
+        "name": "Computer Vision Engine Implementation",
+        "description": "Create comprehensive computer vision engine",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "IMAGE_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "computer_vision",
+          "object_detection",
+          "deep_learning"
+        ]
+      },
+      {
+        "task_id": "FACE_RECOGNITION_TASK",
+        "name": "Face Recognition System Implementation",
+        "description": "Create comprehensive face recognition system",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "COMPUTER_VISION_TASK"
+        ],
+        "skills_required": [
+          "face_recognition",
+          "facial_analysis",
+          "emotion_detection"
+        ]
+      },
+      {
+        "task_id": "IMAGE_ENHANCEMENT_TASK",
+        "name": "Image Enhancement Implementation",
+        "description": "Create image enhancement and preprocessing system",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "FACE_RECOGNITION_TASK"
+        ],
+        "skills_required": [
+          "image_enhancement",
+          "preprocessing",
+          "filtering"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "COMPUTER_VISION_SKILL",
+        "name": "Computer Vision",
+        "description": "Process and analyze images with computer vision",
+        "tools": [
+          "vision_engine",
+          "object_detector",
+          "image_classifier"
+        ],
+        "validation": "computer_vision_validation"
+      },
+      {
+        "skill_id": "FACE_RECOGNITION_SKILL",
+        "name": "Face Recognition",
+        "description": "Detect and recognize faces in images",
+        "tools": [
+          "face_detector",
+          "face_recognizer",
+          "emotion_analyzer"
+        ],
+        "validation": "face_recognition_validation"
+      },
+      {
+        "skill_id": "IMAGE_ENHANCEMENT_SKILL",
+        "name": "Image Enhancement",
+        "description": "Enhance and preprocess images",
+        "tools": [
+          "enhancement_engine",
+          "noise_reducer",
+          "color_corrector"
+        ],
+        "validation": "image_enhancement_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "IMAGE_PROCESSING_TOOL",
+        "name": "Image Processing Engine",
+        "description": "Core image processing system",
+        "file_path": "src/services/image/core.py",
+        "config": "config/image/processing_config.json"
+      },
+      {
+        "tool_id": "COMPUTER_VISION_TOOL",
+        "name": "Computer Vision Engine",
+        "description": "Computer vision and object detection",
+        "file_path": "src/services/image/vision/engine.py",
+        "config": "config/image/vision_config.json"
+      },
+      {
+        "tool_id": "FACE_RECOGNITION_TOOL",
+        "name": "Face Recognition Engine",
+        "description": "Face recognition and analysis",
+        "file_path": "src/services/image/face/engine.py",
+        "config": "config/image/face_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "IMAGE_PROCESSING_CONFIG",
+        "name": "Image Processing Configuration",
+        "description": "Configuration for image processing system",
+        "file_path": "config/image/processing_config.json",
+        "schema": "image_processing_config_schema"
+      },
+      {
+        "config_id": "COMPUTER_VISION_CONFIG",
+        "name": "Computer Vision Configuration",
+        "description": "Configuration for computer vision",
+        "file_path": "config/image/vision_config.json",
+        "schema": "computer_vision_config_schema"
+      },
+      {
+        "config_id": "FACE_RECOGNITION_CONFIG",
+        "name": "Face Recognition Configuration",
+        "description": "Configuration for face recognition",
+        "file_path": "config/image/face_config.json",
+        "schema": "face_recognition_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "IMAGE_ARCHITECTURE_TASK",
+          "COMPUTER_VISION_SKILL",
+          "IMAGE_PROCESSING_TOOL"
+        ],
+        "description": "Gather image processing architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "image_processing_cache",
+        "description": "Check for existing image processing cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "IMAGE_ARCHITECTURE_TASK",
+        "description": "Execute image processing architecture task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "COMPUTER_VISION_TASK",
+          "FACE_RECOGNITION_SKILL",
+          "COMPUTER_VISION_TOOL"
+        ],
+        "description": "Gather computer vision ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "COMPUTER_VISION_TASK",
+        "description": "Execute computer vision task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "FACE_RECOGNITION_TASK",
+          "IMAGE_ENHANCEMENT_SKILL",
+          "FACE_RECOGNITION_TOOL"
+        ],
+        "description": "Gather face recognition ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "FACE_RECOGNITION_TASK",
+        "description": "Execute face recognition task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "IMAGE_ENHANCEMENT_TASK",
+          "IMAGE_ENHANCEMENT_SKILL"
+        ],
+        "description": "Gather image enhancement ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "IMAGE_ENHANCEMENT_TASK",
+        "description": "Execute image enhancement task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "image_processing_validation",
+        "description": "Validate complete image processing system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "image_processing_cache",
+        "description": "Cache image processing configuration and models"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "image_processing_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "model_update",
+      "cache_validation": "image_processing_validation"
+    }
+  },
+  "image_processing_architecture": {
+    "computer_vision": {
+      "purpose": "Computer vision and object detection",
+      "features": [
+        "Object detection and recognition",
+        "Image classification",
+        "Scene understanding",
+        "Visual search capabilities"
+      ],
+      "modular_components": [
+        "vision-engine",
+        "object-detector",
+        "image-classifier",
+        "scene-analyzer"
+      ]
+    },
+    "face_recognition": {
+      "purpose": "Face recognition and facial analysis",
+      "features": [
+        "Face detection and recognition",
+        "Facial landmark detection",
+        "Emotion recognition",
+        "Face clustering and grouping"
+      ],
+      "modular_components": [
+        "face-detector",
+        "face-recognizer",
+        "landmark-detector",
+        "emotion-analyzer"
+      ]
+    },
+    "image_enhancement": {
+      "purpose": "Image enhancement and preprocessing",
+      "features": [
+        "Image quality improvement",
+        "Noise reduction and filtering",
+        "Color correction and enhancement",
+        "Image resizing and cropping"
+      ],
+      "modular_components": [
+        "enhancement-engine",
+        "noise-reducer",
+        "color-corrector",
+        "image-resizer"
+      ]
+    },
+    "metadata_extraction": {
+      "purpose": "Image metadata extraction and analysis",
+      "features": [
+        "EXIF data extraction",
+        "Image properties analysis",
+        "Color palette extraction",
+        "Image similarity analysis"
+      ],
+      "modular_components": [
+        "metadata-extractor",
+        "properties-analyzer",
+        "color-analyzer",
+        "similarity-analyzer"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "14-001",
+      "title": "Create Image Processing Architecture",
+      "description": "Design and implement the core image processing architecture with unified management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/services/image",
+        "mkdir -p src/services/image/vision",
+        "mkdir -p src/services/image/face",
+        "mkdir -p src/services/image/enhancement",
+        "mkdir -p src/services/image/metadata",
+        "mkdir -p src/services/image/common"
+      ],
+      "files_to_create": [
+        "src/services/image/__init__.py",
+        "src/services/image/core.py",
+        "src/services/image/manager.py",
+        "src/services/image/config.py",
+        "src/services/image/types.py"
+      ],
+      "acceptance_criteria": [
+        "Image processing base classes defined with unified interface",
+        "Configuration system supports all image processing types",
+        "Type definitions for all image operations",
+        "Manager class can handle multiple image processors"
+      ]
+    },
+    {
+      "task_id": "14-002",
+      "title": "Implement Computer Vision Engine",
+      "description": "Create comprehensive computer vision engine with OpenCV and deep learning models",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install opencv-python torch torchvision",
+        "mkdir -p src/services/image/vision/models",
+        "mkdir -p src/services/image/vision/detectors"
+      ],
+      "files_to_create": [
+        "src/services/image/vision/__init__.py",
+        "src/services/image/vision/engine.py",
+        "src/services/image/vision/models/__init__.py",
+        "src/services/image/vision/models/yolo.py",
+        "src/services/image/vision/models/resnet.py",
+        "src/services/image/vision/detectors/__init__.py",
+        "src/services/image/vision/detectors/object.py",
+        "src/services/image/vision/detectors/scene.py"
+      ],
+      "acceptance_criteria": [
+        "OpenCV integration working",
+        "YOLO object detection functional",
+        "ResNet image classification operational",
+        "Scene detection working"
+      ]
+    },
+    {
+      "task_id": "14-003",
+      "title": "Implement Face Recognition System",
+      "description": "Create comprehensive face recognition with face-api.js and deep learning",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install face-recognition dlib",
+        "mkdir -p src/services/image/face/recognition",
+        "mkdir -p src/services/image/face/analysis"
+      ],
+      "files_to_create": [
+        "src/services/image/face/__init__.py",
+        "src/services/image/face/engine.py",
+        "src/services/image/face/recognition/__init__.py",
+        "src/services/image/face/recognition/detector.py",
+        "src/services/image/face/recognition/recognizer.py",
+        "src/services/image/face/analysis/__init__.py",
+        "src/services/image/face/analysis/landmarks.py",
+        "src/services/image/face/analysis/emotion.py"
+      ],
+      "acceptance_criteria": [
+        "Face detection working",
+        "Face recognition functional",
+        "Facial landmark detection operational",
+        "Emotion recognition working"
+      ]
+    },
+    {
+      "task_id": "14-004",
+      "title": "Implement Image Enhancement",
+      "description": "Create image enhancement and preprocessing system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install pillow scikit-image",
+        "mkdir -p src/services/image/enhancement/filters",
+        "mkdir -p src/services/image/enhancement/transforms"
+      ],
+      "files_to_create": [
+        "src/services/image/enhancement/__init__.py",
+        "src/services/image/enhancement/engine.py",
+        "src/services/image/enhancement/filters/__init__.py",
+        "src/services/image/enhancement/filters/noise.py",
+        "src/services/image/enhancement/filters/color.py",
+        "src/services/image/enhancement/transforms/__init__.py",
+        "src/services/image/enhancement/transforms/resize.py",
+        "src/services/image/enhancement/transforms/crop.py"
+      ],
+      "acceptance_criteria": [
+        "Image enhancement working",
+        "Noise reduction functional",
+        "Color correction operational",
+        "Image transformation working"
+      ]
+    },
+    {
+      "task_id": "14-005",
+      "title": "Implement Metadata Extraction",
+      "description": "Create comprehensive image metadata extraction system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install exifread colorthief",
+        "mkdir -p src/services/image/metadata/extractors",
+        "mkdir -p src/services/image/metadata/analyzers"
+      ],
+      "files_to_create": [
+        "src/services/image/metadata/__init__.py",
+        "src/services/image/metadata/engine.py",
+        "src/services/image/metadata/extractors/__init__.py",
+        "src/services/image/metadata/extractors/exif.py",
+        "src/services/image/metadata/extractors/color.py",
+        "src/services/image/metadata/analyzers/__init__.py",
+        "src/services/image/metadata/analyzers/properties.py",
+        "src/services/image/metadata/analyzers/similarity.py"
+      ],
+      "acceptance_criteria": [
+        "EXIF metadata extraction working",
+        "Color palette extraction functional",
+        "Image properties analysis operational",
+        "Image similarity analysis working"
+      ]
+    },
+    {
+      "task_id": "14-006",
+      "title": "Implement Image API",
+      "description": "Create comprehensive API for image processing operations",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/api/routes/image",
+        "mkdir -p tests/image"
+      ],
+      "files_to_create": [
+        "src/api/routes/image/__init__.py",
+        "src/api/routes/image/vision.py",
+        "src/api/routes/image/face.py",
+        "src/api/routes/image/enhancement.py",
+        "src/api/routes/image/metadata.py",
+        "tests/image/test_vision.py",
+        "tests/image/test_face.py",
+        "tests/image/test_enhancement.py"
+      ],
+      "acceptance_criteria": [
+        "Vision API endpoints working",
+        "Face recognition API functional",
+        "Enhancement API operational",
+        "Metadata API working"
+      ]
+    },
+    {
+      "task_id": "14-007",
+      "title": "Implement Image Analytics",
+      "description": "Create image analytics and insights generation",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/analytics"
+      ],
+      "files_to_create": [
+        "src/services/image/analytics/__init__.py",
+        "src/services/image/analytics/insights.py",
+        "src/services/image/analytics/patterns.py",
+        "src/services/image/analytics/trends.py",
+        "src/services/image/analytics/reports.py"
+      ],
+      "acceptance_criteria": [
+        "Image insights generation working",
+        "Pattern recognition functional",
+        "Trend analysis operational",
+        "Analytics reporting"
+      ]
+    },
+    {
+      "task_id": "14-008",
+      "title": "Implement Image Quality Assessment",
+      "description": "Create image quality assessment and validation system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/quality"
+      ],
+      "files_to_create": [
+        "src/services/image/quality/__init__.py",
+        "src/services/image/quality/assessor.py",
+        "src/services/image/quality/validator.py",
+        "src/services/image/quality/metrics.py",
+        "src/services/image/quality/scorer.py"
+      ],
+      "acceptance_criteria": [
+        "Image quality assessment working",
+        "Quality validation functional",
+        "Quality metrics calculation",
+        "Quality scoring system"
+      ]
+    },
+    {
+      "task_id": "14-009",
+      "title": "Implement Image Caching",
+      "description": "Create intelligent caching for image processing results",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/caching"
+      ],
+      "files_to_create": [
+        "src/services/image/caching/__init__.py",
+        "src/services/image/caching/manager.py",
+        "src/services/image/caching/strategies.py",
+        "src/services/image/caching/invalidation.py"
+      ],
+      "acceptance_criteria": [
+        "Image processing caching working",
+        "Cache strategies functional",
+        "Cache invalidation operational",
+        "Cache performance optimization"
+      ]
+    },
+    {
+      "task_id": "14-010",
+      "title": "Implement Image Testing",
+      "description": "Create comprehensive testing framework for image processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p tests/image/integration",
+        "mkdir -p tests/image/performance"
+      ],
+      "files_to_create": [
+        "tests/image/integration/test_image_integration.py",
+        "tests/image/performance/test_image_performance.py",
+        "tests/image/conftest.py",
+        "tests/image/test_data/",
+        "config/testing/image_test_config.json"
+      ],
+      "acceptance_criteria": [
+        "Integration tests for image processing",
+        "Performance benchmarks working",
+        "Test data and fixtures available",
+        "Automated image validation"
+      ]
+    },
+    {
+      "task_id": "14-011",
+      "title": "Implement Image Monitoring",
+      "description": "Create monitoring and analytics for image processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/monitoring"
+      ],
+      "files_to_create": [
+        "src/services/image/monitoring/__init__.py",
+        "src/services/image/monitoring/metrics.py",
+        "src/services/image/monitoring/analytics.py",
+        "src/services/image/monitoring/dashboard.py"
+      ],
+      "acceptance_criteria": [
+        "Image processing metrics collection",
+        "Analytics and reporting working",
+        "Monitoring dashboard functional",
+        "Performance tracking operational"
+      ]
+    },
+    {
+      "task_id": "14-012",
+      "title": "Implement Image Documentation",
+      "description": "Create comprehensive documentation for image processing system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/image",
+        "mkdir -p examples/image"
+      ],
+      "files_to_create": [
+        "docs/image/README.md",
+        "docs/image/vision.md",
+        "docs/image/face.md",
+        "docs/image/enhancement.md",
+        "docs/image/metadata.md",
+        "examples/image/vision_examples.py",
+        "examples/image/face_examples.py",
+        "examples/image/enhancement_examples.py"
+      ],
+      "acceptance_criteria": [
+        "Complete image processing documentation",
+        "API usage examples",
+        "Processing pipeline guide",
+        "Troubleshooting documentation"
+      ]
+    },
+    {
+      "task_id": "14-013",
+      "title": "Implement Image Optimization",
+      "description": "Create performance optimizations for image processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/optimization"
+      ],
+      "files_to_create": [
+        "src/services/image/optimization/__init__.py",
+        "src/services/image/optimization/caching.py",
+        "src/services/image/optimization/batching.py",
+        "src/services/image/optimization/parallel.py"
+      ],
+      "acceptance_criteria": [
+        "Image processing optimization working",
+        "Batch processing functional",
+        "Parallel processing operational",
+        "Performance monitoring"
+      ]
+    },
+    {
+      "task_id": "14-014",
+      "title": "Implement Image Security",
+      "description": "Create security features for image processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/security"
+      ],
+      "files_to_create": [
+        "src/services/image/security/__init__.py",
+        "src/services/image/security/sanitizer.py",
+        "src/services/image/security/encryption.py",
+        "src/services/image/security/access_control.py"
+      ],
+      "acceptance_criteria": [
+        "Image sanitization working",
+        "Image encryption functional",
+        "Access control operational",
+        "Security compliance"
+      ]
+    },
+    {
+      "task_id": "14-015",
+      "title": "Implement Image Storage",
+      "description": "Create optimized image storage and retrieval system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/image/storage"
+      ],
+      "files_to_create": [
+        "src/services/image/storage/__init__.py",
+        "src/services/image/storage/manager.py",
+        "src/services/image/storage/optimization.py",
+        "src/services/image/storage/retrieval.py"
+      ],
+      "acceptance_criteria": [
+        "Image storage manager working",
+        "Image optimization functional",
+        "Fast image retrieval operational",
+        "Storage efficiency optimization"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "OPENCV_CUDA_ENABLED": "true",
+      "FACE_RECOGNITION_MODEL": "hog",
+      "YOLO_MODEL_PATH": "/models/yolo.weights",
+      "IMAGE_PROCESSING_CACHE_TTL": "3600",
+      "IMAGE_MAX_SIZE": "10MB",
+      "IMAGE_PROCESSING_WORKERS": "4"
+    },
+    "supported_formats": {
+      "input": [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "tiff",
+        "webp"
+      ],
+      "output": [
+        "jpg",
+        "png",
+        "webp"
+      ],
+      "processing": [
+        "jpg",
+        "png",
+        "tiff"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test object detection accuracy",
+      "Test face recognition precision",
+      "Test image enhancement quality",
+      "Test metadata extraction",
+      "Test image classification"
+    ],
+    "integration_tests": [
+      "Test end-to-end image processing",
+      "Test batch image processing",
+      "Test GPU acceleration",
+      "Test error handling"
+    ],
+    "performance_tests": [
+      "Image processing speed tests",
+      "Memory usage optimization",
+      "GPU utilization tests",
+      "Concurrent processing tests"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Python 3.9+ with required packages",
+      "OpenCV with CUDA support (optional)",
+      "GPU support for deep learning models",
+      "Sufficient storage for image processing"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the project directory",
+      "2. Copy configuration templates and update with your settings",
+      "3. Install Python dependencies: pip install -r requirements.txt",
+      "4. Install OpenCV: pip install opencv-python",
+      "5. Download pre-trained models: python scripts/download_models.py",
+      "6. Run image processing tests: python -m pytest tests/image/"
+    ],
+    "verification": [
+      "Test object detection with sample images",
+      "Verify face recognition functionality",
+      "Test image enhancement features",
+      "Confirm metadata extraction"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-Image-Processing-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

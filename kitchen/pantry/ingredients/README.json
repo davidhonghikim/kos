@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "title": "Pantry Ingredients Directory Structure",
+    "version": "1.0.0",
+    "created_by": "Q-Assist",
+    "created_timestamp": "2025-07-08T08:30:00Z",
+    "last_updated": "2025-07-08T08:30:00Z",
+    "status": "ACTIVE",
+    "purpose": "Documentation for pantry ingredients organization and conventions"
+  },
+  "directory_structure": {
+    "overview": "App-centric organization for scalability and maintainability",
+    "conventions": {
+      "naming": "Use application names (lowercase) for main directories",
+      "subdirectories": "Each app directory contains: tools/, skills/, tasks/, modules/",
+      "file_naming": "Use descriptive names with underscores, no numbered prefixes"
+    },
+    "directories": {
+      "base/": {
+        "purpose": "Universal tools and resources used across all applications",
+        "subdirectories": ["tools/", "skills/", "tasks/", "modules/"],
+        "contents": "General-purpose tools like file_utils, calendar_tool, etc."
+      },
+      "automatic1111/": {
+        "purpose": "Stable Diffusion and AI image generation tools",
+        "subdirectories": ["tools/", "skills/", "tasks/", "modules/"],
+        "contents": "Image generation, model management, prompt engineering"
+      },
+      "comfyui/": {
+        "purpose": "ComfyUI workflow and node-based AI tools",
+        "subdirectories": ["tools/", "skills/", "tasks/", "modules/"],
+        "contents": "Workflow automation, custom nodes, pipeline tools"
+      },
+      "n8n/": {
+        "purpose": "Workflow automation and integration tools",
+        "subdirectories": ["tools/", "skills/", "tasks/", "modules/"],
+        "contents": "API integrations, automation workflows, data processing"
+      },
+      "penpot/": {
+        "purpose": "Design and prototyping tools",
+        "subdirectories": ["tools/", "skills/", "tasks/", "modules/"],
+        "contents": "UI/UX design, prototyping, design system tools"
+      },
+      "openwebui/": {
+        "purpose": "Web interface and UI tools",
+        "subdirectories": ["tools/", "skills/", "tasks/", "modules/"],
+        "contents": "Web components, interface tools, frontend utilities"
+      },
+      "schemas/": {
+        "purpose": "Data schemas and validation definitions",
+        "contents": ["content_schema.json", "data_schema.json"],
+        "note": "Cross-application schemas, not app-specific"
+      },
+      "configs/": {
+        "purpose": "Configuration templates and settings",
+        "contents": ["productivity_config.json", "content_creation_config.json", "data_analysis_config.json"],
+        "note": "Reusable configuration patterns"
+      }
+    }
+  },
+  "file_organization_rules": {
+    "app_specific": "Tools, skills, and tasks specific to an application go in that app's directory",
+    "universal": "Cross-application tools go in base/ directory",
+    "schemas": "Data schemas go in schemas/ directory",
+    "configs": "Configuration templates go in configs/ directory",
+    "legacy": "Uncategorized files should be moved to base/ or a new app directory",
+    "naming": "Use descriptive names, avoid numbered prefixes, use underscores for spaces"
+  },
+  "scalability_considerations": {
+    "current_structure": "Supports 6 main applications + base + schemas + configs",
+    "expansion": "New applications can be added as new top-level directories",
+    "file_limits": "Each subdirectory can contain hundreds of files",
+    "organization": "Structure supports thousands of ingredients across all applications",
+    "discovery": "App-centric organization makes it easy to find relevant tools"
+  },
+  "maintenance_guidelines": {
+    "audit_frequency": "Monthly audit of file placement and organization",
+    "cleanup": "Remove empty directories, consolidate similar tools",
+    "documentation": "Update this README when adding new applications or changing structure",
+    "validation": "Ensure all files are in appropriate app directories or base/",
+    "backup": "Maintain backup of structure before major reorganizations"
+  },
+  "current_status": {
+    "total_applications": 6,
+    "base_tools_count": 9,
+    "schemas_count": 2,
+    "configs_count": 3,
+    "structure_validation": "PASS",
+    "last_audit": "2025-07-08T08:30:00Z",
+    "notes": "Structure is well-organized and ready for expansion"
+  }
+} 

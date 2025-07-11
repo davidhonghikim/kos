@@ -1,0 +1,315 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-COLLABORATIVE-WORKFLOWS-001",
+    "title": "Collaborative Workflows Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T15:00:00Z",
+    "last_updated": "2025-01-28T15:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 7,
+    "estimated_time": "4-5 hours"
+  },
+  "recipe_overview": {
+    "description": "Implement a comprehensive collaborative workflow system that enables multiple AI agents to work together on complex tasks with workflow orchestration, task coordination, progress tracking, and result aggregation.",
+    "technology_stack": {
+      "language": "TypeScript",
+      "runtime": "Node.js",
+      "workflow_engine": "Custom orchestration",
+      "database": "PostgreSQL",
+      "cache": "Redis",
+      "message_queue": "RabbitMQ"
+    },
+    "deliverables": [
+      "Workflow orchestration engine",
+      "Task coordination system",
+      "Progress tracking and monitoring",
+      "Result aggregation and synthesis",
+      "Collaborative decision making"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "CWF-001",
+      "title": "Create Workflow Orchestration Engine",
+      "description": "Build the core workflow orchestration engine for managing complex multi-agent workflows",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/workflows/orchestration",
+        "mkdir -p src/workflows/engine",
+        "mkdir -p src/workflows/types"
+      ],
+      "files_to_create": [
+        "src/workflows/orchestration/workflow-orchestrator.ts",
+        "src/workflows/orchestration/task-scheduler.ts",
+        "src/workflows/engine/workflow-engine.ts",
+        "src/workflows/engine/execution-manager.ts",
+        "src/workflows/types/workflow-types.ts"
+      ],
+      "acceptance_criteria": [
+        "Workflow orchestration manages complex tasks",
+        "Task scheduling is efficient",
+        "Execution management handles failures",
+        "Workflow types are properly defined"
+      ]
+    },
+    {
+      "id": "CWF-002",
+      "title": "Implement Task Coordination System",
+      "description": "Create task coordination mechanisms for agent collaboration and synchronization",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/workflows/coordination"
+      ],
+      "files_to_create": [
+        "src/workflows/coordination/task-coordinator.ts",
+        "src/workflows/coordination/dependency-manager.ts",
+        "src/workflows/coordination/synchronization.ts",
+        "src/workflows/coordination/resource-manager.ts"
+      ],
+      "acceptance_criteria": [
+        "Task coordination works efficiently",
+        "Dependency management prevents deadlocks",
+        "Synchronization ensures consistency",
+        "Resource management optimizes usage"
+      ]
+    },
+    {
+      "id": "CWF-003",
+      "title": "Build Progress Tracking System",
+      "description": "Implement comprehensive progress tracking and monitoring for collaborative workflows",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/workflows/tracking"
+      ],
+      "files_to_create": [
+        "src/workflows/tracking/progress-tracker.ts",
+        "src/workflows/tracking/milestone-manager.ts",
+        "src/workflows/tracking/status-monitor.ts",
+        "src/workflows/tracking/metrics-collector.ts"
+      ],
+      "acceptance_criteria": [
+        "Progress tracking is real-time",
+        "Milestone management works correctly",
+        "Status monitoring provides insights",
+        "Metrics collection is comprehensive"
+      ]
+    },
+    {
+      "id": "CWF-004",
+      "title": "Create Result Aggregation System",
+      "description": "Implement result aggregation and synthesis for combining outputs from multiple agents",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/workflows/aggregation"
+      ],
+      "files_to_create": [
+        "src/workflows/aggregation/result-aggregator.ts",
+        "src/workflows/aggregation/output-synthesizer.ts",
+        "src/workflows/aggregation/quality-assessor.ts",
+        "src/workflows/aggregation/consensus-builder.ts"
+      ],
+      "acceptance_criteria": [
+        "Result aggregation combines outputs effectively",
+        "Output synthesis creates coherent results",
+        "Quality assessment ensures standards",
+        "Consensus building resolves conflicts"
+      ]
+    },
+    {
+      "id": "CWF-005",
+      "title": "Implement Collaborative Decision Making",
+      "description": "Create collaborative decision making mechanisms for group consensus and voting",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/workflows/decision"
+      ],
+      "files_to_create": [
+        "src/workflows/decision/decision-engine.ts",
+        "src/workflows/decision/voting-system.ts",
+        "src/workflows/decision/consensus-algorithm.ts",
+        "src/workflows/decision/conflict-resolver.ts"
+      ],
+      "acceptance_criteria": [
+        "Decision engine processes group input",
+        "Voting system handles multiple options",
+        "Consensus algorithm reaches agreements",
+        "Conflict resolution prevents deadlocks"
+      ]
+    },
+    {
+      "id": "CWF-006",
+      "title": "Add Workflow Templates and Patterns",
+      "description": "Create reusable workflow templates and collaboration patterns",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/workflows/templates"
+      ],
+      "files_to_create": [
+        "src/workflows/templates/template-manager.ts",
+        "src/workflows/templates/pattern-library.ts",
+        "src/workflows/templates/workflow-builder.ts",
+        "src/workflows/templates/template-validator.ts"
+      ],
+      "acceptance_criteria": [
+        "Template management enables reuse",
+        "Pattern library provides common workflows",
+        "Workflow builder creates custom workflows",
+        "Template validation ensures correctness"
+      ]
+    },
+    {
+      "id": "CWF-007",
+      "title": "Create Workflow Configuration",
+      "description": "Set up configuration management and deployment for the collaborative workflow system",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p config/workflows",
+        "mkdir -p docker/workflows"
+      ],
+      "files_to_create": [
+        "config/workflows/workflow-config.json",
+        "config/workflows/template-config.json",
+        "docker/workflows/Dockerfile",
+        "docker/workflows/docker-compose.yml",
+        "scripts/workflow-engine-start.sh"
+      ],
+      "acceptance_criteria": [
+        "Configuration is properly structured",
+        "Docker deployment works correctly",
+        "Startup script functions properly",
+        "Configuration validation prevents errors"
+      ]
+    }
+  ],
+  "workflow_patterns": {
+    "sequential_collaboration": {
+      "description": "Sequential workflow where agents work in order",
+      "components": [
+        "Linear task progression",
+        "Handoff mechanisms",
+        "Progress tracking",
+        "Result passing"
+      ]
+    },
+    "parallel_collaboration": {
+      "description": "Parallel workflow where agents work simultaneously",
+      "components": [
+        "Concurrent task execution",
+        "Synchronization points",
+        "Resource sharing",
+        "Result aggregation"
+      ]
+    },
+    "hierarchical_collaboration": {
+      "description": "Hierarchical workflow with master-slave coordination",
+      "components": [
+        "Task delegation",
+        "Supervision mechanisms",
+        "Escalation procedures",
+        "Result consolidation"
+      ]
+    },
+    "swarm_collaboration": {
+      "description": "Swarm workflow with emergent behavior",
+      "components": [
+        "Local interactions",
+        "Emergent patterns",
+        "Self-organization",
+        "Collective intelligence"
+      ]
+    }
+  },
+  "dependencies": {
+    "infrastructure": [
+      "01-core-infrastructure-recipe.json",
+      "06-api-gateway-recipe.json",
+      "07-authentication-security-recipe.json"
+    ],
+    "external_packages": [
+      "express (HTTP server)",
+      "pg (PostgreSQL)",
+      "redis (Redis cache)",
+      "amqplib (RabbitMQ)",
+      "winston (Logging)"
+    ]
+  },
+  "testing_requirements": {
+    "unit_tests": [
+      "Workflow orchestration tests",
+      "Task coordination tests",
+      "Progress tracking tests",
+      "Result aggregation tests"
+    ],
+    "integration_tests": [
+      "End-to-end workflow tests",
+      "Multi-agent collaboration tests",
+      "Performance and scalability tests",
+      "Error handling and recovery tests"
+    ]
+  },
+  "security_considerations": {
+    "authentication": [
+      "Workflow access authentication",
+      "Agent identity verification",
+      "Task execution permissions",
+      "Result access control"
+    ],
+    "authorization": [
+      "Workflow modification rights",
+      "Task assignment permissions",
+      "Result viewing rights",
+      "Administrative privileges"
+    ]
+  },
+  "performance_requirements": {
+    "response_times": [
+      "Workflow creation: < 500ms",
+      "Task assignment: < 200ms",
+      "Progress updates: < 100ms",
+      "Result aggregation: < 1000ms"
+    ],
+    "scalability": [
+      "Support 100+ concurrent workflows",
+      "Handle 1000+ concurrent tasks",
+      "Process complex multi-agent scenarios",
+      "Maintain performance under load"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "06-Collaborative-Workflows",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

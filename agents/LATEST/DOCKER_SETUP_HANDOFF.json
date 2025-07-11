@@ -1,0 +1,311 @@
+{
+  "metadata": {
+    "title": "kOS Docker Setup Completion Handoff - Install from ai-Q & griot",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - Environment Configuration Specialist",
+    "handoff_timestamp": "2025-07-09T22:55:00Z",
+    "status": "ACTIVE",
+    "priority": "HIGH",
+    "purpose": "Install all working services from ai-Q and griot repos to test kOS implementation"
+  },
+  "current_status": {
+    "work_completed": {
+      "description": "Created centralized port/IP management system with no conflicts, organized environment files, and prepared for Docker setup completion",
+      "files_created": [
+        "env/ports.env.example - Centralized port management (no conflicts)",
+        "env/local.env.example - Service-first organization with core services enabled",
+        "env/cloud.env.example - Cloud services configuration (all disabled)",
+        "env/api-keys.env.example - External API keys (all blank)",
+        "env/settings/api.settings.env.example - API advanced settings",
+        "env/settings/ollama.settings.env.example - Ollama advanced settings",
+        "env/settings/openwebui.settings.env.example - OpenWebUI advanced settings"
+      ],
+      "key_improvements": [
+        "No port conflicts - all services have unique external ports",
+        "Unified admin credentials (kos-admin/kos-30437) for all services",
+        "Blank secret keys and API keys for easy startup",
+        "Service-first organization with all settings grouped together",
+        "Environment variables for all IPs and ports (no hardcoded values)"
+      ],
+      "system_state": "READY_FOR_SERVICE_INSTALLATION"
+    },
+    "next_phase": {
+      "primary_task": "Install all working services from ai-Q and griot repos",
+      "description": "Copy and adapt working Docker configurations from existing repos to test kOS implementation",
+      "priority": "HIGH",
+      "estimated_duration": "3-5 hours"
+    }
+  },
+  "next_agent_tasks": {
+    "immediate_priorities": [
+      "Analyze ai-Q repo for working Docker services and configurations",
+      "Analyze griot repo for working Docker services and configurations",
+      "Copy working Dockerfiles and docker-compose configurations to kOS",
+      "Adapt configurations to use kOS environment variables and naming",
+      "Test all services to ensure they work with kOS setup",
+      "Enable all services in local.env.example"
+    ],
+    "service_installation_strategy": {
+      "approach": "Copy proven configurations from working repos",
+      "benefits": [
+        "Test kOS with services that are already working",
+        "Reduce setup time and debugging",
+        "Ensure compatibility and stability",
+        "Build on proven configurations"
+      ],
+      "repos_to_analyze": [
+        "E:\\kos\\ai-Q - Main ai-Q repository with working services",
+        "E:\\kos\\griot-main - Griot repository with additional services"
+      ]
+    }
+  },
+  "ai_q_repo_analysis": {
+    "location": "E:\\kos\\ai-Q",
+    "files_to_examine": [
+      "docker-compose.yml - Main Docker Compose configuration",
+      "env.template - Environment configuration template",
+      "docker/ - Dockerfile directory",
+      "scripts/ - Setup and installation scripts"
+    ],
+    "services_to_install": [
+      "Core: API, Frontend, PostgreSQL, Redis, Neo4j",
+      "AI/ML: Ollama, OpenWebUI, HuggingFace",
+      "Storage: Weaviate, MinIO, Elasticsearch",
+      "Development: Gitea",
+      "Monitoring: Prometheus, Grafana, cAdvisor",
+      "Workflow: N8N, Penpot",
+      "Self-hosted: Nextcloud, Admin Panel, Registry"
+    ],
+    "configuration_adaptation": {
+      "environment_variables": "Convert ai-Q variables to kOS_ prefixed variables",
+      "port_mapping": "Use centralized port configuration from ports.env",
+      "service_names": "Add kos- prefix to all service names",
+      "credentials": "Use unified admin credentials (kos-admin/kos-30437)"
+    }
+  },
+  "griot_repo_analysis": {
+    "location": "E:\\kos\\griot-main",
+    "files_to_examine": [
+      "docker-compose.yml - Griot Docker Compose configuration",
+      "docker/ - Dockerfile directory",
+      "scripts/ - Additional setup scripts",
+      "services/ - Service-specific configurations"
+    ],
+    "additional_services": [
+      "Any services not present in ai-Q repo",
+      "Griot-specific configurations and optimizations",
+      "Additional development tools and utilities"
+    ],
+    "integration_approach": "Merge with ai-Q services, resolve conflicts, maintain kOS naming"
+  },
+  "installation_workflow": {
+    "step_1_analyze_repos": {
+      "task": "Analyze ai-Q and griot repos for working services",
+      "actions": [
+        "Examine docker-compose.yml files in both repos",
+        "List all services and their configurations",
+        "Identify Dockerfiles and build contexts",
+        "Note environment variables and dependencies",
+        "Document working port configurations"
+      ],
+      "output": "Complete inventory of working services from both repos"
+    },
+    "step_2_copy_configurations": {
+      "task": "Copy working Docker configurations to kOS",
+      "actions": [
+        "Copy docker-compose.yml sections for each service",
+        "Copy Dockerfiles from docker/ directories",
+        "Copy any service-specific configuration files",
+        "Copy setup and initialization scripts",
+        "Maintain directory structure and organization"
+      ],
+      "adaptations": [
+        "Add kos- prefix to all service names",
+        "Update environment variables to use kOS_ prefix",
+        "Use centralized port configuration from ports.env",
+        "Replace hardcoded credentials with unified admin credentials"
+      ]
+    },
+    "step_3_adapt_to_kos": {
+      "task": "Adapt configurations to kOS environment structure",
+      "actions": [
+        "Update docker-compose.yml to use kOS environment variables",
+        "Modify Dockerfiles to use kOS naming conventions",
+        "Update service dependencies and networks",
+        "Ensure all ports use centralized configuration",
+        "Test environment variable substitution"
+      ],
+      "environment_integration": [
+        "Load ports.env for all port configurations",
+        "Load local.env for service settings",
+        "Load api-keys.env for external authentication",
+        "Load settings/*.env for advanced configurations"
+      ]
+    },
+    "step_4_enable_all_services": {
+      "task": "Enable all services in local.env.example",
+      "actions": [
+        "Set all KOS_*_ENABLE=true in local.env.example",
+        "Verify all required environment variables are defined",
+        "Ensure no missing dependencies or configurations",
+        "Test environment variable loading"
+      ],
+      "services_to_enable": [
+        "Core: API, Frontend, PostgreSQL, Redis, Neo4j, Nginx",
+        "AI/ML: Ollama, OpenWebUI, HuggingFace",
+        "Storage: Weaviate, MinIO, Elasticsearch",
+        "Development: Gitea, Supabase, Browseruse, Context7, Codium",
+        "Monitoring: Prometheus, Grafana, cAdvisor",
+        "Workflow: N8N, Penpot",
+        "Self-hosted: Nextcloud, Admin Panel, Registry",
+        "Managers: Prompt Manager, Artifact Manager",
+        "Security: Vault"
+      ]
+    },
+    "step_5_test_installation": {
+      "task": "Test all services and verify functionality",
+      "actions": [
+        "Run docker-compose up -d",
+        "Check all containers start successfully",
+        "Verify services are accessible on assigned ports",
+        "Test basic functionality of each service",
+        "Check logs for any errors or warnings"
+      ],
+      "verification_checks": [
+        "All containers running: docker-compose ps",
+        "No port conflicts: netstat -an | grep LISTEN",
+        "Services accessible: curl/wget to service endpoints",
+        "Logs clean: docker-compose logs --tail=50"
+      ]
+    }
+  },
+  "service_mapping": {
+    "ai_q_services": {
+      "core": {
+        "api": "kos-backend",
+        "frontend": "kos-frontend",
+        "postgres": "kos-postgres",
+        "redis": "kos-redis",
+        "neo4j": "kos-neo4j",
+        "nginx": "kos-nginx"
+      },
+      "ai_ml": {
+        "ollama": "kos-ollama",
+        "openwebui": "kos-openwebui",
+        "huggingface": "kos-huggingface"
+      },
+      "storage": {
+        "weaviate": "kos-weaviate",
+        "minio": "kos-minio",
+        "elasticsearch": "kos-elasticsearch"
+      },
+      "development": {
+        "gitea": "kos-gitea"
+      },
+      "monitoring": {
+        "prometheus": "kos-prometheus",
+        "grafana": "kos-grafana",
+        "cadvisor": "kos-cadvisor"
+      },
+      "workflow": {
+        "n8n": "kos-n8n",
+        "penpot": "kos-penpot"
+      },
+      "self_hosted": {
+        "nextcloud": "kos-nextcloud",
+        "admin_panel": "kos-admin-panel",
+        "registry": "kos-registry"
+      }
+    },
+    "griot_services": {
+      "additional": "Any services not in ai-Q mapping",
+      "enhancements": "Griot-specific optimizations and configurations"
+    }
+  },
+  "environment_adaptation": {
+    "variable_mapping": {
+      "ai_q_to_kos": {
+        "AIQ_HOST": "KOS_DEFAULT_HOST",
+        "API_PORT": "KOS_API_EXTERNAL_PORT",
+        "POSTGRES_PORT": "KOS_POSTGRES_EXTERNAL_PORT",
+        "REDIS_PORT": "KOS_REDIS_EXTERNAL_PORT",
+        "NEO4J_PORT": "KOS_NEO4J_EXTERNAL_PORT",
+        "OLLAMA_PORT": "KOS_OLLAMA_EXTERNAL_PORT",
+        "OPENWEBUI_PORT": "KOS_OPENWEBUI_EXTERNAL_PORT",
+        "GITEA_PORT": "KOS_GITEA_EXTERNAL_PORT",
+        "PROMETHEUS_PORT": "KOS_PROMETHEUS_EXTERNAL_PORT",
+        "GRAFANA_PORT": "KOS_GRAFANA_EXTERNAL_PORT",
+        "WEAVIATE_PORT": "KOS_WEAVIATE_EXTERNAL_PORT",
+        "MINIO_PORT": "KOS_MINIO_EXTERNAL_PORT",
+        "ELASTICSEARCH_PORT": "KOS_ELASTICSEARCH_EXTERNAL_PORT"
+      },
+      "credential_mapping": {
+        "POSTGRES_USER": "KOS_ADMIN_USER",
+        "POSTGRES_PASSWORD": "KOS_ADMIN_PASSWORD",
+        "REDIS_PASSWORD": "KOS_ADMIN_PASSWORD",
+        "NEO4J_USER": "KOS_ADMIN_USER",
+        "NEO4J_PASSWORD": "KOS_ADMIN_PASSWORD",
+        "MINIO_ROOT_USER": "KOS_ADMIN_USER",
+        "MINIO_ROOT_PASSWORD": "KOS_ADMIN_PASSWORD"
+      }
+    }
+  },
+  "testing_strategy": {
+    "phase_1_basic_startup": {
+      "goal": "Verify all services start without errors",
+      "tests": [
+        "docker-compose up -d",
+        "docker-compose ps (all containers running)",
+        "docker-compose logs (no critical errors)"
+      ]
+    },
+    "phase_2_port_accessibility": {
+      "goal": "Verify all services are accessible on assigned ports",
+      "tests": [
+        "API: curl http://localhost:8000/health",
+        "Frontend: curl http://localhost:3000",
+        "PostgreSQL: psql -h localhost -p 5432 -U kos-admin -d kos_db",
+        "Redis: redis-cli -h localhost -p 6379 -a kos-30437",
+        "Neo4j: curl http://localhost:7474",
+        "OpenWebUI: curl http://localhost:3001",
+        "Gitea: curl http://localhost:3002"
+      ]
+    },
+    "phase_3_functionality": {
+      "goal": "Test basic functionality of each service",
+      "tests": [
+        "API endpoints respond correctly",
+        "Frontend loads without errors",
+        "Databases accept connections",
+        "AI services respond to basic requests",
+        "Monitoring services show data"
+      ]
+    },
+    "phase_4_integration": {
+      "goal": "Test service integration and communication",
+      "tests": [
+        "API can connect to databases",
+        "Frontend can communicate with API",
+        "Services can access shared resources",
+        "Monitoring can collect metrics from all services"
+      ]
+    }
+  },
+  "success_criteria": {
+    "functional": "All services from ai-Q and griot repos are running and accessible",
+    "quality": "No port conflicts, all services use kOS environment variables",
+    "integration": "Services work together as expected",
+    "documentation": "Complete setup documentation and troubleshooting guide"
+  },
+  "notes": {
+    "important_reminders": [
+      "Copy proven configurations from working repos - don't reinvent the wheel",
+      "Maintain kOS naming conventions (kos- prefix) throughout",
+      "Use centralized port configuration to avoid conflicts",
+      "Test each service after installation to ensure it works",
+      "Keep all secret keys blank for now - focus on getting services running",
+      "Document any issues or adaptations needed during installation"
+    ],
+    "context": "Previous agent created comprehensive environment structure. Now we need to install all the working services from ai-Q and griot repos to test the kOS implementation with proven configurations."
+  }
+} 

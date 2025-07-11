@@ -1,0 +1,205 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-SECURITY-HARDENING-009",
+    "title": "Enterprise Database Security and Hardening",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 12000,
+    "estimated_execution_time": "6-8 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "100%",
+    "compliance_standards": [
+      "SOC 2",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "PCI DSS"
+    ],
+    "architecture_tier": "enterprise-security"
+  },
+  "recipe_overview": {
+    "description": "Implement a multi-layered security strategy to protect the polyglot database infrastructure. This recipe covers network security, data encryption (at rest and in transit), access control, audit logging, and secrets management, ensuring the entire data platform adheres to strict security and compliance standards.",
+    "technology_stack": {
+      "secrets_management": "HashiCorp Vault",
+      "encryption": "TLS/SSL, Native Database Encryption",
+      "access_control": "Role-Based Access Control (RBAC)",
+      "auditing": "Native database audit logging, Logstash",
+      "network": "Docker network policies, Firewalls"
+    },
+    "deliverables": [
+      "Secure network configuration for all databases",
+      "End-to-end encryption for all data in transit",
+      "Encryption at rest for all sensitive data",
+      "A centralized secrets management system with Vault",
+      "Comprehensive audit trails for all database activity"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-security-hardening-009",
+      "title": "Enterprise Database Security and Hardening Implementation",
+      "description": "Implement a multi-layered security strategy to protect the polyglot database infrastructure. This recipe covers network security, data encryption (at rest and in transit), access control, audit logging, and secrets management, ensuring the entire data platform adheres to strict security and compliance standards.",
+      "category": "security",
+      "estimated_tokens": 12000,
+      "estimated_duration": "6-8 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Database security best practices",
+          "Network security",
+          "Encryption",
+          "Secrets management",
+          "HashiCorp Vault"
+        ],
+        "tools_required": [
+          "OpenSSL",
+          "HashiCorp Vault",
+          "Docker"
+        ],
+        "environment_setup": [
+          "All databases running"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "config/vault/vault-config.hcl"
+        ],
+        "config_dependencies": [
+          "Security policies and compliance requirements"
+        ],
+        "environment_variables": [
+          "VAULT_TOKEN"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "config/tls/ - Directory for all TLS certificates",
+          "config/vault/vault-config.hcl - Vault server configuration",
+          "scripts/security/generate-certs.sh - Script to create self-signed certs for testing",
+          "scripts/security/setup-vault.sh - Script to initialize Vault and store secrets"
+        ],
+        "files_modified": [
+          "docker-compose files for all databases to enable TLS and integrate with Vault"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-postgresql-cluster-001",
+          "03-database-redis-cluster-002",
+          "03-database-neo4j-cluster-003",
+          "03-database-weaviate-cluster-004",
+          "03-database-elasticsearch-cluster-005"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task focuses on securing the database layer. It involves generating TLS certificates for all services to encrypt traffic, setting up Vault to manage all database credentials, and configuring each database to use these security features.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Generate TLS Certificates",
+            "description": "Create a Certificate Authority (CA) and generate TLS certificates for each database service to enable encrypted communication.",
+            "commands": [
+              "mkdir -p config/tls",
+              "# Use openssl to create a root CA key and certificate",
+              "openssl genrsa -out config/tls/ca.key 4096",
+              "openssl req -x509 -new -nodes -key config/tls/ca.key -sha256 -days_3650 -out config/tls/ca.crt",
+              "# For each service, generate a key and a certificate signing request (CSR)",
+              "# Sign the CSR with the CA to create the certificate"
+            ],
+            "expected_output": "TLS certificates and keys for all services are created in `config/tls/`.",
+            "troubleshooting": "Ensure Common Name (CN) in certificates matches the service hostname."
+          },
+          {
+            "step": 2,
+            "title": "Deploy and Configure HashiCorp Vault",
+            "description": "Deploy a Vault server and configure it to store and manage database credentials.",
+            "commands": [
+              "# Add Vault service to a docker-compose file",
+              "docker-compose up -d vault",
+              "sleep 10",
+              "# Initialize and unseal Vault",
+              "docker exec vault vault operator init > vault-keys.txt",
+              "docker exec vault vault operator unseal <unseal_key_1>",
+              "docker exec vault vault operator unseal <unseal_key_2>",
+              "docker exec vault vault operator unseal <unseal_key_3>",
+              "# Login with root token and store database passwords",
+              "docker exec vault vault login <root_token>",
+              "docker exec vault vault kv put secret/database/postgres password=... "
+            ],
+            "expected_output": "Vault is deployed, unsealed, and contains database secrets.",
+            "troubleshooting": "Securely store the unseal keys and root token from `vault-keys.txt`."
+          },
+          {
+            "step": 3,
+            "title": "Configure Databases for Security",
+            "description": "Update the configuration and Docker Compose files for each database to enable TLS and fetch credentials from Vault.",
+            "commands": [
+              "# Example for PostgreSQL: Modify postgresql.conf to require SSL",
+              "echo 'ssl = on' >> config/postgresql/postgresql.conf",
+              "# Modify docker-compose files to mount TLS certs and use Vault agent or envconsul to inject secrets"
+            ],
+            "expected_output": "All databases are reconfigured to enforce secure connections and use centrally managed secrets.",
+            "troubleshooting": "Check database logs for TLS handshake errors or authentication failures."
+          },
+          {
+            "step": 4,
+            "title": "Implement Audit Logging",
+            "description": "Enable and configure audit logging for all databases to track access and changes.",
+            "commands": [
+              "# Example for PostgreSQL: In postgresql.conf",
+              "echo 'log_statement = 'all'' >> config/postgresql/postgresql.conf",
+              "# Configure log shipping to a central location (e.g., using Logstash to send to Elasticsearch)"
+            ],
+            "expected_output": "Audit logs are generated and collected for all databases.",
+            "troubleshooting": "Ensure log volumes do not fill up disk space. Implement log rotation."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "All inter-service communication is encrypted with TLS.",
+          "Database credentials are no longer stored in plain text configuration files.",
+          "Strict, role-based access control is enforced for all databases.",
+          "A complete audit trail of database activities is available."
+        ],
+        "security_requirements": [
+          "Passes vulnerability scans (e.g., Nessus, OpenSCAP).",
+          "Meets all specified compliance requirements."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "09-Security-Hardening",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

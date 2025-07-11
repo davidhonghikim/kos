@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "recipe_id": "03-backup-and-restore",
+    "title": "Automated Backup & Restore System",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - Infrastructure Specialist",
+    "last_updated": "2025-07-05T21:53:00Z",
+    "purpose": "Create comprehensive backup and restore procedures for all data and configurations with automated scheduling and validation",
+    "total_tasks": 15,
+    "estimated_duration": "5 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "01-volume-structure-design"
+    ],
+    "backup_stack": [
+      "Automated Scheduling",
+      "Incremental Backups",
+      "Disaster Recovery",
+      "Data Validation",
+      "Monitoring"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_recipes": [
+      "01-volume-structure-design",
+      "02-docker-caching-system"
+    ],
+    "system_requirements": {
+      "storage": "Minimum 1TB available storage (500GB for backups)",
+      "ram": "Minimum 8GB RAM",
+      "cpu": "Minimum 4 CPU cores",
+      "permissions": "Administrative privileges required"
+    },
+    "software_requirements": [
+      "Docker 24.0+",
+      "Docker Compose 2.15+",
+      "rsync 3.2.0+",
+      "tar 1.34+",
+      "gzip 1.10+",
+      "cron (system cron daemon)",
+      "jq 1.6+ (for JSON processing)"
+    ]
+  },
+  "task_01_create_backup_directory_structure": {
+    "task_id": "03-01",
+    "title": "Create Backup Directory Structure",
+    "description": "Create comprehensive backup directory structure with proper permissions and organization",
+    "estimated_duration": "20 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "03-01-01",
+        "title": "Create main backup directories",
+        "description": "Create the main backup directory structure",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/backups",
+          "sudo mkdir -p /opt/ai-q/backups/incremental",
+          "sudo mkdir -p /opt/ai-q/backups/daily",
+          "sudo mkdir -p /opt/ai-q/backups/weekly",
+          "sudo mkdir -p /opt/ai-q/backups/monthly",
+          "sudo mkdir -p /opt/ai-q/backups/archives",
+          "sudo mkdir -p /opt/ai-q/backups/logs",
+          "sudo mkdir -p /opt/ai-q/backups/temp"
+        ],
+        "verification": "Verify all backup directories created",
+        "expected_output": "All backup directories created successfully"
+      },
+      {
+        "step_id": "03-01-02",
+        "title": "Create service-specific backup directories",
+        "description": "Create backup directories for each service",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/backups/incremental/postgresql",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/redis",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/elasticsearch",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/weaviate",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/minio",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/gitea",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/nextcloud",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/grafana",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/prometheus",
+          "sudo mkdir -p /opt/ai-q/backups/incremental/docker-registry"
+        ],
+        "verification": "Verify service backup directories created",
+        "expected_output": "All service backup directories created successfully"
+      },
+      {
+        "step_id": "03-01-03",
+        "title": "Set backup directory permissions",
+        "description": "Set appropriate permissions for backup directories",
+        "commands": [
+          "sudo chown -R root:root /opt/ai-q/backups",
+          "sudo chmod -R 755 /opt/ai-q/backups",
+          "sudo chmod -R 700 /opt/ai-q/backups/incremental",
+          "sudo chmod -R 700 /opt/ai-q/backups/daily",
+          "sudo chmod -R 700 /opt/ai-q/backups/weekly",
+          "sudo chmod -R 700 /opt/ai-q/backups/monthly"
+        ],
+        "verification": "Verify backup directory permissions set correctly",
+        "expected_output": "Backup directories have correct ownership and permissions"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/backups/",
+      "find /opt/ai-q/backups -type d | wc -l"
+    ],
+    "expected_outputs": {
+      "directory_count": "At least 20 backup directories created",
+      "permissions": "Correct ownership and permissions for all directories"
+    }
+  },
+  "task_02_create_backup_scripts": {
+    "task_id": "03-02",
+    "title": "Create Backup Automation Scripts",
+    "description": "Create comprehensive backup scripts for all services with error handling and logging",
+    "estimated_duration": "2 hours",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "03-02-01",
+        "title": "Create main backup script",
+        "description": "Create the main backup orchestration script",
+        "script_path": "/opt/ai-q/scripts/backup-automation.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Backup Automation Script\n# Version: 1.0.0\n# Created: 2025-01-27\n# Purpose: Comprehensive backup automation for all services\n\nset -euo pipefail\n\n# Configuration\nBACKUP_ROOT=\"/opt/ai-q/backups\"\nLOG_FILE=\"$BACKUP_ROOT/logs/backup-$(date +%Y%m%d-%H%M%S).log\"\nBACKUP_TYPE=\"${1:-incremental}\"\nRETENTION_DAYS=7\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Error handling\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# Check prerequisites\ncheck_prerequisites() {\n    log \"Checking prerequisites...\"\n    \n    if [[ ! -d \"$BACKUP_ROOT\" ]]; then\n        error_exit \"Backup root directory does not exist\"\n    fi\n    \n    if ! command -v docker &> /dev/null; then\n        error_exit \"Docker is not installed\"\n    fi\n    \n    if ! command -v rsync &> /dev/null; then\n        error_exit \"rsync is not installed\"\n    fi\n    \n    log \"Prerequisites check passed\"\n}\n\n# Create backup directories\ncreate_backup_dirs() {\n    log \"Creating backup directories...\"\n    \n    mkdir -p \"$BACKUP_ROOT/$BACKUP_TYPE\"\n    mkdir -p \"$BACKUP_ROOT/logs\"\n    mkdir -p \"$BACKUP_ROOT/temp\"\n    \n    log \"Backup directories created\"\n}\n\n# Backup PostgreSQL\nbackup_postgresql() {\n    log \"Starting PostgreSQL backup...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/postgresql\"\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    local backup_file=\"$backup_dir/postgresql_$timestamp.sql\"\n    \n    mkdir -p \"$backup_dir\"\n    \n    # Create PostgreSQL backup\n    docker exec ai-q-postgres pg_dumpall -U aiq_user > \"$backup_file\" 2>> \"$LOG_FILE\" || {\n        error_exit \"PostgreSQL backup failed\"\n    }\n    \n    # Compress backup\n    gzip \"$backup_file\"\n    \n    log \"PostgreSQL backup completed: ${backup_file}.gz\"\n}\n\n# Backup Redis\nbackup_redis() {\n    log \"Starting Redis backup...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/redis\"\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    local backup_file=\"$backup_dir/redis_$timestamp.rdb\"\n    \n    mkdir -p \"$backup_dir\"\n    \n    # Copy Redis dump file\n    docker cp ai-q-redis:/data/dump.rdb \"$backup_file\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Redis backup failed\"\n    }\n    \n    # Compress backup\n    gzip \"$backup_file\"\n    \n    log \"Redis backup completed: ${backup_file}.gz\"\n}\n\n# Backup Elasticsearch\nbackup_elasticsearch() {\n    log \"Starting Elasticsearch backup...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/elasticsearch\"\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    local backup_file=\"$backup_dir/elasticsearch_$timestamp.tar.gz\"\n    \n    mkdir -p \"$backup_dir\"\n    \n    # Create Elasticsearch snapshot\n    docker exec ai-q-elasticsearch curl -X PUT \"localhost:9200/_snapshot/ai-q-backup/snapshot_$timestamp?wait_for_completion=true\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Elasticsearch backup failed\"\n    }\n    \n    # Copy snapshot files\n    docker cp ai-q-elasticsearch:/usr/share/elasticsearch/data/snapshots \"$backup_dir/snapshots_$timestamp\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Elasticsearch snapshot copy failed\"\n    }\n    \n    # Archive snapshot\n    tar -czf \"$backup_file\" -C \"$backup_dir\" \"snapshots_$timestamp\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Elasticsearch backup archive failed\"\n    }\n    \n    # Cleanup\n    rm -rf \"$backup_dir/snapshots_$timestamp\"\n    \n    log \"Elasticsearch backup completed: $backup_file\"\n}\n\n# Backup Weaviate\nbackup_weaviate() {\n    log \"Starting Weaviate backup...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/weaviate\"\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    local backup_file=\"$backup_dir/weaviate_$timestamp.tar.gz\"\n    \n    mkdir -p \"$backup_dir\"\n    \n    # Stop Weaviate for consistent backup\n    docker stop ai-q-weaviate 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop Weaviate\"\n    }\n    \n    # Create backup\n    docker run --rm -v ai-q-weaviate-data:/data -v \"$backup_dir\":/backup alpine tar -czf \"/backup/weaviate_$timestamp.tar.gz\" -C /data . 2>> \"$LOG_FILE\" || {\n        error_exit \"Weaviate backup failed\"\n    }\n    \n    # Restart Weaviate\n    docker start ai-q-weaviate 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to restart Weaviate\"\n    }\n    \n    log \"Weaviate backup completed: $backup_file\"\n}\n\n# Backup MinIO\nbackup_minio() {\n    log \"Starting MinIO backup...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/minio\"\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    local backup_file=\"$backup_dir/minio_$timestamp.tar.gz\"\n    \n    mkdir -p \"$backup_dir\"\n    \n    # Create MinIO backup\n    docker run --rm -v ai-q-minio-data:/data -v \"$backup_dir\":/backup alpine tar -czf \"/backup/minio_$timestamp.tar.gz\" -C /data . 2>> \"$LOG_FILE\" || {\n        error_exit \"MinIO backup failed\"\n    }\n    \n    log \"MinIO backup completed: $backup_file\"\n}\n\n# Backup configuration files\nbackup_configs() {\n    log \"Starting configuration backup...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/configs\"\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    local backup_file=\"$backup_dir/configs_$timestamp.tar.gz\"\n    \n    mkdir -p \"$backup_dir\"\n    \n    # Backup configuration files\n    tar -czf \"$backup_file\" -C /opt/ai-q config 2>> \"$LOG_FILE\" || {\n        error_exit \"Configuration backup failed\"\n    }\n    \n    log \"Configuration backup completed: $backup_file\"\n}\n\n# Cleanup old backups\ncleanup_old_backups() {\n    log \"Cleaning up old backups...\"\n    \n    # Remove backups older than retention period\n    find \"$BACKUP_ROOT/incremental\" -name \"*.gz\" -mtime +$RETENTION_DAYS -delete 2>> \"$LOG_FILE\" || {\n        log \"Warning: Failed to cleanup some old backups\"\n    }\n    \n    # Remove old log files\n    find \"$BACKUP_ROOT/logs\" -name \"*.log\" -mtime +30 -delete 2>> \"$LOG_FILE\" || {\n        log \"Warning: Failed to cleanup some old logs\"\n    }\n    \n    log \"Cleanup completed\"\n}\n\n# Main execution\nmain() {\n    log \"Starting AI-Q backup process (Type: $BACKUP_TYPE)\"\n    \n    check_prerequisites\n    create_backup_dirs\n    backup_postgresql\n    backup_redis\n    backup_elasticsearch\n    backup_weaviate\n    backup_minio\n    backup_configs\n    cleanup_old_backups\n    \n    log \"Backup process completed successfully\"\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify script created and is executable",
+        "expected_output": "Backup script created and executable"
+      },
+      {
+        "step_id": "03-02-02",
+        "title": "Create restore script",
+        "description": "Create the restore script for disaster recovery",
+        "script_path": "/opt/ai-q/scripts/backup-restore.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Backup Restore Script\n# Version: 1.0.0\n# Created: 2025-01-27\n# Purpose: Restore system from backups\n\nset -euo pipefail\n\n# Configuration\nBACKUP_ROOT=\"/opt/ai-q/backups\"\nLOG_FILE=\"$BACKUP_ROOT/logs/restore-$(date +%Y%m%d-%H%M%S).log\"\nBACKUP_TYPE=\"${1:-incremental}\"\nBACKUP_DATE=\"${2:-}\"\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Error handling\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# Check prerequisites\ncheck_prerequisites() {\n    log \"Checking prerequisites...\"\n    \n    if [[ ! -d \"$BACKUP_ROOT\" ]]; then\n        error_exit \"Backup root directory does not exist\"\n    fi\n    \n    if ! command -v docker &> /dev/null; then\n        error_exit \"Docker is not installed\"\n    fi\n    \n    log \"Prerequisites check passed\"\n}\n\n# Restore PostgreSQL\nrestore_postgresql() {\n    log \"Starting PostgreSQL restore...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/postgresql\"\n    local backup_file=\"$backup_dir/postgresql_$BACKUP_DATE.sql.gz\"\n    \n    if [[ ! -f \"$backup_file\" ]]; then\n        error_exit \"PostgreSQL backup file not found: $backup_file\"\n    fi\n    \n    # Stop PostgreSQL\n    docker stop ai-q-postgres 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop PostgreSQL\"\n    }\n    \n    # Restore data\n    gunzip -c \"$backup_file\" | docker exec -i ai-q-postgres psql -U aiq_user 2>> \"$LOG_FILE\" || {\n        error_exit \"PostgreSQL restore failed\"\n    }\n    \n    # Start PostgreSQL\n    docker start ai-q-postgres 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start PostgreSQL\"\n    }\n    \n    log \"PostgreSQL restore completed\"\n}\n\n# Restore Redis\nrestore_redis() {\n    log \"Starting Redis restore...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/redis\"\n    local backup_file=\"$backup_dir/redis_$BACKUP_DATE.rdb.gz\"\n    \n    if [[ ! -f \"$backup_file\" ]]; then\n        error_exit \"Redis backup file not found: $backup_file\"\n    fi\n    \n    # Stop Redis\n    docker stop ai-q-redis 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop Redis\"\n    }\n    \n    # Restore data\n    gunzip -c \"$backup_file\" | docker cp - ai-q-redis:/data/dump.rdb 2>> \"$LOG_FILE\" || {\n        error_exit \"Redis restore failed\"\n    }\n    \n    # Start Redis\n    docker start ai-q-redis 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start Redis\"\n    }\n    \n    log \"Redis restore completed\"\n}\n\n# Restore Elasticsearch\nrestore_elasticsearch() {\n    log \"Starting Elasticsearch restore...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/elasticsearch\"\n    local backup_file=\"$backup_dir/elasticsearch_$BACKUP_DATE.tar.gz\"\n    \n    if [[ ! -f \"$backup_file\" ]]; then\n        error_exit \"Elasticsearch backup file not found: $backup_file\"\n    fi\n    \n    # Stop Elasticsearch\n    docker stop ai-q-elasticsearch 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop Elasticsearch\"\n    }\n    \n    # Extract backup\n    tar -xzf \"$backup_file\" -C \"$backup_dir\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Elasticsearch backup extraction failed\"\n    }\n    \n    # Restore data\n    docker cp \"$backup_dir/snapshots_$BACKUP_DATE\" ai-q-elasticsearch:/usr/share/elasticsearch/data/snapshots/ 2>> \"$LOG_FILE\" || {\n        error_exit \"Elasticsearch restore failed\"\n    }\n    \n    # Start Elasticsearch\n    docker start ai-q-elasticsearch 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start Elasticsearch\"\n    }\n    \n    # Cleanup\n    rm -rf \"$backup_dir/snapshots_$BACKUP_DATE\"\n    \n    log \"Elasticsearch restore completed\"\n}\n\n# Restore Weaviate\nrestore_weaviate() {\n    log \"Starting Weaviate restore...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/weaviate\"\n    local backup_file=\"$backup_dir/weaviate_$BACKUP_DATE.tar.gz\"\n    \n    if [[ ! -f \"$backup_file\" ]]; then\n        error_exit \"Weaviate backup file not found: $backup_file\"\n    fi\n    \n    # Stop Weaviate\n    docker stop ai-q-weaviate 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop Weaviate\"\n    }\n    \n    # Restore data\n    docker run --rm -v ai-q-weaviate-data:/data -v \"$backup_file\":/backup.tar.gz alpine sh -c \"cd /data && tar -xzf /backup.tar.gz\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Weaviate restore failed\"\n    }\n    \n    # Start Weaviate\n    docker start ai-q-weaviate 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start Weaviate\"\n    }\n    \n    log \"Weaviate restore completed\"\n}\n\n# Restore MinIO\nrestore_minio() {\n    log \"Starting MinIO restore...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/minio\"\n    local backup_file=\"$backup_dir/minio_$BACKUP_DATE.tar.gz\"\n    \n    if [[ ! -f \"$backup_file\" ]]; then\n        error_exit \"MinIO backup file not found: $backup_file\"\n    fi\n    \n    # Stop MinIO\n    docker stop ai-q-minio 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop MinIO\"\n    }\n    \n    # Restore data\n    docker run --rm -v ai-q-minio-data:/data -v \"$backup_file\":/backup.tar.gz alpine sh -c \"cd /data && tar -xzf /backup.tar.gz\" 2>> \"$LOG_FILE\" || {\n        error_exit \"MinIO restore failed\"\n    }\n    \n    # Start MinIO\n    docker start ai-q-minio 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start MinIO\"\n    }\n    \n    log \"MinIO restore completed\"\n}\n\n# Restore configurations\nrestore_configs() {\n    log \"Starting configuration restore...\"\n    \n    local backup_dir=\"$BACKUP_ROOT/$BACKUP_TYPE/configs\"\n    local backup_file=\"$backup_dir/configs_$BACKUP_DATE.tar.gz\"\n    \n    if [[ ! -f \"$backup_file\" ]]; then\n        error_exit \"Configuration backup file not found: $backup_file\"\n    fi\n    \n    # Restore configuration files\n    tar -xzf \"$backup_file\" -C /opt/ai-q 2>> \"$LOG_FILE\" || {\n        error_exit \"Configuration restore failed\"\n    }\n    \n    log \"Configuration restore completed\"\n}\n\n# Main execution\nmain() {\n    if [[ -z \"$BACKUP_DATE\" ]]; then\n        error_exit \"Backup date must be specified (format: YYYYMMDD_HHMMSS)\"\n    fi\n    \n    log \"Starting AI-Q restore process (Type: $BACKUP_TYPE, Date: $BACKUP_DATE)\"\n    \n    check_prerequisites\n    restore_postgresql\n    restore_redis\n    restore_elasticsearch\n    restore_weaviate\n    restore_minio\n    restore_configs\n    \n    log \"Restore process completed successfully\"\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify restore script created and is executable",
+        "expected_output": "Restore script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/backup-*.sh",
+      "chmod +x /opt/ai-q/scripts/backup-*.sh"
+    ],
+    "expected_outputs": {
+      "scripts_created": "2 backup scripts created and executable",
+      "permissions": "Scripts have execute permissions"
+    }
+  },
+  "task_03_setup_automated_scheduling": {
+    "task_id": "03-03",
+    "title": "Setup Automated Backup Scheduling",
+    "description": "Configure cron jobs for automated backup scheduling with different frequencies",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "03-03-01",
+        "title": "Create cron configuration",
+        "description": "Create cron configuration for automated backups",
+        "commands": [
+          "sudo crontab -l > /tmp/current_cron 2>/dev/null || echo \"\" > /tmp/current_cron",
+          "echo \"# AI-Q Automated Backups\" >> /tmp/current_cron",
+          "echo \"# Incremental backups every 6 hours\" >> /tmp/current_cron",
+          "echo \"0 */6 * * * /opt/ai-q/scripts/backup-automation.sh incremental >> /opt/ai-q/backups/logs/cron.log 2>&1\" >> /tmp/current_cron",
+          "echo \"# Daily backups at 2:00 AM\" >> /tmp/current_cron",
+          "echo \"0 2 * * * /opt/ai-q/scripts/backup-automation.sh daily >> /opt/ai-q/backups/logs/cron.log 2>&1\" >> /tmp/current_cron",
+          "echo \"# Weekly backups on Sunday at 3:00 AM\" >> /tmp/current_cron",
+          "echo \"0 3 * * 0 /opt/ai-q/scripts/backup-automation.sh weekly >> /opt/ai-q/backups/logs/cron.log 2>&1\" >> /tmp/current_cron",
+          "echo \"# Monthly backups on first day of month at 4:00 AM\" >> /tmp/current_cron",
+          "echo \"0 4 1 * * /opt/ai-q/scripts/backup-automation.sh monthly >> /opt/ai-q/backups/logs/cron.log 2>&1\" >> /tmp/current_cron",
+          "sudo crontab /tmp/current_cron",
+          "rm /tmp/current_cron"
+        ],
+        "verification": "Verify cron jobs configured",
+        "expected_output": "Cron jobs configured successfully"
+      },
+      {
+        "step_id": "03-03-02",
+        "title": "Test automated backup",
+        "description": "Test the automated backup system",
+        "commands": [
+          "/opt/ai-q/scripts/backup-automation.sh incremental",
+          "ls -la /opt/ai-q/backups/incremental/"
+        ],
+        "verification": "Verify backup created successfully",
+        "expected_output": "Backup files created in incremental directory"
+      }
+    ],
+    "verification_commands": [
+      "sudo crontab -l | grep ai-q",
+      "ls -la /opt/ai-q/backups/incremental/"
+    ],
+    "expected_outputs": {
+      "cron_jobs": "5 cron jobs configured for AI-Q backups",
+      "backup_files": "Backup files present in incremental directory"
+    }
+  },
+  "task_04_create_backup_monitoring": {
+    "task_id": "03-04",
+    "title": "Create Backup Monitoring and Alerting",
+    "description": "Create monitoring scripts and health checks for backup system",
+    "estimated_duration": "1 hour",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "03-04-01",
+        "title": "Create backup monitoring script",
+        "description": "Create script to monitor backup health and status",
+        "script_path": "/opt/ai-q/scripts/backup-monitor.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Backup Monitoring Script\n# Version: 1.0.0\n# Created: 2025-01-27\n# Purpose: Monitor backup system health and status\n\nset -euo pipefail\n\n# Configuration\nBACKUP_ROOT=\"/opt/ai-q/backups\"\nLOG_FILE=\"$BACKUP_ROOT/logs/monitor-$(date +%Y%m%d-%H%M%S).log\"\nALERT_THRESHOLD_HOURS=24\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Check backup freshness\ncheck_backup_freshness() {\n    log \"Checking backup freshness...\"\n    \n    local latest_backup=$(find \"$BACKUP_ROOT/incremental\" -name \"*.gz\" -type f -printf '%T@ %p\\n' | sort -n | tail -1 | cut -d' ' -f2)\n    \n    if [[ -z \"$latest_backup\" ]]; then\n        log \"ERROR: No backups found\"\n        return 1\n    fi\n    \n    local backup_age_hours=$(( ( $(date +%s) - $(stat -c %Y \"$latest_backup\") ) / 3600 ))\n    \n    if [[ $backup_age_hours -gt $ALERT_THRESHOLD_HOURS ]]; then\n        log \"WARNING: Latest backup is $backup_age_hours hours old (threshold: $ALERT_THRESHOLD_HOURS hours)\"\n        return 1\n    fi\n    \n    log \"Backup freshness check passed (age: $backup_age_hours hours)\"\n    return 0\n}\n\n# Check backup integrity\ncheck_backup_integrity() {\n    log \"Checking backup integrity...\"\n    \n    local integrity_errors=0\n    \n    # Check for corrupted backup files\n    for backup_file in $(find \"$BACKUP_ROOT\" -name \"*.gz\" -type f); do\n        if ! gzip -t \"$backup_file\" 2>/dev/null; then\n            log \"ERROR: Corrupted backup file: $backup_file\"\n            ((integrity_errors++))\n        fi\n    done\n    \n    if [[ $integrity_errors -eq 0 ]]; then\n        log \"Backup integrity check passed\"\n        return 0\n    else\n        log \"ERROR: $integrity_errors corrupted backup files found\"\n        return 1\n    fi\n}\n\n# Check disk space\ncheck_disk_space() {\n    log \"Checking disk space...\"\n    \n    local backup_usage=$(df \"$BACKUP_ROOT\" | tail -1 | awk '{print $5}' | sed 's/%//')\n    \n    if [[ $backup_usage -gt 80 ]]; then\n        log \"WARNING: Backup disk usage is ${backup_usage}% (threshold: 80%)\"\n        return 1\n    fi\n    \n    log \"Disk space check passed (usage: ${backup_usage}%)\"\n    return 0\n}\n\n# Generate health report\ngenerate_health_report() {\n    log \"Generating health report...\"\n    \n    local report_file=\"$BACKUP_ROOT/logs/health-report-$(date +%Y%m%d).json\"\n    \n    cat > \"$report_file\" << EOF\n{\n  \"timestamp\": \"$(date -Iseconds)\",\n  \"backup_root\": \"$BACKUP_ROOT\",\n  \"checks\": {\n    \"freshness\": $(check_backup_freshness && echo true || echo false),\n    \"integrity\": $(check_backup_integrity && echo true || echo false),\n    \"disk_space\": $(check_disk_space && echo true || echo false)\n  },\n  \"statistics\": {\n    \"total_backups\": $(find \"$BACKUP_ROOT\" -name \"*.gz\" -type f | wc -l),\n    \"total_size_mb\": $(du -sm \"$BACKUP_ROOT\" | cut -f1),\n    \"latest_backup\": \"$(find \"$BACKUP_ROOT/incremental\" -name \"*.gz\" -type f -printf '%T@ %p\\n' | sort -n | tail -1 | cut -d' ' -f2)\"\n  }\n}\nEOF\n    \n    log \"Health report generated: $report_file\"\n}\n\n# Main execution\nmain() {\n    log \"Starting backup monitoring...\"\n    \n    local exit_code=0\n    \n    check_backup_freshness || exit_code=1\n    check_backup_integrity || exit_code=1\n    check_disk_space || exit_code=1\n    generate_health_report\n    \n    if [[ $exit_code -eq 0 ]]; then\n        log \"All backup health checks passed\"\n    else\n        log \"Some backup health checks failed\"\n    fi\n    \n    exit $exit_code\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify monitoring script created and is executable",
+        "expected_output": "Monitoring script created and executable"
+      },
+      {
+        "step_id": "03-04-02",
+        "title": "Create backup health endpoint",
+        "description": "Create HTTP health endpoint for backup monitoring",
+        "script_path": "/opt/ai-q/scripts/backup-health-endpoint.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Backup Health Endpoint\n# Version: 1.0.0\n# Created: 2025-01-27\n# Purpose: HTTP health endpoint for backup monitoring\n\nset -euo pipefail\n\n# Configuration\nPORT=8083\nBACKUP_ROOT=\"/opt/ai-q/backups\"\n\n# HTTP response function\nhttp_response() {\n    local status_code=\"$1\"\n    local content_type=\"$2\"\n    local body=\"$3\"\n    \n    echo -e \"HTTP/1.1 $status_code\\r\"\n    echo -e \"Content-Type: $content_type\\r\"\n    echo -e \"Content-Length: ${#body}\\r\"\n    echo -e \"\\r\"\n    echo -e \"$body\"\n}\n\n# Health check function\ncheck_backup_health() {\n    local latest_backup=$(find \"$BACKUP_ROOT/incremental\" -name \"*.gz\" -type f -printf '%T@ %p\\n' | sort -n | tail -1 | cut -d' ' -f2)\n    \n    if [[ -z \"$latest_backup\" ]]; then\n        echo '{\"status\":\"error\",\"message\":\"No backups found\"}'\n        return 1\n    fi\n    \n    local backup_age_hours=$(( ( $(date +%s) - $(stat -c %Y \"$latest_backup\") ) / 3600 ))\n    local disk_usage=$(df \"$BACKUP_ROOT\" | tail -1 | awk '{print $5}' | sed 's/%//')\n    \n    cat << EOF\n{\n  \"status\": \"healthy\",\n  \"timestamp\": \"$(date -Iseconds)\",\n  \"latest_backup\": \"$latest_backup\",\n  \"backup_age_hours\": $backup_age_hours,\n  \"disk_usage_percent\": $disk_usage,\n  \"total_backups\": $(find \"$BACKUP_ROOT\" -name \"*.gz\" -type f | wc -l),\n  \"total_size_mb\": $(du -sm \"$BACKUP_ROOT\" | cut -f1)\n}\nEOF\n}\n\n# Main server loop\nmain() {\n    echo \"Starting backup health endpoint on port $PORT...\"\n    \n    while true; do\n        # Read HTTP request\n        read -r request_line\n        \n        if [[ -z \"$request_line\" ]]; then\n            continue\n        fi\n        \n        # Parse request\n        read -r method path version <<< \"$request_line\"\n        \n        # Read headers\n        while read -r header; do\n            if [[ -z \"$header\" ]] || [[ \"$header\" == $'\\r' ]]; then\n                break\n            fi\n        done\n        \n        # Handle requests\n        case \"$path\" in\n            \"/health\")\n                health_data=$(check_backup_health)\n                http_response \"200 OK\" \"application/json\" \"$health_data\"\n                ;;\n            \"/\")\n                http_response \"200 OK\" \"text/plain\" \"AI-Q Backup Health Endpoint\\nUse /health for backup status\"\n                ;;\n            *)\n                http_response \"404 Not Found\" \"text/plain\" \"Not Found\"\n                ;;\n        esac\n    done\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify health endpoint script created and is executable",
+        "expected_output": "Health endpoint script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/backup-monitor.sh",
+      "ls -la /opt/ai-q/scripts/backup-health-endpoint.sh",
+      "chmod +x /opt/ai-q/scripts/backup-monitor.sh",
+      "chmod +x /opt/ai-q/scripts/backup-health-endpoint.sh"
+    ],
+    "expected_outputs": {
+      "monitoring_scripts": "2 monitoring scripts created and executable",
+      "health_endpoint": "Backup health endpoint available on port 8083"
+    }
+  },
+  "verification_and_testing": {
+    "verification_commands": [
+      "ls -la /opt/ai-q/backups/",
+      "ls -la /opt/ai-q/scripts/backup-*.sh",
+      "sudo crontab -l | grep ai-q",
+      "/opt/ai-q/scripts/backup-automation.sh incremental",
+      "/opt/ai-q/scripts/backup-monitor.sh",
+      "curl -s http://localhost:8083/health | jq ."
+    ],
+    "expected_outputs": {
+      "backup_structure": "Complete backup directory structure with proper permissions",
+      "backup_scripts": "All backup scripts created and executable",
+      "cron_jobs": "5 automated backup cron jobs configured",
+      "backup_execution": "Backup process completes successfully",
+      "monitoring": "Backup monitoring reports healthy status",
+      "health_endpoint": "HTTP health endpoint returns backup status"
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Permission denied errors",
+        "symptoms": "Cannot create backup files or directories",
+        "solution": "Check ownership and permissions with 'ls -la /opt/ai-q/backups/' and fix with chown/chmod",
+        "prevention": "Ensure proper permissions are set during installation"
+      },
+      {
+        "issue": "Backup script failures",
+        "symptoms": "Backup procedures fail or incomplete",
+        "solution": "Check available disk space and backup directory permissions",
+        "prevention": "Monitor disk usage and backup success rates"
+      },
+      {
+        "issue": "Cron job not running",
+        "symptoms": "Automated backups not executing",
+        "solution": "Check cron service status and log files",
+        "prevention": "Monitor cron logs and backup execution"
+      }
+    ],
+    "recovery_procedures": [
+      {
+        "procedure": "Manual backup execution",
+        "commands": [
+          "/opt/ai-q/scripts/backup-automation.sh incremental",
+          "/opt/ai-q/scripts/backup-monitor.sh"
+        ]
+      },
+      {
+        "procedure": "Backup restoration",
+        "commands": [
+          "/opt/ai-q/scripts/backup-restore.sh incremental YYYYMMDD_HHMMSS"
+        ]
+      }
+    ]
+  },
+  "success_criteria": [
+    "✅ Complete backup directory structure created with proper permissions",
+    "✅ Comprehensive backup and restore scripts implemented",
+    "✅ Automated backup scheduling configured with cron",
+    "✅ Backup monitoring and health checks operational",
+    "✅ HTTP health endpoint available on port 8083",
+    "✅ All backup procedures tested and functional",
+    "✅ Disaster recovery procedures validated",
+    "✅ Performance targets met (backup speed < 30 minutes)"
+  ],
+  "next_steps": [
+    "Test backup and restore procedures thoroughly",
+    "Validate automated scheduling functionality",
+    "Monitor backup performance and adjust as needed",
+    "Integrate with existing monitoring systems",
+    "Prepare for off-grid deployment framework"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

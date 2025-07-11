@@ -1,0 +1,210 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-AI-SERVICE-OLLAMA-SETUP-002",
+    "title": "Ollama Service Setup",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "difficulty_level": "intermediate",
+    "total_tasks": 1,
+    "kitchen_system": {
+      "pantry_category": "llm_services",
+      "cooking_time": "20 minutes",
+      "complexity": "intermediate",
+      "kitchen_tools": [
+        "docker_orchestration",
+        "llm_deployment",
+        "hardware_optimization"
+      ],
+      "cache_strategy": "ollama_service_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "description": "Deploys the Ollama service using Docker. This service is a default component for running local LLMs and will be configured based on the hardware profile.",
+    "technology_stack": {
+      "llm_server": "Ollama",
+      "orchestration": "Docker Compose",
+      "hardware_integration": "GPU_optimization",
+      "api_access": "REST_API"
+    },
+    "deliverables": [
+      "A running Ollama Docker container.",
+      "A Docker Compose file for easy management.",
+      "Configuration to expose the Ollama API to other services."
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "OLLAMA_DEPLOYMENT_TASK",
+        "name": "Ollama Container Deployment",
+        "description": "Deploy and configure Ollama service container",
+        "estimated_time": "20 minutes",
+        "dependencies": [
+          "HARDWARE_PROFILING_TASK"
+        ],
+        "skills_required": [
+          "docker_orchestration",
+          "llm_deployment",
+          "hardware_optimization"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "DOCKER_ORCHESTRATION_SKILL",
+        "name": "Docker Orchestration",
+        "description": "Deploy and manage Docker containers",
+        "tools": [
+          "docker_compose",
+          "container_management"
+        ],
+        "validation": "container_deployment_validation"
+      },
+      {
+        "skill_id": "LLM_DEPLOYMENT_SKILL",
+        "name": "LLM Deployment",
+        "description": "Deploy and configure LLM services",
+        "tools": [
+          "ollama_deployment",
+          "model_management"
+        ],
+        "validation": "llm_service_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "OLLAMA_DEPLOYMENT_TOOL",
+        "name": "Ollama Deployment Tool",
+        "description": "Docker Compose configuration for Ollama",
+        "file_path": "docker/compose/ollama.yml",
+        "config": "config/ollama/ollama_config.json"
+      },
+      {
+        "tool_id": "HARDWARE_OPTIMIZATION_TOOL",
+        "name": "Hardware Optimization Tool",
+        "description": "Optimize deployment based on hardware profile",
+        "file_path": "scripts/optimization/hardware_optimizer.py",
+        "config": "config/optimization/hardware_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "OLLAMA_CONFIG",
+        "name": "Ollama Configuration",
+        "description": "Configuration for Ollama service",
+        "file_path": "config/ollama/ollama_config.json",
+        "schema": "ollama_config_schema"
+      },
+      {
+        "config_id": "HARDWARE_OPTIMIZATION_CONFIG",
+        "name": "Hardware Optimization Configuration",
+        "description": "Configuration for hardware optimization",
+        "file_path": "config/optimization/hardware_config.json",
+        "schema": "hardware_optimization_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "OLLAMA_DEPLOYMENT_TASK",
+          "DOCKER_ORCHESTRATION_SKILL",
+          "OLLAMA_DEPLOYMENT_TOOL"
+        ],
+        "description": "Gather Ollama deployment ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "ollama_service_cache",
+        "description": "Check for existing Ollama service cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "optimize_for_hardware",
+        "tool": "HARDWARE_OPTIMIZATION_TOOL",
+        "description": "Optimize deployment based on hardware profile"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_task",
+        "task": "OLLAMA_DEPLOYMENT_TASK",
+        "description": "Execute Ollama deployment task"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "validate_results",
+        "validation": "llm_service_validation",
+        "description": "Validate Ollama service deployment"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "cache_results",
+        "cache_key": "ollama_service_cache",
+        "description": "Cache Ollama service configuration"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "ollama_service_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "hardware_change",
+      "cache_validation": "llm_service_validation"
+    }
+  },
+  "tasks": [
+    {
+      "id": "40-002",
+      "title": "Deploy Ollama Container",
+      "description": "Create and configure a docker-compose.yml file to run the official Ollama image. The setup will be optimized based on the hardware profile (e.g., assigning GPU resources).",
+      "dependencies": [
+        "40-001"
+      ],
+      "estimated_time": "20 minutes",
+      "commands": [
+        "docker-compose -f docker/compose/ollama.yml up -d"
+      ],
+      "files_to_create": [
+        "docker/compose/ollama.yml"
+      ],
+      "acceptance_criteria": [
+        "The ollama.yml Docker Compose file is created.",
+        "The Ollama container starts successfully without errors.",
+        "The Ollama API is accessible on its default port (11434)."
+      ]
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-Ollama-Setup",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

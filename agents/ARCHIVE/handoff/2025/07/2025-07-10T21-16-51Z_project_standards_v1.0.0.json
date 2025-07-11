@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "title": "kOS Project Standards and Guidelines",
+    "version": "1.0.0",
+    "created_by": "kOS Development Team",
+    "created_timestamp": "2025-07-10T09:05:00Z",
+    "purpose": "Define coding standards, documentation requirements, and development guidelines"
+  },
+  "code_standards": {
+    "file_organization": {
+      "max_file_size": "150 lines",
+      "single_responsibility": "One task per file",
+      "modular_architecture": "Reusable, generic components",
+      "naming_conventions": {
+        "files": "kebab-case for files, PascalCase for components",
+        "functions": "camelCase for functions, PascalCase for classes",
+        "constants": "UPPER_SNAKE_CASE for constants",
+        "variables": "camelCase for variables"
+      }
+    },
+    "documentation": {
+      "format": "JSON for all documentation (no Markdown unless required)",
+      "inline_comments": "Clear, concise comments for complex logic",
+      "api_documentation": "OpenAPI 3.0 specifications",
+      "readme_files": "JSON format with comprehensive metadata"
+    },
+    "testing": {
+      "coverage_requirement": "90% minimum",
+      "test_types": ["Unit", "Integration", "End-to-End"],
+      "naming": "test_*.py for Python, *.test.ts for TypeScript",
+      "organization": "Mirror source directory structure"
+    }
+  },
+  "technology_stack": {
+    "frontend": {
+      "framework": "React 18+ with TypeScript",
+      "build_tool": "Vite",
+      "styling": "Tailwind CSS",
+      "state_management": "React Context + Hooks",
+      "testing": "Jest + React Testing Library"
+    },
+    "backend": {
+      "framework": "FastAPI with Python 3.10+",
+      "database": "PostgreSQL (primary), Redis (cache), Neo4j (graph)",
+      "messaging": "WebSocket for real-time, gRPC for services",
+      "testing": "Pytest with async support"
+    },
+    "infrastructure": {
+      "containerization": "Docker Compose",
+      "orchestration": "Kubernetes (production)",
+      "monitoring": "Prometheus + Grafana",
+      "logging": "Structured logging with JSON format"
+    }
+  },
+  "development_workflow": {
+    "git_workflow": {
+      "branching": "Feature branches from main",
+      "commits": "Conventional commit messages",
+      "reviews": "Required for all changes",
+      "deployment": "Automated via CI/CD"
+    },
+    "code_review": {
+      "required": "All changes must be reviewed",
+      "checklist": [
+        "Code follows standards",
+        "Tests are included",
+        "Documentation is updated",
+        "Performance is considered",
+        "Security is validated"
+      ]
+    },
+    "deployment": {
+      "environments": ["Development", "Staging", "Production"],
+      "automation": "CI/CD pipeline with automated testing",
+      "rollback": "Quick rollback capability for all deployments"
+    }
+  },
+  "security_standards": {
+    "authentication": "JWT with refresh tokens",
+    "authorization": "Role-based access control (RBAC)",
+    "data_protection": "Encryption at rest and in transit",
+    "input_validation": "Comprehensive validation for all inputs",
+    "audit_logging": "Complete audit trail for all actions"
+  },
+  "performance_standards": {
+    "response_times": "Under 200ms for API calls",
+    "throughput": "Support 1000+ concurrent users",
+    "scalability": "Horizontal scaling capability",
+    "monitoring": "Real-time performance metrics"
+  },
+  "quality_assurance": {
+    "static_analysis": "ESLint, Prettier, Black, MyPy",
+    "dynamic_testing": "Unit, integration, and E2E tests",
+    "security_scanning": "Regular security audits",
+    "performance_testing": "Load testing and benchmarking"
+  },
+  "handoff_protocol": {
+    "documentation": {
+      "format": "JSON with ISO 8601 timestamps",
+      "location": "agents/LATEST/ directory",
+      "archiving": "Move to agents/ARCHIVE/YYYY/MM/ with timestamps",
+      "content": "Complete status, next steps, and context"
+    },
+    "requirements": {
+      "archive_before_create": "Always archive current handoff before creating new one",
+      "comprehensive_logging": "Document all major decisions and changes",
+      "context_preservation": "Maintain context for next agent"
+    }
+  },
+  "project_structure": {
+    "src/": {
+      "frontend/": "React components and TypeScript code",
+      "backend/": "Python FastAPI application",
+      "shared/": "Common utilities and types",
+      "config/": "Configuration management"
+    },
+    "tests/": {
+      "unit/": "Unit tests for individual components",
+      "integration/": "Integration tests for services",
+      "e2e/": "End-to-end tests",
+      "fixtures/": "Test data and mock objects"
+    },
+    "docs/": {
+      "api/": "API documentation",
+      "architecture/": "System architecture diagrams",
+      "user_guides/": "User documentation",
+      "developer/": "Developer guides"
+    },
+    "config/": {
+      "env.example": "Environment variable template",
+      "docker/": "Docker configuration files",
+      "deployment/": "Deployment configurations"
+    }
+  }
+} 

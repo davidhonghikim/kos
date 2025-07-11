@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../ai-Q"
+		},
+		{
+			"path": "../kai-cd"
+		},
+		{
+			"path": "../chatdemon"
+		}
+	],
+	"settings": {}
+}

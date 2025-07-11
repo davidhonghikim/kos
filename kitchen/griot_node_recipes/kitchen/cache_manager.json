@@ -1,0 +1,153 @@
+{
+  "cache_manager_config": {
+    "version": "1.0.0",
+    "description": "Cache management system for pantry ingredients and recipe results",
+    "cache_strategies": {
+      "aggressive": {
+        "description": "Cache everything possible with long TTL",
+        "default_ttl": 86400,
+        "validation_frequency": "low",
+        "cleanup_frequency": "weekly"
+      },
+      "conservative": {
+        "description": "Cache only stable ingredients with short TTL",
+        "default_ttl": 3600,
+        "validation_frequency": "high",
+        "cleanup_frequency": "daily"
+      },
+      "smart": {
+        "description": "Adaptive caching based on ingredient type and usage patterns",
+        "default_ttl": 7200,
+        "validation_frequency": "medium",
+        "cleanup_frequency": "daily"
+      }
+    },
+    "cache_operations": {
+      "check_cache": {
+        "description": "Check if ingredient result is available in cache",
+        "steps": [
+          "Generate cache key from ingredient ID and inputs",
+          "Check cache location (local/shared/remote)",
+          "Validate cache entry if found",
+          "Return cached result if valid"
+        ]
+      },
+      "store_cache": {
+        "description": "Store ingredient result in cache",
+        "steps": [
+          "Generate cache key",
+          "Serialize result with metadata",
+          "Store in appropriate cache location",
+          "Update cache index"
+        ]
+      },
+      "invalidate_cache": {
+        "description": "Invalidate cache entries based on conditions",
+        "triggers": [
+          "Ingredient version changed",
+          "Dependency updated",
+          "Cache TTL expired",
+          "Manual invalidation request"
+        ]
+      },
+      "cleanup_cache": {
+        "description": "Remove expired and unused cache entries",
+        "criteria": [
+          "TTL expired",
+          "Size limit exceeded",
+          "Least recently used",
+          "Invalid signatures"
+        ]
+      }
+    },
+    "cache_locations": {
+      "local": {
+        "path": "./cache/local",
+        "type": "filesystem",
+        "max_size": "1GB",
+        "compression": true
+      },
+      "shared": {
+        "path": "./cache/shared",
+        "type": "filesystem",
+        "max_size": "10GB",
+        "compression": true,
+        "access_control": true
+      },
+      "remote": {
+        "type": "http",
+        "url": "https://cache.ai-q.example.com",
+        "authentication": "token",
+        "compression": true,
+        "fallback": "local"
+      }
+    },
+    "cache_validation": {
+      "methods": {
+        "signature": {
+          "description": "Validate using cryptographic signature",
+          "command": "verify_signature ${cache_file} ${signature}"
+        },
+        "timestamp": {
+          "description": "Validate using timestamp comparison",
+          "command": "check_timestamp ${cache_file} ${max_age}"
+        },
+        "content_hash": {
+          "description": "Validate using content hash",
+          "command": "verify_hash ${cache_file} ${expected_hash}"
+        },
+        "none": {
+          "description": "No validation (trust cache)",
+          "command": "return_true"
+        }
+      }
+    },
+    "cache_index": {
+      "file": "cache_index.json",
+      "structure": {
+        "entries": [
+          {
+            "cache_key": "string",
+            "ingredient_id": "string",
+            "cache_location": "string",
+            "created": "timestamp",
+            "last_accessed": "timestamp",
+            "ttl": "number",
+            "size": "number",
+            "signature": "string"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:23.597552Z",
+    "last_updated": "2025-07-07T14:50:23.597552Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

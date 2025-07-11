@@ -1,0 +1,19 @@
+{
+  "id": "tool.numpy",
+  "type": "tool",
+  "name": "NumPy Array Tool",
+  "description": "Numerical computing tool for array operations and mathematical functions",
+  "version": "1.21.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["data", "numpy", "numerical", "arrays", "math"],
+  "author": "data_team",
+  "created": "2025-07-08T00:07:55Z",
+  "updated": "2025-07-08T00:07:55Z",
+  "access_level": "public",
+  "usage": "Use for numerical operations, array manipulation, and mathematical functions",
+  "validation": {
+    "required_fields": ["operation", "array_data"],
+    "operations": ["array", "zeros", "ones", "random", "mean", "std", "sum"]
+  }
+} 

@@ -1,0 +1,174 @@
+{
+  "id": "deploy-ollama-service:1.0.0",
+  "name": "Deploy Ollama Service",
+  "version": "1.0.0",
+  "description": "Deploy Ollama LLM service using Docker Compose with proper validation and monitoring",
+  "ingredients": [
+    {
+      "registry_id": "task:pull-docker-image:1.0.0",
+      "version": "1.0.0",
+      "alias": "pull_image"
+    },
+    {
+      "registry_id": "skill:run-docker-compose:1.0.0",
+      "version": "1.0.0",
+      "alias": "compose"
+    },
+    {
+      "registry_id": "tool:docker:24.0.0",
+      "version": "24.0.0",
+      "alias": "docker"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "DEPLOY-01",
+      "ingredient_ref": "pull_image",
+      "description": "Pull the Ollama Docker image",
+      "inputs": {
+        "image_name": "ollama/ollama",
+        "image_tag": "latest",
+        "registry": "docker.io"
+      },
+      "outputs": {
+        "image_id": "ollama_image_id",
+        "image_size": "ollama_image_size"
+      },
+      "validation": {
+        "expected_outputs": {
+          "pull_status": "success"
+        }
+      },
+      "error_handling": "fail"
+    },
+    {
+      "step_id": "DEPLOY-02",
+      "ingredient_ref": "compose",
+      "description": "Start Ollama service using Docker Compose",
+      "inputs": {
+        "compose_file": "docker-compose.yml",
+        "action": "up",
+        "services": "ollama",
+        "detached": true
+      },
+      "outputs": {
+        "service_status": "ollama_status",
+        "action_result": "deploy_result"
+      },
+      "validation": {
+        "expected_outputs": {
+          "action_result": "success",
+          "service_status": {
+            "ollama": "running"
+          }
+        }
+      },
+      "error_handling": "rollback"
+    },
+    {
+      "step_id": "DEPLOY-03",
+      "ingredient_ref": "docker",
+      "description": "Verify Ollama service is healthy",
+      "inputs": {
+        "command": "exec",
+        "args": "ollama-ollama-1 ollama list"
+      },
+      "outputs": {
+        "exit_code": "health_check_code",
+        "stdout": "ollama_models"
+      },
+      "validation": {
+        "expected_outputs": {
+          "exit_code": 0
+        }
+      },
+      "error_handling": "retry"
+    }
+  ],
+  "orchestrator": {
+    "agent_role": "chef",
+    "execution_policy": "sequential",
+    "timeout": 300,
+    "retry_policy": {
+      "max_retries": 3,
+      "retry_delay": 10
+    }
+  },
+  "inputs": {
+    "ollama_version": {
+      "type": "string",
+      "required": false,
+      "default": "latest",
+      "description": "Ollama version to deploy"
+    },
+    "port": {
+      "type": "number",
+      "required": false,
+      "default": 11434,
+      "description": "Port for Ollama service"
+    },
+    "data_volume": {
+      "type": "directory",
+      "required": false,
+      "default": "./data/ollama",
+      "description": "Data volume for Ollama models"
+    }
+  },
+  "outputs": {
+    "service_url": {
+      "type": "string",
+      "description": "URL where Ollama service is accessible"
+    },
+    "container_id": {
+      "type": "string",
+      "description": "Docker container ID of the Ollama service"
+    },
+    "deployment_status": {
+      "type": "string",
+      "description": "Overall deployment status"
+    }
+  },
+  "dependencies": [],
+  "tags": [
+    "ollama",
+    "llm",
+    "deployment",
+    "docker",
+    "ai"
+  ],
+  "author": "Claude Sonnet 4",
+  "last_updated": "2025-07-05T23:55:00Z",
+  "signature": "sha256:jkl012mno345...",
+  "validation": {
+    "pre_execution": [
+      "Check if Docker is installed and running",
+      "Verify sufficient disk space for Ollama models",
+      "Check if port 11434 is available"
+    ],
+    "post_execution": [
+      "Verify Ollama service responds to health check",
+      "Check if service is accessible on specified port",
+      "Validate data volume is properly mounted"
+    ]
+  },
+  "example_usage": {
+    "inputs": {
+      "ollama_version": "latest",
+      "port": 11434,
+      "data_volume": "./data/ollama"
+    },
+    "expected_outputs": {
+      "service_url": "http://localhost:11434",
+      "container_id": "abc123def456",
+      "deployment_status": "success"
+    }
+  },
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:23.607266Z",
+    "last_updated": "2025-07-07T14:50:23.607266Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  }
+}

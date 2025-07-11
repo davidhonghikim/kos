@@ -1,0 +1,520 @@
+{
+  "metadata": {
+    "sub_recipe_id": "02-01-minio-enterprise-cluster",
+    "title": "Enterprise MinIO Distributed Storage Cluster - Complete Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T18:14:00Z",
+    "purpose": "Exact step-by-step MinIO enterprise cluster implementation with zero ambiguity",
+    "total_tasks": 8,
+    "estimated_duration": "4-6 hours",
+    "complexity": "Expert",
+    "dependencies": [
+      "01-01-docker-environment",
+      "01-02-system-monitoring",
+      "01-03-logging-infrastructure"
+    ],
+    "components": [
+      "MinIO Cluster",
+      "Erasure Coding",
+      "SSL/TLS",
+      "Load Balancing",
+      "Monitoring"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "01-01-01: Docker Engine installed",
+      "01-01-02: Docker daemon configured",
+      "01-01-03: Docker networks created",
+      "01-02-01: Prometheus installed",
+      "01-02-02: Node Exporter running",
+      "01-03-01: Elasticsearch installed"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 32 cores for distributed cluster",
+      "ram": "Minimum 128GB for cluster operations",
+      "storage": "Minimum 10TB NVMe SSD for production",
+      "network": "10Gbps ethernet minimum for storage network"
+    }
+  },
+  "task_01_cluster_architecture_planning": {
+    "task_id": "02-01-01",
+    "title": "MinIO Cluster Architecture Planning",
+    "description": "Design and plan the MinIO distributed cluster architecture including node layout, storage allocation, and network configuration",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-01-01",
+        "title": "Create cluster planning configuration",
+        "description": "Create cluster architecture planning configuration",
+        "config_file": "/opt/ai-q/storage/minio/cluster-planning.json",
+        "config_content": {
+          "cluster_configuration": {
+            "node_count": 4,
+            "drives_per_node": 2,
+            "total_drives": 8,
+            "erasure_coding": {
+              "data_drives": 4,
+              "parity_drives": 4,
+              "protection_level": "50%"
+            },
+            "network_configuration": {
+              "cluster_network": "10.0.1.0/24",
+              "client_network": "10.0.2.0/24",
+              "management_network": "10.0.3.0/24"
+            },
+            "storage_allocation": {
+              "drive_size": "2TB",
+              "total_capacity": "16TB",
+              "usable_capacity": "8TB",
+              "reserved_space": "20%"
+            }
+          },
+          "performance_requirements": {
+            "throughput_target": "10GB/s",
+            "latency_target": "100ms",
+            "iops_target": "100000",
+            "concurrent_connections": 1000
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/storage/minio",
+          "sudo tee /opt/ai-q/storage/minio/cluster-planning.json << 'EOF'\\n{\\n  \\\"cluster_configuration\\\": {\\n    \\\"node_count\\\": 4,\\n    \\\"drives_per_node\\\": 2,\\n    \\\"total_drives\\\": 8,\\n    \\\"erasure_coding\\\": {\\n      \\\"data_drives\\\": 4,\\n      \\\"parity_drives\\\": 4,\\n      \\\"protection_level\\\": \\\"50%\\\"\\n    },\\n    \\\"network_configuration\\\": {\\n      \\\"cluster_network\\\": \\\"10.0.1.0/24\\\",\\n      \\\"client_network\\\": \\\"10.0.2.0/24\\\",\\n      \\\"management_network\\\": \\\"10.0.3.0/24\\\"\\n    },\\n    \\\"storage_allocation\\\": {\\n      \\\"drive_size\\\": \\\"2TB\\\",\\n      \\\"total_capacity\\\": \\\"16TB\\\",\\n      \\\"usable_capacity\\\": \\\"8TB\\\",\\n      \\\"reserved_space\\\": \\\"20%\\\"\\n    }\\n  },\\n  \\\"performance_requirements\\\": {\\n    \\\"throughput_target\\\": \\\"10GB/s\\\",\\n    \\\"latency_target\\\": \\\"100ms\\\",\\n    \\\"iops_target\\\": \\\"100000\\\",\\n    \\\"concurrent_connections\\\": 1000\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check cluster planning configuration exists",
+        "expected_output": "cluster-planning.json created with cluster architecture"
+      },
+      {
+        "step_id": "02-01-01-02",
+        "title": "Create storage directory structure",
+        "description": "Create storage directory structure for MinIO cluster",
+        "commands": [
+          "sudo mkdir -p /data/minio/node{1..4}/data{1..2}",
+          "sudo mkdir -p /data/minio/certs",
+          "sudo mkdir -p /data/minio/config",
+          "sudo mkdir -p /data/minio/logs",
+          "sudo chown -R 1000:1000 /data/minio",
+          "sudo chmod -R 755 /data/minio"
+        ],
+        "verification": "Check storage directories created with correct permissions",
+        "expected_output": "Storage directories created with proper ownership and permissions"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/storage/minio/",
+      "cat /opt/ai-q/storage/minio/cluster-planning.json",
+      "ls -la /data/minio/"
+    ],
+    "expected_outputs": {
+      "planning_config": "cluster-planning.json contains cluster architecture",
+      "storage_dirs": "Storage directories created with correct structure"
+    }
+  },
+  "task_02_ssl_certificate_generation": {
+    "task_id": "02-01-02",
+    "title": "SSL Certificate Generation",
+    "description": "Generate SSL certificates for secure MinIO cluster communication",
+    "estimated_duration": "20 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-02-01",
+        "title": "Generate SSL certificates",
+        "description": "Generate SSL certificates for MinIO cluster",
+        "commands": [
+          "cd /data/minio/certs",
+          "openssl req -new -x509 -days 3650 -nodes -out public.crt -keyout private.key -subj '/C=US/ST=State/L=City/O=AI-Q/CN=minio.ai-q.local'",
+          "openssl x509 -in public.crt -text -noout",
+          "chmod 600 private.key",
+          "chmod 644 public.crt"
+        ],
+        "verification": "Check SSL certificates generated and valid",
+        "expected_output": "SSL certificates generated with proper permissions"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /data/minio/certs/",
+      "openssl x509 -in /data/minio/certs/public.crt -text -noout | head -10"
+    ],
+    "expected_outputs": {
+      "ssl_certs": "SSL certificates generated and valid",
+      "ssl_permissions": "SSL certificates have correct permissions"
+    }
+  },
+  "task_03_minio_cluster_deployment": {
+    "task_id": "02-01-03",
+    "title": "MinIO Cluster Deployment",
+    "description": "Deploy MinIO distributed cluster with Docker Compose",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-03-01",
+        "title": "Create MinIO cluster Docker Compose",
+        "description": "Create Docker Compose configuration for MinIO cluster",
+        "config_file": "/opt/ai-q/storage/minio/docker-compose.yml",
+        "config_content": "version: '3.8'\\n\\nservices:\\n  minio1:\\n    image: minio/minio:latest\\n    hostname: minio1\\n    container_name: minio-node1\\n    volumes:\\n      - /data/minio/node1/data1:/data1\\n      - /data/minio/node1/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    ports:\\n      - '9000:9000'\\n      - '9001:9001'\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\n  minio2:\\n    image: minio/minio:latest\\n    hostname: minio2\\n    container_name: minio-node2\\n    volumes:\\n      - /data/minio/node2/data1:/data1\\n      - /data/minio/node2/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\n  minio3:\\n    image: minio/minio:latest\\n    hostname: minio3\\n    container_name: minio-node3\\n    volumes:\\n      - /data/minio/node3/data1:/data1\\n      - /data/minio/node3/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\n  minio4:\\n    image: minio/minio:latest\\n    hostname: minio4\\n    container_name: minio-node4\\n    volumes:\\n      - /data/minio/node4/data1:/data1\\n      - /data/minio/node4/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\nnetworks:\\n  minio-cluster:\\n    driver: bridge\\n    ipam:\\n      config:\\n        - subnet: 172.20.0.0/16",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/minio/docker-compose.yml << 'EOF'\\nversion: '3.8'\\n\\nservices:\\n  minio1:\\n    image: minio/minio:latest\\n    hostname: minio1\\n    container_name: minio-node1\\n    volumes:\\n      - /data/minio/node1/data1:/data1\\n      - /data/minio/node1/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    ports:\\n      - '9000:9000'\\n      - '9001:9001'\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\n  minio2:\\n    image: minio/minio:latest\\n    hostname: minio2\\n    container_name: minio-node2\\n    volumes:\\n      - /data/minio/node2/data1:/data1\\n      - /data/minio/node2/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\n  minio3:\\n    image: minio/minio:latest\\n    hostname: minio3\\n    container_name: minio-node3\\n    volumes:\\n      - /data/minio/node3/data1:/data1\\n      - /data/minio/node3/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\n  minio4:\\n    image: minio/minio:latest\\n    hostname: minio4\\n    container_name: minio-node4\\n    volumes:\\n      - /data/minio/node4/data1:/data1\\n      - /data/minio/node4/data2:/data2\\n      - /data/minio/certs:/root/.minio/certs\\n      - /data/minio/config:/root/.minio/config\\n      - /data/minio/logs:/root/.minio/logs\\n    environment:\\n      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}\\n      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}\\n      MINIO_SERVER_URL: https://minio.ai-q.local:9000\\n      MINIO_CONSOLE_ADDRESS: ':9001'\\n    command: server --console-address ':9001' --address ':9000' https://minio{1...4}/data{1...2}\\n    healthcheck:\\n      test: ['CMD', 'curl', '-f', 'https://localhost:9000/minio/health/live']\\n      interval: 30s\\n      timeout: 20s\\n      retries: 3\\n      start_period: 60s\\n    networks:\\n      - minio-cluster\\n    deploy:\\n      resources:\\n        limits:\\n          memory: 32G\\n          cpus: '8'\\n        reservations:\\n          memory: 16G\\n          cpus: '4'\\n\\nnetworks:\\n  minio-cluster:\\n    driver: bridge\\n    ipam:\\n      config:\\n        - subnet: 172.20.0.0/16\\nEOF"
+        ],
+        "verification": "Check Docker Compose file created",
+        "expected_output": "Docker Compose file created with MinIO cluster configuration"
+      },
+      {
+        "step_id": "02-01-03-02",
+        "title": "Deploy MinIO cluster",
+        "description": "Deploy MinIO cluster using Docker Compose",
+        "commands": [
+          "cd /opt/ai-q/storage/minio",
+          "export MINIO_ROOT_USER=admin",
+          "export MINIO_ROOT_PASSWORD=admin123",
+          "docker-compose up -d",
+          "sleep 60",
+          "docker-compose ps"
+        ],
+        "verification": "Check MinIO cluster containers running",
+        "expected_output": "All MinIO cluster containers running and healthy"
+      }
+    ],
+    "verification_commands": [
+      "docker-compose -f /opt/ai-q/storage/minio/docker-compose.yml ps",
+      "docker logs minio-node1 | tail -20"
+    ],
+    "expected_outputs": {
+      "cluster_running": "All MinIO cluster containers running",
+      "cluster_healthy": "Cluster health checks passing"
+    }
+  },
+  "task_04_minio_client_configuration": {
+    "task_id": "02-01-04",
+    "title": "MinIO Client Configuration",
+    "description": "Configure MinIO client for cluster management",
+    "estimated_duration": "15 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-04-01",
+        "title": "Install MinIO client",
+        "description": "Install MinIO client (mc) for cluster management",
+        "commands": [
+          "wget https://dl.min.io/client/mc/release/linux-amd64/mc",
+          "chmod +x mc",
+          "sudo mv mc /usr/local/bin/",
+          "mc --version"
+        ],
+        "verification": "Check MinIO client installed",
+        "expected_output": "MinIO client installed and accessible"
+      },
+      {
+        "step_id": "02-01-04-02",
+        "title": "Configure MinIO client alias",
+        "description": "Configure MinIO client alias for cluster access",
+        "commands": [
+          "mc alias set minio-cluster https://localhost:9000 admin admin123 --insecure",
+          "mc admin info minio-cluster"
+        ],
+        "verification": "Check MinIO client connected to cluster",
+        "expected_output": "MinIO client connected to cluster successfully"
+      }
+    ],
+    "verification_commands": [
+      "mc --version",
+      "mc admin info minio-cluster"
+    ],
+    "expected_outputs": {
+      "client_installed": "MinIO client installed and working",
+      "cluster_connected": "Client connected to MinIO cluster"
+    }
+  },
+  "task_05_bucket_configuration": {
+    "task_id": "02-01-05",
+    "title": "Bucket Configuration and Policies",
+    "description": "Configure storage buckets with appropriate policies and lifecycle management",
+    "estimated_duration": "20 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-05-01",
+        "title": "Create storage buckets",
+        "description": "Create main storage buckets for AI-Q system",
+        "commands": [
+          "mc mb minio-cluster/ai-q-documents",
+          "mc mb minio-cluster/ai-q-media",
+          "mc mb minio-cluster/ai-q-backups",
+          "mc mb minio-cluster/ai-q-logs",
+          "mc mb minio-cluster/ai-q-temp",
+          "mc ls minio-cluster/"
+        ],
+        "verification": "Check buckets created successfully",
+        "expected_output": "All storage buckets created successfully"
+      },
+      {
+        "step_id": "02-01-05-02",
+        "title": "Enable bucket versioning",
+        "description": "Enable versioning for important buckets",
+        "commands": [
+          "mc version enable minio-cluster/ai-q-documents",
+          "mc version enable minio-cluster/ai-q-media",
+          "mc version enable minio-cluster/ai-q-backups"
+        ],
+        "verification": "Check versioning enabled",
+        "expected_output": "Versioning enabled for important buckets"
+      },
+      {
+        "step_id": "02-01-05-03",
+        "title": "Configure bucket policies",
+        "description": "Configure bucket access policies",
+        "commands": [
+          "mc policy set private minio-cluster/ai-q-documents",
+          "mc policy set private minio-cluster/ai-q-backups",
+          "mc policy set public minio-cluster/ai-q-media",
+          "mc policy set private minio-cluster/ai-q-logs"
+        ],
+        "verification": "Check bucket policies applied",
+        "expected_output": "Bucket policies configured correctly"
+      }
+    ],
+    "verification_commands": [
+      "mc ls minio-cluster/",
+      "mc version info minio-cluster/ai-q-documents",
+      "mc policy get minio-cluster/ai-q-documents"
+    ],
+    "expected_outputs": {
+      "buckets_created": "All buckets created and accessible",
+      "versioning_enabled": "Versioning enabled for important buckets",
+      "policies_applied": "Bucket policies configured correctly"
+    }
+  },
+  "task_06_performance_optimization": {
+    "task_id": "02-01-06",
+    "title": "Performance Optimization Configuration",
+    "description": "Configure advanced performance optimization settings for high-throughput operations",
+    "estimated_duration": "25 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-06-01",
+        "title": "Configure cache settings",
+        "description": "Configure cache settings for improved performance",
+        "commands": [
+          "mc admin config set minio-cluster cache drives='/tmp/cache1;/tmp/cache2;/tmp/cache3;/tmp/cache4'",
+          "mc admin config set minio-cluster cache quota=80",
+          "mc admin config set minio-cluster cache expiry=24h",
+          "mc admin config set minio-cluster cache maxuse=90"
+        ],
+        "verification": "Check cache configuration applied",
+        "expected_output": "Cache settings configured successfully"
+      },
+      {
+        "step_id": "02-01-06-02",
+        "title": "Configure compression",
+        "description": "Configure compression for storage optimization",
+        "commands": [
+          "mc admin config set minio-cluster compression enable=on",
+          "mc admin config set minio-cluster compression mime_types='.txt,.log,.csv,.json,.xml,.md,.html,.css,.js'",
+          "mc admin config set minio-cluster compression extensions='.txt,.log,.csv,.json,.xml,.md,.html,.css,.js'"
+        ],
+        "verification": "Check compression configuration applied",
+        "expected_output": "Compression settings configured successfully"
+      },
+      {
+        "step_id": "02-01-06-03",
+        "title": "Configure healing optimization",
+        "description": "Configure healing optimization for cluster maintenance",
+        "commands": [
+          "mc admin config set minio-cluster heal max_sleep=1s",
+          "mc admin config set minio-cluster heal max_io=100",
+          "mc admin config set minio-cluster heal max_io_workers=10"
+        ],
+        "verification": "Check healing configuration applied",
+        "expected_output": "Healing optimization configured successfully"
+      },
+      {
+        "step_id": "02-01-06-04",
+        "title": "Restart cluster to apply changes",
+        "description": "Restart MinIO cluster to apply performance optimizations",
+        "commands": [
+          "mc admin service restart minio-cluster",
+          "sleep 30",
+          "mc admin info minio-cluster"
+        ],
+        "verification": "Check cluster restarted successfully",
+        "expected_output": "Cluster restarted with performance optimizations"
+      }
+    ],
+    "verification_commands": [
+      "mc admin config get minio-cluster cache",
+      "mc admin config get minio-cluster compression",
+      "mc admin info minio-cluster"
+    ],
+    "expected_outputs": {
+      "cache_configured": "Cache settings applied correctly",
+      "compression_configured": "Compression settings applied correctly",
+      "healing_configured": "Healing optimization applied correctly",
+      "cluster_restarted": "Cluster restarted successfully"
+    }
+  },
+  "task_07_monitoring_integration": {
+    "task_id": "02-01-07",
+    "title": "Monitoring Integration",
+    "description": "Integrate MinIO cluster with monitoring systems",
+    "estimated_duration": "20 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-07-01",
+        "title": "Configure Prometheus targets",
+        "description": "Configure Prometheus targets for MinIO monitoring",
+        "config_file": "/opt/ai-q/storage/minio/prometheus-targets.yml",
+        "config_content": "- targets:\\n    - 'minio-node1:9000'\\n    - 'minio-node2:9000'\\n    - 'minio-node3:9000'\\n    - 'minio-node4:9000'\\n  labels:\\n    service: 'minio-cluster'\\n    environment: 'production'\\n    cluster: 'ai-q-storage'",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/minio/prometheus-targets.yml << 'EOF'\\n- targets:\\n    - 'minio-node1:9000'\\n    - 'minio-node2:9000'\\n    - 'minio-node3:9000'\\n    - 'minio-node4:9000'\\n  labels:\\n    service: 'minio-cluster'\\n    environment: 'production'\\n    cluster: 'ai-q-storage'\\nEOF"
+        ],
+        "verification": "Check Prometheus targets configured",
+        "expected_output": "Prometheus targets configuration created"
+      },
+      {
+        "step_id": "02-01-07-02",
+        "title": "Create monitoring dashboard",
+        "description": "Create Grafana dashboard for MinIO monitoring",
+        "config_file": "/opt/ai-q/storage/minio/grafana-dashboard.json",
+        "config_content": "{\\n  \\\"dashboard\\\": {\\n    \\\"title\\\": \\\"MinIO Cluster Dashboard\\\",\\n    \\\"panels\\\": [\\n      {\\n        \\\"title\\\": \\\"Cluster Health\\\",\\n        \\\"type\\\": \\\"stat\\\",\\n        \\\"targets\\\": [\\n          {\\n            \\\"expr\\\": \\\"minio_cluster_health_status\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"title\\\": \\\"Storage Usage\\\",\\n        \\\"type\\\": \\\"graph\\\",\\n        \\\"targets\\\": [\\n          {\\n            \\\"expr\\\": \\\"minio_cluster_capacity_usable_bytes\\\"\\n          }\\n        ]\\n      }\\n    ]\\n  }\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/minio/grafana-dashboard.json << 'EOF'\\n{\\n  \\\"dashboard\\\": {\\n    \\\"title\\\": \\\"MinIO Cluster Dashboard\\\",\\n    \\\"panels\\\": [\\n      {\\n        \\\"title\\\": \\\"Cluster Health\\\",\\n        \\\"type\\\": \\\"stat\\\",\\n        \\\"targets\\\": [\\n          {\\n            \\\"expr\\\": \\\"minio_cluster_health_status\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"title\\\": \\\"Storage Usage\\\",\\n        \\\"type\\\": \\\"graph\\\",\\n        \\\"targets\\\": [\\n          {\\n            \\\"expr\\\": \\\"minio_cluster_capacity_usable_bytes\\\"\\n          }\\n        ]\\n      }\\n    ]\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check monitoring dashboard created",
+        "expected_output": "Grafana dashboard configuration created"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/storage/minio/prometheus-targets.yml",
+      "cat /opt/ai-q/storage/minio/grafana-dashboard.json"
+    ],
+    "expected_outputs": {
+      "prometheus_targets": "Prometheus targets configured for MinIO cluster",
+      "grafana_dashboard": "Grafana dashboard configuration created"
+    }
+  },
+  "task_08_cluster_verification": {
+    "task_id": "02-01-08",
+    "title": "Cluster Verification and Testing",
+    "description": "Verify MinIO cluster functionality and performance",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-08-01",
+        "title": "Test cluster functionality",
+        "description": "Test basic cluster functionality and operations",
+        "commands": [
+          "mc admin info minio-cluster",
+          "mc admin heal minio-cluster",
+          "mc admin scanner minio-cluster",
+          "echo 'test file content' | mc pipe minio-cluster/ai-q-temp/test.txt",
+          "mc cat minio-cluster/ai-q-temp/test.txt",
+          "mc rm minio-cluster/ai-q-temp/test.txt"
+        ],
+        "verification": "Check cluster operations working",
+        "expected_output": "All cluster operations working correctly"
+      },
+      {
+        "step_id": "02-01-08-02",
+        "title": "Performance testing",
+        "description": "Run performance tests on the cluster",
+        "commands": [
+          "mc admin speedtest minio-cluster --duration 30s",
+          "mc admin speedtest minio-cluster --size 1MB --duration 30s",
+          "mc admin speedtest minio-cluster --size 100MB --duration 30s"
+        ],
+        "verification": "Check performance test results",
+        "expected_output": "Performance tests completed successfully"
+      },
+      {
+        "step_id": "02-01-08-03",
+        "title": "Create verification report",
+        "description": "Create comprehensive verification report",
+        "config_file": "/opt/ai-q/storage/minio/verification-report.json",
+        "config_content": "{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"cluster_status\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.status')\\\",\\n  \\\"node_count\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.nodes | length')\\\",\\n  \\\"total_capacity\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.capacity.total')\\\",\\n  \\\"usable_capacity\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.capacity.usable')\\\",\\n  \\\"buckets_created\\\": \\\"$(mc ls minio-cluster/ | wc -l)\\\",\\n  \\\"ssl_enabled\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.security.tls')\\\"\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/minio/verification-report.json << 'EOF'\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"cluster_status\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.status')\\\",\\n  \\\"node_count\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.nodes | length')\\\",\\n  \\\"total_capacity\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.capacity.total')\\\",\\n  \\\"usable_capacity\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.capacity.usable')\\\",\\n  \\\"buckets_created\\\": \\\"$(mc ls minio-cluster/ | wc -l)\\\",\\n  \\\"ssl_enabled\\\": \\\"$(mc admin info minio-cluster --json | jq -r '.info.security.tls')\\\"\\n}\\nEOF"
+        ],
+        "verification": "Check verification report created",
+        "expected_output": "Verification report created with cluster status"
+      }
+    ],
+    "verification_commands": [
+      "mc admin info minio-cluster",
+      "mc ls minio-cluster/",
+      "cat /opt/ai-q/storage/minio/verification-report.json"
+    ],
+    "expected_outputs": {
+      "cluster_healthy": "Cluster health verified and operational",
+      "performance_ok": "Performance tests completed successfully",
+      "verification_report": "Verification report created with complete status"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete MinIO Cluster Verification",
+      "description": "Run comprehensive tests to verify MinIO cluster deployment",
+      "test_commands": [
+        "docker-compose -f /opt/ai-q/storage/minio/docker-compose.yml ps",
+        "mc admin info minio-cluster",
+        "mc ls minio-cluster/",
+        "mc admin heal minio-cluster",
+        "mc admin speedtest minio-cluster --duration 10s",
+        "curl -k https://localhost:9000/minio/health/live",
+        "curl -k https://localhost:9001/",
+        "cat /opt/ai-q/storage/minio/verification-report.json"
+      ],
+      "expected_results": {
+        "cluster_running": "All MinIO containers running and healthy",
+        "cluster_accessible": "Cluster accessible via MinIO client",
+        "buckets_created": "All required buckets created and accessible",
+        "healing_working": "Cluster healing operations working",
+        "performance_ok": "Performance tests meeting requirements",
+        "health_endpoint": "Health endpoint responding correctly",
+        "console_accessible": "MinIO console accessible",
+        "verification_complete": "Verification report generated successfully"
+      }
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "02-02-aws-s3-integration",
+    "prerequisites_completed": [
+      "MinIO distributed cluster deployed and operational",
+      "SSL certificates generated and configured",
+      "Storage buckets created with proper policies",
+      "Performance optimization applied",
+      "Monitoring integration configured",
+      "Cluster verification completed successfully"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

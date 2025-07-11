@@ -1,0 +1,79 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "04-RESEARCH-KNOWLEDGE-GRAPH-006",
+    "title": "Knowledge Graph Construction",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Builds a dynamic knowledge graph system with relationship mapping, entity extraction, and semantic reasoning capabilities.",
+    "technology_stack": {
+      "knowledge": "Knowledge graphs, entity extraction, semantic reasoning",
+      "database": "Neo4j"
+    },
+    "deliverables": [
+      "A dynamic knowledge graph representing the research domain",
+      "Robust entity and relationship extraction",
+      "Semantic reasoning capabilities to infer new knowledge"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "08-006",
+      "title": "Knowledge Graph Construction",
+      "description": "Build dynamic knowledge graph system with relationship mapping, entity extraction, and semantic reasoning capabilities.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "dependencies": [
+        "08-004"
+      ],
+      "commands": [
+        "pip install neo4j"
+      ],
+      "files_to_create": [
+        "src/modules/research/knowledge_graph/graph_db_connector.py",
+        "src/modules/research/knowledge_graph/entity_extractor.py",
+        "src/modules/research/knowledge_graph/semantic_reasoner.py",
+        "docker-compose.neo4j.yml"
+      ],
+      "acceptance_criteria": [
+        "Knowledge graph is successfully created and populated.",
+        "Entities and relationships are extracted with high accuracy.",
+        "Semantic reasoning generates valid and useful inferences."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "06-Knowledge-Graph-Construction",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

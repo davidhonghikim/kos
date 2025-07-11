@@ -1,0 +1,395 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Orchestrator Agent Schema",
+  "description": "Schema for the chef/orchestrator agent that executes recipes using pantry ingredients",
+  "type": "object",
+  "required": [
+    "agent_id",
+    "role",
+    "capabilities",
+    "execution_config"
+  ],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "description": "Unique identifier for this orchestrator agent",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "role": {
+      "type": "string",
+      "description": "Role of this agent (e.g., chef, sous-chef, kitchen-manager)",
+      "enum": [
+        "chef",
+        "sous-chef",
+        "kitchen-manager",
+        "specialist"
+      ]
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Capabilities and permissions of this agent",
+      "properties": {
+        "can_execute_recipes": {
+          "type": "boolean",
+          "description": "Can execute complete recipes"
+        },
+        "can_delegate_tasks": {
+          "type": "boolean",
+          "description": "Can delegate tasks to other agents"
+        },
+        "can_modify_pantry": {
+          "type": "boolean",
+          "description": "Can add/modify pantry ingredients"
+        },
+        "can_manage_cache": {
+          "type": "boolean",
+          "description": "Can manage ingredient and result caching"
+        },
+        "supported_ingredient_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "task",
+              "module",
+              "skill",
+              "tool",
+              "config"
+            ]
+          },
+          "description": "Types of ingredients this agent can handle"
+        },
+        "environment_access": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Environment resources this agent can access"
+        }
+      }
+    },
+    "execution_config": {
+      "type": "object",
+      "description": "Configuration for recipe execution",
+      "required": [
+        "pantry_path",
+        "log_path",
+        "timeout_default"
+      ],
+      "properties": {
+        "pantry_path": {
+          "type": "string",
+          "description": "Path to the pantry directory"
+        },
+        "log_path": {
+          "type": "string",
+          "description": "Path to the kitchen log file"
+        },
+        "timeout_default": {
+          "type": "number",
+          "description": "Default timeout for ingredient execution in seconds"
+        },
+        "parallel_execution": {
+          "type": "boolean",
+          "description": "Whether to allow parallel execution of steps"
+        },
+        "retry_policy": {
+          "type": "object",
+          "properties": {
+            "max_retries": {
+              "type": "number",
+              "default": 3
+            },
+            "retry_delay": {
+              "type": "number",
+              "default": 5
+            },
+            "backoff_multiplier": {
+              "type": "number",
+              "default": 2
+            }
+          }
+        },
+        "validation_level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "basic",
+            "strict"
+          ],
+          "description": "Level of validation to perform"
+        }
+      }
+    },
+    "cache_config": {
+      "type": "object",
+      "description": "Configuration for caching system",
+      "properties": {
+        "cache_enabled": {
+          "type": "boolean",
+          "description": "Whether caching is enabled",
+          "default": true
+        },
+        "cache_directory": {
+          "type": "string",
+          "description": "Directory for storing cache files",
+          "default": "./cache"
+        },
+        "cache_strategy": {
+          "type": "string",
+          "enum": [
+            "aggressive",
+            "conservative",
+            "smart"
+          ],
+          "description": "Caching strategy to use",
+          "default": "smart"
+        },
+        "cache_validation": {
+          "type": "object",
+          "properties": {
+            "validate_on_use": {
+              "type": "boolean",
+              "description": "Validate cached results when used",
+              "default": true
+            },
+            "validation_method": {
+              "type": "string",
+              "enum": [
+                "signature",
+                "timestamp",
+                "content_hash",
+                "none"
+              ],
+              "description": "Method to validate cached results",
+              "default": "signature"
+            }
+          }
+        },
+        "cache_cleanup": {
+          "type": "object",
+          "properties": {
+            "auto_cleanup": {
+              "type": "boolean",
+              "description": "Automatically clean up expired cache entries",
+              "default": true
+            },
+            "cleanup_interval": {
+              "type": "number",
+              "description": "Interval for cache cleanup in seconds",
+              "default": 3600
+            },
+            "max_cache_size": {
+              "type": "number",
+              "description": "Maximum cache size in MB",
+              "default": 1024
+            }
+          }
+        },
+        "cache_locations": {
+          "type": "object",
+          "description": "Cache storage locations",
+          "properties": {
+            "local": {
+              "type": "string",
+              "description": "Local cache directory"
+            },
+            "shared": {
+              "type": "string",
+              "description": "Shared cache directory"
+            },
+            "remote": {
+              "type": "object",
+              "description": "Remote cache configuration",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "credentials": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "delegation_config": {
+      "type": "object",
+      "description": "Configuration for task delegation to other agents",
+      "properties": {
+        "sous_chefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "agent_id": {
+                "type": "string"
+              },
+              "specializations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "max_concurrent_tasks": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "delegation_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "condition": {
+                "type": "string",
+                "description": "Condition for delegation"
+              },
+              "target_agent": {
+                "type": "string",
+                "description": "Agent to delegate to"
+              }
+            }
+          }
+        }
+      }
+    },
+    "logging_config": {
+      "type": "object",
+      "description": "Configuration for logging and audit trail",
+      "properties": {
+        "log_level": {
+          "type": "string",
+          "enum": [
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "default": "info"
+        },
+        "log_format": {
+          "type": "string",
+          "enum": [
+            "json",
+            "text"
+          ],
+          "default": "json"
+        },
+        "include_timestamps": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_signatures": {
+          "type": "boolean",
+          "default": true
+        },
+        "retention_policy": {
+          "type": "object",
+          "properties": {
+            "max_log_size": {
+              "type": "number",
+              "description": "Maximum log file size in MB"
+            },
+            "max_log_age": {
+              "type": "number",
+              "description": "Maximum log age in days"
+            }
+          }
+        }
+      }
+    },
+    "security_config": {
+      "type": "object",
+      "description": "Security configuration for the agent",
+      "properties": {
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "none",
+                "token",
+                "certificate",
+                "oauth"
+              ]
+            },
+            "token": {
+              "type": "string"
+            }
+          }
+        },
+        "authorization": {
+          "type": "object",
+          "properties": {
+            "allowed_recipes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_ingredients": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata about the agent",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:23.602180Z",
+    "last_updated": "2025-07-07T14:50:23.602180Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

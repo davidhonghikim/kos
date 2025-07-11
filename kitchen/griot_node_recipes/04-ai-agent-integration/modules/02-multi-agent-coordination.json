@@ -1,0 +1,321 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-MULTI-AGENT-COORDINATION-001",
+    "title": "Multi-Agent Coordination System",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T15:00:00Z",
+    "last_updated": "2025-01-28T15:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 7,
+    "estimated_time": "4-5 hours"
+  },
+  "recipe_overview": {
+    "description": "Implement a comprehensive multi-agent coordination system that enables multiple AI agents to work together collaboratively with task distribution, load balancing, conflict resolution, and shared context management.",
+    "technology_stack": {
+      "language": "TypeScript",
+      "runtime": "Node.js",
+      "communication": "WebSocket, HTTP/2",
+      "database": "PostgreSQL",
+      "cache": "Redis",
+      "message_queue": "RabbitMQ"
+    },
+    "deliverables": [
+      "Multi-agent coordination framework",
+      "Task distribution and load balancing system",
+      "Conflict resolution mechanisms",
+      "Shared context management",
+      "Performance monitoring and optimization"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "MAC-001",
+      "title": "Create Agent Coordination Framework",
+      "description": "Build the core agent coordination framework with agent registration and management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/agents/coordination",
+        "mkdir -p src/agents/registry",
+        "mkdir -p src/agents/types"
+      ],
+      "files_to_create": [
+        "src/agents/coordination/agent-coordinator.ts",
+        "src/agents/coordination/agent-manager.ts",
+        "src/agents/registry/agent-registry.ts",
+        "src/agents/registry/agent-discovery.ts",
+        "src/agents/types/agent-types.ts"
+      ],
+      "acceptance_criteria": [
+        "Agent coordination framework starts successfully",
+        "Agent registration and discovery work correctly",
+        "Agent management handles lifecycle events",
+        "Agent types are properly defined and validated"
+      ]
+    },
+    {
+      "id": "MAC-002",
+      "title": "Implement Task Distribution System",
+      "description": "Create intelligent task distribution system with load balancing and priority management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/agents/tasks",
+        "mkdir -p src/agents/tasks/distribution"
+      ],
+      "files_to_create": [
+        "src/agents/tasks/task-manager.ts",
+        "src/agents/tasks/distribution/task-distributor.ts",
+        "src/agents/tasks/distribution/load-balancer.ts",
+        "src/agents/tasks/distribution/priority-manager.ts",
+        "src/agents/tasks/task-queue.ts"
+      ],
+      "acceptance_criteria": [
+        "Task distribution works efficiently",
+        "Load balancing distributes work evenly",
+        "Priority management handles urgent tasks",
+        "Task queue manages task lifecycle"
+      ]
+    },
+    {
+      "id": "MAC-003",
+      "title": "Build Shared Context Management",
+      "description": "Implement shared context management for maintaining state across multiple agents",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/agents/context",
+        "mkdir -p src/agents/context/shared"
+      ],
+      "files_to_create": [
+        "src/agents/context/context-manager.ts",
+        "src/agents/context/shared/shared-context.ts",
+        "src/agents/context/shared/context-sync.ts",
+        "src/agents/context/context-validator.ts"
+      ],
+      "acceptance_criteria": [
+        "Shared context is properly maintained",
+        "Context synchronization works across agents",
+        "Context validation prevents conflicts",
+        "Context updates are propagated efficiently"
+      ]
+    },
+    {
+      "id": "MAC-004",
+      "title": "Implement Conflict Resolution",
+      "description": "Create conflict resolution mechanisms for handling agent conflicts and deadlocks",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/agents/conflict"
+      ],
+      "files_to_create": [
+        "src/agents/conflict/conflict-detector.ts",
+        "src/agents/conflict/conflict-resolver.ts",
+        "src/agents/conflict/deadlock-prevention.ts",
+        "src/agents/conflict/consensus-manager.ts"
+      ],
+      "acceptance_criteria": [
+        "Conflict detection identifies issues quickly",
+        "Conflict resolution prevents deadlocks",
+        "Consensus management reaches agreements",
+        "Deadlock prevention mechanisms work"
+      ]
+    },
+    {
+      "id": "MAC-005",
+      "title": "Create Performance Monitoring",
+      "description": "Implement comprehensive performance monitoring and optimization for the coordination system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/agents/monitoring"
+      ],
+      "files_to_create": [
+        "src/agents/monitoring/performance-monitor.ts",
+        "src/agents/monitoring/metrics-collector.ts",
+        "src/agents/monitoring/optimization-engine.ts",
+        "src/agents/monitoring/health-checker.ts"
+      ],
+      "acceptance_criteria": [
+        "Performance monitoring provides real-time metrics",
+        "Metrics collection is efficient and accurate",
+        "Optimization engine improves performance",
+        "Health checks monitor system status"
+      ]
+    },
+    {
+      "id": "MAC-006",
+      "title": "Implement Communication Protocols",
+      "description": "Create communication protocols for agent-to-agent and agent-to-coordinator communication",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/agents/communication",
+        "mkdir -p src/agents/communication/protocols"
+      ],
+      "files_to_create": [
+        "src/agents/communication/agent-communicator.ts",
+        "src/agents/communication/protocols/agent-protocol.ts",
+        "src/agents/communication/protocols/coordinator-protocol.ts",
+        "src/agents/communication/message-handler.ts",
+        "src/agents/communication/event-bus.ts"
+      ],
+      "acceptance_criteria": [
+        "Agent communication works reliably",
+        "Protocol implementations are efficient",
+        "Message handling processes all message types",
+        "Event bus manages system events"
+      ]
+    },
+    {
+      "id": "MAC-007",
+      "title": "Create Coordination Configuration",
+      "description": "Set up configuration management and deployment for the multi-agent coordination system",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p config/agents",
+        "mkdir -p docker/agents"
+      ],
+      "files_to_create": [
+        "config/agents/coordination-config.json",
+        "config/agents/agent-registry-config.json",
+        "docker/agents/Dockerfile",
+        "docker/agents/docker-compose.yml",
+        "scripts/agent-coordinator-start.sh"
+      ],
+      "acceptance_criteria": [
+        "Configuration is properly structured",
+        "Docker deployment works correctly",
+        "Startup script functions properly",
+        "Configuration validation prevents errors"
+      ]
+    }
+  ],
+  "coordination_patterns": {
+    "master_slave": {
+      "description": "Master-slave coordination pattern for hierarchical task delegation",
+      "components": [
+        "Master agent for task orchestration",
+        "Slave agents for task execution",
+        "Task delegation protocol",
+        "Result aggregation system"
+      ]
+    },
+    "peer_to_peer": {
+      "description": "Peer-to-peer collaboration pattern for equal agent participation",
+      "components": [
+        "Peer discovery mechanism",
+        "Direct communication channels",
+        "Consensus building",
+        "Shared decision making"
+      ]
+    },
+    "hierarchical": {
+      "description": "Hierarchical task delegation pattern for complex workflows",
+      "components": [
+        "Task hierarchy management",
+        "Delegation chains",
+        "Progress tracking",
+        "Escalation mechanisms"
+      ]
+    },
+    "swarm_intelligence": {
+      "description": "Swarm intelligence pattern for emergent behavior",
+      "components": [
+        "Local interaction rules",
+        "Emergent behavior detection",
+        "Swarm optimization",
+        "Collective decision making"
+      ]
+    }
+  },
+  "dependencies": {
+    "infrastructure": [
+      "01-core-infrastructure-recipe.json",
+      "06-api-gateway-recipe.json",
+      "07-authentication-security-recipe.json"
+    ],
+    "external_packages": [
+      "ws (WebSocket)",
+      "express (HTTP server)",
+      "pg (PostgreSQL)",
+      "redis (Redis cache)",
+      "amqplib (RabbitMQ)",
+      "winston (Logging)"
+    ]
+  },
+  "testing_requirements": {
+    "unit_tests": [
+      "Agent coordination logic tests",
+      "Task distribution algorithm tests",
+      "Conflict resolution mechanism tests",
+      "Performance monitoring tests"
+    ],
+    "integration_tests": [
+      "Multi-agent collaboration tests",
+      "Task distribution and execution tests",
+      "Conflict resolution and consensus tests",
+      "Performance and scalability tests"
+    ]
+  },
+  "security_considerations": {
+    "authentication": [
+      "Agent identity verification",
+      "Communication encryption",
+      "Access control for shared resources",
+      "Audit logging for all operations"
+    ],
+    "authorization": [
+      "Task execution permissions",
+      "Resource access control",
+      "Communication permissions",
+      "Administrative privileges"
+    ]
+  },
+  "performance_requirements": {
+    "response_times": [
+      "Agent coordination: < 200ms",
+      "Task distribution: < 100ms",
+      "Conflict resolution: < 500ms",
+      "Context synchronization: < 150ms"
+    ],
+    "scalability": [
+      "Support 100+ concurrent agents",
+      "Handle 1000+ concurrent tasks",
+      "Process 10000+ messages per minute",
+      "Maintain performance under load"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-Multi-Agent-Coordination",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

@@ -1,0 +1,654 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-AI-SERVICES-MASTER",
+    "title": "AI Services Master Recipe",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T21:30:49Z",
+    "last_updated": "2025-07-05T21:30:49Z",
+    "difficulty_level": "expert",
+    "architecture_tier": "ai-services",
+    "description": "Master recipe orchestrating comprehensive AI services deployment with exact specifications, hardware profiling, and intelligent model management",
+    "is_master_recipe": true,
+    "kitchen_system": {
+      "pantry_category": "ai_services",
+      "cooking_time": "360 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "hardware_profiling",
+        "llm_deployment",
+        "model_management",
+        "ui_setup"
+      ],
+      "cache_strategy": "ai_services_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "name": "AI Services Master System",
+    "description": "Complete AI services deployment with hardware profiling, LLM orchestration, model management, and intelligent UI setup",
+    "prerequisites": [
+      "Core infrastructure recipe completed",
+      "Docker Engine 24.0+ running",
+      "Docker Compose 2.20+ available",
+      "Python 3.10+ with pip installed",
+      "Minimum 8GB RAM, 4 CPU cores",
+      "50GB free disk space for models",
+      "NVIDIA GPU with CUDA 11.8+ (optional for GPU acceleration)"
+    ],
+    "target_outcome": "Production-ready AI services with intelligent model management and hardware optimization",
+    "success_criteria": [
+      "Hardware profiling completed with detailed system analysis",
+      "Ollama server running with health check at http://localhost:11434",
+      "Open WebUI accessible at http://localhost:3000 with model management",
+      "Model download and management system operational",
+      "GPU acceleration working (if available)",
+      "All services can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "HARDWARE_PROFILING_TASK",
+        "name": "Hardware Profiling and Analysis",
+        "description": "Comprehensive hardware profiling with exact system specifications",
+        "estimated_time": "30 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "system_analysis",
+          "hardware_detection",
+          "performance_benchmarking"
+        ],
+        "exact_commands": [
+          "python3 -c \"import psutil; print(f'CPU: {psutil.cpu_count()} cores, {psutil.cpu_freq().current:.0f}MHz')\"",
+          "python3 -c \"import psutil; print(f'RAM: {psutil.virtual_memory().total // (1024**3)}GB total')\"",
+          "nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader,nounits",
+          "df -h / | awk 'NR==2 {print $4}'"
+        ]
+      },
+      {
+        "task_id": "OLLAMA_DEPLOYMENT_TASK",
+        "name": "Ollama LLM Server Deployment",
+        "description": "Deploy Ollama server with exact configurations and model management",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "HARDWARE_PROFILING_TASK"
+        ],
+        "skills_required": [
+          "docker_deployment",
+          "llm_configuration",
+          "model_management"
+        ],
+        "exact_commands": [
+          "docker run -d --name ollama --network ai-q-network -p 11434:11434 -v /opt/ai-q/data/ollama:/root/.ollama ollama/ollama:latest",
+          "docker exec ollama ollama pull llama2:7b",
+          "docker exec ollama ollama pull codellama:7b",
+          "curl -f http://localhost:11434/api/tags"
+        ]
+      },
+      {
+        "task_id": "OPEN_WEBUI_SETUP_TASK",
+        "name": "Open WebUI Interface Setup",
+        "description": "Deploy Open WebUI with exact configurations and Ollama integration",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "OLLAMA_DEPLOYMENT_TASK"
+        ],
+        "skills_required": [
+          "web_ui_deployment",
+          "api_integration",
+          "user_interface"
+        ],
+        "exact_commands": [
+          "docker run -d --name open-webui --network ai-q-network -p 3000:8080 -v /opt/ai-q/data/open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://ollama:11434 ghcr.io/open-webui/open-webui:main",
+          "curl -f http://localhost:3000/api/v1/models",
+          "curl -f http://localhost:3000/api/v1/chat/models"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "HARDWARE_PROFILING_SKILL",
+        "name": "Hardware Profiling",
+        "description": "Analyze and profile system hardware capabilities",
+        "tools": [
+          "psutil",
+          "nvidia_smi",
+          "system_profiler",
+          "benchmark_tools"
+        ],
+        "validation": "hardware_profiling_validation",
+        "exact_validation_commands": [
+          "python3 -c \"import psutil; assert psutil.cpu_count() >= 4, 'Insufficient CPU cores'\"",
+          "python3 -c \"import psutil; assert psutil.virtual_memory().total >= 8*1024**3, 'Insufficient RAM'\"",
+          "nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | awk '{if($1>=8000) print \"GPU OK\"}'"
+        ]
+      },
+      {
+        "skill_id": "LLM_DEPLOYMENT_SKILL",
+        "name": "LLM Deployment",
+        "description": "Deploy and configure LLM servers",
+        "tools": [
+          "ollama",
+          "vllm",
+          "transformers",
+          "docker"
+        ],
+        "validation": "llm_deployment_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:11434/api/tags",
+          "docker exec ollama ollama list",
+          "curl -f http://localhost:11434/api/generate -d '{\"model\":\"llama2:7b\",\"prompt\":\"Hello\"}'"
+        ]
+      },
+      {
+        "skill_id": "MODEL_MANAGEMENT_SKILL",
+        "name": "Model Management",
+        "description": "Manage LLM models and configurations",
+        "tools": [
+          "ollama_cli",
+          "model_registry",
+          "version_control"
+        ],
+        "validation": "model_management_validation",
+        "exact_validation_commands": [
+          "docker exec ollama ollama list | grep -E '(llama2|codellama)'",
+          "ls -la /opt/ai-q/data/ollama/models/",
+          "python3 src/services/ai/model_manager.py --validate-models"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "AI_SERVICES_TOOL",
+        "name": "AI Services Engine",
+        "description": "Core AI services orchestration system",
+        "file_path": "src/services/ai/core.py",
+        "config": "config/ai/services_config.json",
+        "exact_config_spec": {
+          "ollama_version": "latest",
+          "open_webui_version": "main",
+          "default_models": [
+            "llama2:7b",
+            "codellama:7b"
+          ],
+          "gpu_acceleration": true,
+          "model_cache_dir": "/opt/ai-q/data/ollama/models"
+        }
+      },
+      {
+        "tool_id": "HARDWARE_PROFILER_TOOL",
+        "name": "Hardware Profiler",
+        "description": "System hardware analysis and profiling",
+        "file_path": "src/services/ai/hardware_profiler.py",
+        "config": "config/ai/hardware_config.json",
+        "exact_config_spec": {
+          "min_cpu_cores": 4,
+          "min_ram_gb": 8,
+          "min_disk_gb": 50,
+          "gpu_memory_gb": 8,
+          "cuda_version": "11.8"
+        }
+      },
+      {
+        "tool_id": "MODEL_MANAGER_TOOL",
+        "name": "Model Manager",
+        "description": "LLM model management and optimization",
+        "file_path": "src/services/ai/model_manager.py",
+        "config": "config/ai/model_config.json",
+        "exact_config_spec": {
+          "model_download_timeout": 3600,
+          "model_validation_checksum": true,
+          "auto_cleanup_unused": true,
+          "compression_enabled": true
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "AI_SERVICES_CONFIG",
+        "name": "AI Services Configuration",
+        "description": "Configuration for AI services system",
+        "file_path": "config/ai/services_config.json",
+        "schema": "ai_services_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "ollama_version": {
+              "type": "string",
+              "pattern": "^latest|[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "open_webui_version": {
+              "type": "string",
+              "pattern": "^main|[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "default_models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "gpu_acceleration": {
+              "type": "boolean"
+            },
+            "model_cache_dir": {
+              "type": "string",
+              "pattern": "^/[a-zA-Z0-9/_-]+$"
+            }
+          },
+          "required": [
+            "ollama_version",
+            "open_webui_version",
+            "default_models",
+            "gpu_acceleration",
+            "model_cache_dir"
+          ]
+        }
+      },
+      {
+        "config_id": "HARDWARE_CONFIG",
+        "name": "Hardware Configuration",
+        "description": "Configuration for hardware profiling",
+        "file_path": "config/ai/hardware_config.json",
+        "schema": "hardware_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "min_cpu_cores": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 128
+            },
+            "min_ram_gb": {
+              "type": "integer",
+              "minimum": 4,
+              "maximum": 1024
+            },
+            "min_disk_gb": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 10000
+            },
+            "gpu_memory_gb": {
+              "type": "integer",
+              "minimum": 4,
+              "maximum": 80
+            },
+            "cuda_version": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+$"
+            }
+          },
+          "required": [
+            "min_cpu_cores",
+            "min_ram_gb",
+            "min_disk_gb",
+            "gpu_memory_gb",
+            "cuda_version"
+          ]
+        }
+      },
+      {
+        "config_id": "MODEL_CONFIG",
+        "name": "Model Configuration",
+        "description": "Configuration for model management",
+        "file_path": "config/ai/model_config.json",
+        "schema": "model_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "model_download_timeout": {
+              "type": "integer",
+              "minimum": 300,
+              "maximum": 7200
+            },
+            "model_validation_checksum": {
+              "type": "boolean"
+            },
+            "auto_cleanup_unused": {
+              "type": "boolean"
+            },
+            "compression_enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "model_download_timeout",
+            "model_validation_checksum",
+            "auto_cleanup_unused",
+            "compression_enabled"
+          ]
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "HARDWARE_PROFILING_TASK",
+          "HARDWARE_PROFILING_SKILL",
+          "AI_SERVICES_TOOL"
+        ],
+        "description": "Gather AI services ingredients from pantry",
+        "exact_commands": [
+          "python3 src/services/ai/core.py --gather-ingredients",
+          "python3 src/services/ai/hardware_profiler.py --validate-prerequisites"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "ai_services_cache",
+        "description": "Check for existing AI services cache",
+        "exact_commands": [
+          "python3 src/services/ai/core.py --check-cache",
+          "ls -la /opt/ai-q/cache/ai_services/"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "HARDWARE_PROFILING_TASK",
+        "description": "Execute hardware profiling task",
+        "exact_commands": [
+          "python3 src/services/ai/hardware_profiler.py --profile-system",
+          "python3 -c \"import psutil; print(f'CPU: {psutil.cpu_count()} cores, {psutil.cpu_freq().current:.0f}MHz')\"",
+          "python3 -c \"import psutil; print(f'RAM: {psutil.virtual_memory().total // (1024**3)}GB total')\"",
+          "nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader,nounits || echo 'No GPU detected'",
+          "df -h / | awk 'NR==2 {print $4}'"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "OLLAMA_DEPLOYMENT_TASK",
+          "LLM_DEPLOYMENT_SKILL",
+          "HARDWARE_PROFILER_TOOL"
+        ],
+        "description": "Gather Ollama deployment ingredients from pantry",
+        "exact_commands": [
+          "python3 src/services/ai/core.py --gather-ollama-ingredients",
+          "docker pull ollama/ollama:latest"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "OLLAMA_DEPLOYMENT_TASK",
+        "description": "Execute Ollama deployment task",
+        "exact_commands": [
+          "docker run -d --name ollama --network ai-q-network -p 11434:11434 -v /opt/ai-q/data/ollama:/root/.ollama ollama/ollama:latest",
+          "sleep 30",
+          "docker exec ollama ollama pull llama2:7b",
+          "docker exec ollama ollama pull codellama:7b",
+          "curl -f http://localhost:11434/api/tags",
+          "python3 src/services/ai/model_manager.py --validate-deployment"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "OPEN_WEBUI_SETUP_TASK",
+          "MODEL_MANAGEMENT_SKILL",
+          "MODEL_MANAGER_TOOL"
+        ],
+        "description": "Gather Open WebUI ingredients from pantry",
+        "exact_commands": [
+          "python3 src/services/ai/core.py --gather-webui-ingredients",
+          "docker pull ghcr.io/open-webui/open-webui:main"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "OPEN_WEBUI_SETUP_TASK",
+        "description": "Execute Open WebUI setup task",
+        "exact_commands": [
+          "docker run -d --name open-webui --network ai-q-network -p 3000:8080 -v /opt/ai-q/data/open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://ollama:11434 ghcr.io/open-webui/open-webui:main",
+          "sleep 60",
+          "curl -f http://localhost:3000/api/v1/models",
+          "curl -f http://localhost:3000/api/v1/chat/models",
+          "python3 src/services/ai/core.py --validate-webui"
+        ]
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "validate_results",
+        "validation": "ai_services_validation",
+        "description": "Validate complete AI services system",
+        "exact_commands": [
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}' | grep -E '(ollama|open-webui)'",
+          "curl -f http://localhost:11434/api/tags",
+          "curl -f http://localhost:3000/api/v1/models",
+          "python3 src/services/ai/core.py --validate-system"
+        ]
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "cache_results",
+        "cache_key": "ai_services_cache",
+        "description": "Cache AI services configuration and models",
+        "exact_commands": [
+          "python3 src/services/ai/core.py --cache-results",
+          "tar -czf /opt/ai-q/cache/ai_services_cache.tar.gz /opt/ai-q/data/ollama /opt/ai-q/data/open-webui"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "ai_services_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "model_update",
+      "cache_validation": "ai_services_validation",
+      "exact_cache_commands": [
+        "python3 src/services/ai/core.py --cache-config",
+        "python3 src/services/ai/core.py --cache-models",
+        "python3 src/services/ai/core.py --cache-hardware-profile"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "02-001",
+      "title": "Create AI Services Architecture",
+      "description": "Design and implement the core AI services architecture with exact specifications",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "mkdir -p src/services/ai",
+        "mkdir -p config/ai",
+        "mkdir -p /opt/ai-q/data/{ollama,open-webui,models}",
+        "chmod 755 /opt/ai-q/data"
+      ],
+      "files_to_create": [
+        "src/services/ai/__init__.py",
+        "src/services/ai/core.py",
+        "src/services/ai/hardware_profiler.py",
+        "src/services/ai/model_manager.py",
+        "src/services/ai/webui_manager.py",
+        "config/ai/services_config.json",
+        "config/ai/hardware_config.json",
+        "config/ai/model_config.json"
+      ],
+      "acceptance_criteria": [
+        "All directory structures created with correct permissions",
+        "AI services base classes defined with exact interfaces",
+        "Configuration system supports all AI service types with validation",
+        "Type definitions for all AI operations with exact specifications",
+        "Manager class can handle multiple AI providers with atomic operations"
+      ]
+    },
+    {
+      "task_id": "02-002",
+      "title": "Implement Hardware Profiling System",
+      "description": "Create comprehensive hardware profiling with exact system analysis",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "exact_commands": [
+        "pip install psutil nvidia-ml-py3",
+        "python3 src/services/ai/hardware_profiler.py --install-dependencies",
+        "python3 src/services/ai/hardware_profiler.py --profile-system"
+      ],
+      "files_to_create": [
+        "src/services/ai/hardware_profiler.py",
+        "config/ai/hardware_profile.json",
+        "scripts/hardware_benchmark.py"
+      ],
+      "acceptance_criteria": [
+        "Hardware profiling script functional with exact system detection",
+        "GPU detection working with CUDA version validation",
+        "Performance benchmarking operational with baseline measurements",
+        "Hardware profile JSON generated with complete specifications",
+        "System requirements validation working with clear pass/fail criteria"
+      ]
+    },
+    {
+      "task_id": "02-003",
+      "title": "Implement Ollama LLM Server",
+      "description": "Deploy Ollama server with exact configurations and model management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name ollama --network ai-q-network -p 11434:11434 -v /opt/ai-q/data/ollama:/root/.ollama ollama/ollama:latest",
+        "sleep 30",
+        "docker exec ollama ollama pull llama2:7b",
+        "docker exec ollama ollama pull codellama:7b"
+      ],
+      "files_to_create": [
+        "docker-compose.ollama.yml",
+        "config/ai/ollama_config.json",
+        "scripts/ollama_setup.sh"
+      ],
+      "acceptance_criteria": [
+        "Ollama container running with health check at port 11434",
+        "Default models (llama2:7b, codellama:7b) downloaded and available",
+        "API endpoints responding with correct model information",
+        "GPU acceleration working (if available) with CUDA support",
+        "Model management commands functional with exact specifications"
+      ]
+    }
+  ],
+  "acceptance_criteria": [
+    "Hardware profiling completed with detailed system analysis in JSON format",
+    "Ollama server running with health check at http://localhost:11434",
+    "Open WebUI accessible at http://localhost:3000 with admin interface",
+    "Default models (llama2:7b, codellama:7b) downloaded and operational",
+    "GPU acceleration working with CUDA support (if hardware available)",
+    "Model management system functional with download, validation, and cleanup",
+    "API endpoints responding with correct model and service information",
+    "All services can be safely installed/uninstalled with atomic operations",
+    "Performance benchmarks met (model loading < 30s, inference < 5s)",
+    "Zero technical debt with complete documentation and validation"
+  ],
+  "deliverables": [
+    "Complete AI services architecture with hardware profiling",
+    "Ollama LLM server with exact configurations and model management",
+    "Open WebUI interface with full model integration and management",
+    "Hardware profile JSON with detailed system specifications",
+    "Model management system with download, validation, and optimization",
+    "GPU acceleration support with CUDA integration (if available)",
+    "Performance benchmarking tools with baseline measurements",
+    "Complete API documentation with exact endpoint specifications",
+    "Troubleshooting guides for all components with exact procedures",
+    "Validation scripts for all services with exact test procedures"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Ollama container fails to start",
+        "symptoms": "docker run fails with network or volume errors",
+        "diagnosis": "Check Docker network and volume permissions",
+        "solution": "Remove existing container and recreate: docker rm -f ollama && docker run -d --name ollama --network ai-q-network -p 11434:11434 -v /opt/ai-q/data/ollama:/root/.ollama ollama/ollama:latest",
+        "prevention": "Always validate Docker network and volume configurations"
+      },
+      {
+        "issue": "Model download fails",
+        "symptoms": "ollama pull command fails with timeout or network errors",
+        "diagnosis": "Check network connectivity and disk space",
+        "solution": "Increase timeout and check disk space: docker exec ollama ollama pull llama2:7b --timeout 3600",
+        "prevention": "Monitor disk space and network connectivity during downloads"
+      },
+      {
+        "issue": "Open WebUI cannot connect to Ollama",
+        "symptoms": "WebUI shows 'No models available' or connection errors",
+        "diagnosis": "Check network connectivity between containers",
+        "solution": "Verify network and restart WebUI: docker restart open-webui",
+        "prevention": "Use Docker networks and validate container communication"
+      }
+    ],
+    "performance_optimization": [
+      {
+        "optimization": "GPU acceleration setup",
+        "description": "Enable CUDA support for faster inference",
+        "implementation": "Install NVIDIA Docker runtime and use --gpus all flag",
+        "expected_improvement": "5-10x faster inference with GPU"
+      },
+      {
+        "optimization": "Model quantization",
+        "description": "Use quantized models for reduced memory usage",
+        "implementation": "Download quantized models: ollama pull llama2:7b-q4_0",
+        "expected_improvement": "50% reduction in memory usage"
+      },
+      {
+        "optimization": "Model caching",
+        "description": "Cache frequently used models in memory",
+        "implementation": "Configure model cache in Ollama settings",
+        "expected_improvement": "Faster model loading and switching"
+      }
+    ]
+  },
+  "performance_benchmarks": {
+    "response_time_targets": {
+      "hardware_profiling": "< 30 seconds",
+      "ollama_startup": "< 60 seconds",
+      "model_download": "< 30 minutes per model",
+      "model_inference": "< 5 seconds for 100 tokens",
+      "webui_load": "< 3 seconds"
+    },
+    "resource_utilization_targets": {
+      "cpu_usage": "< 80% during inference",
+      "memory_usage": "< 90% of available RAM",
+      "gpu_utilization": "> 80% during inference (if GPU available)",
+      "disk_usage": "< 85% of available space"
+    },
+    "availability_targets": {
+      "ollama_uptime": "> 99.9%",
+      "webui_uptime": "> 99.9%",
+      "model_availability": "> 99.5%",
+      "api_response_time": "< 2 seconds"
+    }
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Ai-Services-Master-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

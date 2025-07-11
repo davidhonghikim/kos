@@ -1,0 +1,56 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "12-IOT-INTEGRATION-001",
+    "title": "IoT and Sensor Network Integration",
+    "version": "0.1.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T23:44:00Z",
+    "description": "Placeholder for IoT and sensor network integration."
+  },
+  "tasks": [
+    "Define IoT communication protocol.",
+    "Implement sensor data ingestion pipeline.",
+    "Integrate IoT data with agentic memory.",
+    "Test with simulated and real IoT devices."
+  ],
+  "deliverables": [
+    "IoT protocol spec.",
+    "Sensor ingestion module.",
+    "Agentic IoT data interface.",
+    "Test suite for IoT integration."
+  ],
+  "acceptance_criteria": [
+    "Agents can ingest and process IoT data.",
+    "IoT protocol is secure and scalable.",
+    "IoT data integrates with agentic workflows."
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-Iot-Integration-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

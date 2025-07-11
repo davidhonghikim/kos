@@ -1,0 +1,318 @@
+{
+  "metadata": {
+    "recipe_id": "storage-performance-optimization",
+    "title": "Storage Performance Optimization",
+    "description": "Advanced performance optimization for storage systems including caching, compression, and tuning for maximum throughput and low latency",
+    "category": "storage-systems",
+    "difficulty": "advanced",
+    "estimated_time": "60 minutes",
+    "prerequisites": [
+      "01-minio-enterprise-cluster",
+      "03-local-storage-optimization",
+      "08-storage-monitoring-alerting"
+    ],
+    "tags": [
+      "performance",
+      "optimization",
+      "caching",
+      "compression",
+      "tuning"
+    ],
+    "version": "1.0.0",
+    "last_updated": "2025-01-27T12:00:00Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "os": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "python_version": "3.8+",
+      "node_version": "16+",
+      "docker": "20.10+",
+      "docker_compose": "2.0+",
+      "ram": "8GB+",
+      "storage": "SSD recommended"
+    },
+    "dependencies": [
+      "redis",
+      "nginx",
+      "varnish",
+      "lz4",
+      "zstd",
+      "fio"
+    ],
+    "permissions": [
+      "system_admin",
+      "storage_admin",
+      "network_admin"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "caching-setup",
+      "title": "Setup Multi-Layer Caching",
+      "description": "Implement Redis and Varnish caching for storage performance",
+      "steps": [
+        {
+          "step_id": "redis-install",
+          "title": "Install and Configure Redis",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo apt-get update && sudo apt-get install -y redis-server",
+              "expected_output": "Redis installed successfully"
+            },
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/redis/redis.conf > /dev/null << 'EOF'\nmaxmemory 2gb\nmaxmemory-policy allkeys-lru\nsave 900 1\nsave 300 10\nsave 60 10000\nEOF",
+              "expected_output": "Redis configuration updated"
+            },
+            {
+              "os": "linux",
+              "command": "sudo systemctl restart redis-server",
+              "expected_output": "Redis service restarted"
+            }
+          ]
+        },
+        {
+          "step_id": "varnish-install",
+          "title": "Install and Configure Varnish",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo apt-get install -y varnish",
+              "expected_output": "Varnish installed successfully"
+            },
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/varnish/default.vcl > /dev/null << 'EOF'\nvcl 4.0;\n\nbackend default {\n    .host = \"127.0.0.1\";\n    .port = \"8080\";\n}\n\nsub vcl_recv {\n    if (req.method == \"GET\") {\n        return (hash);\n    }\n    return (pass);\n}\n\nsub vcl_backend_response {\n    set beresp.ttl = 1h;\n    set beresp.grace = 1h;\n}\nEOF",
+              "expected_output": "Varnish configuration created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "compression-optimization",
+      "title": "Optimize Compression Settings",
+      "description": "Configure advanced compression for storage efficiency",
+      "steps": [
+        {
+          "step_id": "nginx-compression",
+          "title": "Configure Nginx Compression",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/nginx/conf.d/compression.conf > /dev/null << 'EOF'\ngzip on;\ngzip_vary on;\ngzip_min_length 1024;\ngzip_proxied any;\ngzip_comp_level 6;\ngzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;\nEOF",
+              "expected_output": "Nginx compression configured"
+            }
+          ]
+        },
+        {
+          "step_id": "storage-compression",
+          "title": "Configure Storage Compression",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "mc admin config set myminio/ compression '{\"extensions\":[\".txt\",\".log\",\".json\",\".xml\"],\"mime_types\":[\"text/*\",\"application/json\",\"application/xml\"]}'",
+              "expected_output": "MinIO compression configured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "io-optimization",
+      "title": "Optimize I/O Performance",
+      "description": "Configure advanced I/O settings for maximum performance",
+      "steps": [
+        {
+          "step_id": "filesystem-tuning",
+          "title": "Tune Filesystem Settings",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "echo 'vm.dirty_ratio = 15' | sudo tee -a /etc/sysctl.conf && echo 'vm.dirty_background_ratio = 5' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
+              "expected_output": "Filesystem tuning applied"
+            }
+          ]
+        },
+        {
+          "step_id": "disk-scheduler",
+          "title": "Configure Disk Scheduler",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "echo 'ACTION==\"add|change\", KERNEL==\"sd[a-z]\", ATTR{queue/scheduler}=\"mq-deadline\"' | sudo tee /etc/udev/rules.d/60-scheduler.rules",
+              "expected_output": "Disk scheduler configured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "network-optimization",
+      "title": "Optimize Network Performance",
+      "description": "Configure network settings for optimal storage performance",
+      "steps": [
+        {
+          "step_id": "tcp-tuning",
+          "title": "Tune TCP Settings",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "echo 'net.core.rmem_max = 16777216' | sudo tee -a /etc/sysctl.conf && echo 'net.core.wmem_max = 16777216' | sudo tee -a /etc/sysctl.conf && echo 'net.ipv4.tcp_rmem = 4096 87380 16777216' | sudo tee -a /etc/sysctl.conf && echo 'net.ipv4.tcp_wmem = 4096 65536 16777216' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
+              "expected_output": "TCP tuning applied"
+            }
+          ]
+        },
+        {
+          "step_id": "connection-pooling",
+          "title": "Configure Connection Pooling",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "mc admin config set myminio/ api '{\"requests_max\":1000,\"requests_deadline\":\"30s\"}'",
+              "expected_output": "Connection pooling configured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "performance-testing",
+      "title": "Performance Testing and Validation",
+      "description": "Run comprehensive performance tests to validate optimizations",
+      "steps": [
+        {
+          "step_id": "fio-install",
+          "title": "Install FIO for Performance Testing",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo apt-get install -y fio",
+              "expected_output": "FIO installed successfully"
+            }
+          ]
+        },
+        {
+          "step_id": "storage-benchmark",
+          "title": "Run Storage Benchmark",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "fio --name=randread --ioengine=libaio --iodepth=16 --rw=randread --bs=4k --direct=1 --size=1G --numjobs=4",
+              "expected_output": "Random read benchmark completed"
+            },
+            {
+              "os": "linux",
+              "command": "fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --direct=1 --size=1G --numjobs=4",
+              "expected_output": "Random write benchmark completed"
+            }
+          ]
+        },
+        {
+          "step_id": "cache-benchmark",
+          "title": "Test Cache Performance",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "redis-benchmark -h localhost -p 6379 -n 100000 -c 50",
+              "expected_output": "Redis benchmark completed"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "os": "linux",
+        "command": "redis-cli ping",
+        "expected_output": "PONG"
+      },
+      {
+        "os": "linux",
+        "command": "varnishstat -1 | grep 'cache_hit'",
+        "expected_output": "cache_hit"
+      },
+      {
+        "os": "linux",
+        "command": "nginx -t",
+        "expected_output": "nginx: configuration file /etc/nginx/nginx.conf test is successful"
+      },
+      {
+        "os": "linux",
+        "command": "cat /proc/sys/vm/dirty_ratio",
+        "expected_output": "15"
+      }
+    ],
+    "expected_outputs": {
+      "redis_status": "Redis running and responding",
+      "varnish_status": "Varnish cache operational",
+      "nginx_config": "Nginx configuration valid",
+      "filesystem_tuning": "Filesystem tuning applied"
+    }
+  },
+  "expected_output": {
+    "caching_system": "Multi-layer caching with Redis and Varnish operational",
+    "compression": "Advanced compression configured for optimal efficiency",
+    "io_performance": "I/O optimized with tuned filesystem and disk settings",
+    "network_performance": "Network optimized with TCP tuning and connection pooling",
+    "performance_metrics": {
+      "read_throughput": ">500 MB/s",
+      "write_throughput": ">400 MB/s",
+      "cache_hit_ratio": ">80%",
+      "compression_ratio": ">60%"
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Redis memory usage too high",
+        "solution": "Adjust maxmemory and eviction policy in redis.conf"
+      },
+      {
+        "issue": "Varnish cache not working",
+        "solution": "Check backend configuration and VCL syntax"
+      },
+      {
+        "issue": "Compression not effective",
+        "solution": "Verify gzip configuration and content types"
+      }
+    ]
+  },
+  "next_steps": [
+    "Implement adaptive caching policies",
+    "Setup performance monitoring dashboards",
+    "Configure automated performance tuning",
+    "Implement predictive caching"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

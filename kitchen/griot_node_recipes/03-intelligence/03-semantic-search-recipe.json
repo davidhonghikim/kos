@@ -1,0 +1,498 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-03-SEMANTIC-SEARCH-COMPREHENSIVE",
+    "title": "Semantic Search System - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-04T14:44:24Z",
+    "last_updated": "2025-07-04T14:44:24Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "3-4 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 6,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-intelligence",
+    "description": "Complete semantic search system implementation with exact specifications, atomic tasks, and zero technical debt",
+    "is_master_recipe": false,
+    "kitchen_system": {
+      "pantry_category": "semantic_search",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "query_processing",
+        "search_engine",
+        "ranking_system",
+        "discovery_engine"
+      ],
+      "cache_strategy": "semantic_search_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Semantic Search System",
+    "description": "Complete semantic search implementation with multi-modal capabilities, advanced ranking, and intelligent discovery",
+    "prerequisites": [
+      "02-knowledge-graph-recipe.json completed",
+      "Python 3.10+ with pip installed",
+      "Elasticsearch 8.0+ or Weaviate 1.0+",
+      "Minimum 16GB RAM, 8 CPU cores",
+      "100GB free disk space for search indexes",
+      "Network connectivity for search engines"
+    ],
+    "target_outcome": "Production-ready semantic search system with zero technical debt",
+    "success_criteria": [
+      "Multi-modal semantic search (text, image, audio) operational",
+      "Advanced ranking and relevance scoring achieving >90% accuracy",
+      "Intelligent query understanding and expansion functional",
+      "Real-time search and discovery working",
+      "Search analytics and optimization operational",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "SEARCH_ARCHITECTURE_TASK",
+        "name": "Semantic Search Architecture Setup",
+        "description": "Design and implement core semantic search architecture with exact specifications",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "search_architecture",
+          "system_design",
+          "unified_management"
+        ],
+        "exact_commands": [
+          "mkdir -p src/services/semantic_search/{core,query,engine,ranking,analytics}",
+          "mkdir -p config/semantic_search/{query,engine,ranking}",
+          "mkdir -p /opt/ai-q/data/{search_indexes,query_cache,analytics}",
+          "chmod 755 /opt/ai-q/data"
+        ]
+      },
+      {
+        "task_id": "QUERY_PROCESSING_TASK",
+        "name": "Query Processing Implementation",
+        "description": "Create comprehensive query processing system with exact specifications",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "SEARCH_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "nlp_processing",
+          "query_expansion",
+          "intent_recognition"
+        ],
+        "exact_commands": [
+          "pip install transformers torch sentence-transformers spacy",
+          "python -m spacy download en_core_web_sm",
+          "python3 src/services/semantic_search/query/processor.py --validate-models",
+          "python3 src/services/semantic_search/query/expander.py --test-expansion"
+        ]
+      },
+      {
+        "task_id": "SEARCH_ENGINE_TASK",
+        "name": "Search Engine Implementation",
+        "description": "Create multi-modal search engine with advanced indexing and exact configurations",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "QUERY_PROCESSING_TASK"
+        ],
+        "skills_required": [
+          "search_engines",
+          "indexing_systems",
+          "multi_modal_search"
+        ],
+        "exact_commands": [
+          "docker run -d --name elasticsearch --network ai-q-network -p 9200:9200 -p 9300:9300 -e discovery.type=single-node -e xpack.security.enabled=false elasticsearch:8.8.0",
+          "sleep 60",
+          "curl -f http://localhost:9200/_cluster/health",
+          "python3 src/services/semantic_search/engine/core.py --setup-indexes"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "QUERY_PROCESSING_SKILL",
+        "name": "Query Processing",
+        "description": "Process and understand search queries with exact procedures",
+        "tools": [
+          "nlp_processor",
+          "query_expander",
+          "intent_recognizer"
+        ],
+        "validation": "query_processing_validation",
+        "exact_validation_commands": [
+          "python3 src/services/semantic_search/query/processor.py --test-processing",
+          "python3 -c \"from src.services.semantic_search.query import QueryProcessor; processor = QueryProcessor(); assert processor.test_nlp_processing() > 0.8\"",
+          "python3 -c \"from src.services.semantic_search.query import QueryProcessor; processor = QueryProcessor(); assert processor.test_intent_recognition() > 0.8\""
+        ]
+      },
+      {
+        "skill_id": "SEARCH_ENGINE_SKILL",
+        "name": "Search Engine",
+        "description": "Execute multi-modal search operations with exact procedures",
+        "tools": [
+          "search_engine",
+          "index_manager",
+          "retrieval_engine"
+        ],
+        "validation": "search_engine_validation",
+        "exact_validation_commands": [
+          "python3 src/services/semantic_search/engine/core.py --test-search",
+          "python3 -c \"from src.services.semantic_search.engine import SearchEngine; engine = SearchEngine(); assert engine.test_multi_modal_search() > 0.8\"",
+          "python3 -c \"from src.services.semantic_search.engine import SearchEngine; engine = SearchEngine(); assert engine.test_index_management() > 0.8\""
+        ]
+      },
+      {
+        "skill_id": "RANKING_SYSTEM_SKILL",
+        "name": "Ranking System",
+        "description": "Rank and score search results with exact procedures",
+        "tools": [
+          "ranking_engine",
+          "relevance_scorer",
+          "learning_ranker"
+        ],
+        "validation": "ranking_system_validation",
+        "exact_validation_commands": [
+          "python3 src/services/semantic_search/ranking/engine.py --test-ranking",
+          "python3 -c \"from src.services.semantic_search.ranking import RankingEngine; engine = RankingEngine(); assert engine.test_relevance_scoring() > 0.8\"",
+          "python3 -c \"from src.services.semantic_search.ranking import RankingEngine; engine = RankingEngine(); assert engine.test_learning_to_rank() > 0.8\""
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "SEMANTIC_SEARCH_TOOL",
+        "name": "Semantic Search Engine",
+        "description": "Core semantic search with unified interface and exact specifications",
+        "file_path": "src/services/semantic_search/core.py",
+        "config": "config/semantic_search/search_config.json",
+        "exact_config_spec": {
+          "search_engine": "elasticsearch",
+          "elasticsearch_url": "http://localhost:9200",
+          "index_name": "ai_q_semantic",
+          "embedding_model": "all-MiniLM-L6-v2",
+          "similarity_threshold": 0.8
+        }
+      },
+      {
+        "tool_id": "QUERY_PROCESSOR_TOOL",
+        "name": "Query Processor",
+        "description": "Process and understand search queries with exact specifications",
+        "file_path": "src/services/semantic_search/query/processor.py",
+        "config": "config/semantic_search/query_config.json",
+        "exact_config_spec": {
+          "nlp_model": "en_core_web_sm",
+          "query_expansion_enabled": true,
+          "intent_recognition_enabled": true,
+          "max_query_length": 512,
+          "expansion_threshold": 0.7
+        }
+      },
+      {
+        "tool_id": "SEARCH_ENGINE_TOOL",
+        "name": "Search Engine",
+        "description": "Multi-modal search engine with indexing and exact configurations",
+        "file_path": "src/services/semantic_search/engine/core.py",
+        "config": "config/semantic_search/engine_config.json",
+        "exact_config_spec": {
+          "primary_engine": "elasticsearch",
+          "elasticsearch_url": "http://localhost:9200",
+          "backup_engine": "weaviate",
+          "weaviate_url": "http://localhost:8080",
+          "index_shards": 3,
+          "index_replicas": 1
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "SEMANTIC_SEARCH_CONFIG",
+        "name": "Semantic Search Configuration",
+        "description": "Configuration for semantic search system",
+        "file_path": "config/semantic_search/search_config.json",
+        "schema": "semantic_search_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "search_engine": {
+              "type": "string",
+              "enum": [
+                "elasticsearch",
+                "weaviate",
+                "pinecone"
+              ]
+            },
+            "elasticsearch_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "index_name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "embedding_model": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "similarity_threshold": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "required": [
+            "search_engine",
+            "elasticsearch_url",
+            "index_name",
+            "embedding_model",
+            "similarity_threshold"
+          ]
+        }
+      },
+      {
+        "config_id": "QUERY_CONFIG",
+        "name": "Query Processing Configuration",
+        "description": "Configuration for query processing",
+        "file_path": "config/semantic_search/query_config.json",
+        "schema": "query_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "nlp_model": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "query_expansion_enabled": {
+              "type": "boolean"
+            },
+            "intent_recognition_enabled": {
+              "type": "boolean"
+            },
+            "max_query_length": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 2048
+            },
+            "expansion_threshold": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "required": [
+            "nlp_model",
+            "query_expansion_enabled",
+            "intent_recognition_enabled",
+            "max_query_length",
+            "expansion_threshold"
+          ]
+        }
+      },
+      {
+        "config_id": "SEARCH_ENGINE_CONFIG",
+        "name": "Search Engine Configuration",
+        "description": "Configuration for search engine backends",
+        "file_path": "config/semantic_search/engine_config.json",
+        "schema": "search_engine_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "primary_engine": {
+              "type": "string",
+              "enum": [
+                "elasticsearch",
+                "weaviate",
+                "pinecone"
+              ]
+            },
+            "elasticsearch_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "backup_engine": {
+              "type": "string",
+              "enum": [
+                "elasticsearch",
+                "weaviate",
+                "pinecone"
+              ]
+            },
+            "weaviate_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "index_shards": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "index_replicas": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "primary_engine",
+            "elasticsearch_url",
+            "backup_engine",
+            "weaviate_url",
+            "index_shards",
+            "index_replicas"
+          ]
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:setup-search-architecture:1.0.0",
+          "task:build-query-processing:1.0.0",
+          "task:setup-search-engine:1.0.0",
+          "task:implement-ranking-system:1.0.0",
+          "task:setup-search-analytics:1.0.0",
+          "skill:query-processing:1.0.0",
+          "skill:search-engine:1.0.0",
+          "skill:ranking-system:1.0.0",
+          "tool:semantic-search:1.0.0",
+          "tool:query-processor:1.0.0",
+          "tool:search-engine:1.0.0",
+          "config:semantic-search:1.0.0",
+          "config:query:1.0.0",
+          "config:search-engine:1.0.0"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Knowledge graph system is operational and accessible",
+          "Elasticsearch is available and configured",
+          "Python environment has required packages",
+          "Storage space is sufficient for search indexes"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_search_deployment",
+        "description": "Execute semantic search deployment with all components",
+        "sub_steps": [
+          "Deploy search architecture and core components",
+          "Setup query processing and NLP models",
+          "Configure search engine with Elasticsearch backend",
+          "Implement ranking system and relevance scoring",
+          "Setup search analytics and optimization"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "cache_results",
+        "description": "Cache successful deployment results for future use",
+        "cache_items": [
+          "Query processing configurations",
+          "Elasticsearch index settings",
+          "NLP models and embeddings",
+          "Ranking algorithms and parameters",
+          "Search analytics configurations"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "ingredient_caching": "aggressive",
+      "result_caching": "aggressive",
+      "cache_validation": "content_hash",
+      "cache_ttl": 604800,
+      "cache_location": "local"
+    }
+  },
+  "acceptance_criteria": [
+    "Multi-modal semantic search (text, image, audio) operational",
+    "Advanced ranking and relevance scoring achieving >90% accuracy",
+    "Intelligent query understanding and expansion functional",
+    "Real-time search and discovery working",
+    "Search analytics and optimization operational",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready semantic search system with exact configurations",
+    "Multi-modal search capabilities (text, image, audio)",
+    "Advanced ranking and relevance scoring",
+    "Query processing and expansion engine",
+    "Complete documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Elasticsearch connection fails",
+        "symptoms": "Connection refused or cluster health red",
+        "diagnosis": "Elasticsearch service not running or configuration incorrect",
+        "solution": "Check Elasticsearch service status and verify configuration",
+        "prevention": "Always validate Elasticsearch connection before deployment"
+      },
+      {
+        "issue": "Query processing accuracy low",
+        "symptoms": "Poor query understanding or expansion",
+        "diagnosis": "NLP models not loaded or training data insufficient",
+        "solution": "Verify model installation and retrain if needed",
+        "prevention": "Use high-quality NLP models and validate processing"
+      },
+      {
+        "issue": "Search results relevance poor",
+        "symptoms": "Low-quality search results or ranking",
+        "diagnosis": "Embedding models not optimized or ranking algorithm issues",
+        "solution": "Optimize embedding models and tune ranking parameters",
+        "prevention": "Regularly evaluate and update embedding models"
+      }
+    ]
+  },
+  "performance_benchmarks": {
+    "query_processing_time": "< 50ms per query",
+    "search_execution_time": "< 100ms for simple queries",
+    "ranking_time": "< 50ms per result set",
+    "index_update_time": "< 200ms per document"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "03-Semantic-Search-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

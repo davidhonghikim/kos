@@ -1,0 +1,23 @@
+{
+  "id": "tool.social_media",
+  "type": "tool",
+  "name": "Social Media Manager",
+  "description": "Modular social media operations for scheduling posts and analyzing engagement",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["social", "media", "post", "engagement", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for social media operations in recipes",
+  "operations": {
+    "schedule_post": "Schedule posts on social media platforms",
+    "analyze_engagement": "Analyze post engagement metrics"
+  },
+  "validation": {
+    "required_fields": ["operation", "platform"],
+    "operations": ["schedule", "analyze"]
+  }
+} 

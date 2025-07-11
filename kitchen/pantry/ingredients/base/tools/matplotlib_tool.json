@@ -1,0 +1,19 @@
+{
+  "id": "tool.matplotlib",
+  "type": "tool",
+  "name": "Matplotlib Visualization Tool",
+  "description": "Data visualization tool for creating charts and plots",
+  "version": "3.5.0",
+  "category": "tools",
+  "dependencies": ["tool.numpy"],
+  "tags": ["data", "visualization", "plotting", "charts", "graphs"],
+  "author": "data_team",
+  "created": "2025-07-08T00:08:04Z",
+  "updated": "2025-07-08T00:08:04Z",
+  "access_level": "public",
+  "usage": "Use for creating various types of charts and visualizations",
+  "validation": {
+    "required_fields": ["plot_type", "data"],
+    "operations": ["line_plot", "bar_plot", "scatter_plot", "histogram", "box_plot"]
+  }
+} 

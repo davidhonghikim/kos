@@ -1,0 +1,220 @@
+{
+  "metadata": {
+    "recipe_id": "02-docker-caching-system",
+    "title": "Docker Image Caching & Version Control",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - Infrastructure Specialist",
+    "last_updated": "2025-07-05T21:42:00Z",
+    "purpose": "Implement intelligent Docker image caching with version control and rollback capabilities",
+    "total_tasks": 8,
+    "estimated_duration": "6 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "01-volume-structure-design"
+    ],
+    "cache_stack": [
+      "Local Registry",
+      "Image Versioning",
+      "Cache Management",
+      "Rollback System"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "01-01: Base directory structure created",
+      "01-02: Permissions and ownership set",
+      "01-03: Docker volumes created"
+    ],
+    "system_requirements": {
+      "storage": "Minimum 100GB for image cache",
+      "ram": "Minimum 4GB for registry",
+      "network": "Access to Docker Hub or other registries"
+    }
+  },
+  "task_01_deploy_local_docker_registry": {
+    "task_id": "02-01",
+    "title": "Deploy Local Docker Registry",
+    "description": "Deploy and configure local Docker registry for image caching",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-01-01",
+        "title": "Create registry configuration",
+        "description": "Create configuration for local Docker registry",
+        "config_file": "/opt/ai-q/config/registry/config.yml",
+        "config_content": {
+          "version": "0.1",
+          "log": {
+            "level": "info",
+            "formatter": "text",
+            "fields": {
+              "service": "registry"
+            }
+          },
+          "storage": {
+            "filesystem": {
+              "rootdirectory": "/var/lib/registry"
+            },
+            "delete": {
+              "enabled": true
+            },
+            "cache": {
+              "blobdescriptor": "inmemory"
+            }
+          },
+          "http": {
+            "addr": ":5000",
+            "headers": {
+              "X-Content-Type-Options": [
+                "nosniff"
+              ]
+            }
+          },
+          "health": {
+            "storagedriver": {
+              "enabled": true,
+              "interval": "10s",
+              "threshold": 3
+            }
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/config/registry",
+          "sudo tee /opt/ai-q/config/registry/config.yml << 'EOF'\nversion: 0.1\nlog:\n  level: info\n  formatter: text\n  fields:\n    service: registry\nstorage:\n  filesystem:\n    rootdirectory: /var/lib/registry\n  delete:\n    enabled: true\n  cache:\n    blobdescriptor: inmemory\nhttp:\n  addr: :5000\n  headers:\n    X-Content-Type-Options: [nosniff]\nhealth:\n  storagedriver:\n    enabled: true\n    interval: 10s\n    threshold: 3\nEOF"
+        ],
+        "verification": "Check registry configuration created",
+        "expected_output": "Registry configuration file created successfully"
+      },
+      {
+        "step_id": "02-01-02",
+        "title": "Deploy registry container",
+        "description": "Deploy Docker registry container with persistent storage",
+        "commands": [
+          "docker run -d --name ai-q-registry \\\n  --restart=unless-stopped \\\n  -p 5000:5000 \\\n  -v /opt/ai-q/data/registry:/var/lib/registry \\\n  -v /opt/ai-q/config/registry/config.yml:/etc/docker/registry/config.yml \\\n  registry:2"
+        ],
+        "verification": "Check registry container running",
+        "expected_output": "Registry container deployed and running on port 5000"
+      }
+    ],
+    "verification_commands": [
+      "docker ps | grep ai-q-registry",
+      "curl -s http://localhost:5000/v2/_catalog"
+    ],
+    "expected_outputs": {
+      "container_status": "Registry container running",
+      "api_response": "Empty catalog or valid JSON response"
+    }
+  },
+  "task_02_implement_image_versioning": {
+    "task_id": "02-02",
+    "title": "Implement Image Versioning System",
+    "description": "Create system for managing image versions and tags",
+    "estimated_duration": "60 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-02-01",
+        "title": "Create image versioning script",
+        "description": "Create script to manage image versions and tags",
+        "script_file": "/opt/ai-q/scripts/image-versioning.sh",
+        "script_content": "#!/bin/bash\n\n# Image versioning script\nREGISTRY=\"localhost:5000\"\nVERSION_FILE=\"/opt/ai-q/config/image-versions.json\"\n\n# Initialize version file if not exists\nif [ ! -f \"$VERSION_FILE\" ]; then\n    cat > \"$VERSION_FILE\" << EOF\n{\n    \"images\": {},\n    \"last_updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"\n}\nEOF\nfi\n\n# Function to add image version\nadd_image_version() {\n    local image_name=\"$1\"\n    local version=\"$2\"\n    local source=\"$3\"\n    \n    # Update version file\n    jq --arg img \"$image_name\" \\\n       --arg ver \"$version\" \\\n       --arg src \"$source\" \\\n       --arg date \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n       '.images[$img] = {\"version\": $ver, \"source\": $src, \"added\": $date}' \\\n       \"$VERSION_FILE\" > \"$VERSION_FILE.tmp\" && mv \"$VERSION_FILE.tmp\" \"$VERSION_FILE\"\n    \n    echo \"Added image: $image_name:$version from $source\"\n}\n\n# Function to list image versions\nlist_image_versions() {\n    local image_name=\"$1\"\n    \n    if [ -n \"$image_name\" ]; then\n        jq -r \".images[\"$image_name\"]\" \"$VERSION_FILE\"\n    else\n        jq -r '.images | to_entries[] | \"\\(.key): \\(.value.version) from \\(.value.source)\"' \"$VERSION_FILE\"\n    fi\n}\n\n# Function to get latest version\nget_latest_version() {\n    local image_name=\"$1\"\n    jq -r \".images[\"$image_name\"].version\" \"$VERSION_FILE\"\n}\n\n# Main execution based on command\ncase \"$1\" in\n    \"add\")\n        if [ $# -eq 4 ]; then\n            add_image_version \"$2\" \"$3\" \"$4\"\n        else\n            echo \"Usage: $0 add <image_name> <version> <source>\"\n            exit 1\n        fi\n        ;;\n    \"list\")\n        list_image_versions \"$2\"\n        ;;\n    \"latest\")\n        if [ -n \"$2\" ]; then\n            get_latest_version \"$2\"\n        else\n            echo \"Usage: $0 latest <image_name>\"\n            exit 1\n        fi\n        ;;\n    *)\n        echo \"Usage: $0 {add|list|latest}\"\n        exit 1\n        ;;\nesac",
+        "commands": [
+          "sudo tee /opt/ai-q/scripts/image-versioning.sh << 'EOF'\n#!/bin/bash\n\n# Image versioning script\nREGISTRY=\"localhost:5000\"\nVERSION_FILE=\"/opt/ai-q/config/image-versions.json\"\n\n# Initialize version file if not exists\nif [ ! -f \"$VERSION_FILE\" ]; then\n    cat > \"$VERSION_FILE\" << EOF\n{\n    \"images\": {},\n    \"last_updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"\n}\nEOF\nfi\n\n# Function to add image version\nadd_image_version() {\n    local image_name=\"$1\"\n    local version=\"$2\"\n    local source=\"$3\"\n    \n    # Update version file\n    jq --arg img \"$image_name\" \\\n       --arg ver \"$version\" \\\n       --arg src \"$source\" \\\n       --arg date \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n       '.images[$img] = {\"version\": $ver, \"source\": $src, \"added\": $date}' \\\n       \"$VERSION_FILE\" > \"$VERSION_FILE.tmp\" && mv \"$VERSION_FILE.tmp\" \"$VERSION_FILE\"\n    \n    echo \"Added image: $image_name:$version from $source\"\n}\n\n# Function to list image versions\nlist_image_versions() {\n    local image_name=\"$1\"\n    \n    if [ -n \"$image_name\" ]; then\n        jq -r \".images[\"$image_name\"]\" \"$VERSION_FILE\"\n    else\n        jq -r '.images | to_entries[] | \"\\(.key): \\(.value.version) from \\(.value.source)\"' \"$VERSION_FILE\"\n    fi\n}\n\n# Function to get latest version\nget_latest_version() {\n    local image_name=\"$1\"\n    jq -r \".images[\"$image_name\"].version\" \"$VERSION_FILE\"\n}\n\n# Main execution based on command\ncase \"$1\" in\n    \"add\")\n        if [ $# -eq 4 ]; then\n            add_image_version \"$2\" \"$3\" \"$4\"\n        else\n            echo \"Usage: $0 add <image_name> <version> <source>\"\n            exit 1\n        fi\n        ;;\n    \"list\")\n        list_image_versions \"$2\"\n        ;;\n    \"latest\")\n        if [ -n \"$2\" ]; then\n            get_latest_version \"$2\"\n        else\n            echo \"Usage: $0 latest <image_name>\"\n            exit 1\n        fi\n        ;;\n    *)\n        echo \"Usage: $0 {add|list|latest}\"\n        exit 1\n        ;;\nesac\nEOF",
+          "sudo chmod +x /opt/ai-q/scripts/image-versioning.sh"
+        ],
+        "verification": "Check versioning script created",
+        "expected_output": "Image versioning script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/image-versioning.sh",
+      "/opt/ai-q/scripts/image-versioning.sh list"
+    ],
+    "expected_outputs": {
+      "script": "Image versioning script created and executable",
+      "version_list": "Empty version list or valid JSON output"
+    }
+  },
+  "task_03_create_cache_update_mechanisms": {
+    "task_id": "02-03",
+    "title": "Create Cache Update Mechanisms",
+    "description": "Implement intelligent cache update system with version comparison",
+    "estimated_duration": "90 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-03-01",
+        "title": "Create cache update script",
+        "description": "Create script for intelligent cache updates",
+        "script_file": "/opt/ai-q/scripts/cache-update.sh",
+        "script_content": "#!/bin/bash\n\n# Cache update script\nREGISTRY=\"localhost:5000\"\nVERSION_FILE=\"/opt/ai-q/config/image-versions.json\"\nLOG_FILE=\"/opt/ai-q/logs/cache-update.log\"\n\n# Function to check if update needed\ncheck_update_needed() {\n    local image_name=\"$1\"\n    local current_version=\"$2\"\n    local remote_version=\"$3\"\n    \n    if [ \"$current_version\" != \"$remote_version\" ]; then\n        return 0  # Update needed\n    else\n        return 1  # No update needed\n    fi\n}\n\n# Function to update image\nupdate_image() {\n    local image_name=\"$1\"\n    local source=\"$2\"\n    local version=\"$3\"\n    \n    echo \"Updating $image_name to version $version from $source\"\n    \n    # Pull image from source\n    docker pull \"$source:$version\"\n    if [ $? -ne 0 ]; then\n        echo \"ERROR: Failed to pull $source:$version\"\n        return 1\n    fi\n    \n    # Tag for local registry\n    docker tag \"$source:$version\" \"$REGISTRY/$image_name:$version\"\n    \n    # Push to local registry\n    docker push \"$REGISTRY/$image_name:$version\"\n    if [ $? -ne 0 ]; then\n        echo \"ERROR: Failed to push to local registry\"\n        return 1\n    fi\n    \n    # Update version file\n    /opt/ai-q/scripts/image-versioning.sh add \"$image_name\" \"$version\" \"$source\"\n    \n    echo \"Successfully updated $image_name to version $version\"\n}\n\n# Main update process\nmain() {\n    local image_name=\"$1\"\n    local source=\"$2\"\n    local version=\"$3\"\n    \n    if [ -z \"$image_name\" ] || [ -z \"$source\" ] || [ -z \"$version\" ]; then\n        echo \"Usage: $0 <image_name> <source> <version>\"\n        exit 1\n    fi\n    \n    # Get current version\n    current_version=$(/opt/ai-q/scripts/image-versioning.sh latest \"$image_name\" 2>/dev/null)\n    \n    # Check if update needed\n    if check_update_needed \"$image_name\" \"$current_version\" \"$version\"; then\n        update_image \"$image_name\" \"$source\" \"$version\"\n    else\n        echo \"$image_name is already at version $version\"\n    fi\n}\n\n# Execute main function\nmain \"$@\"",
+        "commands": [
+          "sudo tee /opt/ai-q/scripts/cache-update.sh << 'EOF'\n#!/bin/bash\n\n# Cache update script\nREGISTRY=\"localhost:5000\"\nVERSION_FILE=\"/opt/ai-q/config/image-versions.json\"\nLOG_FILE=\"/opt/ai-q/logs/cache-update.log\"\n\n# Function to check if update needed\ncheck_update_needed() {\n    local image_name=\"$1\"\n    local current_version=\"$2\"\n    local remote_version=\"$3\"\n    \n    if [ \"$current_version\" != \"$remote_version\" ]; then\n        return 0  # Update needed\n    else\n        return 1  # No update needed\n    fi\n}\n\n# Function to update image\nupdate_image() {\n    local image_name=\"$1\"\n    local source=\"$2\"\n    local version=\"$3\"\n    \n    echo \"Updating $image_name to version $version from $source\"\n    \n    # Pull image from source\n    docker pull \"$source:$version\"\n    if [ $? -ne 0 ]; then\n        echo \"ERROR: Failed to pull $source:$version\"\n        return 1\n    fi\n    \n    # Tag for local registry\n    docker tag \"$source:$version\" \"$REGISTRY/$image_name:$version\"\n    \n    # Push to local registry\n    docker push \"$REGISTRY/$image_name:$version\"\n    if [ $? -ne 0 ]; then\n        echo \"ERROR: Failed to push to local registry\"\n        return 1\n    fi\n    \n    # Update version file\n    /opt/ai-q/scripts/image-versioning.sh add \"$image_name\" \"$version\" \"$source\"\n    \n    echo \"Successfully updated $image_name to version $version\"\n}\n\n# Main update process\nmain() {\n    local image_name=\"$1\"\n    local source=\"$2\"\n    local version=\"$3\"\n    \n    if [ -z \"$image_name\" ] || [ -z \"$source\" ] || [ -z \"$version\" ]; then\n        echo \"Usage: $0 <image_name> <source> <version>\"\n        exit 1\n    fi\n    \n    # Get current version\n    current_version=$(/opt/ai-q/scripts/image-versioning.sh latest \"$image_name\" 2>/dev/null)\n    \n    # Check if update needed\n    if check_update_needed \"$image_name\" \"$current_version\" \"$version\"; then\n        update_image \"$image_name\" \"$source\" \"$version\"\n    else\n        echo \"$image_name is already at version $version\"\n    fi\n}\n\n# Execute main function\nmain \"$@\"\nEOF",
+          "sudo chmod +x /opt/ai-q/scripts/cache-update.sh"
+        ],
+        "verification": "Check cache update script created",
+        "expected_output": "Cache update script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/cache-update.sh",
+      "/opt/ai-q/scripts/cache-update.sh --help"
+    ],
+    "expected_outputs": {
+      "script": "Cache update script created and executable",
+      "usage": "Usage information displayed"
+    }
+  },
+  "verification_and_testing": {
+    "verification_commands": [
+      "docker ps | grep ai-q-registry",
+      "curl -s http://localhost:5000/v2/_catalog",
+      "/opt/ai-q/scripts/image-versioning.sh list",
+      "docker images | grep localhost:5000"
+    ],
+    "expected_outputs": {
+      "registry": "Registry container running on port 5000",
+      "catalog": "Valid JSON response from registry API",
+      "versions": "Version file accessible and readable",
+      "images": "No local images or valid image list"
+    }
+  },
+  "next_steps": [
+    "Proceed to Backup and Restore System implementation",
+    "Test image caching and versioning functionality",
+    "Validate cache update mechanisms",
+    "Prepare for next recipe: Backup and Restore System"
+  ],
+  "success_criteria": [
+    "✅ Local Docker registry deployed and operational",
+    "✅ Image versioning system implemented",
+    "✅ Cache update mechanisms working",
+    "✅ Registry accessible on localhost:5000",
+    "✅ Version tracking system functional"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "tool.ai_content_generator",
+  "type": "tool",
+  "name": "AI Content Generator",
+  "description": "Modular AI content operations for generating and optimizing content",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["ai", "content", "generation", "optimization", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for AI content operations in recipes",
+  "operations": {
+    "generate_content": "Generate AI content based on prompts",
+    "optimize_content": "Optimize content for target audiences"
+  },
+  "validation": {
+    "required_fields": ["operation", "content_type"],
+    "operations": ["generate", "optimize"]
+  }
+} 

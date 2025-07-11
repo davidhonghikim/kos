@@ -1,0 +1,572 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-06-MONITORING-INFRASTRUCTURE-FOUNDATION",
+    "title": "Monitoring Infrastructure Foundation - Docker Environment Setup",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:12:05Z",
+    "last_updated": "2025-07-05T18:12:05Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "45 minutes",
+    "difficulty_level": "expert",
+    "total_tasks": 3,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": ["ISO 27001", "SOC 2"],
+    "architecture_tier": "enterprise-monitoring-infrastructure",
+    "description": "Monitoring infrastructure foundation with Docker networks, volumes, and orchestration framework - infrastructure only, no services installed",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": ["02-01-docker-core", "02-02-docker-services"],
+      "required_services": ["docker", "docker-compose"],
+      "required_networks": ["ai-q-monitoring-network"],
+      "required_volumes": ["ai-q-monitoring-data", "ai-q-monitoring-config", "ai-q-monitoring-alerts"],
+      "required_ports": [],
+      "required_files": ["/opt/ai-q/docker/compose/monitoring/"]
+    },
+    "kitchen_system": {
+      "pantry_category": "monitoring-infrastructure",
+      "cooking_time": "45 minutes",
+      "complexity": "expert",
+      "kitchen_tools": ["monitoring_network_setup", "monitoring_volume_management", "monitoring_orchestration_framework"],
+      "cache_strategy": "monitoring_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Monitoring Infrastructure Foundation",
+    "description": "Docker infrastructure foundation for monitoring services - networks, volumes, and orchestration framework only",
+    "prerequisites": [
+      "02-01-docker-core completed",
+      "02-02-docker-services completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 8GB RAM available",
+      "100GB free disk space for monitoring data"
+    ],
+    "target_outcome": "Production-ready monitoring infrastructure foundation with zero technical debt",
+    "success_criteria": [
+      "Monitoring Docker network operational",
+      "Monitoring volumes created and accessible",
+      "Monitoring orchestration framework ready",
+      "No actual monitoring services installed",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "MONITORING_NETWORK_SETUP_TASK",
+        "name": "Monitoring Network Setup",
+        "description": "Create dedicated Docker network for monitoring services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [],
+        "skills_required": ["network_configuration", "subnet_management", "monitoring_infrastructure"],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.27.0.0/16 --gateway 172.27.0.1 ai-q-monitoring-network",
+          "docker network ls --filter name=ai-q-monitoring-network",
+          "docker network inspect ai-q-monitoring-network --format '{{.IPAM.Config}}'"
+        ],
+        "validation_commands": [
+          "docker network ls --filter name=ai-q-monitoring-network",
+          "docker network inspect ai-q-monitoring-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-monitoring-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "task_id": "MONITORING_VOLUME_SETUP_TASK",
+        "name": "Monitoring Volume Setup",
+        "description": "Create persistent volumes for monitoring services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": ["MONITORING_NETWORK_SETUP_TASK"],
+        "skills_required": ["volume_management", "persistence_configuration", "monitoring_data_storage"],
+        "exact_commands": [
+          "docker volume create ai-q-monitoring-data",
+          "docker volume create ai-q-monitoring-config",
+          "docker volume create ai-q-monitoring-alerts",
+          "docker volume create ai-q-monitoring-logs",
+          "docker volume create ai-q-monitoring-cache",
+          "docker volume create ai-q-monitoring-temp"
+        ],
+        "validation_commands": [
+          "docker volume ls --filter name=ai-q-monitoring",
+          "docker volume inspect ai-q-monitoring-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-monitoring-config --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "task_id": "MONITORING_ORCHESTRATION_SETUP_TASK",
+        "name": "Monitoring Orchestration Framework",
+        "description": "Create orchestration framework for monitoring services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": ["MONITORING_VOLUME_SETUP_TASK"],
+        "skills_required": ["orchestration_framework", "template_management", "monitoring_infrastructure"],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/monitoring/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/monitoring",
+          "tee /opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-monitoring-network:",
+          "    external: true",
+          "volumes:",
+          "  monitoring-data:",
+          "    external: true",
+          "  monitoring-config:",
+          "    external: true",
+          "  monitoring-alerts:",
+          "    external: true",
+          "  monitoring-logs:",
+          "    external: true",
+          "  monitoring-cache:",
+          "    external: true",
+          "  monitoring-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Monitoring Services Orchestration Script",
+          "MONITORING_DIR=\"/opt/ai-q/docker/compose/monitoring\"",
+          "start_monitoring_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$MONITORING_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Starting \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_monitoring_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$MONITORING_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Stopping \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" down",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_monitoring_service() {",
+          "    local service_name=\$1",
+          "    stop_monitoring_service \"\$service_name\"",
+          "    sleep 5",
+          "    start_monitoring_service \"\$service_name\"",
+          "}",
+          "check_monitoring_service_status() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$MONITORING_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Checking status of \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" ps",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"\$1\" in",
+          "    start)",
+          "        start_monitoring_service \"\$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_monitoring_service \"\$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_monitoring_service \"\$2\"",
+          "        ;;",
+          "    status)",
+          "        check_monitoring_service_status \"\$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: \$0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/monitoring/",
+          "cat /opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml",
+          "/opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh --help || echo 'Script created'"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "MONITORING_NETWORK_CONFIGURATION_SKILL",
+        "name": "Monitoring Network Configuration",
+        "description": "Configure monitoring networks with exact specifications",
+        "tools": ["network_setup", "subnet_management", "monitoring_infrastructure"],
+        "validation": "monitoring_network_configuration_validation",
+        "exact_validation_commands": [
+          "docker network ls --filter name=ai-q-monitoring-network",
+          "docker network inspect ai-q-monitoring-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-monitoring-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "skill_id": "MONITORING_VOLUME_MANAGEMENT_SKILL",
+        "name": "Monitoring Volume Management",
+        "description": "Manage monitoring volumes with exact specifications",
+        "tools": ["volume_setup", "persistence_management", "monitoring_data_storage"],
+        "validation": "monitoring_volume_management_validation",
+        "exact_validation_commands": [
+          "docker volume ls --filter name=ai-q-monitoring",
+          "docker volume inspect ai-q-monitoring-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-monitoring-config --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "skill_id": "MONITORING_ORCHESTRATION_SKILL",
+        "name": "Monitoring Orchestration Framework",
+        "description": "Manage monitoring orchestration with exact specifications",
+        "tools": ["orchestration_setup", "template_management", "script_management"],
+        "validation": "monitoring_orchestration_validation",
+        "exact_validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/monitoring/",
+          "cat /opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml",
+          "test -x /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "MONITORING_INFRASTRUCTURE_TOOL",
+        "name": "Monitoring Infrastructure Setup Tool",
+        "description": "Automated monitoring infrastructure installation and configuration",
+        "file_path": "scripts/infrastructure/setup_monitoring_infrastructure.py",
+        "config": "config/infrastructure/monitoring_infrastructure_config.json",
+        "exact_config_spec": {
+          "network_subnet": "172.27.0.0/16",
+          "network_gateway": "172.27.0.1",
+          "network_driver": "bridge",
+          "volumes": ["ai-q-monitoring-data", "ai-q-monitoring-config", "ai-q-monitoring-alerts", "ai-q-monitoring-logs", "ai-q-monitoring-cache", "ai-q-monitoring-temp"],
+          "orchestration_dir": "/opt/ai-q/docker/compose/monitoring"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "MONITORING_NETWORK_CONFIG",
+        "name": "Monitoring Network Configuration",
+        "description": "Monitoring network configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/monitoring_network.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "network_name": {"type": "string"},
+            "subnet": {"type": "string"},
+            "gateway": {"type": "string"},
+            "driver": {"type": "string"},
+            "enable_ipv6": {"type": "boolean"},
+            "internal": {"type": "boolean"},
+            "attachable": {"type": "boolean"}
+          }
+        }
+      },
+      {
+        "config_id": "MONITORING_VOLUME_CONFIG",
+        "name": "Monitoring Volume Configuration",
+        "description": "Monitoring volume configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/monitoring_volumes.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "driver": {"type": "string"},
+                  "labels": {"type": "object"}
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:monitoring-network-setup:1.0.0",
+          "task:monitoring-volume-setup:1.0.0",
+          "task:monitoring-orchestration-setup:1.0.0",
+          "skill:monitoring-network-configuration:1.0.0",
+          "skill:monitoring-volume-management:1.0.0",
+          "skill:monitoring-orchestration:1.0.0",
+          "tool:monitoring-infrastructure:1.0.0",
+          "config:monitoring-network:1.0.0",
+          "config:monitoring-volume:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_monitoring_infrastructure.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 8GB RAM available",
+          "100GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_monitoring_network_setup",
+        "description": "Create monitoring Docker network with exact commands",
+        "sub_steps": [
+          "Create monitoring network",
+          "Validate network configuration"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.27.0.0/16 --gateway 172.27.0.1 ai-q-monitoring-network",
+          "docker network ls --filter name=ai-q-monitoring-network",
+          "docker network inspect ai-q-monitoring-network --format '{{.IPAM.Config}}'"
+        ],
+        "files_to_create": [
+          "Docker network: ai-q-monitoring-network"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_monitoring_volume_setup",
+        "description": "Create monitoring volumes with exact commands",
+        "sub_steps": [
+          "Create monitoring volumes",
+          "Validate volume creation"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-monitoring-data",
+          "docker volume create ai-q-monitoring-config",
+          "docker volume create ai-q-monitoring-alerts",
+          "docker volume create ai-q-monitoring-logs",
+          "docker volume create ai-q-monitoring-cache",
+          "docker volume create ai-q-monitoring-temp",
+          "docker volume ls --filter name=ai-q-monitoring"
+        ],
+        "files_to_create": [
+          "Docker volumes: ai-q-monitoring-data, ai-q-monitoring-config, ai-q-monitoring-alerts, ai-q-monitoring-logs, ai-q-monitoring-cache, ai-q-monitoring-temp"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_monitoring_orchestration_setup",
+        "description": "Create monitoring orchestration framework with exact commands",
+        "sub_steps": [
+          "Create orchestration directories",
+          "Create base template",
+          "Create orchestration script"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/monitoring/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/monitoring",
+          "tee /opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-monitoring-network:",
+          "    external: true",
+          "volumes:",
+          "  monitoring-data:",
+          "    external: true",
+          "  monitoring-config:",
+          "    external: true",
+          "  monitoring-alerts:",
+          "    external: true",
+          "  monitoring-logs:",
+          "    external: true",
+          "  monitoring-cache:",
+          "    external: true",
+          "  monitoring-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Monitoring Services Orchestration Script",
+          "MONITORING_DIR=\"/opt/ai-q/docker/compose/monitoring\"",
+          "start_monitoring_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$MONITORING_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Starting \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_monitoring_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$MONITORING_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Stopping \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" down",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_monitoring_service() {",
+          "    local service_name=\$1",
+          "    stop_monitoring_service \"\$service_name\"",
+          "    sleep 5",
+          "    start_monitoring_service \"\$service_name\"",
+          "}",
+          "check_monitoring_service_status() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$MONITORING_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Checking status of \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" ps",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"\$1\" in",
+          "    start)",
+          "        start_monitoring_service \"\$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_monitoring_service \"\$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_monitoring_service \"\$2\"",
+          "        ;;",
+          "    status)",
+          "        check_monitoring_service_status \"\$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: \$0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/docker/compose/monitoring/templates/",
+          "/opt/ai-q/docker/compose/monitoring/configs/",
+          "/opt/ai-q/docker/compose/monitoring/scripts/",
+          "/opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml",
+          "/opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete monitoring infrastructure setup",
+        "validation": "monitoring_infrastructure_validation",
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-monitoring-network",
+          "docker volume ls --filter name=ai-q-monitoring",
+          "ls -la /opt/ai-q/docker/compose/monitoring/",
+          "cat /opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml",
+          "test -x /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache monitoring infrastructure configuration and setup",
+        "cache_key": "monitoring_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_monitoring_infrastructure.py --cache-results",
+          "tar -czf /opt/ai-q/cache/monitoring_infrastructure_cache.tar.gz /opt/ai-q/docker/compose/monitoring"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "monitoring_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "monitoring_infrastructure_update",
+      "cache_validation": "monitoring_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/infrastructure/setup_monitoring_infrastructure.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "Monitoring Docker network operational and configured",
+    "All monitoring volumes created and accessible",
+    "Monitoring orchestration framework ready",
+    "No actual monitoring services installed",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready monitoring infrastructure foundation",
+    "Monitoring Docker network with proper configuration",
+    "Monitoring volumes for data, config, alerts, logs, cache, and temp",
+    "Monitoring orchestration framework with templates and scripts",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Monitoring network creation fails",
+        "symptoms": ["Network already exists", "Subnet conflict"],
+        "diagnosis": "Check existing networks and subnet conflicts",
+        "solution": "Remove existing network or use different subnet",
+        "prevention": "Check network configuration before creation"
+      },
+      {
+        "issue": "Monitoring volumes not accessible",
+        "symptoms": ["Permission denied", "Volume not found"],
+        "diagnosis": "Check volume permissions and existence",
+        "solution": "Verify volume creation and set proper permissions",
+        "prevention": "Validate volume creation after setup"
+      },
+      {
+        "issue": "Orchestration script not executable",
+        "symptoms": ["Permission denied", "Script not found"],
+        "diagnosis": "Check script permissions and location",
+        "solution": "Set executable permissions and verify path",
+        "prevention": "Test script after creation"
+      },
+      {
+        "issue": "Directory structure not created",
+        "symptoms": ["Directory not found", "Permission denied"],
+        "diagnosis": "Check directory creation and permissions",
+        "solution": "Create directories with proper permissions",
+        "prevention": "Verify directory structure after setup"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker network ls --filter name=ai-q-monitoring",
+      "docker volume ls --filter name=ai-q-monitoring",
+      "ls -la /opt/ai-q/docker/compose/monitoring/",
+      "cat /opt/ai-q/docker/compose/monitoring/templates/base-monitoring.yml",
+      "test -x /opt/ai-q/docker/compose/monitoring/scripts/orchestrate-monitoring.sh"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 45 minutes",
+    "network_creation_time": "< 5 seconds",
+    "volume_creation_time": "< 10 seconds",
+    "orchestration_setup_time": "< 30 seconds",
+    "validation_time": "< 5 seconds"
+  }
+} 

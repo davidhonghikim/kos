@@ -1,0 +1,690 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-04-AI-ML-INFRASTRUCTURE-FOUNDATION",
+    "title": "AI/ML Infrastructure Foundation - Docker Environment Setup",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:08:45Z",
+    "last_updated": "2025-07-05T18:08:45Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "45 minutes",
+    "difficulty_level": "expert",
+    "total_tasks": 3,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-ai-ml-infrastructure",
+    "description": "AI/ML infrastructure foundation with Docker networks, volumes, and orchestration framework - infrastructure only, no services installed",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "02-01-docker-core",
+        "02-02-docker-services"
+      ],
+      "required_services": [
+        "docker",
+        "docker-compose"
+      ],
+      "required_networks": [
+        "ai-q-ai-ml-network"
+      ],
+      "required_volumes": [
+        "ai-q-ai-ml-data",
+        "ai-q-ai-ml-models",
+        "ai-q-ai-ml-config",
+        "ai-q-ai-ml-cache"
+      ],
+      "required_ports": [],
+      "required_files": [
+        "/opt/ai-q/docker/compose/ai-ml/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "ai-ml-infrastructure",
+      "cooking_time": "45 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "ai_ml_network_setup",
+        "ai_ml_volume_management",
+        "ai_ml_orchestration_framework"
+      ],
+      "cache_strategy": "ai_ml_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "AI/ML Infrastructure Foundation",
+    "description": "Docker infrastructure foundation for AI/ML services - networks, volumes, and orchestration framework only",
+    "prerequisites": [
+      "02-01-docker-core completed",
+      "02-02-docker-services completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 8GB RAM available",
+      "100GB free disk space for AI/ML data"
+    ],
+    "target_outcome": "Production-ready AI/ML infrastructure foundation with zero technical debt",
+    "success_criteria": [
+      "AI/ML Docker network operational",
+      "AI/ML volumes created and accessible",
+      "AI/ML orchestration framework ready",
+      "No actual AI/ML services installed",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "AI_ML_NETWORK_SETUP_TASK",
+        "name": "AI/ML Network Setup",
+        "description": "Create dedicated Docker network for AI/ML services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "network_configuration",
+          "subnet_management",
+          "ai_ml_infrastructure"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.25.0.0/16 --gateway 172.25.0.1 ai-q-ai-ml-network",
+          "docker network ls --filter name=ai-q-ai-ml-network",
+          "docker network inspect ai-q-ai-ml-network --format '{{.IPAM.Config}}'"
+        ],
+        "validation_commands": [
+          "docker network ls --filter name=ai-q-ai-ml-network",
+          "docker network inspect ai-q-ai-ml-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-ai-ml-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "task_id": "AI_ML_VOLUME_SETUP_TASK",
+        "name": "AI/ML Volume Setup",
+        "description": "Create persistent volumes for AI/ML services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [
+          "AI_ML_NETWORK_SETUP_TASK"
+        ],
+        "skills_required": [
+          "volume_management",
+          "persistence_configuration",
+          "ai_ml_data_storage"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-ai-ml-data",
+          "docker volume create ai-q-ai-ml-models",
+          "docker volume create ai-q-ai-ml-config",
+          "docker volume create ai-q-ai-ml-cache",
+          "docker volume create ai-q-ai-ml-logs",
+          "docker volume create ai-q-ai-ml-temp"
+        ],
+        "validation_commands": [
+          "docker volume ls --filter name=ai-q-ai-ml",
+          "docker volume inspect ai-q-ai-ml-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-ai-ml-models --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "task_id": "AI_ML_ORCHESTRATION_SETUP_TASK",
+        "name": "AI/ML Orchestration Framework",
+        "description": "Create orchestration framework for AI/ML services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [
+          "AI_ML_VOLUME_SETUP_TASK"
+        ],
+        "skills_required": [
+          "orchestration_framework",
+          "template_management",
+          "ai_ml_infrastructure"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/ai-ml/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/ai-ml",
+          "tee /opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-ai-ml-network:",
+          "    external: true",
+          "volumes:",
+          "  ai-ml-data:",
+          "    external: true",
+          "  ai-ml-models:",
+          "    external: true",
+          "  ai-ml-config:",
+          "    external: true",
+          "  ai-ml-cache:",
+          "    external: true",
+          "  ai-ml-logs:",
+          "    external: true",
+          "  ai-ml-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh << 'EOF'",
+          "#!/bin/bash",
+          "# AI/ML Services Orchestration Script",
+          "AI_ML_DIR=\"/opt/ai-q/docker/compose/ai-ml\"",
+          "start_ai_ml_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$AI_ML_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Starting $service_name...\"",
+          "        docker-compose -f \"$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_ai_ml_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$AI_ML_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Stopping $service_name...\"",
+          "        docker-compose -f \"$compose_file\" down",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_ai_ml_service() {",
+          "    local service_name=$1",
+          "    stop_ai_ml_service \"$service_name\"",
+          "    sleep 5",
+          "    start_ai_ml_service \"$service_name\"",
+          "}",
+          "check_ai_ml_service_status() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$AI_ML_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Checking status of $service_name...\"",
+          "        docker-compose -f \"$compose_file\" ps",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"$1\" in",
+          "    start)",
+          "        start_ai_ml_service \"$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_ai_ml_service \"$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_ai_ml_service \"$2\"",
+          "        ;;",
+          "    status)",
+          "        check_ai_ml_service_status \"$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: $0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/ai-ml/",
+          "cat /opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml",
+          "/opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh --help || echo 'Script created'"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "AI_ML_NETWORK_CONFIGURATION_SKILL",
+        "name": "AI/ML Network Configuration",
+        "description": "Configure AI/ML networks with exact specifications",
+        "tools": [
+          "network_setup",
+          "subnet_management",
+          "ai_ml_infrastructure"
+        ],
+        "validation": "ai_ml_network_configuration_validation",
+        "exact_validation_commands": [
+          "docker network ls --filter name=ai-q-ai-ml-network",
+          "docker network inspect ai-q-ai-ml-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-ai-ml-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "skill_id": "AI_ML_VOLUME_MANAGEMENT_SKILL",
+        "name": "AI/ML Volume Management",
+        "description": "Manage AI/ML volumes with exact specifications",
+        "tools": [
+          "volume_setup",
+          "persistence_management",
+          "ai_ml_data_storage"
+        ],
+        "validation": "ai_ml_volume_management_validation",
+        "exact_validation_commands": [
+          "docker volume ls --filter name=ai-q-ai-ml",
+          "docker volume inspect ai-q-ai-ml-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-ai-ml-models --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "skill_id": "AI_ML_ORCHESTRATION_SKILL",
+        "name": "AI/ML Orchestration Framework",
+        "description": "Manage AI/ML orchestration with exact specifications",
+        "tools": [
+          "orchestration_setup",
+          "template_management",
+          "script_management"
+        ],
+        "validation": "ai_ml_orchestration_validation",
+        "exact_validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/ai-ml/",
+          "cat /opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml",
+          "test -x /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "AI_ML_INFRASTRUCTURE_TOOL",
+        "name": "AI/ML Infrastructure Setup Tool",
+        "description": "Automated AI/ML infrastructure installation and configuration",
+        "file_path": "scripts/infrastructure/setup_ai_ml_infrastructure.py",
+        "config": "config/infrastructure/ai_ml_infrastructure_config.json",
+        "exact_config_spec": {
+          "network_subnet": "172.25.0.0/16",
+          "network_gateway": "172.25.0.1",
+          "network_driver": "bridge",
+          "volumes": [
+            "ai-q-ai-ml-data",
+            "ai-q-ai-ml-models",
+            "ai-q-ai-ml-config",
+            "ai-q-ai-ml-cache",
+            "ai-q-ai-ml-logs",
+            "ai-q-ai-ml-temp"
+          ],
+          "orchestration_dir": "/opt/ai-q/docker/compose/ai-ml"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "AI_ML_NETWORK_CONFIG",
+        "name": "AI/ML Network Configuration",
+        "description": "AI/ML network configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/ai_ml_network.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "network_name": {
+              "type": "string"
+            },
+            "subnet": {
+              "type": "string"
+            },
+            "gateway": {
+              "type": "string"
+            },
+            "driver": {
+              "type": "string"
+            },
+            "enable_ipv6": {
+              "type": "boolean"
+            },
+            "internal": {
+              "type": "boolean"
+            },
+            "attachable": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      {
+        "config_id": "AI_ML_VOLUME_CONFIG",
+        "name": "AI/ML Volume Configuration",
+        "description": "AI/ML volume configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/ai_ml_volumes.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "driver": {
+                    "type": "string"
+                  },
+                  "labels": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:ai-ml-network-setup:1.0.0",
+          "task:ai-ml-volume-setup:1.0.0",
+          "task:ai-ml-orchestration-setup:1.0.0",
+          "skill:ai-ml-network-configuration:1.0.0",
+          "skill:ai-ml-volume-management:1.0.0",
+          "skill:ai-ml-orchestration:1.0.0",
+          "tool:ai-ml-infrastructure:1.0.0",
+          "config:ai-ml-network:1.0.0",
+          "config:ai-ml-volume:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_ai_ml_infrastructure.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 8GB RAM available",
+          "100GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_ai_ml_network_setup",
+        "description": "Create AI/ML Docker network with exact commands",
+        "sub_steps": [
+          "Create AI/ML network",
+          "Validate network configuration"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.25.0.0/16 --gateway 172.25.0.1 ai-q-ai-ml-network",
+          "docker network ls --filter name=ai-q-ai-ml-network",
+          "docker network inspect ai-q-ai-ml-network --format '{{.IPAM.Config}}'"
+        ],
+        "files_to_create": [
+          "Docker network: ai-q-ai-ml-network"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_ai_ml_volume_setup",
+        "description": "Create AI/ML volumes with exact commands",
+        "sub_steps": [
+          "Create AI/ML volumes",
+          "Validate volume creation"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-ai-ml-data",
+          "docker volume create ai-q-ai-ml-models",
+          "docker volume create ai-q-ai-ml-config",
+          "docker volume create ai-q-ai-ml-cache",
+          "docker volume create ai-q-ai-ml-logs",
+          "docker volume create ai-q-ai-ml-temp",
+          "docker volume ls --filter name=ai-q-ai-ml"
+        ],
+        "files_to_create": [
+          "Docker volumes: ai-q-ai-ml-data, ai-q-ai-ml-models, ai-q-ai-ml-config, ai-q-ai-ml-cache, ai-q-ai-ml-logs, ai-q-ai-ml-temp"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_ai_ml_orchestration_setup",
+        "description": "Create AI/ML orchestration framework with exact commands",
+        "sub_steps": [
+          "Create orchestration directories",
+          "Create base template",
+          "Create orchestration script"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/ai-ml/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/ai-ml",
+          "tee /opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-ai-ml-network:",
+          "    external: true",
+          "volumes:",
+          "  ai-ml-data:",
+          "    external: true",
+          "  ai-ml-models:",
+          "    external: true",
+          "  ai-ml-config:",
+          "    external: true",
+          "  ai-ml-cache:",
+          "    external: true",
+          "  ai-ml-logs:",
+          "    external: true",
+          "  ai-ml-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh << 'EOF'",
+          "#!/bin/bash",
+          "# AI/ML Services Orchestration Script",
+          "AI_ML_DIR=\"/opt/ai-q/docker/compose/ai-ml\"",
+          "start_ai_ml_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$AI_ML_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Starting $service_name...\"",
+          "        docker-compose -f \"$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_ai_ml_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$AI_ML_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Stopping $service_name...\"",
+          "        docker-compose -f \"$compose_file\" down",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_ai_ml_service() {",
+          "    local service_name=$1",
+          "    stop_ai_ml_service \"$service_name\"",
+          "    sleep 5",
+          "    start_ai_ml_service \"$service_name\"",
+          "}",
+          "check_ai_ml_service_status() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$AI_ML_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Checking status of $service_name...\"",
+          "        docker-compose -f \"$compose_file\" ps",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"$1\" in",
+          "    start)",
+          "        start_ai_ml_service \"$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_ai_ml_service \"$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_ai_ml_service \"$2\"",
+          "        ;;",
+          "    status)",
+          "        check_ai_ml_service_status \"$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: $0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/docker/compose/ai-ml/templates/",
+          "/opt/ai-q/docker/compose/ai-ml/configs/",
+          "/opt/ai-q/docker/compose/ai-ml/scripts/",
+          "/opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml",
+          "/opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete AI/ML infrastructure setup",
+        "validation": "ai_ml_infrastructure_validation",
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-ai-ml-network",
+          "docker volume ls --filter name=ai-q-ai-ml",
+          "ls -la /opt/ai-q/docker/compose/ai-ml/",
+          "cat /opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml",
+          "test -x /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache AI/ML infrastructure configuration and setup",
+        "cache_key": "ai_ml_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_ai_ml_infrastructure.py --cache-results",
+          "tar -czf /opt/ai-q/cache/ai_ml_infrastructure_cache.tar.gz /opt/ai-q/docker/compose/ai-ml"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "ai_ml_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "ai_ml_infrastructure_update",
+      "cache_validation": "ai_ml_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/infrastructure/setup_ai_ml_infrastructure.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "AI/ML Docker network operational and configured",
+    "All AI/ML volumes created and accessible",
+    "AI/ML orchestration framework ready",
+    "No actual AI/ML services installed",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready AI/ML infrastructure foundation",
+    "AI/ML Docker network with proper configuration",
+    "AI/ML volumes for data, models, config, cache, logs, and temp",
+    "AI/ML orchestration framework with templates and scripts",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "AI/ML network creation fails",
+        "symptoms": [
+          "Network already exists",
+          "Subnet conflict"
+        ],
+        "diagnosis": "Check existing networks and subnet conflicts",
+        "solution": "Remove existing network or use different subnet",
+        "prevention": "Check network configuration before creation"
+      },
+      {
+        "issue": "AI/ML volumes not accessible",
+        "symptoms": [
+          "Permission denied",
+          "Volume not found"
+        ],
+        "diagnosis": "Check volume permissions and existence",
+        "solution": "Verify volume creation and set proper permissions",
+        "prevention": "Validate volume creation after setup"
+      },
+      {
+        "issue": "Orchestration script not executable",
+        "symptoms": [
+          "Permission denied",
+          "Script not found"
+        ],
+        "diagnosis": "Check script permissions and location",
+        "solution": "Set executable permissions and verify path",
+        "prevention": "Test script after creation"
+      },
+      {
+        "issue": "Directory structure not created",
+        "symptoms": [
+          "Directory not found",
+          "Permission denied"
+        ],
+        "diagnosis": "Check directory creation and permissions",
+        "solution": "Create directories with proper permissions",
+        "prevention": "Verify directory structure after setup"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker network ls --filter name=ai-q-ai-ml",
+      "docker volume ls --filter name=ai-q-ai-ml",
+      "ls -la /opt/ai-q/docker/compose/ai-ml/",
+      "cat /opt/ai-q/docker/compose/ai-ml/templates/base-ai-ml.yml",
+      "test -x /opt/ai-q/docker/compose/ai-ml/scripts/orchestrate-ai-ml.sh"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 45 minutes",
+    "network_creation_time": "< 5 seconds",
+    "volume_creation_time": "< 10 seconds",
+    "orchestration_setup_time": "< 30 seconds",
+    "validation_time": "< 5 seconds"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-04-Ai-Ml-Services",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

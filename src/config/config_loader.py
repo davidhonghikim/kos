@@ -54,26 +54,41 @@ class ConfigLoader:
     
     def _load_config(self) -> None:
         """Load configuration from file and environment variables"""
-        # Load .env file from root directory
-        env_file = Path(".env")
-        if env_file.exists():
-            load_dotenv(env_file)
-        else:
-            raise FileNotFoundError("No .env file found in project root. Please copy .env.example to .env and configure.")
+        # Get the project root directory (two levels up from src/config/)
+        project_root = Path(__file__).parent.parent.parent
         
-        # Load user.env file for user-specific overrides
-        user_env_file = Path("user.env")
-        if user_env_file.exists():
-            load_dotenv(user_env_file, override=True)
+        # Load environment files in priority order
+        env_files = [
+            project_root / 'env/local.env.example',
+            project_root / 'env/cloud.env.example',
+            project_root / 'env/api-keys.env.example',
+            project_root / 'env/settings.env.example',
+            project_root / 'env/local.env',
+            project_root / 'env/cloud.env',
+            project_root / 'env/api-keys.env',
+            project_root / 'env/settings.env'
+        ]
+        
+        # Load each environment file if it exists
+        for env_path in env_files:
+            if env_path.exists():
+                load_dotenv(env_path, override=True)
+        
+        # Check if at least one environment file was loaded
+        if not any(env_path.exists() for env_path in env_files):
+            raise FileNotFoundError("No environment files found. Please copy env/*.env.example files to env/*.env and configure.")
         
         # Load centralized config
-        config_file = Path(self.config_path)
+        config_file = project_root / self.config_path
         if config_file.exists():
             with open(config_file, 'r') as f:
                 self._config = json.load(f)
         
         # Override with environment variables
         self._override_from_env()
+        
+        # Apply master user/password fallbacks
+        self._apply_master_credentials()
         
         # Validate required variables
         self._validate_required_vars()
@@ -249,13 +264,37 @@ class ConfigLoader:
         
         current[keys[-1]] = value
     
+    def _apply_master_credentials(self) -> None:
+        """Apply master user/password fallbacks for services that don't have specific credentials set."""
+        master_user = os.getenv('KOS_MASTER_USER')
+        master_password = os.getenv('KOS_MASTER_PASSWORD')
+        
+        if not master_user or not master_password:
+            return  # No master credentials set
+        
+        # Services that can use master credentials if not specifically set
+        service_credentials = [
+            ('KOS_POSTGRES_USER', 'KOS_POSTGRES_PASSWORD'),
+            ('KOS_REDIS_USER', 'KOS_REDIS_PASSWORD'),
+            ('KOS_NEO4J_USER', 'KOS_NEO4J_PASSWORD'),
+            ('KOS_MINIO_ROOT_USER', 'KOS_MINIO_ROOT_PASSWORD'),
+            ('KOS_GRAFANA_ADMIN_USER', 'KOS_GRAFANA_ADMIN_PASSWORD'),
+        ]
+        
+        for user_var, password_var in service_credentials:
+            # Only apply master credentials if the service doesn't have specific credentials
+            if not os.getenv(user_var) and not os.getenv(password_var):
+                # Set the master credentials for this service
+                os.environ[user_var] = master_user
+                os.environ[password_var] = master_password
+
     def _validate_required_vars(self) -> None:
         """Validate that all required environment variables are set"""
         required_vars = self._config.get('validation_rules', {}).get('required_variables', [])
         missing_vars = []
         
         for var in required_vars:
-            if not self.get(var.lower().replace('_', '.')):
+            if not os.getenv(var):
                 missing_vars.append(var)
         
         if missing_vars:
@@ -333,5 +372,12 @@ class ConfigLoader:
         return self._config.copy()
 
 
-# Global configuration instance
-config = ConfigLoader() 
+# Global configuration instance (lazy loading)
+_config_instance = None
+
+def get_config() -> ConfigLoader:
+    """Get the global configuration instance"""
+    global _config_instance
+    if _config_instance is None:
+        _config_instance = ConfigLoader()
+    return _config_instance 

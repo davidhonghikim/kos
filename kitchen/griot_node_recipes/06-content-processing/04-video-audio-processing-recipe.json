@@ -1,0 +1,814 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "15-video-audio-processing",
+    "title": "Video/Audio Processing System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "last_updated": "2025-07-06T16:10:00Z",
+    "created_by": "Claude Sonnet 4",
+    "purpose": "Implement comprehensive video and audio processing system with transcription, scene detection, and audio analysis for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "content_processing",
+    "priority": "HIGH",
+    "kitchen_system": {
+      "pantry_category": "content_processing",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "video_processing",
+        "audio_processing",
+        "media_analysis",
+        "transcription"
+      ],
+      "cache_strategy": "video_audio_processing_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "name": "Video & Audio Processing System",
+    "description": "Implement production-ready video and audio processing with transcription, scene detection, audio analysis, and media enhancement",
+    "prerequisites": [
+      "14-image-processing-recipe.json completed",
+      "Python 3.9+ and Node.js 18+ installed",
+      "FFmpeg and audio processing libraries available"
+    ],
+    "target_outcome": "Complete video and audio processing system with advanced media analysis capabilities",
+    "success_criteria": [
+      "Video transcription and subtitle generation",
+      "Audio transcription and speech recognition",
+      "Scene detection and video segmentation",
+      "Audio analysis and feature extraction",
+      "Media enhancement and quality improvement",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "MEDIA_ARCHITECTURE_TASK",
+        "name": "Video & Audio Processing Architecture",
+        "description": "Design and implement core media processing architecture",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "media_architecture",
+          "system_design",
+          "unified_management"
+        ]
+      },
+      {
+        "task_id": "VIDEO_PROCESSING_TASK",
+        "name": "Video Processing Engine Implementation",
+        "description": "Create comprehensive video processing engine",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "MEDIA_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "video_processing",
+          "ffmpeg_integration",
+          "scene_detection"
+        ]
+      },
+      {
+        "task_id": "AUDIO_PROCESSING_TASK",
+        "name": "Audio Processing Engine Implementation",
+        "description": "Create comprehensive audio processing engine",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "VIDEO_PROCESSING_TASK"
+        ],
+        "skills_required": [
+          "audio_processing",
+          "speech_recognition",
+          "feature_extraction"
+        ]
+      },
+      {
+        "task_id": "TRANSCRIPTION_TASK",
+        "name": "Video Transcription Implementation",
+        "description": "Create video transcription system with subtitle generation",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "AUDIO_PROCESSING_TASK"
+        ],
+        "skills_required": [
+          "transcription",
+          "subtitle_generation",
+          "audio_sync"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "VIDEO_PROCESSING_SKILL",
+        "name": "Video Processing",
+        "description": "Process and analyze video content",
+        "tools": [
+          "video_engine",
+          "transcription_processor",
+          "scene_detector"
+        ],
+        "validation": "video_processing_validation"
+      },
+      {
+        "skill_id": "AUDIO_PROCESSING_SKILL",
+        "name": "Audio Processing",
+        "description": "Process and analyze audio content",
+        "tools": [
+          "audio_engine",
+          "speech_recognizer",
+          "feature_extractor"
+        ],
+        "validation": "audio_processing_validation"
+      },
+      {
+        "skill_id": "TRANSCRIPTION_SKILL",
+        "name": "Transcription",
+        "description": "Transcribe audio and video content",
+        "tools": [
+          "transcription_engine",
+          "subtitle_generator",
+          "audio_sync"
+        ],
+        "validation": "transcription_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "MEDIA_PROCESSING_TOOL",
+        "name": "Media Processing Engine",
+        "description": "Core media processing system",
+        "file_path": "src/services/media/core.py",
+        "config": "config/media/processing_config.json"
+      },
+      {
+        "tool_id": "VIDEO_PROCESSING_TOOL",
+        "name": "Video Processing Engine",
+        "description": "Video processing and analysis",
+        "file_path": "src/services/media/video/engine.py",
+        "config": "config/media/video_config.json"
+      },
+      {
+        "tool_id": "AUDIO_PROCESSING_TOOL",
+        "name": "Audio Processing Engine",
+        "description": "Audio processing and analysis",
+        "file_path": "src/services/media/audio/engine.py",
+        "config": "config/media/audio_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "MEDIA_PROCESSING_CONFIG",
+        "name": "Media Processing Configuration",
+        "description": "Configuration for media processing system",
+        "file_path": "config/media/processing_config.json",
+        "schema": "media_processing_config_schema"
+      },
+      {
+        "config_id": "VIDEO_CONFIG",
+        "name": "Video Processing Configuration",
+        "description": "Configuration for video processing",
+        "file_path": "config/media/video_config.json",
+        "schema": "video_config_schema"
+      },
+      {
+        "config_id": "AUDIO_CONFIG",
+        "name": "Audio Processing Configuration",
+        "description": "Configuration for audio processing",
+        "file_path": "config/media/audio_config.json",
+        "schema": "audio_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "MEDIA_ARCHITECTURE_TASK",
+          "VIDEO_PROCESSING_SKILL",
+          "MEDIA_PROCESSING_TOOL"
+        ],
+        "description": "Gather media processing architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "video_audio_processing_cache",
+        "description": "Check for existing video/audio processing cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "MEDIA_ARCHITECTURE_TASK",
+        "description": "Execute media processing architecture task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "VIDEO_PROCESSING_TASK",
+          "AUDIO_PROCESSING_SKILL",
+          "VIDEO_PROCESSING_TOOL"
+        ],
+        "description": "Gather video processing ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "VIDEO_PROCESSING_TASK",
+        "description": "Execute video processing task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "AUDIO_PROCESSING_TASK",
+          "TRANSCRIPTION_SKILL",
+          "AUDIO_PROCESSING_TOOL"
+        ],
+        "description": "Gather audio processing ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "AUDIO_PROCESSING_TASK",
+        "description": "Execute audio processing task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "TRANSCRIPTION_TASK",
+          "TRANSCRIPTION_SKILL"
+        ],
+        "description": "Gather transcription ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "TRANSCRIPTION_TASK",
+        "description": "Execute transcription task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "video_audio_processing_validation",
+        "description": "Validate complete video/audio processing system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "video_audio_processing_cache",
+        "description": "Cache video/audio processing configuration and models"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "video_audio_processing_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "model_update",
+      "cache_validation": "video_audio_processing_validation"
+    }
+  },
+  "video_audio_processing_architecture": {
+    "video_processing": {
+      "purpose": "Video processing and analysis",
+      "features": [
+        "Video transcription and subtitles",
+        "Scene detection and segmentation",
+        "Video quality enhancement",
+        "Video metadata extraction"
+      ],
+      "modular_components": [
+        "video-engine",
+        "transcription-processor",
+        "scene-detector",
+        "video-enhancer"
+      ]
+    },
+    "audio_processing": {
+      "purpose": "Audio processing and analysis",
+      "features": [
+        "Audio transcription and speech recognition",
+        "Audio feature extraction",
+        "Audio quality enhancement",
+        "Audio classification and tagging"
+      ],
+      "modular_components": [
+        "audio-engine",
+        "speech-recognizer",
+        "feature-extractor",
+        "audio-enhancer"
+      ]
+    },
+    "media_analysis": {
+      "purpose": "Comprehensive media analysis",
+      "features": [
+        "Multi-modal content analysis",
+        "Content synchronization",
+        "Media relationship mapping",
+        "Cross-media insights"
+      ],
+      "modular_components": [
+        "analysis-engine",
+        "synchronizer",
+        "relationship-mapper",
+        "insights-generator"
+      ]
+    },
+    "media_enhancement": {
+      "purpose": "Media quality enhancement",
+      "features": [
+        "Video quality improvement",
+        "Audio noise reduction",
+        "Resolution upscaling",
+        "Format conversion"
+      ],
+      "modular_components": [
+        "enhancement-engine",
+        "quality-improver",
+        "noise-reducer",
+        "format-converter"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "15-001",
+      "title": "Create Video & Audio Processing Architecture",
+      "description": "Design and implement the core video and audio processing architecture with unified management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/services/media",
+        "mkdir -p src/services/media/video",
+        "mkdir -p src/services/media/audio",
+        "mkdir -p src/services/media/analysis",
+        "mkdir -p src/services/media/enhancement",
+        "mkdir -p src/services/media/common"
+      ],
+      "files_to_create": [
+        "src/services/media/__init__.py",
+        "src/services/media/core.py",
+        "src/services/media/manager.py",
+        "src/services/media/config.py",
+        "src/services/media/types.py"
+      ],
+      "acceptance_criteria": [
+        "Media processing base classes defined with unified interface",
+        "Configuration system supports all media processing types",
+        "Type definitions for all media operations",
+        "Manager class can handle multiple media processors"
+      ]
+    },
+    {
+      "task_id": "15-002",
+      "title": "Implement Video Processing Engine",
+      "description": "Create comprehensive video processing engine with FFmpeg and OpenCV",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install opencv-python ffmpeg-python",
+        "mkdir -p src/services/media/video/processors",
+        "mkdir -p src/services/media/video/analyzers"
+      ],
+      "files_to_create": [
+        "src/services/media/video/__init__.py",
+        "src/services/media/video/engine.py",
+        "src/services/media/video/processors/__init__.py",
+        "src/services/media/video/processors/transcoder.py",
+        "src/services/media/video/processors/encoder.py",
+        "src/services/media/video/analyzers/__init__.py",
+        "src/services/media/video/analyzers/scene.py",
+        "src/services/media/video/analyzers/metadata.py"
+      ],
+      "acceptance_criteria": [
+        "FFmpeg integration working",
+        "Video transcoding functional",
+        "Scene detection operational",
+        "Video metadata extraction"
+      ]
+    },
+    {
+      "task_id": "15-003",
+      "title": "Implement Audio Processing Engine",
+      "description": "Create comprehensive audio processing engine with speech recognition",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install speechrecognition pydub librosa",
+        "mkdir -p src/services/media/audio/processors",
+        "mkdir -p src/services/media/audio/analyzers"
+      ],
+      "files_to_create": [
+        "src/services/media/audio/__init__.py",
+        "src/services/media/audio/engine.py",
+        "src/services/media/audio/processors/__init__.py",
+        "src/services/media/audio/processors/transcoder.py",
+        "src/services/media/audio/processors/enhancer.py",
+        "src/services/media/audio/analyzers/__init__.py",
+        "src/services/media/audio/analyzers/features.py",
+        "src/services/media/audio/analyzers/classification.py"
+      ],
+      "acceptance_criteria": [
+        "Audio processing working",
+        "Speech recognition functional",
+        "Audio feature extraction operational",
+        "Audio classification working"
+      ]
+    },
+    {
+      "task_id": "15-004",
+      "title": "Implement Video Transcription",
+      "description": "Create video transcription system with subtitle generation",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install whisper openai-whisper",
+        "mkdir -p src/services/media/video/transcription"
+      ],
+      "files_to_create": [
+        "src/services/media/video/transcription/__init__.py",
+        "src/services/media/video/transcription/engine.py",
+        "src/services/media/video/transcription/whisper.py",
+        "src/services/media/video/transcription/subtitles.py",
+        "src/services/media/video/transcription/sync.py"
+      ],
+      "acceptance_criteria": [
+        "Whisper transcription working",
+        "Subtitle generation functional",
+        "Audio-video synchronization operational",
+        "Multi-language support"
+      ]
+    },
+    {
+      "task_id": "15-005",
+      "title": "Implement Audio Transcription",
+      "description": "Create audio transcription system with speech recognition",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install google-cloud-speech",
+        "mkdir -p src/services/media/audio/transcription"
+      ],
+      "files_to_create": [
+        "src/services/media/audio/transcription/__init__.py",
+        "src/services/media/audio/transcription/engine.py",
+        "src/services/media/audio/transcription/google.py",
+        "src/services/media/audio/transcription/whisper.py",
+        "src/services/media/audio/transcription/processor.py"
+      ],
+      "acceptance_criteria": [
+        "Google Speech API integration working",
+        "Whisper audio transcription functional",
+        "Speech processing operational",
+        "Transcription accuracy validation"
+      ]
+    },
+    {
+      "task_id": "15-006",
+      "title": "Implement Scene Detection",
+      "description": "Create video scene detection and segmentation system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install scenedetect",
+        "mkdir -p src/services/media/video/scenes"
+      ],
+      "files_to_create": [
+        "src/services/media/video/scenes/__init__.py",
+        "src/services/media/video/scenes/detector.py",
+        "src/services/media/video/scenes/analyzer.py",
+        "src/services/media/video/scenes/segmentation.py",
+        "src/services/media/video/scenes/classification.py"
+      ],
+      "acceptance_criteria": [
+        "Scene detection working",
+        "Scene segmentation functional",
+        "Scene classification operational",
+        "Scene metadata extraction"
+      ]
+    },
+    {
+      "task_id": "15-007",
+      "title": "Implement Media API",
+      "description": "Create comprehensive API for video and audio processing operations",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/api/routes/media",
+        "mkdir -p tests/media"
+      ],
+      "files_to_create": [
+        "src/api/routes/media/__init__.py",
+        "src/api/routes/media/video.py",
+        "src/api/routes/media/audio.py",
+        "src/api/routes/media/transcription.py",
+        "src/api/routes/media/enhancement.py",
+        "tests/media/test_video.py",
+        "tests/media/test_audio.py",
+        "tests/media/test_transcription.py"
+      ],
+      "acceptance_criteria": [
+        "Video processing API endpoints working",
+        "Audio processing API functional",
+        "Transcription API operational",
+        "Enhancement API working"
+      ]
+    },
+    {
+      "task_id": "15-008",
+      "title": "Implement Media Analytics",
+      "description": "Create media analytics and insights generation",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/media/analytics"
+      ],
+      "files_to_create": [
+        "src/services/media/analytics/__init__.py",
+        "src/services/media/analytics/insights.py",
+        "src/services/media/analytics/patterns.py",
+        "src/services/media/analytics/trends.py",
+        "src/services/media/analytics/reports.py"
+      ],
+      "acceptance_criteria": [
+        "Media insights generation working",
+        "Pattern recognition functional",
+        "Trend analysis operational",
+        "Analytics reporting"
+      ]
+    },
+    {
+      "task_id": "15-009",
+      "title": "Implement Media Quality Assessment",
+      "description": "Create media quality assessment and validation system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/media/quality"
+      ],
+      "files_to_create": [
+        "src/services/media/quality/__init__.py",
+        "src/services/media/quality/assessor.py",
+        "src/services/media/quality/validator.py",
+        "src/services/media/quality/metrics.py",
+        "src/services/media/quality/scorer.py"
+      ],
+      "acceptance_criteria": [
+        "Media quality assessment working",
+        "Quality validation functional",
+        "Quality metrics calculation",
+        "Quality scoring system"
+      ]
+    },
+    {
+      "task_id": "15-010",
+      "title": "Implement Media Caching",
+      "description": "Create intelligent caching for media processing results",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/media/caching"
+      ],
+      "files_to_create": [
+        "src/services/media/caching/__init__.py",
+        "src/services/media/caching/manager.py",
+        "src/services/media/caching/strategies.py",
+        "src/services/media/caching/invalidation.py"
+      ],
+      "acceptance_criteria": [
+        "Media processing caching working",
+        "Cache strategies functional",
+        "Cache invalidation operational",
+        "Cache performance optimization"
+      ]
+    },
+    {
+      "task_id": "15-011",
+      "title": "Implement Media Testing",
+      "description": "Create comprehensive testing framework for media processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p tests/media/integration",
+        "mkdir -p tests/media/performance"
+      ],
+      "files_to_create": [
+        "tests/media/integration/test_media_integration.py",
+        "tests/media/performance/test_media_performance.py",
+        "tests/media/conftest.py",
+        "tests/media/test_data/",
+        "config/testing/media_test_config.json"
+      ],
+      "acceptance_criteria": [
+        "Integration tests for media processing",
+        "Performance benchmarks working",
+        "Test data and fixtures available",
+        "Automated media validation"
+      ]
+    },
+    {
+      "task_id": "15-012",
+      "title": "Implement Media Monitoring",
+      "description": "Create monitoring and analytics for media processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/media/monitoring"
+      ],
+      "files_to_create": [
+        "src/services/media/monitoring/__init__.py",
+        "src/services/media/monitoring/metrics.py",
+        "src/services/media/monitoring/analytics.py",
+        "src/services/media/monitoring/dashboard.py"
+      ],
+      "acceptance_criteria": [
+        "Media processing metrics collection",
+        "Analytics and reporting working",
+        "Monitoring dashboard functional",
+        "Performance tracking operational"
+      ]
+    },
+    {
+      "task_id": "15-013",
+      "title": "Implement Media Documentation",
+      "description": "Create comprehensive documentation for media processing system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/media",
+        "mkdir -p examples/media"
+      ],
+      "files_to_create": [
+        "docs/media/README.md",
+        "docs/media/video.md",
+        "docs/media/audio.md",
+        "docs/media/transcription.md",
+        "docs/media/enhancement.md",
+        "examples/media/video_examples.py",
+        "examples/media/audio_examples.py",
+        "examples/media/transcription_examples.py"
+      ],
+      "acceptance_criteria": [
+        "Complete media processing documentation",
+        "API usage examples",
+        "Processing pipeline guide",
+        "Troubleshooting documentation"
+      ]
+    },
+    {
+      "task_id": "15-014",
+      "title": "Implement Media Optimization",
+      "description": "Create performance optimizations for media processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/media/optimization"
+      ],
+      "files_to_create": [
+        "src/services/media/optimization/__init__.py",
+        "src/services/media/optimization/caching.py",
+        "src/services/media/optimization/batching.py",
+        "src/services/media/optimization/parallel.py"
+      ],
+      "acceptance_criteria": [
+        "Media processing optimization working",
+        "Batch processing functional",
+        "Parallel processing operational",
+        "Performance monitoring"
+      ]
+    },
+    {
+      "task_id": "15-015",
+      "title": "Implement Media Security",
+      "description": "Create security features for media processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/media/security"
+      ],
+      "files_to_create": [
+        "src/services/media/security/__init__.py",
+        "src/services/media/security/sanitizer.py",
+        "src/services/media/security/encryption.py",
+        "src/services/media/security/access_control.py"
+      ],
+      "acceptance_criteria": [
+        "Media sanitization working",
+        "Media encryption functional",
+        "Access control operational",
+        "Security compliance"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "FFMPEG_PATH": "/usr/bin/ffmpeg",
+      "WHISPER_MODEL": "base",
+      "GOOGLE_SPEECH_API_KEY": "your-google-speech-key",
+      "MEDIA_PROCESSING_CACHE_TTL": "3600",
+      "MEDIA_MAX_SIZE": "100MB",
+      "MEDIA_PROCESSING_WORKERS": "4"
+    },
+    "supported_formats": {
+      "video": [
+        "mp4",
+        "avi",
+        "mov",
+        "mkv",
+        "wmv",
+        "flv",
+        "webm"
+      ],
+      "audio": [
+        "mp3",
+        "wav",
+        "flac",
+        "aac",
+        "ogg",
+        "m4a"
+      ],
+      "output": [
+        "mp4",
+        "mp3",
+        "wav",
+        "srt",
+        "vtt"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test video transcription accuracy",
+      "Test audio transcription precision",
+      "Test scene detection quality",
+      "Test media enhancement",
+      "Test format conversion"
+    ],
+    "integration_tests": [
+      "Test end-to-end media processing",
+      "Test batch media processing",
+      "Test multi-format support",
+      "Test error handling"
+    ],
+    "performance_tests": [
+      "Media processing speed tests",
+      "Memory usage optimization",
+      "CPU utilization tests",
+      "Concurrent processing tests"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Python 3.9+ with required packages",
+      "FFmpeg installed and configured",
+      "GPU support for video processing (optional)",
+      "Sufficient storage for media processing"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the project directory",
+      "2. Copy configuration templates and update with your settings",
+      "3. Install Python dependencies: pip install -r requirements.txt",
+      "4. Install FFmpeg: sudo apt-get install ffmpeg",
+      "5. Download Whisper models: python scripts/download_whisper.py",
+      "6. Run media processing tests: python -m pytest tests/media/"
+    ],
+    "verification": [
+      "Test video transcription with sample videos",
+      "Verify audio transcription functionality",
+      "Test scene detection features",
+      "Confirm media enhancement capabilities"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "04-Video-Audio-Processing-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

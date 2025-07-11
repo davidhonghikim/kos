@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "title": "AI-Q Docker Compose Profiles Guide",
+    "version": "1.0.0",
+    "created_by": "Q-Assist (GPT-4.1)",
+    "creation_timestamp": "2025-07-09T22:45:00Z",
+    "purpose": "Comprehensive guide for using Docker Compose profiles to deploy AI-Q system with different service combinations"
+  },
+  "overview": {
+    "description": "AI-Q system uses Docker Compose profiles to allow flexible deployment configurations. Choose the profile that matches your needs.",
+    "main_file": "docker-compose.unified.yml",
+    "environment_file": "../env.txt (rename to .env)"
+  },
+  "deployment_profiles": {
+    "minimal": {
+      "description": "Absolute minimum - just the main AI-Q application",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml up -d",
+      "services": [
+        "ai-q-app (main application only)"
+      ],
+      "use_case": "Testing or development with external services"
+    },
+    "core": {
+      "description": "Essential services for basic AI-Q functionality",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile core up -d",
+      "services": [
+        "ai-q-app (main application)",
+        "postgres (primary database)",
+        "redis (caching and sessions)",
+        "weaviate (vector database for RAG)",
+        "minio (object storage)",
+        "ollama (local LLM)"
+      ],
+      "use_case": "Production deployment with core functionality",
+      "recommended": true
+    },
+    "full": {
+      "description": "Complete system with all services",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile full up -d",
+      "services": [
+        "All core services",
+        "elasticsearch (full-text search)",
+        "neo4j (graph database)",
+        "prometheus (metrics)",
+        "grafana (monitoring dashboards)",
+        "cadvisor (container monitoring)",
+        "huggingface-inference (advanced ML)",
+        "gitea (version control)"
+      ],
+      "use_case": "Full-featured deployment with all capabilities",
+      "resource_requirements": "High - requires significant system resources"
+    }
+  },
+  "individual_service_profiles": {
+    "postgres": {
+      "description": "PostgreSQL database only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile postgres up -d",
+      "use_case": "External PostgreSQL deployment"
+    },
+    "redis": {
+      "description": "Redis cache only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile redis up -d",
+      "use_case": "External Redis deployment"
+    },
+    "weaviate": {
+      "description": "Weaviate vector database only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile weaviate up -d",
+      "use_case": "External Weaviate deployment"
+    },
+    "minio": {
+      "description": "MinIO object storage only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile minio up -d",
+      "use_case": "External MinIO deployment"
+    },
+    "ollama": {
+      "description": "Ollama LLM only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile ollama up -d",
+      "use_case": "External Ollama deployment"
+    },
+    "elasticsearch": {
+      "description": "Elasticsearch only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile elasticsearch up -d",
+      "use_case": "External Elasticsearch deployment"
+    },
+    "neo4j": {
+      "description": "Neo4j graph database only",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile neo4j up -d",
+      "use_case": "External Neo4j deployment"
+    },
+    "monitoring": {
+      "description": "Monitoring stack (Prometheus, Grafana, cAdvisor)",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile monitoring up -d",
+      "use_case": "Add monitoring to existing deployment"
+    },
+    "ai-ml": {
+      "description": "AI/ML services (HuggingFace)",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile ai-ml up -d",
+      "use_case": "Add advanced ML capabilities"
+    },
+    "development": {
+      "description": "Development tools (Gitea)",
+      "command": "docker-compose -f docker/compose/docker-compose.unified.yml --profile development up -d",
+      "use_case": "Add version control and collaboration"
+    }
+  },
+  "recommended_deployments": {
+    "development": {
+      "profile": "core",
+      "description": "For development and testing",
+      "services": "Essential services only",
+      "resource_usage": "Medium"
+    },
+    "production_minimal": {
+      "profile": "core",
+      "description": "Production with minimal resource usage",
+      "services": "Core functionality only",
+      "resource_usage": "Medium"
+    },
+    "production_full": {
+      "profile": "full",
+      "description": "Production with all features",
+      "services": "Complete system",
+      "resource_usage": "High"
+    },
+    "testing": {
+      "profile": "minimal",
+      "description": "For testing with external services",
+      "services": "Main application only",
+      "resource_usage": "Low"
+    }
+  },
+  "environment_configuration": {
+    "setup_steps": [
+      "1. Copy env.txt to .env: cp env.txt .env",
+      "2. Edit .env and set AIQ_HOST to your desired host",
+      "3. Configure feature flags as needed",
+      "4. Run the appropriate docker-compose command"
+    ],
+    "host_configuration": {
+      "localhost": "AIQ_HOST=localhost",
+      "lan_ip": "AIQ_HOST=192.168.1.100",
+      "remote_server": "AIQ_HOST=your-server-ip.com",
+      "commercial": "AIQ_HOST=your-domain.com"
+    },
+    "feature_flags": {
+      "description": "Control which services are enabled via environment variables",
+      "location": "env.txt (rename to .env)",
+      "format": "ENABLE_SERVICE=true/false"
+    }
+  },
+  "service_dependencies": {
+    "ai-q-app": {
+      "required": ["postgres", "redis", "weaviate", "minio", "ollama"],
+      "optional": ["elasticsearch", "neo4j", "monitoring", "ai-ml", "development"]
+    },
+    "core_services": {
+      "postgres": "Primary database for recipes, ingredients, history",
+      "redis": "Caching, sessions, job queues",
+      "weaviate": "Vector database for RAG and semantic search",
+      "minio": "Object storage for artifacts, models, files",
+      "ollama": "Local LLM for AI processing"
+    },
+    "optional_services": {
+      "elasticsearch": "Full-text search, advanced analytics",
+      "neo4j": "Graph database for complex relationships",
+      "prometheus": "Metrics collection",
+      "grafana": "Monitoring dashboards",
+      "cadvisor": "Container monitoring",
+      "huggingface": "Advanced ML models",
+      "gitea": "Version control and collaboration"
+    }
+  },
+  "troubleshooting": {
+    "common_issues": {
+      "services_not_starting": "Check if required services are enabled in profile",
+      "port_conflicts": "Verify ports are not used by other applications",
+      "resource_issues": "Ensure sufficient RAM and CPU for selected profile",
+      "network_issues": "Check if AIQ_HOST is correctly configured"
+    },
+    "health_checks": {
+      "description": "All services include health checks",
+      "check_command": "docker ps -a",
+      "logs_command": "docker-compose logs [service-name]"
+    }
+  },
+  "examples": {
+    "quick_start": {
+      "description": "Get started quickly with core services",
+      "steps": [
+        "cp env.txt .env",
+        "docker-compose -f docker/compose/docker-compose.unified.yml --profile core up -d",
+        "docker ps -a"
+      ]
+    },
+    "add_monitoring": {
+      "description": "Add monitoring to existing deployment",
+      "steps": [
+        "docker-compose -f docker/compose/docker-compose.unified.yml --profile monitoring up -d"
+      ]
+    },
+    "full_deployment": {
+      "description": "Deploy complete system",
+      "steps": [
+        "cp env.txt .env",
+        "Edit .env to set AIQ_HOST",
+        "docker-compose -f docker/compose/docker-compose.unified.yml --profile full up -d"
+      ]
+    }
+  }
+} 

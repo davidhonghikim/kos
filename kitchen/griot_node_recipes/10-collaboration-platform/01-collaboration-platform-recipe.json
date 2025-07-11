@@ -1,0 +1,548 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "10-COLLABORATION-PLATFORM",
+    "title": "Collaboration Platform System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "last_updated": "2025-07-06T16:11:00Z",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:11:00Z",
+    "estimated_tokens": 85000,
+    "estimated_execution_time": "5-7 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 50,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "98%",
+    "kitchen_system": {
+      "pantry_category": "collaboration_platform",
+      "cooking_time": "420 minutes",
+      "complexity": "advanced",
+      "kitchen_tools": [
+        "real_time_communication",
+        "collaborative_editing",
+        "version_control",
+        "team_management"
+      ],
+      "cache_strategy": "collaboration_platform_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "description": "Advanced real-time collaboration platform enabling seamless team workflows, document editing, version control, and project management. This recipe implements a comprehensive collaboration system with WebSocket-based real-time communication, conflict resolution, user presence tracking, and integrated project management capabilities.",
+    "architectural_scope": "Full-featured collaboration platform with real-time editing, version control, team management, project tracking, and integrated communication tools",
+    "technology_stack": {
+      "real_time_communication": "WebSocket, Socket.IO, Redis pub/sub",
+      "document_editing": "Operational Transform (OT), Conflict-free Replicated Data Types (CRDT)",
+      "version_control": "Git integration, diff algorithms, merge strategies",
+      "user_management": "JWT authentication, role-based access control, user presence",
+      "project_management": "Kanban boards, task tracking, milestone management",
+      "communication": "Real-time chat, video conferencing, screen sharing",
+      "storage": "PostgreSQL for metadata, Redis for sessions, MinIO for assets"
+    },
+    "deliverables": [
+      "Real-time collaborative document editor with conflict resolution",
+      "Integrated version control system with Git workflow",
+      "Team management dashboard with user roles and permissions",
+      "Project management tools with Kanban boards and task tracking",
+      "Real-time communication platform with chat and video",
+      "User presence tracking and activity monitoring",
+      "Conflict resolution and merge strategies",
+      "Audit logging and activity history",
+      "Mobile-responsive collaboration interface",
+      "API endpoints for third-party integrations"
+    ],
+    "success_criteria": [
+      "Real-time document editing with multiple concurrent users",
+      "Automatic conflict resolution and merge capabilities",
+      "Version control integration with full Git workflow",
+      "Team collaboration features operational",
+      "User presence and activity tracking functional",
+      "Project management tools fully operational",
+      "Real-time communication features working",
+      "Mobile interface responsive and functional",
+      "API endpoints documented and tested",
+      "Performance benchmarks met under load"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "REAL_TIME_COMMUNICATION_TASK",
+        "name": "Real-Time Communication Infrastructure Setup",
+        "description": "Establish WebSocket-based real-time communication infrastructure",
+        "estimated_time": "45 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "websocket",
+          "socket_io",
+          "redis_pubsub"
+        ]
+      },
+      {
+        "task_id": "COLLABORATIVE_EDITING_TASK",
+        "name": "Collaborative Document Editor Implementation",
+        "description": "Implement operational transform-based collaborative editor",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "REAL_TIME_COMMUNICATION_TASK"
+        ],
+        "skills_required": [
+          "operational_transform",
+          "conflict_resolution",
+          "real_time_sync"
+        ]
+      },
+      {
+        "task_id": "VERSION_CONTROL_TASK",
+        "name": "Version Control Integration",
+        "description": "Integrate Git-based version control with collaborative editing",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "COLLABORATIVE_EDITING_TASK"
+        ],
+        "skills_required": [
+          "git_integration",
+          "version_control",
+          "merge_strategies"
+        ]
+      },
+      {
+        "task_id": "TEAM_MANAGEMENT_TASK",
+        "name": "Team Management System",
+        "description": "Implement comprehensive team management",
+        "estimated_time": "75 minutes",
+        "dependencies": [
+          "REAL_TIME_COMMUNICATION_TASK"
+        ],
+        "skills_required": [
+          "user_management",
+          "role_based_access",
+          "activity_tracking"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "REAL_TIME_COMMUNICATION_SKILL",
+        "name": "Real-Time Communication",
+        "description": "Handle real-time communication and synchronization",
+        "tools": [
+          "websocket",
+          "socket_io",
+          "redis_pubsub"
+        ],
+        "validation": "real_time_communication_validation"
+      },
+      {
+        "skill_id": "COLLABORATIVE_EDITING_SKILL",
+        "name": "Collaborative Editing",
+        "description": "Enable collaborative document editing",
+        "tools": [
+          "operational_transform",
+          "crdt",
+          "conflict_resolution"
+        ],
+        "validation": "collaborative_editing_validation"
+      },
+      {
+        "skill_id": "TEAM_MANAGEMENT_SKILL",
+        "name": "Team Management",
+        "description": "Manage teams and user permissions",
+        "tools": [
+          "user_management",
+          "role_based_access",
+          "project_management"
+        ],
+        "validation": "team_management_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "COLLABORATION_PLATFORM_TOOL",
+        "name": "Collaboration Platform Engine",
+        "description": "Core collaboration platform system",
+        "file_path": "src/services/collaboration/core.py",
+        "config": "config/collaboration/platform_config.json"
+      },
+      {
+        "tool_id": "REAL_TIME_COMMUNICATION_TOOL",
+        "name": "Real-Time Communication Engine",
+        "description": "Real-time communication and synchronization",
+        "file_path": "src/services/collaboration/communication_engine.py",
+        "config": "config/collaboration/communication_config.json"
+      },
+      {
+        "tool_id": "COLLABORATIVE_EDITING_TOOL",
+        "name": "Collaborative Editing Engine",
+        "description": "Collaborative document editing",
+        "file_path": "src/services/collaboration/editing_engine.py",
+        "config": "config/collaboration/editing_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "COLLABORATION_PLATFORM_CONFIG",
+        "name": "Collaboration Platform Configuration",
+        "description": "Configuration for collaboration platform",
+        "file_path": "config/collaboration/platform_config.json",
+        "schema": "collaboration_platform_config_schema"
+      },
+      {
+        "config_id": "REAL_TIME_COMMUNICATION_CONFIG",
+        "name": "Real-Time Communication Configuration",
+        "description": "Configuration for real-time communication",
+        "file_path": "config/collaboration/communication_config.json",
+        "schema": "real_time_communication_config_schema"
+      },
+      {
+        "config_id": "COLLABORATIVE_EDITING_CONFIG",
+        "name": "Collaborative Editing Configuration",
+        "description": "Configuration for collaborative editing",
+        "file_path": "config/collaboration/editing_config.json",
+        "schema": "collaborative_editing_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "REAL_TIME_COMMUNICATION_TASK",
+          "REAL_TIME_COMMUNICATION_SKILL",
+          "COLLABORATION_PLATFORM_TOOL"
+        ],
+        "description": "Gather collaboration platform architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "collaboration_platform_cache",
+        "description": "Check for existing collaboration platform cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "REAL_TIME_COMMUNICATION_TASK",
+        "description": "Execute real-time communication infrastructure task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "COLLABORATIVE_EDITING_TASK",
+          "COLLABORATIVE_EDITING_SKILL",
+          "REAL_TIME_COMMUNICATION_TOOL"
+        ],
+        "description": "Gather collaborative editing ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "COLLABORATIVE_EDITING_TASK",
+        "description": "Execute collaborative editing task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "VERSION_CONTROL_TASK",
+          "TEAM_MANAGEMENT_SKILL",
+          "COLLABORATIVE_EDITING_TOOL"
+        ],
+        "description": "Gather version control ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "VERSION_CONTROL_TASK",
+        "description": "Execute version control task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "TEAM_MANAGEMENT_TASK",
+          "TEAM_MANAGEMENT_SKILL"
+        ],
+        "description": "Gather team management ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "TEAM_MANAGEMENT_TASK",
+        "description": "Execute team management task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "collaboration_platform_validation",
+        "description": "Validate complete collaboration platform system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "collaboration_platform_cache",
+        "description": "Cache collaboration platform configuration and sessions"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "collaboration_platform_cache",
+      "cache_duration": "session_based",
+      "cache_invalidation": "session_expiry",
+      "cache_validation": "collaboration_platform_validation"
+    }
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "operating_system": "Windows 10/11, macOS 12+, or Ubuntu 20.04 LTS+",
+      "memory": "16GB RAM minimum, 32GB recommended",
+      "storage": "100GB free space for collaboration data",
+      "cpu": "8 cores minimum, 16 cores recommended",
+      "network": "Gigabit ethernet for real-time communication",
+      "browser": "Chrome 110+, Firefox 110+, Safari 15+"
+    },
+    "software_prerequisites": [
+      "Node.js 18+ with npm/yarn",
+      "PostgreSQL 15+ with extensions",
+      "Redis 7+ for session management",
+      "Git 2.35+ for version control",
+      "Docker and Docker Compose",
+      "WebSocket-capable web server (Nginx/Apache)"
+    ],
+    "knowledge_requirements": [
+      "Real-time communication protocols (WebSocket, Socket.IO)",
+      "Operational Transform and CRDT algorithms",
+      "Version control systems and Git workflows",
+      "Conflict resolution strategies",
+      "User authentication and authorization",
+      "Project management methodologies",
+      "Database design and optimization",
+      "API design and documentation"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "11-001",
+      "title": "Real-Time Communication Infrastructure Setup",
+      "description": "Establish WebSocket-based real-time communication infrastructure with Socket.IO, Redis pub/sub, and connection management for collaborative editing sessions.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1800,
+      "dependencies": [],
+      "category": "infrastructure",
+      "priority": "critical"
+    },
+    {
+      "task_id": "11-002",
+      "title": "Collaborative Document Editor Implementation",
+      "description": "Implement operational transform-based collaborative document editor with conflict resolution, cursor tracking, and real-time synchronization.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2200,
+      "dependencies": [
+        "11-001"
+      ],
+      "category": "core_feature",
+      "priority": "critical"
+    },
+    {
+      "task_id": "11-003",
+      "title": "Version Control Integration",
+      "description": "Integrate Git-based version control with collaborative editing, automatic commits, branch management, and merge conflict resolution.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "dependencies": [
+        "11-002"
+      ],
+      "category": "integration",
+      "priority": "high"
+    },
+    {
+      "task_id": "11-004",
+      "title": "Team Management System",
+      "description": "Implement comprehensive team management with user roles, permissions, project assignments, and activity tracking.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2000,
+      "dependencies": [
+        "11-001"
+      ],
+      "category": "management",
+      "priority": "high"
+    },
+    {
+      "task_id": "11-005",
+      "title": "Project Management Tools",
+      "description": "Create Kanban boards, task tracking, milestone management, and project timeline visualization tools.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1800,
+      "dependencies": [
+        "11-004"
+      ],
+      "category": "management",
+      "priority": "medium"
+    },
+    {
+      "task_id": "11-006",
+      "title": "Real-Time Communication Features",
+      "description": "Implement chat, video conferencing, screen sharing, and notification systems for team communication.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2100,
+      "dependencies": [
+        "11-001"
+      ],
+      "category": "communication",
+      "priority": "medium"
+    },
+    {
+      "task_id": "11-007",
+      "title": "User Presence and Activity Tracking",
+      "description": "Implement user presence indicators, activity monitoring, and real-time status updates for collaboration awareness.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1600,
+      "dependencies": [
+        "11-001"
+      ],
+      "category": "tracking",
+      "priority": "medium"
+    },
+    {
+      "task_id": "11-008",
+      "title": "Conflict Resolution System",
+      "description": "Implement advanced conflict resolution algorithms with automatic merge strategies and manual conflict resolution tools.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2000,
+      "dependencies": [
+        "11-002"
+      ],
+      "category": "core_feature",
+      "priority": "high"
+    },
+    {
+      "task_id": "11-009",
+      "title": "Mobile-Responsive Interface",
+      "description": "Create mobile-responsive collaboration interface with touch-optimized controls and offline capability.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1800,
+      "dependencies": [
+        "11-002"
+      ],
+      "category": "interface",
+      "priority": "medium"
+    },
+    {
+      "task_id": "11-010",
+      "title": "API Development and Documentation",
+      "description": "Develop comprehensive REST API endpoints for third-party integrations and create detailed API documentation.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1600,
+      "dependencies": [
+        "11-004"
+      ],
+      "category": "integration",
+      "priority": "medium"
+    }
+  ],
+  "acceptance_criteria": [
+    "Real-time collaborative editing functional with multiple users",
+    "Version control integration working with Git workflow",
+    "Team management features operational",
+    "Project management tools functional",
+    "Real-time communication features working",
+    "Conflict resolution system operational",
+    "Mobile interface responsive and functional",
+    "API endpoints documented and tested",
+    "Performance benchmarks met under load",
+    "Security and privacy requirements satisfied"
+  ],
+  "configuration": {
+    "websocket_settings": {
+      "port": 3001,
+      "cors_origins": [
+        "http://localhost:3000",
+        "https://ai-q.local"
+      ],
+      "heartbeat_interval": 30000,
+      "connection_timeout": 60000
+    },
+    "redis_config": {
+      "host": "localhost",
+      "port": 6379,
+      "database": 1,
+      "key_prefix": "collab:"
+    },
+    "postgres_config": {
+      "host": "localhost",
+      "port": 5432,
+      "database": "ai_q_collab",
+      "schema": "collaboration"
+    },
+    "git_integration": {
+      "repository_path": "./repositories",
+      "auto_commit_interval": 300000,
+      "branch_naming": "feature/{user}/{timestamp}",
+      "merge_strategy": "recursive"
+    }
+  },
+  "validation_and_testing": {
+    "real_time_tests": [
+      "Multi-user concurrent editing",
+      "Conflict resolution scenarios",
+      "Connection stability under load",
+      "Data synchronization accuracy"
+    ],
+    "performance_tests": [
+      "Document load times",
+      "Real-time update latency",
+      "Memory usage under load",
+      "Database query performance"
+    ],
+    "security_tests": [
+      "Authentication and authorization",
+      "Data encryption in transit",
+      "Session management",
+      "Access control validation"
+    ]
+  },
+  "deployment_instructions": {
+    "setup_commands": [
+      "npm install",
+      "docker-compose up -d redis postgres",
+      "npm run migrate",
+      "npm run seed",
+      "npm start"
+    ],
+    "verification_commands": [
+      "curl -f http://localhost:3001/health",
+      "curl -f http://localhost:3000/api/collaboration/status",
+      "websocat ws://localhost:3001/socket.io/"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Collaboration-Platform-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

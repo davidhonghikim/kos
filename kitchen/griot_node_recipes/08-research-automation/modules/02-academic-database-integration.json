@@ -1,0 +1,78 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "04-RESEARCH-ACADEMIC-DB-002",
+    "title": "Academic Database Integration",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "difficulty_level": "advanced",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Integrates major academic databases and APIs, including PubMed, arXiv, IEEE, ACM, and Google Scholar, with authentication and rate limiting.",
+    "technology_stack": {
+      "academic_databases": "PubMed, arXiv, IEEE, ACM, Google Scholar APIs",
+      "language": "Python"
+    },
+    "deliverables": [
+      "API connectors for major academic databases",
+      "Secure handling of API keys and authentication",
+      "Respectful rate limiting to comply with API terms of service"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "08-002",
+      "title": "Academic Database Integration",
+      "description": "Integrate major academic databases and APIs including PubMed, arXiv, IEEE, ACM, and Google Scholar with authentication and rate limiting.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "commands": [
+        "pip install requests"
+      ],
+      "files_to_create": [
+        "src/modules/research/academic_apis/pubmed_connector.py",
+        "src/modules/research/academic_apis/arxiv_connector.py",
+        "src/modules/research/academic_apis/ieee_connector.py",
+        "src/modules/research/academic_apis/acm_connector.py",
+        "src/modules/research/academic_apis/google_scholar_connector.py",
+        "config/api_keys.yml"
+      ],
+      "acceptance_criteria": [
+        "Can successfully query each academic database API.",
+        "API keys are stored securely and not exposed in code.",
+        "Rate limits for each API are respected."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-Academic-Database-Integration",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

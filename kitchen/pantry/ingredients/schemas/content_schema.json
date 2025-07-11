@@ -1,0 +1,31 @@
+{
+  "id": "schema.content",
+  "type": "schema",
+  "name": "Content Schema",
+  "description": "Schema definition for content creation and social media posts",
+  "version": "1.2.0",
+  "category": "schemas",
+  "dependencies": [],
+  "tags": ["schema", "content", "social_media", "validation", "structure"],
+  "author": "creative_team",
+  "created": "2025-07-07T23:00:00Z",
+  "updated": "2025-07-07T23:00:00Z",
+  "access_level": "protected",
+  "usage": "Use for validating content structure and social media post format",
+  "validation": {
+    "required_fields": ["content_type", "platform", "content_data"],
+    "schema_definition": {
+      "type": "object",
+      "properties": {
+        "content_id": {"type": "string"},
+        "content_type": {"type": "string", "enum": ["image", "video", "text", "story"]},
+        "platform": {"type": "string", "enum": ["instagram", "tiktok", "youtube", "twitter"]},
+        "caption": {"type": "string", "maxLength": 2200},
+        "hashtags": {"type": "array", "items": {"type": "string"}},
+        "media_urls": {"type": "array", "items": {"type": "string"}},
+        "scheduled_time": {"type": "string", "format": "date-time"}
+      },
+      "required": ["content_id", "content_type", "platform"]
+    }
+  }
+} 

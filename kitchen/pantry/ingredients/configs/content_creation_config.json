@@ -1,0 +1,26 @@
+{
+  "id": "config.content_creation",
+  "type": "config",
+  "name": "Content Creation Configuration",
+  "description": "Configuration settings for content creation workflows",
+  "version": "2.1.0",
+  "category": "configs",
+  "dependencies": [],
+  "tags": ["configuration", "content_creation", "workflow", "settings", "creative"],
+  "author": "creative_team",
+  "created": "2025-07-07T23:00:00Z",
+  "updated": "2025-07-07T23:00:00Z",
+  "access_level": "protected",
+  "usage": "Use to configure content creation workflow parameters and settings",
+  "validation": {
+    "required_fields": ["output_formats", "quality_standards"],
+    "settings": {
+      "default_image_format": "png",
+      "video_quality": "1080p",
+      "caption_length_limit": 2200,
+      "hashtag_limit": 30,
+      "auto_schedule": true,
+      "engagement_tracking": true
+    }
+  }
+} 

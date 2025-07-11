@@ -1,0 +1,431 @@
+{
+  "version": "3.8",
+  "last_updated": "2025-07-07T01:25:06Z",
+  "created_by": "Claude Sonnet 4 - Sonnet 4",
+  "converted_from": "E:\\kos\\ai-Q\\docker-compose.yml",
+  "conversion_timestamp": "2025-07-05T04:52:18Z",
+  "converter": "RobustYAMLToJSONConverter v1.0",
+  "purpose": "Converted from YAML to JSON format for agent consumption",
+  "services": {
+    "postgres": {
+      "image": "postgres:15-alpine",
+      "container_name": "ai-q-postgres",
+      "environment": {
+        "POSTGRES_DB": "${POSTGRES_DB}",
+        "POSTGRES_USER": "${POSTGRES_USER}",
+        "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD}",
+        "POSTGRES_INITDB_ARGS": "${POSTGRES_INITDB_ARGS}"
+      },
+      "volumes": [
+        "postgres_data:/var/lib/postgresql/data",
+        "./init-scripts:/docker-entrypoint-initdb.d"
+      ],
+      "ports": [
+        "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "redis": {
+      "image": "redis:7-alpine",
+      "container_name": "ai-q-redis",
+      "command": "redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}",
+      "volumes": [
+        "redis_data:/data"
+      ],
+      "ports": [
+        "${REDIS_PORT}:${REDIS_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "redis-cli",
+          "--raw",
+          "incr",
+          "ping"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "elasticsearch": {
+      "image": "docker.elastic.co/elasticsearch/elasticsearch:8.11.0",
+      "container_name": "ai-q-elasticsearch",
+      "environment": [
+        "discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE}",
+        "xpack.security.enabled=${ELASTICSEARCH_XPACK_SECURITY_ENABLED}",
+        "ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS}",
+        "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}"
+      ],
+      "volumes": [
+        "elasticsearch_data:/usr/share/elasticsearch/data"
+      ],
+      "ports": [
+        "${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}",
+        "${ELASTICSEARCH_CLUSTER_PORT}:${ELASTICSEARCH_CLUSTER_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:${ELASTICSEARCH_PORT}/_cluster/health || exit 1"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 5
+      }
+    },
+    "neo4j": {
+      "image": "neo4j:5.15.0",
+      "container_name": "ai-q-neo4j",
+      "environment": {
+        "NEO4J_AUTH": "${NEO4J_USER}/${NEO4J_PASSWORD}",
+        "NEO4J_PLUGINS": "${NEO4J_PLUGINS}",
+        "NEO4J_dbms_security_procedures_unrestricted": "${NEO4J_PROCEDURES_UNRESTRICTED}",
+        "NEO4J_dbms_memory_heap_initial__size": "${NEO4J_HEAP_INITIAL_SIZE}",
+        "NEO4J_dbms_memory_heap_max__size": "${NEO4J_HEAP_MAX_SIZE}",
+        "NEO4J_dbms_memory_pagecache_size": "${NEO4J_PAGECACHE_SIZE}"
+      },
+      "volumes": [
+        "neo4j_data:/data",
+        "neo4j_logs:/logs",
+        "neo4j_import:/var/lib/neo4j/import",
+        "neo4j_plugins:/plugins"
+      ],
+      "ports": [
+        "${NEO4J_BROWSER_PORT}:${NEO4J_BROWSER_PORT}",
+        "${NEO4J_BOLT_PORT}:${NEO4J_BOLT_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:${NEO4J_BROWSER_PORT}/browser/ || exit 1"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "weaviate": {
+      "image": "semitechnologies/weaviate:1.22.4",
+      "container_name": "ai-q-weaviate",
+      "environment": {
+        "QUERY_DEFAULTS_LIMIT": "${WEAVIATE_QUERY_DEFAULTS_LIMIT}",
+        "AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED": "${WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED}",
+        "PERSISTENCE_DATA_PATH": "${WEAVIATE_PERSISTENCE_DATA_PATH}",
+        "DEFAULT_VECTORIZER_MODULE": "${WEAVIATE_DEFAULT_VECTORIZER_MODULE}",
+        "ENABLE_MODULES": "${WEAVIATE_ENABLE_MODULES}",
+        "TRANSFORMERS_INFERENCE_API": "${WEAVIATE_TRANSFORMERS_INFERENCE_API}",
+        "CLUSTER_HOSTNAME": "${WEAVIATE_CLUSTER_HOSTNAME}"
+      },
+      "volumes": [
+        "weaviate_data:/var/lib/weaviate"
+      ],
+      "ports": [
+        "${WEAVIATE_PORT}:${WEAVIATE_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${WEAVIATE_PORT}/v1/.well-known/ready"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "minio": {
+      "image": "minio/minio:RELEASE.2023-11-15T20-43-25Z",
+      "container_name": "ai-q-minio",
+      "environment": {
+        "MINIO_ROOT_USER": "${MINIO_ROOT_USER}",
+        "MINIO_ROOT_PASSWORD": "${MINIO_ROOT_PASSWORD}"
+      },
+      "volumes": [
+        "minio_data:/data"
+      ],
+      "ports": [
+        "${MINIO_API_PORT}:${MINIO_API_PORT}",
+        "${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped",
+      "command": "server /data --console-address \":${MINIO_CONSOLE_PORT}\"",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${MINIO_API_PORT}/minio/health/live"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "api-server": {
+      "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile.api"
+      },
+      "container_name": "ai-q-api-server",
+      "environment": [
+        "DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}",
+        "REDIS_URL=redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}/${REDIS_DB}",
+        "ELASTICSEARCH_URL=http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}",
+        "NEO4J_URI=bolt://${NEO4J_HOST}:${NEO4J_BOLT_PORT}",
+        "NEO4J_USER=${NEO4J_USER}",
+        "NEO4J_PASSWORD=${NEO4J_PASSWORD}",
+        "WEAVIATE_URL=http://${WEAVIATE_HOST}:${WEAVIATE_PORT}",
+        "MINIO_ENDPOINT=${MINIO_HOST}:${MINIO_API_PORT}",
+        "MINIO_ACCESS_KEY=${MINIO_ROOT_USER}",
+        "MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}",
+        "JWT_SECRET=${JWT_SECRET}",
+        "ENVIRONMENT=${API_ENVIRONMENT}"
+      ],
+      "volumes": [
+        "./logs:/app/logs",
+        "./uploads:/app/uploads"
+      ],
+      "ports": [
+        "${API_SERVER_PORT}:${API_SERVER_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "depends_on": {
+        "postgres": {
+          "condition": "service_healthy"
+        },
+        "redis": {
+          "condition": "service_healthy"
+        },
+        "elasticsearch": {
+          "condition": "service_healthy"
+        },
+        "neo4j": {
+          "condition": "service_healthy"
+        },
+        "weaviate": {
+          "condition": "service_healthy"
+        },
+        "minio": {
+          "condition": "service_healthy"
+        }
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${API_SERVER_PORT}/health"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "web-dashboard": {
+      "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile.web"
+      },
+      "container_name": "ai-q-web-dashboard",
+      "environment": [
+        "NEXT_PUBLIC_API_URL=http://${API_SERVER_HOST}:${API_SERVER_PORT}",
+        "NEXT_PUBLIC_WEBSOCKET_URL=ws://${API_SERVER_HOST}:${API_SERVER_PORT}/ws",
+        "NODE_ENV=${NODE_ENV}"
+      ],
+      "ports": [
+        "${WEB_DASHBOARD_PORT}:${WEB_DASHBOARD_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "depends_on": {
+        "api-server": {
+          "condition": "service_healthy"
+        }
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${WEB_DASHBOARD_PORT}/api/health"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "prometheus": {
+      "image": "prom/prometheus:v2.48.1",
+      "container_name": "ai-q-prometheus",
+      "command": [
+        "--config.file=/etc/prometheus/prometheus.yml",
+        "--storage.tsdb.path=/prometheus",
+        "--web.console.libraries=/etc/prometheus/console_libraries",
+        "--web.console.templates=/etc/prometheus/consoles",
+        "--storage.tsdb.retention.time=${PROMETHEUS_RETENTION_TIME}",
+        "--web.enable-lifecycle"
+      ],
+      "volumes": [
+        "./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml",
+        "prometheus_data:/prometheus"
+      ],
+      "ports": [
+        "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped"
+    },
+    "grafana": {
+      "image": "grafana/grafana:10.2.0",
+      "container_name": "ai-q-grafana",
+      "environment": [
+        "GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}",
+        "GF_USERS_ALLOW_SIGN_UP=${GRAFANA_ALLOW_SIGN_UP}"
+      ],
+      "volumes": [
+        "grafana_data:/var/lib/grafana",
+        "./monitoring/grafana/provisioning:/etc/grafana/provisioning",
+        "./monitoring/grafana/dashboards:/var/lib/grafana/dashboards"
+      ],
+      "ports": [
+        "${GRAFANA_PORT}:3000"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "depends_on": [
+        "prometheus"
+      ],
+      "restart": "unless-stopped"
+    },
+    "nginx": {
+      "image": "nginx:alpine",
+      "container_name": "ai-q-nginx",
+      "volumes": [
+        "./nginx/nginx.conf:/etc/nginx/nginx.conf",
+        "./nginx/ssl:/etc/nginx/ssl",
+        "./logs/nginx:/var/log/nginx"
+      ],
+      "ports": [
+        "${NGINX_HTTP_PORT}:80",
+        "${NGINX_HTTPS_PORT}:443"
+      ],
+      "networks": [
+        "ai-q-network"
+      ],
+      "depends_on": [
+        "web-dashboard",
+        "api-server"
+      ],
+      "restart": "unless-stopped"
+    },
+    "backup": {
+      "image": "alpine:latest",
+      "container_name": "ai-q-backup",
+      "volumes": [
+        "./backup:/backup",
+        "postgres_data:/var/lib/postgresql/data:ro",
+        "elasticsearch_data:/usr/share/elasticsearch/data:ro",
+        "neo4j_data:/data:ro",
+        "weaviate_data:/var/lib/weaviate:ro",
+        "minio_data:/data:ro"
+      ],
+      "environment": [
+        "BACKUP_SCHEDULE=${BACKUP_SCHEDULE}",
+        "BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS}"
+      ],
+      "command": "sh -c \"\n  apk add --no-cache postgresql-client curl tar gzip\n  while true; do\n    sleep 86400\n    echo 'Starting backup...'\n    pg_dump -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -d ${POSTGRES_DB} > /backup/postgres_$(date +%Y%m%d_%H%M%S).sql\n    echo 'Backup completed'\n  done\n\"\n",
+      "networks": [
+        "ai-q-network"
+      ],
+      "restart": "unless-stopped"
+    }
+  },
+  "volumes": {
+    "postgres_data": {
+      "driver": "local"
+    },
+    "redis_data": {
+      "driver": "local"
+    },
+    "elasticsearch_data": {
+      "driver": "local"
+    },
+    "neo4j_data": {
+      "driver": "local"
+    },
+    "neo4j_logs": {
+      "driver": "local"
+    },
+    "neo4j_import": {
+      "driver": "local"
+    },
+    "neo4j_plugins": {
+      "driver": "local"
+    },
+    "weaviate_data": {
+      "driver": "local"
+    },
+    "minio_data": {
+      "driver": "local"
+    },
+    "prometheus_data": {
+      "driver": "local"
+    },
+    "grafana_data": {
+      "driver": "local"
+    }
+  },
+  "networks": {
+    "ai-q-network": {
+      "driver": "bridge",
+      "ipam": {
+        "config": [
+          {
+            "subnet": "${NETWORK_SUBNET}"
+          }
+        ]
+      }
+    }
+  }
+}

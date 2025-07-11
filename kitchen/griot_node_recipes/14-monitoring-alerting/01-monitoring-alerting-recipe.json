@@ -1,0 +1,547 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "14-MONITORING-ALERTING",
+    "title": "Monitoring and Alerting System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:16:00Z",
+    "last_updated": "2025-07-06T16:16:00Z",
+    "estimated_tokens": 80000,
+    "estimated_execution_time": "5-6 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 45,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "98%",
+    "kitchen_system": {
+      "pantry_category": "monitoring_alerting",
+      "cooking_time": "360 minutes",
+      "complexity": "advanced",
+      "kitchen_tools": [
+        "metrics_collection",
+        "alert_management",
+        "dashboard_creation",
+        "incident_response"
+      ],
+      "cache_strategy": "monitoring_alerting_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "description": "Comprehensive monitoring and alerting system for real-time system health monitoring, performance tracking, and automated incident response. This recipe implements enterprise-grade monitoring including metrics collection, alert management, dashboard creation, and automated incident response workflows.",
+    "architectural_scope": "Complete monitoring and alerting platform with real-time metrics, intelligent alerting, and automated response",
+    "technology_stack": {
+      "metrics_collection": "Prometheus, Telegraf, StatsD, CollectD",
+      "alert_management": "AlertManager, PagerDuty, Slack, Email",
+      "visualization": "Grafana, Kibana, DataDog, New Relic",
+      "logging": "ELK Stack, FluentD, Logstash, Graylog",
+      "incident_response": "PagerDuty, OpsGenie, VictorOps, automated runbooks"
+    },
+    "deliverables": [
+      "Real-time metrics collection and storage",
+      "Intelligent alerting with escalation policies",
+      "Comprehensive dashboards and visualizations",
+      "Automated incident response workflows",
+      "Performance monitoring and optimization",
+      "Log aggregation and analysis",
+      "Capacity planning and forecasting",
+      "Service level objective monitoring",
+      "Automated runbook execution",
+      "Compliance and audit reporting"
+    ],
+    "success_criteria": [
+      "Real-time metrics collection operational",
+      "Alerting system responding within 30 seconds",
+      "Dashboards providing actionable insights",
+      "Automated incident response reducing MTTR by 50%",
+      "Performance monitoring identifying bottlenecks",
+      "Log analysis providing security insights",
+      "Capacity planning preventing outages",
+      "SLO monitoring ensuring service quality",
+      "Automated runbooks reducing manual intervention",
+      "Compliance reporting meeting regulatory requirements"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "METRICS_COLLECTION_TASK",
+        "name": "Metrics Collection Setup",
+        "description": "Set up comprehensive metrics collection system",
+        "estimated_time": "90 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "metrics_collection",
+          "data_storage",
+          "time_series"
+        ]
+      },
+      {
+        "task_id": "ALERT_MANAGEMENT_TASK",
+        "name": "Alert Management System",
+        "description": "Implement intelligent alerting with escalation",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "METRICS_COLLECTION_TASK"
+        ],
+        "skills_required": [
+          "alert_management",
+          "escalation_policies",
+          "notification"
+        ]
+      },
+      {
+        "task_id": "DASHBOARD_CREATION_TASK",
+        "name": "Dashboard and Visualization",
+        "description": "Create comprehensive monitoring dashboards",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "ALERT_MANAGEMENT_TASK"
+        ],
+        "skills_required": [
+          "dashboard_creation",
+          "visualization",
+          "ui_design"
+        ]
+      },
+      {
+        "task_id": "INCIDENT_RESPONSE_TASK",
+        "name": "Incident Response Automation",
+        "description": "Implement automated incident response workflows",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "DASHBOARD_CREATION_TASK"
+        ],
+        "skills_required": [
+          "incident_response",
+          "automation",
+          "runbooks"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "METRICS_COLLECTION_SKILL",
+        "name": "Metrics Collection",
+        "description": "Collect and store system metrics",
+        "tools": [
+          "prometheus",
+          "telegraf",
+          "statsd"
+        ],
+        "validation": "metrics_collection_validation"
+      },
+      {
+        "skill_id": "ALERT_MANAGEMENT_SKILL",
+        "name": "Alert Management",
+        "description": "Manage alerts and notifications",
+        "tools": [
+          "alertmanager",
+          "pagerduty",
+          "slack"
+        ],
+        "validation": "alert_management_validation"
+      },
+      {
+        "skill_id": "DASHBOARD_CREATION_SKILL",
+        "name": "Dashboard Creation",
+        "description": "Create monitoring dashboards",
+        "tools": [
+          "grafana",
+          "kibana",
+          "datadog"
+        ],
+        "validation": "dashboard_creation_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "MONITORING_TOOL",
+        "name": "Monitoring Engine",
+        "description": "Core monitoring orchestration system",
+        "file_path": "src/services/monitoring/core.py",
+        "config": "config/monitoring/core_config.json"
+      },
+      {
+        "tool_id": "ALERT_MANAGER_TOOL",
+        "name": "Alert Manager",
+        "description": "Alert management and notification system",
+        "file_path": "src/services/monitoring/alert_manager.py",
+        "config": "config/monitoring/alert_config.json"
+      },
+      {
+        "tool_id": "DASHBOARD_TOOL",
+        "name": "Dashboard Creator",
+        "description": "Dashboard creation and management",
+        "file_path": "src/services/monitoring/dashboard_creator.py",
+        "config": "config/monitoring/dashboard_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "MONITORING_CONFIG",
+        "name": "Monitoring Configuration",
+        "description": "Configuration for monitoring system",
+        "file_path": "config/monitoring/core_config.json",
+        "schema": "monitoring_config_schema"
+      },
+      {
+        "config_id": "ALERT_CONFIG",
+        "name": "Alert Configuration",
+        "description": "Configuration for alert management",
+        "file_path": "config/monitoring/alert_config.json",
+        "schema": "alert_config_schema"
+      },
+      {
+        "config_id": "DASHBOARD_CONFIG",
+        "name": "Dashboard Configuration",
+        "description": "Configuration for dashboards",
+        "file_path": "config/monitoring/dashboard_config.json",
+        "schema": "dashboard_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "METRICS_COLLECTION_TASK",
+          "METRICS_COLLECTION_SKILL",
+          "MONITORING_TOOL"
+        ],
+        "description": "Gather metrics collection ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "monitoring_alerting_cache",
+        "description": "Check for existing monitoring cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "METRICS_COLLECTION_TASK",
+        "description": "Execute metrics collection task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "ALERT_MANAGEMENT_TASK",
+          "ALERT_MANAGEMENT_SKILL",
+          "ALERT_MANAGER_TOOL"
+        ],
+        "description": "Gather alert management ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "ALERT_MANAGEMENT_TASK",
+        "description": "Execute alert management task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "DASHBOARD_CREATION_TASK",
+          "DASHBOARD_CREATION_SKILL",
+          "DASHBOARD_TOOL"
+        ],
+        "description": "Gather dashboard creation ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "DASHBOARD_CREATION_TASK",
+        "description": "Execute dashboard creation task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "INCIDENT_RESPONSE_TASK"
+        ],
+        "description": "Gather incident response ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "INCIDENT_RESPONSE_TASK",
+        "description": "Execute incident response task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation_criteria": [
+          "Metrics collection operational",
+          "Alerting system responding",
+          "Dashboards providing insights",
+          "Incident response automated"
+        ],
+        "description": "Validate monitoring and alerting results"
+      }
+    ]
+  },
+  "caching_strategy": {
+    "cache_key": "monitoring_alerting_cache",
+    "cache_components": [
+      "metrics_data",
+      "alert_configurations",
+      "dashboard_templates",
+      "incident_response_playbooks"
+    ],
+    "invalidation_triggers": [
+      "system_changes",
+      "alert_threshold_updates",
+      "dashboard_modifications",
+      "incident_response_updates"
+    ],
+    "cache_duration": "1 hour",
+    "validation_mechanism": "monitoring_alerting_validation"
+  },
+  "implementation_steps": [
+    {
+      "task_id": "14-001",
+      "title": "Monitoring Infrastructure Setup",
+      "description": "Set up comprehensive monitoring infrastructure with exact specifications and atomic operations",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "mkdir -p src/services/monitoring",
+        "mkdir -p config/monitoring",
+        "mkdir -p /opt/ai-q/monitoring/{data,config,logs}",
+        "chmod 755 /opt/ai-q/monitoring"
+      ],
+      "files_to_create": [
+        "src/services/monitoring/__init__.py",
+        "src/services/monitoring/core.py",
+        "src/services/monitoring/alert_manager.py",
+        "src/services/monitoring/dashboard_creator.py",
+        "src/services/monitoring/metrics_collector.py",
+        "config/monitoring/core_config.json",
+        "config/monitoring/alert_config.json",
+        "config/monitoring/dashboard_config.json"
+      ],
+      "acceptance_criteria": [
+        "All directory structures created with correct permissions",
+        "Monitoring base classes defined with exact interfaces",
+        "Configuration system supports all monitoring tools with validation",
+        "Type definitions for all monitoring operations with exact specifications",
+        "Monitoring system can handle multiple data sources with atomic operations"
+      ]
+    },
+    {
+      "task_id": "14-002",
+      "title": "Prometheus Metrics Collection Setup",
+      "description": "Install and configure Prometheus with exact storage and retention settings",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name prometheus-mon --network ai-q-monitoring -p 9092:9090 -v /opt/ai-q/monitoring/prometheus:/etc/prometheus -v /opt/ai-q/monitoring/data/prometheus:/prometheus prom/prometheus:v2.45.0 --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=15d"
+      ],
+      "files_to_create": [
+        "config/monitoring/prometheus/prometheus.yml",
+        "config/monitoring/prometheus/rules/",
+        "config/monitoring/prometheus/alerts/",
+        "scripts/monitoring/prometheus-setup.sh"
+      ],
+      "acceptance_criteria": [
+        "Prometheus accessible at http://localhost:9092 with health check",
+        "Metrics collection operational with 15-day retention",
+        "Alert rules configured for system monitoring",
+        "Target discovery working for all services",
+        "Prometheus can scrape metrics from all endpoints"
+      ]
+    },
+    {
+      "task_id": "14-003",
+      "title": "AlertManager Configuration",
+      "description": "Configure AlertManager with exact notification channels and escalation policies",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name alertmanager --network ai-q-monitoring -p 9093:9093 -v /opt/ai-q/monitoring/alertmanager:/etc/alertmanager prom/alertmanager:v0.25.0 --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager"
+      ],
+      "files_to_create": [
+        "config/monitoring/alertmanager/alertmanager.yml",
+        "config/monitoring/alertmanager/templates/",
+        "config/monitoring/alertmanager/receivers/",
+        "scripts/monitoring/alertmanager-setup.sh"
+      ],
+      "acceptance_criteria": [
+        "AlertManager accessible at http://localhost:9093",
+        "Email notifications configured and tested",
+        "Slack integration operational with custom templates",
+        "Escalation policies working with time-based routing",
+        "Alert silencing and inhibition rules functional"
+      ]
+    },
+    {
+      "task_id": "14-004",
+      "title": "Grafana Dashboard Implementation",
+      "description": "Set up Grafana with comprehensive dashboards and data source configurations",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name grafana-mon --network ai-q-monitoring -p 3002:3000 -v /opt/ai-q/monitoring/grafana:/var/lib/grafana -e GF_SECURITY_ADMIN_PASSWORD=admin123 grafana/grafana:10.0.0"
+      ],
+      "files_to_create": [
+        "config/monitoring/grafana/dashboards/",
+        "config/monitoring/grafana/provisioning/",
+        "config/monitoring/grafana/datasources/",
+        "scripts/monitoring/grafana-setup.sh"
+      ],
+      "acceptance_criteria": [
+        "Grafana accessible at http://localhost:3002 with admin/admin123",
+        "Prometheus data source configured and tested",
+        "System overview dashboard operational",
+        "Custom dashboards imported and functional",
+        "Dashboard auto-refresh working at 30-second intervals"
+      ]
+    },
+    {
+      "task_id": "14-005",
+      "title": "Log Aggregation Setup",
+      "description": "Implement ELK Stack for centralized log collection and analysis",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name elasticsearch --network ai-q-monitoring -p 9200:9200 -p 9300:9300 -e discovery.type=single-node -v /opt/ai-q/monitoring/elasticsearch:/usr/share/elasticsearch/data elasticsearch:7.17.0",
+        "docker run -d --name kibana --network ai-q-monitoring -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://elasticsearch:9200 kibana:7.17.0",
+        "docker run -d --name logstash --network ai-q-monitoring -p 5044:5044 -v /opt/ai-q/monitoring/logstash:/usr/share/logstash/pipeline logstash:7.17.0"
+      ],
+      "files_to_create": [
+        "config/monitoring/logstash/pipeline/",
+        "config/monitoring/logstash/config/",
+        "config/monitoring/elasticsearch/elasticsearch.yml",
+        "scripts/monitoring/elk-setup.sh"
+      ],
+      "acceptance_criteria": [
+        "Elasticsearch accessible at http://localhost:9200",
+        "Kibana accessible at http://localhost:5601",
+        "Logstash processing logs from all services",
+        "Log indices created with proper mappings",
+        "Log search and filtering operational"
+      ]
+    }
+  ],
+  "acceptance_criteria": [
+    "Real-time metrics collection operational with 15-day retention",
+    "Alerting system responding within 30 seconds of threshold breach",
+    "Dashboards providing actionable insights with auto-refresh",
+    "Automated incident response reducing MTTR by 50%",
+    "Performance monitoring identifying bottlenecks in real-time",
+    "Log analysis providing security insights and compliance",
+    "Capacity planning preventing outages with predictive alerts",
+    "SLO monitoring ensuring service quality with exact thresholds",
+    "Automated runbooks reducing manual intervention by 80%",
+    "Compliance reporting meeting regulatory requirements with audit trails"
+  ],
+  "deliverables": [
+    "Production-ready monitoring system with exact configurations",
+    "Comprehensive metrics collection with Prometheus and custom exporters",
+    "Intelligent alerting system with AlertManager and multiple channels",
+    "Advanced dashboards with Grafana and custom visualizations",
+    "Centralized logging with ELK Stack and log analysis",
+    "Automated incident response with runbooks and escalation",
+    "Performance monitoring with benchmarking and optimization",
+    "Capacity planning with predictive analytics and forecasting",
+    "SLO monitoring with service level agreements and reporting",
+    "Compliance reporting with audit trails and regulatory standards"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Prometheus targets showing as DOWN",
+        "symptoms": "Targets in Prometheus UI showing red status",
+        "diagnosis": "Check target endpoints and network connectivity",
+        "solution": "Verify target URLs and network access: curl -f http://target:port/health",
+        "prevention": "Implement proper health checks and monitoring"
+      },
+      {
+        "issue": "AlertManager notifications not working",
+        "symptoms": "Alerts triggered but no notifications sent",
+        "diagnosis": "Check notification channel configuration and credentials",
+        "solution": "Test notification channels: curl -X POST http://alertmanager:9093/api/v1/test",
+        "prevention": "Regular testing of notification channels"
+      },
+      {
+        "issue": "Grafana dashboards not loading data",
+        "symptoms": "Dashboards show no data or connection errors",
+        "diagnosis": "Check data source configuration and connectivity",
+        "solution": "Verify Prometheus data source: curl -f http://prometheus:9090/api/v1/query?query=up",
+        "prevention": "Monitor data source health and connectivity"
+      }
+    ],
+    "performance_optimization": [
+      {
+        "optimization": "Prometheus retention optimization",
+        "description": "Configure data retention and compression",
+        "implementation": "Set --storage.tsdb.retention.time=15d in Prometheus config",
+        "expected_improvement": "50% reduction in storage usage"
+      },
+      {
+        "optimization": "Alert grouping and inhibition",
+        "description": "Group related alerts and inhibit redundant notifications",
+        "implementation": "Configure group_by and inhibit_rules in AlertManager",
+        "expected_improvement": "70% reduction in alert noise"
+      },
+      {
+        "optimization": "Dashboard caching and optimization",
+        "description": "Enable dashboard caching and query optimization",
+        "implementation": "Configure Grafana caching and query timeouts",
+        "expected_improvement": "60% faster dashboard loading"
+      }
+    ]
+  },
+  "performance_benchmarks": {
+    "monitoring_targets": {
+      "metrics_collection_interval": "15 seconds",
+      "alert_response_time": "< 30 seconds",
+      "dashboard_load_time": "< 2 seconds",
+      "log_processing_latency": "< 5 seconds"
+    },
+    "availability_targets": {
+      "monitoring_uptime": "> 99.99%",
+      "alert_delivery_rate": "> 99.9%",
+      "dashboard_availability": "> 99.95%",
+      "log_retention_compliance": "100%"
+    },
+    "performance_targets": {
+      "query_response_time": "< 100ms",
+      "data_ingestion_rate": "> 10k metrics/second",
+      "storage_efficiency": "> 80% compression",
+      "notification_delivery": "< 10 seconds"
+    }
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Monitoring-Alerting-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

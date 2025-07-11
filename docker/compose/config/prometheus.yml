@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['ai-q-cadvisor:8080']
+  - job_name: 'node'
+    static_configs:
+      - targets: ['ai-q-redis:6379', 'ai-q-postgres:5432', 'ai-q-elasticsearch:9200', 'ai-q-neo4j:7474', 'ai-q-minio:9000', 'ai-q-weaviate:8080'] 

@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Ollama LLM Service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-q-ollama
+    restart: unless-stopped
+    ports:
+      - "11000:11434"
+    volumes:
+      - /opt/ai-q/data/ollama/models:/root/.ollama/models
+      - /opt/ai-q/data/ollama/config:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    networks:
+      - ai-q-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+networks:
+  ai-q-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16 

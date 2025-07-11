@@ -1,0 +1,828 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "13-text-processing",
+    "title": "Text Processing System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "last_updated": "2025-07-06T16:10:00Z",
+    "created_by": "Claude Sonnet 4",
+    "purpose": "Implement comprehensive text processing system with OCR, NLP, summarization, and translation for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "content_processing",
+    "priority": "HIGH",
+    "kitchen_system": {
+      "pantry_category": "content_processing",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "ocr_processing",
+        "nlp_engine",
+        "text_summarization",
+        "translation"
+      ],
+      "cache_strategy": "text_processing_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "name": "Text Processing System",
+    "description": "Implement production-ready text processing with OCR, NLP, summarization, translation, and advanced text analysis",
+    "prerequisites": [
+      "12-content-ingestion-recipe.json completed",
+      "Python 3.9+ and Node.js 18+ installed",
+      "NLP models and OCR engines available"
+    ],
+    "target_outcome": "Complete text processing system with advanced NLP capabilities",
+    "success_criteria": [
+      "OCR processing for scanned documents and images",
+      "NLP analysis with entity extraction and sentiment analysis",
+      "Text summarization and key phrase extraction",
+      "Multi-language translation support",
+      "Text classification and topic modeling",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "TEXT_ARCHITECTURE_TASK",
+        "name": "Text Processing Architecture",
+        "description": "Design and implement core text processing architecture",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "text_architecture",
+          "system_design",
+          "unified_management"
+        ]
+      },
+      {
+        "task_id": "OCR_SYSTEM_TASK",
+        "name": "OCR System Implementation",
+        "description": "Create comprehensive OCR system",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "TEXT_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "ocr_processing",
+          "image_preprocessing",
+          "text_extraction"
+        ]
+      },
+      {
+        "task_id": "NLP_ENGINE_TASK",
+        "name": "NLP Engine Implementation",
+        "description": "Create comprehensive NLP engine",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "OCR_SYSTEM_TASK"
+        ],
+        "skills_required": [
+          "nlp_processing",
+          "entity_extraction",
+          "sentiment_analysis"
+        ]
+      },
+      {
+        "task_id": "TEXT_SUMMARIZATION_TASK",
+        "name": "Text Summarization Implementation",
+        "description": "Create text summarization with multiple methods",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "NLP_ENGINE_TASK"
+        ],
+        "skills_required": [
+          "text_summarization",
+          "key_phrase_extraction",
+          "summary_generation"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "OCR_PROCESSING_SKILL",
+        "name": "OCR Processing",
+        "description": "Extract text from images and documents",
+        "tools": [
+          "ocr_engine",
+          "layout_analyzer",
+          "text_extractor"
+        ],
+        "validation": "ocr_processing_validation"
+      },
+      {
+        "skill_id": "NLP_ENGINE_SKILL",
+        "name": "NLP Engine",
+        "description": "Process and analyze natural language",
+        "tools": [
+          "nlp_processor",
+          "entity_extractor",
+          "sentiment_analyzer"
+        ],
+        "validation": "nlp_engine_validation"
+      },
+      {
+        "skill_id": "TEXT_SUMMARIZATION_SKILL",
+        "name": "Text Summarization",
+        "description": "Summarize and extract key information",
+        "tools": [
+          "summarizer",
+          "key_phrase_extractor",
+          "summary_generator"
+        ],
+        "validation": "text_summarization_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "TEXT_PROCESSING_TOOL",
+        "name": "Text Processing Engine",
+        "description": "Core text processing system",
+        "file_path": "src/services/text/core.py",
+        "config": "config/text/processing_config.json"
+      },
+      {
+        "tool_id": "OCR_ENGINE_TOOL",
+        "name": "OCR Engine",
+        "description": "OCR processing and text extraction",
+        "file_path": "src/services/text/ocr/engine.py",
+        "config": "config/text/ocr_config.json"
+      },
+      {
+        "tool_id": "NLP_ENGINE_TOOL",
+        "name": "NLP Engine",
+        "description": "Natural language processing",
+        "file_path": "src/services/text/nlp/engine.py",
+        "config": "config/text/nlp_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "TEXT_PROCESSING_CONFIG",
+        "name": "Text Processing Configuration",
+        "description": "Configuration for text processing system",
+        "file_path": "config/text/processing_config.json",
+        "schema": "text_processing_config_schema"
+      },
+      {
+        "config_id": "OCR_CONFIG",
+        "name": "OCR Configuration",
+        "description": "Configuration for OCR processing",
+        "file_path": "config/text/ocr_config.json",
+        "schema": "ocr_config_schema"
+      },
+      {
+        "config_id": "NLP_CONFIG",
+        "name": "NLP Configuration",
+        "description": "Configuration for NLP processing",
+        "file_path": "config/text/nlp_config.json",
+        "schema": "nlp_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "TEXT_ARCHITECTURE_TASK",
+          "OCR_PROCESSING_SKILL",
+          "TEXT_PROCESSING_TOOL"
+        ],
+        "description": "Gather text processing architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "text_processing_cache",
+        "description": "Check for existing text processing cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "TEXT_ARCHITECTURE_TASK",
+        "description": "Execute text processing architecture task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "OCR_SYSTEM_TASK",
+          "NLP_ENGINE_SKILL",
+          "OCR_ENGINE_TOOL"
+        ],
+        "description": "Gather OCR system ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "OCR_SYSTEM_TASK",
+        "description": "Execute OCR system task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "NLP_ENGINE_TASK",
+          "TEXT_SUMMARIZATION_SKILL",
+          "NLP_ENGINE_TOOL"
+        ],
+        "description": "Gather NLP engine ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "NLP_ENGINE_TASK",
+        "description": "Execute NLP engine task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "TEXT_SUMMARIZATION_TASK",
+          "TEXT_SUMMARIZATION_SKILL"
+        ],
+        "description": "Gather text summarization ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "TEXT_SUMMARIZATION_TASK",
+        "description": "Execute text summarization task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "text_processing_validation",
+        "description": "Validate complete text processing system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "text_processing_cache",
+        "description": "Cache text processing configuration and models"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "text_processing_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "model_update",
+      "cache_validation": "text_processing_validation"
+    }
+  },
+  "text_processing_architecture": {
+    "ocr_system": {
+      "purpose": "Optical Character Recognition for text extraction",
+      "features": [
+        "Multi-language OCR support",
+        "Handwritten text recognition",
+        "Document layout analysis",
+        "OCR accuracy optimization"
+      ],
+      "modular_components": [
+        "ocr-engine",
+        "layout-analyzer",
+        "text-extractor",
+        "accuracy-validator"
+      ]
+    },
+    "nlp_engine": {
+      "purpose": "Natural Language Processing capabilities",
+      "features": [
+        "Entity recognition and extraction",
+        "Sentiment analysis",
+        "Part-of-speech tagging",
+        "Named entity recognition"
+      ],
+      "modular_components": [
+        "nlp-processor",
+        "entity-extractor",
+        "sentiment-analyzer",
+        "pos-tagger"
+      ]
+    },
+    "summarization": {
+      "purpose": "Text summarization and key information extraction",
+      "features": [
+        "Extractive summarization",
+        "Abstractive summarization",
+        "Key phrase extraction",
+        "Document summarization"
+      ],
+      "modular_components": [
+        "summarizer",
+        "key-phrase-extractor",
+        "document-analyzer",
+        "summary-generator"
+      ]
+    },
+    "translation": {
+      "purpose": "Multi-language translation and localization",
+      "features": [
+        "Machine translation",
+        "Language detection",
+        "Translation memory",
+        "Quality assessment"
+      ],
+      "modular_components": [
+        "translator",
+        "language-detector",
+        "translation-memory",
+        "quality-assessor"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "13-001",
+      "title": "Create Text Processing Architecture",
+      "description": "Design and implement the core text processing architecture with unified management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/services/text",
+        "mkdir -p src/services/text/ocr",
+        "mkdir -p src/services/text/nlp",
+        "mkdir -p src/services/text/summarization",
+        "mkdir -p src/services/text/translation",
+        "mkdir -p src/services/text/common"
+      ],
+      "files_to_create": [
+        "src/services/text/__init__.py",
+        "src/services/text/core.py",
+        "src/services/text/manager.py",
+        "src/services/text/config.py",
+        "src/services/text/types.py"
+      ],
+      "acceptance_criteria": [
+        "Text processing base classes defined with unified interface",
+        "Configuration system supports all text processing types",
+        "Type definitions for all text operations",
+        "Manager class can handle multiple text processors"
+      ]
+    },
+    {
+      "task_id": "13-002",
+      "title": "Implement OCR System",
+      "description": "Create comprehensive OCR system with Tesseract and advanced preprocessing",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install pytesseract pillow opencv-python",
+        "mkdir -p src/services/text/ocr/engines",
+        "mkdir -p src/services/text/ocr/preprocessing"
+      ],
+      "files_to_create": [
+        "src/services/text/ocr/__init__.py",
+        "src/services/text/ocr/engine.py",
+        "src/services/text/ocr/engines/tesseract.py",
+        "src/services/text/ocr/engines/easyocr.py",
+        "src/services/text/ocr/preprocessing/__init__.py",
+        "src/services/text/ocr/preprocessing/image.py",
+        "src/services/text/ocr/preprocessing/layout.py"
+      ],
+      "acceptance_criteria": [
+        "Tesseract OCR integration working",
+        "Image preprocessing functional",
+        "Layout analysis operational",
+        "OCR accuracy validation"
+      ]
+    },
+    {
+      "task_id": "13-003",
+      "title": "Implement NLP Engine",
+      "description": "Create comprehensive NLP engine with spaCy and transformers",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install spacy transformers torch",
+        "python -m spacy download en_core_web_sm",
+        "mkdir -p src/services/text/nlp/processors"
+      ],
+      "files_to_create": [
+        "src/services/text/nlp/__init__.py",
+        "src/services/text/nlp/engine.py",
+        "src/services/text/nlp/processors/__init__.py",
+        "src/services/text/nlp/processors/entity.py",
+        "src/services/text/nlp/processors/sentiment.py",
+        "src/services/text/nlp/processors/pos.py",
+        "src/services/text/nlp/processors/ner.py"
+      ],
+      "acceptance_criteria": [
+        "spaCy NLP pipeline working",
+        "Entity extraction functional",
+        "Sentiment analysis operational",
+        "POS tagging working"
+      ]
+    },
+    {
+      "task_id": "13-004",
+      "title": "Implement Text Summarization",
+      "description": "Create text summarization with extractive and abstractive methods",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install sumy transformers",
+        "mkdir -p src/services/text/summarization/methods"
+      ],
+      "files_to_create": [
+        "src/services/text/summarization/__init__.py",
+        "src/services/text/summarization/engine.py",
+        "src/services/text/summarization/methods/__init__.py",
+        "src/services/text/summarization/methods/extractive.py",
+        "src/services/text/summarization/methods/abstractive.py",
+        "src/services/text/summarization/methods/key_phrases.py"
+      ],
+      "acceptance_criteria": [
+        "Extractive summarization working",
+        "Abstractive summarization functional",
+        "Key phrase extraction operational",
+        "Summary quality assessment"
+      ]
+    },
+    {
+      "task_id": "13-005",
+      "title": "Implement Translation System",
+      "description": "Create multi-language translation with Google Translate and custom models",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install googletrans==4.0.0rc1 langdetect",
+        "mkdir -p src/services/text/translation/engines"
+      ],
+      "files_to_create": [
+        "src/services/text/translation/__init__.py",
+        "src/services/text/translation/engine.py",
+        "src/services/text/translation/engines/google.py",
+        "src/services/text/translation/engines/custom.py",
+        "src/services/text/translation/language_detector.py",
+        "src/services/text/translation/memory.py"
+      ],
+      "acceptance_criteria": [
+        "Google Translate integration working",
+        "Language detection functional",
+        "Translation memory operational",
+        "Translation quality assessment"
+      ]
+    },
+    {
+      "task_id": "13-006",
+      "title": "Implement Text Classification",
+      "description": "Create text classification and topic modeling system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "pip install scikit-learn gensim",
+        "mkdir -p src/services/text/classification"
+      ],
+      "files_to_create": [
+        "src/services/text/classification/__init__.py",
+        "src/services/text/classification/classifier.py",
+        "src/services/text/classification/topic_modeling.py",
+        "src/services/text/classification/features.py",
+        "src/services/text/classification/models.py"
+      ],
+      "acceptance_criteria": [
+        "Text classification working",
+        "Topic modeling functional",
+        "Feature extraction operational",
+        "Model training and evaluation"
+      ]
+    },
+    {
+      "task_id": "13-007",
+      "title": "Implement Text API",
+      "description": "Create comprehensive API for text processing operations",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/api/routes/text",
+        "mkdir -p tests/text"
+      ],
+      "files_to_create": [
+        "src/api/routes/text/__init__.py",
+        "src/api/routes/text/ocr.py",
+        "src/api/routes/text/nlp.py",
+        "src/api/routes/text/summarization.py",
+        "src/api/routes/text/translation.py",
+        "tests/text/test_ocr.py",
+        "tests/text/test_nlp.py",
+        "tests/text/test_summarization.py"
+      ],
+      "acceptance_criteria": [
+        "OCR API endpoints working",
+        "NLP API endpoints functional",
+        "Summarization API operational",
+        "Translation API working"
+      ]
+    },
+    {
+      "task_id": "13-008",
+      "title": "Implement Text Analytics",
+      "description": "Create text analytics and insights generation",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/text/analytics"
+      ],
+      "files_to_create": [
+        "src/services/text/analytics/__init__.py",
+        "src/services/text/analytics/insights.py",
+        "src/services/text/analytics/patterns.py",
+        "src/services/text/analytics/trends.py",
+        "src/services/text/analytics/reports.py"
+      ],
+      "acceptance_criteria": [
+        "Text insights generation working",
+        "Pattern recognition functional",
+        "Trend analysis operational",
+        "Analytics reporting"
+      ]
+    },
+    {
+      "task_id": "13-009",
+      "title": "Implement Text Quality Assessment",
+      "description": "Create text quality assessment and validation system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/text/quality"
+      ],
+      "files_to_create": [
+        "src/services/text/quality/__init__.py",
+        "src/services/text/quality/assessor.py",
+        "src/services/text/quality/validator.py",
+        "src/services/text/quality/metrics.py",
+        "src/services/text/quality/scorer.py"
+      ],
+      "acceptance_criteria": [
+        "Text quality assessment working",
+        "Quality validation functional",
+        "Quality metrics calculation",
+        "Quality scoring system"
+      ]
+    },
+    {
+      "task_id": "13-010",
+      "title": "Implement Text Caching",
+      "description": "Create intelligent caching for text processing results",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/text/caching"
+      ],
+      "files_to_create": [
+        "src/services/text/caching/__init__.py",
+        "src/services/text/caching/manager.py",
+        "src/services/text/caching/strategies.py",
+        "src/services/text/caching/invalidation.py"
+      ],
+      "acceptance_criteria": [
+        "Text processing caching working",
+        "Cache strategies functional",
+        "Cache invalidation operational",
+        "Cache performance optimization"
+      ]
+    },
+    {
+      "task_id": "13-011",
+      "title": "Implement Text Testing",
+      "description": "Create comprehensive testing framework for text processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p tests/text/integration",
+        "mkdir -p tests/text/performance"
+      ],
+      "files_to_create": [
+        "tests/text/integration/test_text_integration.py",
+        "tests/text/performance/test_text_performance.py",
+        "tests/text/conftest.py",
+        "tests/text/test_data/",
+        "config/testing/text_test_config.json"
+      ],
+      "acceptance_criteria": [
+        "Integration tests for text processing",
+        "Performance benchmarks working",
+        "Test data and fixtures available",
+        "Automated text validation"
+      ]
+    },
+    {
+      "task_id": "13-012",
+      "title": "Implement Text Monitoring",
+      "description": "Create monitoring and analytics for text processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/text/monitoring"
+      ],
+      "files_to_create": [
+        "src/services/text/monitoring/__init__.py",
+        "src/services/text/monitoring/metrics.py",
+        "src/services/text/monitoring/analytics.py",
+        "src/services/text/monitoring/dashboard.py"
+      ],
+      "acceptance_criteria": [
+        "Text processing metrics collection",
+        "Analytics and reporting working",
+        "Monitoring dashboard functional",
+        "Performance tracking operational"
+      ]
+    },
+    {
+      "task_id": "13-013",
+      "title": "Implement Text Documentation",
+      "description": "Create comprehensive documentation for text processing system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/text",
+        "mkdir -p examples/text"
+      ],
+      "files_to_create": [
+        "docs/text/README.md",
+        "docs/text/ocr.md",
+        "docs/text/nlp.md",
+        "docs/text/summarization.md",
+        "docs/text/translation.md",
+        "examples/text/ocr_examples.py",
+        "examples/text/nlp_examples.py",
+        "examples/text/summarization_examples.py"
+      ],
+      "acceptance_criteria": [
+        "Complete text processing documentation",
+        "API usage examples",
+        "Processing pipeline guide",
+        "Troubleshooting documentation"
+      ]
+    },
+    {
+      "task_id": "13-014",
+      "title": "Implement Text Optimization",
+      "description": "Create performance optimizations for text processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/text/optimization"
+      ],
+      "files_to_create": [
+        "src/services/text/optimization/__init__.py",
+        "src/services/text/optimization/caching.py",
+        "src/services/text/optimization/batching.py",
+        "src/services/text/optimization/parallel.py"
+      ],
+      "acceptance_criteria": [
+        "Text processing optimization working",
+        "Batch processing functional",
+        "Parallel processing operational",
+        "Performance monitoring"
+      ]
+    },
+    {
+      "task_id": "13-015",
+      "title": "Implement Text Security",
+      "description": "Create security features for text processing",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/services/text/security"
+      ],
+      "files_to_create": [
+        "src/services/text/security/__init__.py",
+        "src/services/text/security/sanitizer.py",
+        "src/services/text/security/encryption.py",
+        "src/services/text/security/access_control.py"
+      ],
+      "acceptance_criteria": [
+        "Text sanitization working",
+        "Text encryption functional",
+        "Access control operational",
+        "Security compliance"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "TESSERACT_PATH": "/usr/bin/tesseract",
+      "SPACY_MODEL": "en_core_web_sm",
+      "GOOGLE_TRANSLATE_API_KEY": "your-google-translate-key",
+      "TEXT_PROCESSING_CACHE_TTL": "3600",
+      "TEXT_PROCESSING_MAX_LENGTH": "10000",
+      "TEXT_PROCESSING_WORKERS": "4"
+    },
+    "supported_languages": {
+      "ocr": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ru",
+        "zh",
+        "ja",
+        "ko"
+      ],
+      "translation": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ru",
+        "zh",
+        "ja",
+        "ko",
+        "ar",
+        "hi"
+      ],
+      "nlp": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ru",
+        "zh",
+        "ja",
+        "ko"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test OCR text extraction",
+      "Test NLP entity extraction",
+      "Test text summarization",
+      "Test translation accuracy",
+      "Test text classification"
+    ],
+    "integration_tests": [
+      "Test end-to-end text processing",
+      "Test multi-language support",
+      "Test batch processing",
+      "Test error handling"
+    ],
+    "performance_tests": [
+      "OCR processing speed tests",
+      "NLP processing throughput",
+      "Translation response time",
+      "Memory usage optimization"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Python 3.9+ with required packages",
+      "Tesseract OCR installed",
+      "spaCy models downloaded",
+      "GPU support for transformers (optional)"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the project directory",
+      "2. Copy configuration templates and update with your settings",
+      "3. Install Python dependencies: pip install -r requirements.txt",
+      "4. Install Tesseract OCR: sudo apt-get install tesseract-ocr",
+      "5. Download spaCy models: python -m spacy download en_core_web_sm",
+      "6. Run text processing tests: python -m pytest tests/text/"
+    ],
+    "verification": [
+      "Test OCR with sample images",
+      "Verify NLP entity extraction",
+      "Test text summarization",
+      "Confirm translation functionality"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-Text-Processing-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

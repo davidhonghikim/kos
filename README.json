@@ -40,10 +40,35 @@
       "Clone this repository",
       "Run `npm install` for frontend dependencies",
       "Run `pip install -r requirements.txt` for backend dependencies",
-      "Copy `config/env.example` to `config/.env` and configure",
+      "Run `python scripts/setup_env.py` to set up environment files",
+      "Edit env/*.env files to configure your services",
       "Run `docker-compose up -d` for databases",
       "Run `npm run test` to verify setup"
     ]
+  },
+  "environment_setup": {
+    "description": "Environment configuration for kOS system",
+    "directory": "env/",
+    "files": [
+      "env/local.env.example - Local services configuration",
+      "env/cloud.env.example - Cloud services configuration", 
+      "env/api-keys.env.example - API keys and secrets",
+      "env/settings.env.example - System settings and feature flags"
+    ],
+    "setup_instructions": [
+      "Run: python scripts/setup_env.py",
+      "Or manually copy env/*.env.example to env/*.env",
+      "Edit env/local.env to configure local services",
+      "Edit env/cloud.env to enable cloud services",
+      "Edit env/api-keys.env to add your API keys",
+      "Edit env/settings.env to configure system behavior"
+    ],
+    "organization": {
+      "local_services": "Default: true (PostgreSQL, Redis, Neo4j, etc.)",
+      "cloud_services": "Default: false (OpenAI, AWS, etc.)",
+      "api_keys": "Blank defaults (add your actual keys)",
+      "settings": "Boolean feature flags for system behavior"
+    }
   },
   "development_workflow": {
     "code_standards": {

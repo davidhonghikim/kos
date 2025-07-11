@@ -1,0 +1,37 @@
+# GitHub Actions Workflow for Gitea Sync
+# This workflow automatically pushes to Gitea whenever there's a push to GitHub
+
+name: Sync to Gitea
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  sync-to-gitea:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+    
+    - name: Add Gitea remote
+      run: |
+        git remote add gitea http://${{ secrets.GITEA_USERNAME }}:${{ secrets.GITEA_PASSWORD }}@${{ secrets.GITEA_URL }}/${{ secrets.GITEA_USERNAME }}/${{ github.event.repository.name }}.git
+    
+    - name: Push to Gitea
+      run: |
+        git push gitea --mirror
+      env:
+        GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
+        GITEA_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
+        GITEA_URL: ${{ secrets.GITEA_URL }}

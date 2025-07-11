@@ -1,0 +1,575 @@
+{
+  "metadata": {
+    "title": "Mobile App Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-06T12:10:00Z",
+    "purpose": "Implement comprehensive mobile app with React Native for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "interface",
+    "priority": "HIGH",
+    "recipe_id": "20-mobile-app",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "recipe_overview": {
+    "name": "Mobile App System",
+    "description": "Implement production-ready mobile app with React Native, cross-platform support, and native features",
+    "prerequisites": [
+      "19-web-dashboard-recipe.json completed",
+      "Node.js 18+ and React Native CLI available",
+      "Mobile development environment configured"
+    ],
+    "target_outcome": "Complete mobile app system with cross-platform support and native features",
+    "success_criteria": [
+      "Cross-platform React Native app (iOS/Android)",
+      "Native mobile features and capabilities",
+      "Offline functionality and sync",
+      "Mobile-optimized user experience",
+      "App store deployment ready",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "mobile_app_architecture": {
+    "react_native_framework": {
+      "purpose": "React Native application framework",
+      "features": [
+        "Cross-platform React Native app",
+        "TypeScript for type safety",
+        "Native module integration",
+        "Performance optimization"
+      ],
+      "modular_components": [
+        "app-framework",
+        "native-modules",
+        "performance-optimizer",
+        "platform-adapter"
+      ]
+    },
+    "mobile_ui": {
+      "purpose": "Mobile-optimized user interface",
+      "features": [
+        "Mobile-first design patterns",
+        "Touch-optimized interactions",
+        "Responsive mobile layouts",
+        "Native UI components"
+      ],
+      "modular_components": [
+        "mobile-components",
+        "touch-handlers",
+        "responsive-layouts",
+        "native-ui"
+      ]
+    },
+    "mobile_features": {
+      "purpose": "Native mobile capabilities",
+      "features": [
+        "Camera and media capture",
+        "Push notifications",
+        "Offline storage and sync",
+        "Location services"
+      ],
+      "modular_components": [
+        "camera-module",
+        "notification-service",
+        "offline-manager",
+        "location-service"
+      ]
+    },
+    "mobile_experience": {
+      "purpose": "Mobile-optimized user experience",
+      "features": [
+        "Gesture-based navigation",
+        "Mobile search and discovery",
+        "Content consumption interface",
+        "Mobile preferences"
+      ],
+      "modular_components": [
+        "gesture-navigation",
+        "mobile-search",
+        "content-viewer",
+        "mobile-settings"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "20-001",
+      "title": "Create Mobile App Architecture",
+      "description": "Design and implement the core mobile app architecture with React Native",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npx react-native@latest init AIQMobile --template react-native-template-typescript",
+        "cd AIQMobile",
+        "npm install @react-navigation/native @react-navigation/stack",
+        "mkdir -p src/components",
+        "mkdir -p src/screens",
+        "mkdir -p src/services",
+        "mkdir -p src/utils"
+      ],
+      "files_to_create": [
+        "src/App.tsx",
+        "src/components/Layout.tsx",
+        "src/components/Navigation.tsx",
+        "src/screens/HomeScreen.tsx",
+        "src/services/api.ts",
+        "src/utils/constants.ts"
+      ],
+      "acceptance_criteria": [
+        "React Native app structure created",
+        "TypeScript configuration working",
+        "Navigation setup functional",
+        "Basic screens operational"
+      ]
+    },
+    {
+      "task_id": "20-002",
+      "title": "Implement Mobile UI Components",
+      "description": "Create mobile-optimized UI components and design system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install react-native-elements react-native-vector-icons",
+        "mkdir -p src/components/ui",
+        "mkdir -p src/styles"
+      ],
+      "files_to_create": [
+        "src/styles/theme.ts",
+        "src/styles/colors.ts",
+        "src/components/ui/Button.tsx",
+        "src/components/ui/Card.tsx",
+        "src/components/ui/Input.tsx",
+        "src/components/ui/Modal.tsx",
+        "src/components/ui/List.tsx"
+      ],
+      "acceptance_criteria": [
+        "Mobile UI components created",
+        "Design system applied",
+        "Theme system working",
+        "Native styling functional"
+      ]
+    },
+    {
+      "task_id": "20-003",
+      "title": "Implement Mobile Navigation",
+      "description": "Create mobile navigation with gesture support",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install react-native-gesture-handler react-native-reanimated",
+        "mkdir -p src/navigation",
+        "mkdir -p src/components/navigation"
+      ],
+      "files_to_create": [
+        "src/navigation/AppNavigator.tsx",
+        "src/navigation/TabNavigator.tsx",
+        "src/navigation/StackNavigator.tsx",
+        "src/components/navigation/TabBar.tsx",
+        "src/components/navigation/Header.tsx",
+        "src/components/navigation/Drawer.tsx"
+      ],
+      "acceptance_criteria": [
+        "Navigation system working",
+        "Gesture navigation functional",
+        "Tab navigation operational",
+        "Stack navigation working"
+      ]
+    },
+    {
+      "task_id": "20-004",
+      "title": "Implement Mobile Search",
+      "description": "Create mobile-optimized search interface",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/screens/search",
+        "mkdir -p src/components/search"
+      ],
+      "files_to_create": [
+        "src/screens/search/SearchScreen.tsx",
+        "src/screens/search/SearchResultsScreen.tsx",
+        "src/components/search/SearchBar.tsx",
+        "src/components/search/SearchFilters.tsx",
+        "src/components/search/SearchSuggestions.tsx",
+        "src/components/search/VoiceSearch.tsx"
+      ],
+      "acceptance_criteria": [
+        "Mobile search interface working",
+        "Voice search functional",
+        "Search filters operational",
+        "Search suggestions working"
+      ]
+    },
+    {
+      "task_id": "20-005",
+      "title": "Implement Content Viewer",
+      "description": "Create mobile content viewing and management",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install react-native-video react-native-image-viewer",
+        "mkdir -p src/screens/content",
+        "mkdir -p src/components/content"
+      ],
+      "files_to_create": [
+        "src/screens/content/ContentListScreen.tsx",
+        "src/screens/content/ContentDetailScreen.tsx",
+        "src/screens/content/ContentViewerScreen.tsx",
+        "src/components/content/ContentCard.tsx",
+        "src/components/content/MediaPlayer.tsx",
+        "src/components/content/ImageViewer.tsx"
+      ],
+      "acceptance_criteria": [
+        "Content viewing working",
+        "Media playback functional",
+        "Image viewing operational",
+        "Content management working"
+      ]
+    },
+    {
+      "task_id": "20-006",
+      "title": "Implement Camera and Media",
+      "description": "Create camera and media capture functionality",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install react-native-camera react-native-image-picker",
+        "mkdir -p src/screens/camera",
+        "mkdir -p src/components/camera"
+      ],
+      "files_to_create": [
+        "src/screens/camera/CameraScreen.tsx",
+        "src/screens/camera/MediaCaptureScreen.tsx",
+        "src/components/camera/CameraView.tsx",
+        "src/components/camera/ImagePicker.tsx",
+        "src/components/camera/VideoRecorder.tsx",
+        "src/components/camera/MediaPreview.tsx"
+      ],
+      "acceptance_criteria": [
+        "Camera functionality working",
+        "Image capture functional",
+        "Video recording operational",
+        "Media preview working"
+      ]
+    },
+    {
+      "task_id": "20-007",
+      "title": "Implement Offline Support",
+      "description": "Create offline functionality and data sync",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install @react-native-async-storage/async-storage react-native-netinfo",
+        "mkdir -p src/services/offline",
+        "mkdir -p src/utils/offline"
+      ],
+      "files_to_create": [
+        "src/services/offline/OfflineManager.tsx",
+        "src/services/offline/SyncService.tsx",
+        "src/services/offline/StorageService.tsx",
+        "src/utils/offline/networkUtils.ts",
+        "src/utils/offline/cacheUtils.ts",
+        "src/utils/offline/syncUtils.ts"
+      ],
+      "acceptance_criteria": [
+        "Offline storage working",
+        "Data sync functional",
+        "Network detection operational",
+        "Cache management working"
+      ]
+    },
+    {
+      "task_id": "20-008",
+      "title": "Implement Push Notifications",
+      "description": "Create push notification system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install @react-native-firebase/messaging react-native-push-notification",
+        "mkdir -p src/services/notifications",
+        "mkdir -p src/components/notifications"
+      ],
+      "files_to_create": [
+        "src/services/notifications/NotificationService.tsx",
+        "src/services/notifications/PushService.tsx",
+        "src/components/notifications/NotificationCenter.tsx",
+        "src/components/notifications/NotificationItem.tsx",
+        "src/components/notifications/NotificationSettings.tsx"
+      ],
+      "acceptance_criteria": [
+        "Push notifications working",
+        "Notification handling functional",
+        "Notification settings operational",
+        "Background notifications working"
+      ]
+    },
+    {
+      "task_id": "20-009",
+      "title": "Implement Location Services",
+      "description": "Create location-based features",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install react-native-geolocation-service react-native-maps",
+        "mkdir -p src/services/location",
+        "mkdir -p src/components/location"
+      ],
+      "files_to_create": [
+        "src/services/location/LocationService.tsx",
+        "src/services/location/GeofencingService.tsx",
+        "src/components/location/MapView.tsx",
+        "src/components/location/LocationPicker.tsx",
+        "src/components/location/NearbyContent.tsx"
+      ],
+      "acceptance_criteria": [
+        "Location services working",
+        "Map integration functional",
+        "Geofencing operational",
+        "Location-based content working"
+      ]
+    },
+    {
+      "task_id": "20-010",
+      "title": "Implement Mobile Analytics",
+      "description": "Create mobile analytics and tracking",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install react-native-analytics react-native-crashlytics",
+        "mkdir -p src/services/analytics",
+        "mkdir -p src/utils/analytics"
+      ],
+      "files_to_create": [
+        "src/services/analytics/AnalyticsService.tsx",
+        "src/services/analytics/CrashReporting.tsx",
+        "src/utils/analytics/tracking.ts",
+        "src/utils/analytics/events.ts",
+        "src/utils/analytics/metrics.ts"
+      ],
+      "acceptance_criteria": [
+        "Analytics tracking working",
+        "Crash reporting functional",
+        "Event tracking operational",
+        "Performance monitoring working"
+      ]
+    },
+    {
+      "task_id": "20-011",
+      "title": "Implement Mobile Testing",
+      "description": "Create comprehensive testing framework for mobile app",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install @testing-library/react-native jest",
+        "mkdir -p src/__tests__",
+        "mkdir -p src/__tests__/components"
+      ],
+      "files_to_create": [
+        "src/__tests__/setup.ts",
+        "src/__tests__/components/App.test.tsx",
+        "src/__tests__/components/Search.test.tsx",
+        "src/__tests__/components/Camera.test.tsx",
+        "src/__tests__/utils/api.test.ts",
+        "jest.config.js"
+      ],
+      "acceptance_criteria": [
+        "Component testing working",
+        "Integration testing functional",
+        "API testing operational",
+        "Test coverage adequate"
+      ]
+    },
+    {
+      "task_id": "20-012",
+      "title": "Implement Mobile Performance",
+      "description": "Create performance optimization for mobile",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/utils/performance",
+        "mkdir -p src/components/optimized"
+      ],
+      "files_to_create": [
+        "src/utils/performance/memory.ts",
+        "src/utils/performance/battery.ts",
+        "src/utils/performance/network.ts",
+        "src/components/optimized/LazyImage.tsx",
+        "src/components/optimized/VirtualList.tsx",
+        "src/components/optimized/ImageCache.tsx"
+      ],
+      "acceptance_criteria": [
+        "Memory optimization working",
+        "Battery optimization functional",
+        "Network optimization operational",
+        "Performance monitoring working"
+      ]
+    },
+    {
+      "task_id": "20-013",
+      "title": "Implement Mobile Security",
+      "description": "Create security features for mobile app",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install react-native-keychain react-native-biometrics",
+        "mkdir -p src/services/security",
+        "mkdir -p src/utils/security"
+      ],
+      "files_to_create": [
+        "src/services/security/SecurityService.tsx",
+        "src/services/security/BiometricService.tsx",
+        "src/utils/security/encryption.ts",
+        "src/utils/security/authentication.ts",
+        "src/utils/security/validation.ts"
+      ],
+      "acceptance_criteria": [
+        "Biometric authentication working",
+        "Data encryption functional",
+        "Secure storage operational",
+        "Security validation working"
+      ]
+    },
+    {
+      "task_id": "20-014",
+      "title": "Implement App Store Deployment",
+      "description": "Create app store deployment configuration",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p android/app/src/main",
+        "mkdir -p ios/AIQMobile"
+      ],
+      "files_to_create": [
+        "android/app/build.gradle",
+        "android/app/src/main/AndroidManifest.xml",
+        "ios/AIQMobile/Info.plist",
+        "ios/AIQMobile/AppDelegate.m",
+        "app.json",
+        "metro.config.js"
+      ],
+      "acceptance_criteria": [
+        "Android build configuration working",
+        "iOS build configuration functional",
+        "App store metadata operational",
+        "Deployment scripts working"
+      ]
+    },
+    {
+      "task_id": "20-015",
+      "title": "Implement Mobile Documentation",
+      "description": "Create comprehensive documentation for mobile app",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/mobile-app",
+        "mkdir -p examples/mobile-app"
+      ],
+      "files_to_create": [
+        "docs/mobile-app/README.json",
+        "docs/mobile-app/architecture.json",
+        "docs/mobile-app/components.json",
+        "docs/mobile-app/api.json",
+        "docs/mobile-app/deployment.json",
+        "examples/mobile-app/usage.json"
+      ],
+      "acceptance_criteria": [
+        "Complete documentation created",
+        "Component documentation functional",
+        "API documentation operational",
+        "Deployment guide working"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "API_BASE_URL": "https://api.aiq.com",
+      "FIREBASE_CONFIG": "your-firebase-config",
+      "MAPS_API_KEY": "your-maps-api-key",
+      "PUSH_NOTIFICATION_KEY": "your-push-key"
+    },
+    "supported_platforms": {
+      "mobile": [
+        "ios",
+        "android"
+      ],
+      "features": [
+        "camera",
+        "location",
+        "notifications",
+        "offline"
+      ],
+      "testing": [
+        "jest",
+        "detox",
+        "appium"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test component rendering",
+      "Test user interactions",
+      "Test API integration",
+      "Test native features",
+      "Test offline functionality"
+    ],
+    "integration_tests": [
+      "Test end-to-end workflows",
+      "Test cross-platform compatibility",
+      "Test performance on devices",
+      "Test app store deployment"
+    ],
+    "performance_tests": [
+      "App launch time tests",
+      "Memory usage optimization",
+      "Battery consumption tests",
+      "Network performance tests"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Node.js 18+ installed",
+      "React Native CLI configured",
+      "Android Studio / Xcode installed",
+      "Backend API running"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the mobile app directory",
+      "2. Install dependencies: npm install",
+      "3. Configure environment variables in .env",
+      "4. Run iOS simulator: npx react-native run-ios",
+      "5. Run Android emulator: npx react-native run-android",
+      "6. Run tests: npm test",
+      "7. Build for production: npm run build"
+    ],
+    "verification": [
+      "Test all mobile features",
+      "Verify cross-platform compatibility",
+      "Test offline functionality",
+      "Confirm app store readiness"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

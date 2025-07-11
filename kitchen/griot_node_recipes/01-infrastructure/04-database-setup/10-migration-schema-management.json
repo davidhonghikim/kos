@@ -1,0 +1,185 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-MIGRATION-SCHEMA-010",
+    "title": "Automated Database Migration and Schema Management",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 7000,
+    "estimated_execution_time": "3-4 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99.5%",
+    "compliance_standards": [],
+    "architecture_tier": "enterprise-devops"
+  },
+  "recipe_overview": {
+    "description": "Establish a standardized, automated system for managing database schema changes and data migrations across the polyglot persistence landscape. This recipe integrates tools like Alembic for PostgreSQL and custom scripts for other databases into a CI/CD pipeline, enabling version-controlled, repeatable, and zero-downtime deployments.",
+    "technology_stack": {
+      "migration_tools": "Alembic (for PostgreSQL), custom Python/Cypher/JSON scripts",
+      "ci_cd": "Jenkins, GitLab CI, or GitHub Actions",
+      "version_control": "Git"
+    },
+    "deliverables": [
+      "A version-controlled repository for all schema and migration scripts",
+      "An automated pipeline for applying migrations",
+      "Procedures for handling migrations for each database type",
+      "A zero-downtime migration strategy"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-migration-schema-010",
+      "title": "Automated Database Migration and Schema Management Implementation",
+      "description": "Establish a standardized, automated system for managing database schema changes and data migrations across the polyglot persistence landscape. This recipe integrates tools like Alembic for PostgreSQL and custom scripts for other databases into a CI/CD pipeline, enabling version-controlled, repeatable, and zero-downtime deployments.",
+      "category": "devops",
+      "estimated_tokens": 7000,
+      "estimated_duration": "3-4 hours",
+      "difficulty_level": "advanced",
+      "prerequisites": {
+        "knowledge_required": [
+          "Database schema design",
+          "CI/CD principles",
+          "Alembic (or similar tool)",
+          "Git"
+        ],
+        "tools_required": [
+          "Git",
+          "Alembic",
+          "Python",
+          "Docker"
+        ],
+        "environment_setup": [
+          "A running CI/CD server",
+          "All databases running"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "migrations/alembic/env.py",
+          "cicd_pipeline.yml"
+        ],
+        "config_dependencies": [
+          "Database credentials"
+        ],
+        "environment_variables": []
+      },
+      "outputs": {
+        "files_created": [
+          "migrations/ - Root directory for all migration scripts",
+          "migrations/alembic/ - Alembic environment for PostgreSQL",
+          "migrations/redis/ - Scripts for Redis data changes",
+          "migrations/neo4j/ - Cypher scripts for graph schema changes",
+          "cicd_pipeline.yml - Definition of the migration pipeline"
+        ],
+        "files_modified": []
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-postgresql-cluster-001",
+          "03-database-redis-cluster-002",
+          "03-database-neo4j-cluster-003",
+          "03-database-weaviate-cluster-004",
+          "03-database-elasticsearch-cluster-005"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task sets up a `migrations` directory in the project's version control. It uses Alembic for handling PostgreSQL schema changes. For non-relational databases, it establishes a convention for versioned scripts that can be applied manually or via a CI/CD job.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Initialize Migration Repository",
+            "description": "Create the directory structure for managing migration scripts.",
+            "commands": [
+              "mkdir -p migrations/{alembic,redis,neo4j,weaviate,elastic}",
+              "# Initialize Alembic for PostgreSQL",
+              "alembic init migrations/alembic"
+            ],
+            "expected_output": "Migration directory structure and Alembic environment created.",
+            "troubleshooting": "Ensure Alembic is installed (`pip install alembic`)."
+          },
+          {
+            "step": 2,
+            "title": "Configure Alembic",
+            "description": "Configure the Alembic environment to connect to the PostgreSQL database.",
+            "commands": [
+              "# Edit migrations/alembic/env.py to point to the database",
+              "# Edit alembic.ini to set the database URL",
+              "sed -i 's#sqlalchemy.url = .*#sqlalchemy.url = postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:6432/${POSTGRES_DB}#' migrations/alembic/alembic.ini"
+            ],
+            "expected_output": "Alembic is configured to connect to the PostgreSQL database via the pgBouncer.",
+            "troubleshooting": "Verify the database URL and credentials are correct."
+          },
+          {
+            "step": 3,
+            "title": "Create Example Migrations",
+            "description": "Generate a sample migration script to demonstrate the process.",
+            "commands": [
+              "alembic -c migrations/alembic/alembic.ini revision -m 'create account table'",
+              "# Edit the generated version script to add a new table",
+              "alembic -c migrations/alembic/alembic.ini upgrade head"
+            ],
+            "expected_output": "A new version script is created in `migrations/alembic/versions` and applied to the database.",
+            "troubleshooting": "Check Alembic output for any errors during the `upgrade` command."
+          },
+          {
+            "step": 4,
+            "title": "Define CI/CD Pipeline for Migrations",
+            "description": "Create a CI/CD pipeline (e.g., in `gitlab-ci.yml`) that automatically applies migrations upon merge to the main branch.",
+            "commands": [
+              "cat > .gitlab-ci.yml << 'EOF'",
+              "deploy_migrations:",
+              "  stage: deploy",
+              "  script:",
+              "    - alembic -c migrations/alembic/alembic.ini upgrade head",
+              "    - python migrations/apply_other_migrations.py",
+              "  only:",
+              "    - main",
+              "EOF"
+            ],
+            "expected_output": "A CI/CD pipeline definition is created.",
+            "troubleshooting": "Ensure the CI/CD runner has access to the database and the necessary tools."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Schema changes for PostgreSQL are managed through versioned Alembic scripts.",
+          "A clear, versioned process exists for managing schema/data changes for all other databases.",
+          "Migrations can be applied automatically via a CI/CD pipeline."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "10-Migration-Schema-Management",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "metadata": {
+    "id": "context7_documentation_tool",
+    "name": "Context7 Documentation Tool",
+    "description": "MCP server tool for fetching up-to-date code documentation from Context7",
+    "version": "1.0.0",
+    "category": "tools",
+    "dependencies": ["mcp_server", "network_access"],
+    "tags": ["documentation", "mcp", "context7", "upstash", "code_docs"],
+    "author": "kOS Kitchen System",
+    "created": "2025-07-08T10:20:00Z",
+    "updated": "2025-07-08T10:20:00Z",
+    "access_level": "public"
+  },
+  "tool_configuration": {
+    "package": "@upstash/context7-mcp",
+    "transport": "stdio",
+    "auto_start": true,
+    "health_check": true,
+    "timeout": 30000,
+    "retry_attempts": 3
+  },
+  "available_operations": {
+    "resolve_library_id": {
+      "name": "resolve-library-id",
+      "description": "Resolves a general library name into a Context7-compatible library ID",
+      "parameters": {
+        "libraryName": {
+          "type": "string",
+          "required": true,
+          "description": "The name of the library to search for"
+        }
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "libraryId": {
+            "type": "string",
+            "description": "Context7-compatible library ID"
+          },
+          "confidence": {
+            "type": "number",
+            "description": "Confidence score for the match"
+          }
+        }
+      }
+    },
+    "get_library_docs": {
+      "name": "get-library-docs",
+      "description": "Fetches documentation for a library using a Context7-compatible library ID",
+      "parameters": {
+        "context7CompatibleLibraryID": {
+          "type": "string",
+          "required": true,
+          "description": "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js')"
+        },
+        "topic": {
+          "type": "string",
+          "required": false,
+          "description": "Focus the docs on a specific topic (e.g., 'routing', 'hooks')"
+        },
+        "tokens": {
+          "type": "number",
+          "required": false,
+          "default": 10000,
+          "description": "Max number of tokens to return. Values less than 10000 are automatically increased to 10000"
+        }
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "documentation": {
+            "type": "string",
+            "description": "The fetched documentation content"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "library": {
+                "type": "string",
+                "description": "Library name"
+              },
+              "version": {
+                "type": "string",
+                "description": "Documentation version"
+              },
+              "lastUpdated": {
+                "type": "string",
+                "description": "Last update timestamp"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "integration_points": {
+    "prompt_manager": {
+      "enabled": true,
+      "auto_invoke": true,
+      "triggers": [
+        "code_examples_requested",
+        "setup_instructions_needed",
+        "library_documentation_requested"
+      ]
+    },
+    "recipe_execution": {
+      "enabled": true,
+      "use_cases": [
+        "recipe_validation",
+        "dependency_resolution",
+        "setup_instructions"
+      ]
+    },
+    "development_workflow": {
+      "enabled": true,
+      "features": [
+        "real_time_documentation",
+        "library_compatibility",
+        "best_practices"
+      ]
+    }
+  },
+  "installation": {
+    "npm": "npx -y @upstash/context7-mcp@latest",
+    "bun": "bunx -y @upstash/context7-mcp@latest",
+    "yarn": "yarn dlx @upstash/context7-mcp@latest",
+    "pnpm": "pnpm dlx @upstash/context7-mcp@latest"
+  },
+  "troubleshooting": {
+    "module_not_found": {
+      "solution": "Use bunx instead of npx",
+      "command": "bunx -y @upstash/context7-mcp"
+    },
+    "esm_resolution": {
+      "solution": "Use --experimental-vm-modules flag",
+      "command": "npx -y --node-options=--experimental-vm-modules @upstash/context7-mcp@1.0.6"
+    },
+    "tls_certificate": {
+      "solution": "Use --experimental-fetch flag",
+      "command": "npx -y --node-options=--experimental-fetch @upstash/context7-mcp"
+    }
+  },
+  "usage_examples": {
+    "basic_library_search": {
+      "description": "Search for a library and get its documentation",
+      "steps": [
+        "Use resolve-library-id with library name",
+        "Use get-library-docs with returned library ID",
+        "Process and display documentation"
+      ]
+    },
+    "specific_topic_docs": {
+      "description": "Get documentation for a specific topic",
+      "steps": [
+        "Use get-library-docs with library ID and topic",
+        "Filter documentation by topic",
+        "Return focused documentation"
+      ]
+    },
+    "auto_integration": {
+      "description": "Automatic documentation lookup during development",
+      "steps": [
+        "Monitor development context",
+        "Auto-invoke Context7 when needed",
+        "Integrate documentation into workflow"
+      ]
+    }
+  },
+  "performance": {
+    "caching": {
+      "enabled": true,
+      "duration": "24_hours",
+      "location": "kitchen/cache/context7"
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 60,
+      "burst_limit": 10
+    }
+  },
+  "security": {
+    "network_access": {
+      "required": true,
+      "protocol": "https",
+      "endpoints": ["https://mcp.context7.com"]
+    },
+    "content_validation": {
+      "enabled": true,
+      "checks": [
+        "documentation_accuracy",
+        "library_compatibility",
+        "security_vulnerabilities"
+      ]
+    }
+  }
+} 

@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "recipe_id": "storage-integration-automation",
+    "title": "Storage Integration and Automation",
+    "description": "Comprehensive integration and automation system for storage infrastructure with CI/CD pipelines, API integration, and automated workflows",
+    "category": "storage-systems",
+    "difficulty": "advanced",
+    "estimated_time": "60 minutes",
+    "prerequisites": [
+      "04-unified-storage-api-gateway",
+      "08-storage-monitoring-alerting",
+      "11-storage-compliance-governance"
+    ],
+    "tags": [
+      "integration",
+      "automation",
+      "ci-cd",
+      "api",
+      "workflows"
+    ],
+    "version": "1.0.0",
+    "last_updated": "2025-01-27T12:00:00Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "os": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "python_version": "3.8+",
+      "node_version": "16+",
+      "docker": "20.10+",
+      "docker_compose": "2.0+",
+      "git": "2.30+"
+    },
+    "dependencies": [
+      "jenkins",
+      "gitlab-ci",
+      "ansible",
+      "terraform",
+      "kubernetes",
+      "helm"
+    ],
+    "permissions": [
+      "devops_admin",
+      "ci_cd_admin",
+      "api_admin"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "ci-cd-setup",
+      "title": "CI/CD Pipeline Setup",
+      "description": "Setup comprehensive CI/CD pipelines for storage infrastructure",
+      "steps": [
+        {
+          "step_id": "jenkins-install",
+          "title": "Install Jenkins",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo apt-key add -",
+              "expected_output": "Jenkins GPG key added"
+            },
+            {
+              "os": "linux",
+              "command": "echo \"deb https://pkg.jenkins.io/debian-stable binary/\" | sudo tee /etc/apt/sources.list.d/jenkins.list",
+              "expected_output": "Jenkins repository added"
+            },
+            {
+              "os": "linux",
+              "command": "sudo apt-get update && sudo apt-get install -y jenkins",
+              "expected_output": "Jenkins installed successfully"
+            }
+          ]
+        },
+        {
+          "step_id": "storage-pipeline",
+          "title": "Create Storage CI/CD Pipeline",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /var/lib/jenkins/jobs/storage-pipeline/config.xml > /dev/null << 'EOF'\n<?xml version='1.1' encoding='UTF-8'?>\n<project>\n  <description>Storage Infrastructure CI/CD Pipeline</description>\n  <triggers>\n    <scm poll>H/5 * * * *</scm>\n  </triggers>\n  <scm class=\"hudson.plugins.git.GitSCM\">\n    <configVersion>2</configVersion>\n    <userRemoteConfigs>\n      <hudson.plugins.git.UserRemoteConfig>\n        <url>https://github.com/ai-q/storage-infrastructure.git</url>\n      </hudson.plugins.git.UserRemoteConfig>\n    </userRemoteConfigs>\n    <branches>\n      <hudson.plugins.git.BranchSpec>\n        <name>*/main</name>\n      </hudson.plugins.git.BranchSpec>\n    </branches>\n  </scm>\n  <builders>\n    <hudson.tasks.Shell>\n      <command>#!/bin/bash\n# Storage Infrastructure Pipeline\necho \"Starting storage infrastructure deployment\"\n\n# Run tests\n./scripts/test-storage.sh\n\n# Deploy infrastructure\n./scripts/deploy-storage.sh\n\n# Run integration tests\n./scripts/test-integration.sh\n\necho \"Storage infrastructure deployment completed\"</command>\n    </hudson.tasks.Shell>\n  </builders>\n</project>\nEOF",
+              "expected_output": "Storage CI/CD pipeline created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "api-integration",
+      "title": "API Integration Framework",
+      "description": "Setup comprehensive API integration for storage systems",
+      "steps": [
+        {
+          "step_id": "api-gateway",
+          "title": "Configure API Gateway",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/nginx/sites-available/storage-api > /dev/null << 'EOF'\nserver {\n    listen 80;\n    server_name storage-api.local;\n    \n    location /api/v1/storage/ {\n        proxy_pass http://localhost:8000;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n    }\n    \n    location /api/v1/minio/ {\n        proxy_pass http://localhost:9000;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n    }\n    \n    location /api/v1/s3/ {\n        proxy_pass http://localhost:9001;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n    }\n}\nEOF",
+              "expected_output": "API gateway configuration created"
+            },
+            {
+              "os": "linux",
+              "command": "sudo ln -s /etc/nginx/sites-available/storage-api /etc/nginx/sites-enabled/ && sudo nginx -t && sudo systemctl reload nginx",
+              "expected_output": "API gateway enabled and reloaded"
+            }
+          ]
+        },
+        {
+          "step_id": "api-documentation",
+          "title": "Generate API Documentation",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/generate-api-docs.sh > /dev/null << 'EOF'\n#!/bin/bash\n\n# Generate OpenAPI documentation\ncat > /var/www/api-docs/openapi.yaml << 'DOC_EOF'\nopenapi: 3.0.0\ninfo:\n  title: Storage API\n  version: 1.0.0\n  description: Comprehensive storage management API\n\npaths:\n  /api/v1/storage/files:\n    get:\n      summary: List files\n      responses:\n        '200':\n          description: List of files\n  /api/v1/storage/files/{id}:\n    get:\n      summary: Get file\n      parameters:\n        - name: id\n          in: path\n          required: true\n          schema:\n            type: string\n      responses:\n        '200':\n          description: File details\n  /api/v1/storage/files:\n    post:\n      summary: Upload file\n      requestBody:\n        required: true\n        content:\n          multipart/form-data:\n            schema:\n              type: object\n              properties:\n                file:\n                  type: string\n                  format: binary\n      responses:\n        '201':\n          description: File uploaded\nDOC_EOF\n\necho \"API documentation generated\"\nEOF",
+              "expected_output": "API documentation generator created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "automation-workflows",
+      "title": "Automated Workflows",
+      "description": "Setup automated workflows for storage operations",
+      "steps": [
+        {
+          "step_id": "ansible-setup",
+          "title": "Setup Ansible for Automation",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo apt-get install -y ansible",
+              "expected_output": "Ansible installed"
+            },
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/ansible/hosts > /dev/null << 'EOF'\n[storage_servers]\nstorage01 ansible_host=192.168.1.10\nstorage02 ansible_host=192.168.1.11\nstorage03 ansible_host=192.168.1.12\n\n[storage_servers:vars]\nansible_user=admin\nansible_ssh_private_key_file=/home/admin/.ssh/id_rsa\nEOF",
+              "expected_output": "Ansible inventory configured"
+            }
+          ]
+        },
+        {
+          "step_id": "storage-playbook",
+          "title": "Create Storage Management Playbook",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/ansible/playbooks/storage-management.yml > /dev/null << 'EOF'\n---\n- name: Storage Infrastructure Management\n  hosts: storage_servers\n  become: yes\n  tasks:\n    - name: Update storage packages\n      apt:\n        update_cache: yes\n        upgrade: yes\n      when: ansible_os_family == \"Debian\"\n    \n    - name: Ensure MinIO is running\n      systemd:\n        name: minio\n        state: started\n        enabled: yes\n    \n    - name: Check storage health\n      shell: mc admin info myminio/\n      register: storage_health\n    \n    - name: Report storage status\n      debug:\n        msg: \"Storage health check: {{ storage_health.stdout }}\"\nEOF",
+              "expected_output": "Storage management playbook created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "monitoring-integration",
+      "title": "Monitoring Integration",
+      "description": "Integrate storage automation with monitoring systems",
+      "steps": [
+        {
+          "step_id": "prometheus-integration",
+          "title": "Integrate with Prometheus",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /etc/prometheus/storage_automation.yml > /dev/null << 'EOF'\ngroups:\n- name: storage_automation\n  rules:\n  - alert: StorageAutomationFailed\n    expr: storage_automation_job_failed > 0\n    for: 5m\n    labels:\n      severity: critical\n    annotations:\n      summary: \"Storage automation job failed\"\n\n  - alert: StorageAPIDown\n    expr: up{job=\"storage_api\"} == 0\n    for: 1m\n    labels:\n      severity: critical\n    annotations:\n      summary: \"Storage API is down\"\nEOF",
+              "expected_output": "Storage automation monitoring rules created"
+            }
+          ]
+        },
+        {
+          "step_id": "alerting-integration",
+          "title": "Setup Alerting Integration",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/storage-alert-handler.sh > /dev/null << 'EOF'\n#!/bin/bash\n\n# Handle storage alerts\nalert_type=$1\nalert_message=$2\n\ncase $alert_type in\n    \"storage_full\")\n        # Trigger cleanup\n        /usr/local/bin/storage-cleanup.sh\n        # Send notification\n        echo \"$alert_message\" | mail -s \"Storage Alert\" admin@company.com\n        ;;\n    \"api_down\")\n        # Restart API service\n        sudo systemctl restart storage-api\n        # Send notification\n        echo \"$alert_message\" | mail -s \"API Alert\" admin@company.com\n        ;;\n    *)\n        echo \"Unknown alert type: $alert_type\"\n        ;;\nesac\nEOF",
+              "expected_output": "Storage alert handler created"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "testing-automation",
+      "title": "Automated Testing Framework",
+      "description": "Setup comprehensive automated testing for storage systems",
+      "steps": [
+        {
+          "step_id": "test-framework",
+          "title": "Create Testing Framework",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "sudo tee /usr/local/bin/storage-test-suite.sh > /dev/null << 'EOF'\n#!/bin/bash\n\n# Storage Testing Suite\nTEST_RESULTS=\"/var/log/storage-tests.log\"\n\nrun_test() {\n    local test_name=$1\n    local test_command=$2\n    \n    echo \"Running test: $test_name\"\n    if eval $test_command; then\n        echo \"$(date): $test_name - PASSED\" >> $TEST_RESULTS\n    else\n        echo \"$(date): $test_name - FAILED\" >> $TEST_RESULTS\n        return 1\n    fi\n}\n\n# API Tests\nrun_test \"API Health Check\" \"curl -f http://localhost:8000/health\"\nrun_test \"MinIO API Test\" \"mc admin info myminio/\"\nrun_test \"S3 API Test\" \"aws s3 ls s3://ai-q-storage\"\n\n# Performance Tests\nrun_test \"Storage Performance\" \"fio --name=perf-test --ioengine=libaio --rw=randread --bs=4k --size=100M --runtime=30\"\n\n# Security Tests\nrun_test \"Encryption Check\" \"mc admin config get myminio/ | grep encryption\"\nrun_test \"Access Control\" \"mc admin policy list myminio/\"\n\necho \"Testing completed. Results: $TEST_RESULTS\"\nEOF",
+              "expected_output": "Storage testing framework created"
+            }
+          ]
+        },
+        {
+          "step_id": "automated-testing",
+          "title": "Setup Automated Testing Schedule",
+          "commands": [
+            {
+              "os": "linux",
+              "command": "echo '0 */6 * * * /usr/local/bin/storage-test-suite.sh' | sudo crontab -",
+              "expected_output": "Automated testing schedule configured"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "os": "linux",
+        "command": "curl -s http://localhost:8080/api/json | jq '.jobs | length'",
+        "expected_output": "Number of Jenkins jobs > 0"
+      },
+      {
+        "os": "linux",
+        "command": "curl -s http://storage-api.local/api/v1/storage/health",
+        "expected_output": "{\"status\":\"healthy\"}"
+      },
+      {
+        "os": "linux",
+        "command": "ansible storage_servers -m ping",
+        "expected_output": "SUCCESS"
+      },
+      {
+        "os": "linux",
+        "command": "/usr/local/bin/storage-test-suite.sh",
+        "expected_output": "Testing completed"
+      }
+    ],
+    "expected_outputs": {
+      "jenkins_status": "Jenkins CI/CD pipeline operational",
+      "api_status": "Storage API gateway responding",
+      "ansible_status": "Ansible automation working",
+      "testing_status": "Automated testing framework operational"
+    }
+  },
+  "expected_output": {
+    "ci_cd_pipeline": "Comprehensive CI/CD pipeline for storage infrastructure",
+    "api_integration": "Unified API gateway for all storage services",
+    "automation_workflows": "Automated workflows for storage operations",
+    "monitoring_integration": "Storage automation integrated with monitoring",
+    "testing_framework": "Comprehensive automated testing framework",
+    "deployment_automation": "Automated deployment and scaling capabilities",
+    "api_documentation": "Complete API documentation and examples"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Jenkins pipeline failures",
+        "solution": "Check Jenkins logs and pipeline configuration"
+      },
+      {
+        "issue": "API gateway not responding",
+        "solution": "Verify nginx configuration and service status"
+      },
+      {
+        "issue": "Ansible playbook failures",
+        "solution": "Check inventory configuration and SSH connectivity"
+      }
+    ]
+  },
+  "next_steps": [
+    "Implement blue-green deployments",
+    "Setup automated rollback procedures",
+    "Configure multi-environment pipelines",
+    "Implement infrastructure as code"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,370 @@
+{
+  "metadata": {
+    "recipe_id": "04-off-grid-deployment",
+    "title": "Off-Grid Deployment Framework",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - Infrastructure Specialist",
+    "last_updated": "2025-07-05T21:55:00Z",
+    "purpose": "Design and implement system for deployment without internet connectivity with local update mechanisms and complete offline operation",
+    "total_tasks": 12,
+    "estimated_duration": "4 hours",
+    "complexity": "Advanced",
+    "dependencies": [
+      "02-docker-caching-system"
+    ],
+    "off_grid_stack": [
+      "Local Dependencies",
+      "Update Mechanisms",
+      "Offline Operation",
+      "Sync Procedures",
+      "Version Control"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_recipes": [
+      "01-volume-structure-design",
+      "02-docker-caching-system"
+    ],
+    "system_requirements": {
+      "storage": "Minimum 1TB available storage for local dependencies",
+      "ram": "Minimum 16GB RAM",
+      "cpu": "Minimum 8 CPU cores",
+      "network": "Initial internet access for dependency download"
+    },
+    "software_requirements": [
+      "Docker 24.0+",
+      "Docker Compose 2.15+",
+      "Git 2.40+",
+      "rsync 3.2.0+",
+      "wget 1.21+",
+      "curl 7.80+",
+      "jq 1.6+"
+    ]
+  },
+  "task_01_create_offline_dependency_structure": {
+    "task_id": "04-01",
+    "title": "Create Offline Dependency Structure",
+    "description": "Create comprehensive directory structure for offline dependencies and local resources",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "04-01-01",
+        "title": "Create offline dependency directories",
+        "description": "Create directory structure for offline dependencies",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/offline",
+          "sudo mkdir -p /opt/ai-q/offline/docker-images",
+          "sudo mkdir -p /opt/ai-q/offline/packages",
+          "sudo mkdir -p /opt/ai-q/offline/documentation",
+          "sudo mkdir -p /opt/ai-q/offline/scripts",
+          "sudo mkdir -p /opt/ai-q/offline/configs",
+          "sudo mkdir -p /opt/ai-q/offline/updates",
+          "sudo mkdir -p /opt/ai-q/offline/backups"
+        ],
+        "verification": "Verify offline directories created",
+        "expected_output": "All offline dependency directories created successfully"
+      },
+      {
+        "step_id": "04-01-02",
+        "title": "Create dependency categories",
+        "description": "Create subdirectories for different dependency types",
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/offline/packages/python",
+          "sudo mkdir -p /opt/ai-q/offline/packages/node",
+          "sudo mkdir -p /opt/ai-q/offline/packages/system",
+          "sudo mkdir -p /opt/ai-q/offline/docker-images/base",
+          "sudo mkdir -p /opt/ai-q/offline/docker-images/services",
+          "sudo mkdir -p /opt/ai-q/offline/docker-images/tools"
+        ],
+        "verification": "Verify dependency category directories created",
+        "expected_output": "All dependency category directories created successfully"
+      },
+      {
+        "step_id": "04-01-03",
+        "title": "Set offline directory permissions",
+        "description": "Set appropriate permissions for offline directories",
+        "commands": [
+          "sudo chown -R root:root /opt/ai-q/offline",
+          "sudo chmod -R 755 /opt/ai-q/offline",
+          "sudo chmod -R 700 /opt/ai-q/offline/updates",
+          "sudo chmod -R 700 /opt/ai-q/offline/backups"
+        ],
+        "verification": "Verify offline directory permissions set correctly",
+        "expected_output": "Offline directories have correct ownership and permissions"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/offline/",
+      "find /opt/ai-q/offline -type d | wc -l"
+    ],
+    "expected_outputs": {
+      "directory_count": "At least 15 offline directories created",
+      "permissions": "Correct ownership and permissions for all directories"
+    }
+  },
+  "task_02_create_dependency_download_scripts": {
+    "task_id": "04-02",
+    "title": "Create Dependency Download Scripts",
+    "description": "Create comprehensive scripts for downloading and caching all dependencies offline",
+    "estimated_duration": "1 hour",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "04-02-01",
+        "title": "Create Docker image download script",
+        "description": "Create script to download and cache all required Docker images",
+        "script_path": "/opt/ai-q/scripts/offline-docker-download.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Offline Docker Image Download Script\n# Version: 1.0.0\n# Created: 2025-01-28\n# Purpose: Download and cache all Docker images for offline deployment\n\nset -euo pipefail\n\n# Configuration\nOFFLINE_ROOT=\"/opt/ai-q/offline\"\nDOCKER_IMAGES_DIR=\"$OFFLINE_ROOT/docker-images\"\nLOG_FILE=\"$OFFLINE_ROOT/logs/docker-download-$(date +%Y%m%d-%H%M%S).log\"\n\n# Required Docker images\nDOCKER_IMAGES=(\n    \"postgres:15-alpine\"\n    \"redis:7-alpine\"\n    \"docker.elastic.co/elasticsearch/elasticsearch:8.11.0\"\n    \"neo4j:5.15.0\"\n    \"semitechnologies/weaviate:1.22.4\"\n    \"minio/minio:RELEASE.2023-11-15T20-43-25Z\"\n    \"grafana/grafana:10.2.0\"\n    \"prom/prometheus:v2.47.0\"\n    \"prom/alertmanager:v0.26.0\"\n    \"gitea/gitea:1.21.0\"\n    \"nextcloud:25.0.0\"\n    \"registry:2.8.2\"\n    \"alpine:3.18\"\n    \"ubuntu:22.04\"\n    \"python:3.11-slim\"\n    \"node:18-alpine\"\n)\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Error handling\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# Check prerequisites\ncheck_prerequisites() {\n    log \"Checking prerequisites...\"\n    \n    if [[ ! -d \"$OFFLINE_ROOT\" ]]; then\n        error_exit \"Offline root directory does not exist\"\n    fi\n    \n    if ! command -v docker &> /dev/null; then\n        error_exit \"Docker is not installed\"\n    fi\n    \n    if ! command -v wget &> /dev/null; then\n        error_exit \"wget is not installed\"\n    fi\n    \n    log \"Prerequisites check passed\"\n}\n\n# Create directories\ncreate_directories() {\n    log \"Creating directories...\"\n    \n    mkdir -p \"$DOCKER_IMAGES_DIR/base\"\n    mkdir -p \"$DOCKER_IMAGES_DIR/services\"\n    mkdir -p \"$DOCKER_IMAGES_DIR/tools\"\n    mkdir -p \"$OFFLINE_ROOT/logs\"\n    \n    log \"Directories created\"\n}\n\n# Download Docker image\ndownload_image() {\n    local image=\"$1\"\n    local image_name=$(echo \"$image\" | sed 's/[^a-zA-Z0-9]/_/g')\n    local tar_file=\"$DOCKER_IMAGES_DIR/services/${image_name}.tar\"\n    \n    log \"Downloading Docker image: $image\"\n    \n    # Pull image\n    docker pull \"$image\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to pull image: $image\"\n    }\n    \n    # Save image to tar file\n    docker save \"$image\" -o \"$tar_file\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to save image: $image\"\n    }\n    \n    # Compress tar file\n    gzip \"$tar_file\" 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to compress image: $image\"\n    }\n    \n    log \"Downloaded and cached: ${tar_file}.gz\"\n}\n\n# Create image manifest\ncreate_manifest() {\n    log \"Creating image manifest...\"\n    \n    local manifest_file=\"$DOCKER_IMAGES_DIR/images-manifest.json\"\n    \n    cat > \"$manifest_file\" << EOF\n{\n  \"version\": \"1.0.0\",\n  \"created\": \"$(date -Iseconds)\",\n  \"images\": [\nEOF\n    \n    for image in \"${DOCKER_IMAGES[@]}\"; do\n        local image_name=$(echo \"$image\" | sed 's/[^a-zA-Z0-9]/_/g')\n        local tar_file=\"${image_name}.tar.gz\"\n        local file_size=$(stat -c %s \"$DOCKER_IMAGES_DIR/services/$tar_file\" 2>/dev/null || echo 0)\n        \n        cat >> \"$manifest_file\" << EOF\n    {\n      \"name\": \"$image\",\n      \"filename\": \"$tar_file\",\n      \"size_bytes\": $file_size,\n      \"cached\": $(if [[ -f \"$DOCKER_IMAGES_DIR/services/$tar_file\" ]]; then echo true; else echo false; fi)\n    },\nEOF\n    done\n    \n    # Remove trailing comma\n    sed -i '$ s/,$//' \"$manifest_file\"\n    \n    cat >> \"$manifest_file\" << EOF\n  ]\n}\nEOF\n    \n    log \"Image manifest created: $manifest_file\"\n}\n\n# Main execution\nmain() {\n    log \"Starting Docker image download process...\"\n    \n    check_prerequisites\n    create_directories\n    \n    # Download all images\n    for image in \"${DOCKER_IMAGES[@]}\"; do\n        download_image \"$image\"\n    done\n    \n    create_manifest\n    \n    log \"Docker image download process completed successfully\"\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify Docker download script created and is executable",
+        "expected_output": "Docker download script created and executable"
+      },
+      {
+        "step_id": "04-02-02",
+        "title": "Create package download script",
+        "description": "Create script to download and cache all required packages",
+        "script_path": "/opt/ai-q/scripts/offline-package-download.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Offline Package Download Script\n# Version: 1.0.0\n# Created: 2025-01-28\n# Purpose: Download and cache all packages for offline deployment\n\nset -euo pipefail\n\n# Configuration\nOFFLINE_ROOT=\"/opt/ai-q/offline\"\nPACKAGES_DIR=\"$OFFLINE_ROOT/packages\"\nLOG_FILE=\"$OFFLINE_ROOT/logs/package-download-$(date +%Y%m%d-%H%M%S).log\"\n\n# Required Python packages\nPYTHON_PACKAGES=(\n    \"fastapi==0.104.1\"\n    \"uvicorn==0.24.0\"\n    \"sqlalchemy==2.0.23\"\n    \"psycopg2-binary==2.9.9\"\n    \"redis==5.0.1\"\n    \"elasticsearch==8.11.0\"\n    \"weaviate-client==3.25.3\"\n    \"minio==7.2.0\"\n    \"pydantic==2.5.0\"\n    \"python-jose==3.3.0\"\n    \"passlib==1.7.4\"\n    \"python-multipart==0.0.6\"\n    \"aiofiles==23.2.1\"\n    \"httpx==0.25.2\"\n    \"pytest==7.4.3\"\n    \"pytest-asyncio==0.21.1\"\n)\n\n# Required Node.js packages\nNODE_PACKAGES=(\n    \"next@14.0.4\"\n    \"react@18.2.0\"\n    \"react-dom@18.2.0\"\n    \"@types/node@20.10.4\"\n    \"@types/react@18.2.45\"\n    \"@types/react-dom@18.2.18\"\n    \"typescript@5.3.3\"\n    \"tailwindcss@3.3.6\"\n    \"autoprefixer@10.4.16\"\n    \"postcss@8.4.32\"\n)\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Error handling\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# Check prerequisites\ncheck_prerequisites() {\n    log \"Checking prerequisites...\"\n    \n    if [[ ! -d \"$OFFLINE_ROOT\" ]]; then\n        error_exit \"Offline root directory does not exist\"\n    fi\n    \n    if ! command -v pip &> /dev/null; then\n        error_exit \"pip is not installed\"\n    fi\n    \n    if ! command -v npm &> /dev/null; then\n        error_exit \"npm is not installed\"\n    fi\n    \n    log \"Prerequisites check passed\"\n}\n\n# Create directories\ncreate_directories() {\n    log \"Creating directories...\"\n    \n    mkdir -p \"$PACKAGES_DIR/python\"\n    mkdir -p \"$PACKAGES_DIR/node\"\n    mkdir -p \"$PACKAGES_DIR/system\"\n    mkdir -p \"$OFFLINE_ROOT/logs\"\n    \n    log \"Directories created\"\n}\n\n# Download Python packages\ndownload_python_packages() {\n    log \"Downloading Python packages...\"\n    \n    cd \"$PACKAGES_DIR/python\"\n    \n    for package in \"${PYTHON_PACKAGES[@]}\"; do\n        log \"Downloading Python package: $package\"\n        \n        pip download \"$package\" 2>> \"$LOG_FILE\" || {\n            error_exit \"Failed to download Python package: $package\"\n        }\n    done\n    \n    log \"Python packages downloaded successfully\"\n}\n\n# Download Node.js packages\ndownload_node_packages() {\n    log \"Downloading Node.js packages...\"\n    \n    cd \"$PACKAGES_DIR/node\"\n    \n    for package in \"${NODE_PACKAGES[@]}\"; do\n        log \"Downloading Node.js package: $package\"\n        \n        npm pack \"$package\" 2>> \"$LOG_FILE\" || {\n            error_exit \"Failed to download Node.js package: $package\"\n        }\n    done\n    \n    log \"Node.js packages downloaded successfully\"\n}\n\n# Create package manifest\ncreate_manifest() {\n    log \"Creating package manifest...\"\n    \n    local manifest_file=\"$PACKAGES_DIR/packages-manifest.json\"\n    \n    cat > \"$manifest_file\" << EOF\n{\n  \"version\": \"1.0.0\",\n  \"created\": \"$(date -Iseconds)\",\n  \"python_packages\": [\nEOF\n    \n    for package in \"${PYTHON_PACKAGES[@]}\"; do\n        cat >> \"$manifest_file\" << EOF\n    \"$package\",\nEOF\n    done\n    \n    # Remove trailing comma\n    sed -i '$ s/,$//' \"$manifest_file\"\n    \n    cat >> \"$manifest_file\" << EOF\n  ],\n  \"node_packages\": [\nEOF\n    \n    for package in \"${NODE_PACKAGES[@]}\"; do\n        cat >> \"$manifest_file\" << EOF\n    \"$package\",\nEOF\n    done\n    \n    # Remove trailing comma\n    sed -i '$ s/,$//' \"$manifest_file\"\n    \n    cat >> \"$manifest_file\" << EOF\n  ]\n}\nEOF\n    \n    log \"Package manifest created: $manifest_file\"\n}\n\n# Main execution\nmain() {\n    log \"Starting package download process...\"\n    \n    check_prerequisites\n    create_directories\n    download_python_packages\n    download_node_packages\n    create_manifest\n    \n    log \"Package download process completed successfully\"\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify package download script created and is executable",
+        "expected_output": "Package download script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/offline-*.sh",
+      "chmod +x /opt/ai-q/scripts/offline-*.sh"
+    ],
+    "expected_outputs": {
+      "download_scripts": "2 download scripts created and executable",
+      "permissions": "Scripts have execute permissions"
+    }
+  },
+  "task_03_create_offline_deployment_scripts": {
+    "task_id": "04-03",
+    "title": "Create Offline Deployment Scripts",
+    "description": "Create scripts for deploying the system without internet connectivity",
+    "estimated_duration": "1 hour",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "04-03-01",
+        "title": "Create offline deployment script",
+        "description": "Create main script for offline deployment",
+        "script_path": "/opt/ai-q/scripts/offline-deploy.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Offline Deployment Script\n# Version: 1.0.0\n# Created: 2025-01-28\n# Purpose: Deploy AI-Q system without internet connectivity\n\nset -euo pipefail\n\n# Configuration\nOFFLINE_ROOT=\"/opt/ai-q/offline\"\nDOCKER_IMAGES_DIR=\"$OFFLINE_ROOT/docker-images\"\nPACKAGES_DIR=\"$OFFLINE_ROOT/packages\"\nLOG_FILE=\"$OFFLINE_ROOT/logs/offline-deploy-$(date +%Y%m%d-%H%M%S).log\"\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Error handling\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# Check offline prerequisites\ncheck_offline_prerequisites() {\n    log \"Checking offline prerequisites...\"\n    \n    if [[ ! -d \"$OFFLINE_ROOT\" ]]; then\n        error_exit \"Offline root directory does not exist\"\n    fi\n    \n    if [[ ! -d \"$DOCKER_IMAGES_DIR\" ]]; then\n        error_exit \"Docker images directory does not exist\"\n    fi\n    \n    if [[ ! -d \"$PACKAGES_DIR\" ]]; then\n        error_exit \"Packages directory does not exist\"\n    fi\n    \n    log \"Offline prerequisites check passed\"\n}\n\n# Load Docker images\nload_docker_images() {\n    log \"Loading Docker images...\"\n    \n    local images_loaded=0\n    \n    for tar_file in \"$DOCKER_IMAGES_DIR/services/\"*.tar.gz; do\n        if [[ -f \"$tar_file\" ]]; then\n            log \"Loading Docker image: $(basename \"$tar_file\")\"\n            \n            gunzip -c \"$tar_file\" | docker load 2>> \"$LOG_FILE\" || {\n                error_exit \"Failed to load Docker image: $tar_file\"\n            }\n            \n            ((images_loaded++))\n        fi\n    done\n    \n    log \"Loaded $images_loaded Docker images\"\n}\n\n# Install Python packages\ninstall_python_packages() {\n    log \"Installing Python packages...\"\n    \n    if [[ -d \"$PACKAGES_DIR/python\" ]]; then\n        cd \"$PACKAGES_DIR/python\"\n        \n        for wheel_file in *.whl; do\n            if [[ -f \"$wheel_file\" ]]; then\n                log \"Installing Python package: $wheel_file\"\n                \n                pip install \"$wheel_file\" 2>> \"$LOG_FILE\" || {\n                    error_exit \"Failed to install Python package: $wheel_file\"\n                }\n            fi\n        done\n        \n        log \"Python packages installed successfully\"\n    fi\n}\n\n# Install Node.js packages\ninstall_node_packages() {\n    log \"Installing Node.js packages...\"\n    \n    if [[ -d \"$PACKAGES_DIR/node\" ]]; then\n        cd \"$PACKAGES_DIR/node\"\n        \n        for tgz_file in *.tgz; do\n            if [[ -f \"$tgz_file\" ]]; then\n                log \"Installing Node.js package: $tgz_file\"\n                \n                npm install \"$tgz_file\" 2>> \"$LOG_FILE\" || {\n                    error_exit \"Failed to install Node.js package: $tgz_file\"\n                }\n            fi\n        done\n        \n        log \"Node.js packages installed successfully\"\n    fi\n}\n\n# Setup local Docker registry\nsetup_local_registry() {\n    log \"Setting up local Docker registry...\"\n    \n    # Start local registry\n    docker run -d --name ai-q-offline-registry \\\n        -p 5000:5000 \\\n        -v /opt/ai-q/data/registry:/var/lib/registry \\\n        registry:2.8.2 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start local Docker registry\"\n    }\n    \n    log \"Local Docker registry started on port 5000\"\n}\n\n# Deploy services\ndeploy_services() {\n    log \"Deploying services...\"\n    \n    # Change to project directory\n    cd /opt/ai-q\n    \n    # Deploy using Docker Compose\n    docker-compose -f docker/compose/docker-compose.yml up -d 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to deploy services\"\n    }\n    \n    log \"Services deployed successfully\"\n}\n\n# Verify deployment\nverify_deployment() {\n    log \"Verifying deployment...\"\n    \n    # Check if all containers are running\n    local running_containers=$(docker ps --format \"table {{.Names}}\" | grep ai-q | wc -l)\n    local expected_containers=12  # Adjust based on your services\n    \n    if [[ $running_containers -lt $expected_containers ]]; then\n        error_exit \"Not all containers are running (expected: $expected_containers, running: $running_containers)\"\n    fi\n    \n    log \"Deployment verification passed ($running_containers containers running)\"\n}\n\n# Main execution\nmain() {\n    log \"Starting offline deployment process...\"\n    \n    check_offline_prerequisites\n    load_docker_images\n    install_python_packages\n    install_node_packages\n    setup_local_registry\n    deploy_services\n    verify_deployment\n    \n    log \"Offline deployment process completed successfully\"\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify offline deployment script created and is executable",
+        "expected_output": "Offline deployment script created and executable"
+      },
+      {
+        "step_id": "04-03-02",
+        "title": "Create offline update script",
+        "description": "Create script for updating offline system when internet is available",
+        "script_path": "/opt/ai-q/scripts/offline-update.sh",
+        "script_content": "#!/bin/bash\n\n# AI-Q Offline Update Script\n# Version: 1.0.0\n# Created: 2025-01-28\n# Purpose: Update offline system when internet connectivity is available\n\nset -euo pipefail\n\n# Configuration\nOFFLINE_ROOT=\"/opt/ai-q/offline\"\nUPDATE_DIR=\"$OFFLINE_ROOT/updates\"\nLOG_FILE=\"$OFFLINE_ROOT/logs/offline-update-$(date +%Y%m%d-%H%M%S).log\"\n\n# Logging function\nlog() {\n    echo \"$(date '+%Y-%m-%d %H:%M:%S') - $1\" | tee -a \"$LOG_FILE\"\n}\n\n# Error handling\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# Check internet connectivity\ncheck_internet() {\n    log \"Checking internet connectivity...\"\n    \n    if ! ping -c 1 8.8.8.8 &> /dev/null; then\n        error_exit \"No internet connectivity available\"\n    fi\n    \n    log \"Internet connectivity confirmed\"\n}\n\n# Create update backup\ncreate_update_backup() {\n    log \"Creating update backup...\"\n    \n    local backup_file=\"$UPDATE_DIR/pre-update-backup-$(date +%Y%m%d-%H%M%S).tar.gz\"\n    \n    mkdir -p \"$UPDATE_DIR\"\n    \n    tar -czf \"$backup_file\" -C /opt/ai-q data config 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to create update backup\"\n    }\n    \n    log \"Update backup created: $backup_file\"\n}\n\n# Update Docker images\nupdate_docker_images() {\n    log \"Updating Docker images...\"\n    \n    # Run Docker image download script\n    /opt/ai-q/scripts/offline-docker-download.sh 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to update Docker images\"\n    }\n    \n    log \"Docker images updated successfully\"\n}\n\n# Update packages\nupdate_packages() {\n    log \"Updating packages...\"\n    \n    # Run package download script\n    /opt/ai-q/scripts/offline-package-download.sh 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to update packages\"\n    }\n    \n    log \"Packages updated successfully\"\n}\n\n# Update system configuration\nupdate_system_config() {\n    log \"Updating system configuration...\"\n    \n    # Update configuration files if needed\n    if [[ -f \"$OFFLINE_ROOT/configs/latest-config.tar.gz\" ]]; then\n        tar -xzf \"$OFFLINE_ROOT/configs/latest-config.tar.gz\" -C /opt/ai-q 2>> \"$LOG_FILE\" || {\n            error_exit \"Failed to update system configuration\"\n        }\n        \n        log \"System configuration updated successfully\"\n    fi\n}\n\n# Restart services\nrestart_services() {\n    log \"Restarting services...\"\n    \n    cd /opt/ai-q\n    \n    # Restart services with new images\n    docker-compose -f docker/compose/docker-compose.yml down 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to stop services\"\n    }\n    \n    docker-compose -f docker/compose/docker-compose.yml up -d 2>> \"$LOG_FILE\" || {\n        error_exit \"Failed to start services\"\n    }\n    \n    log \"Services restarted successfully\"\n}\n\n# Main execution\nmain() {\n    log \"Starting offline update process...\"\n    \n    check_internet\n    create_update_backup\n    update_docker_images\n    update_packages\n    update_system_config\n    restart_services\n    \n    log \"Offline update process completed successfully\"\n}\n\n# Execute main function\nmain \"$@\"",
+        "verification": "Verify offline update script created and is executable",
+        "expected_output": "Offline update script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/scripts/offline-deploy.sh",
+      "ls -la /opt/ai-q/scripts/offline-update.sh",
+      "chmod +x /opt/ai-q/scripts/offline-deploy.sh",
+      "chmod +x /opt/ai-q/scripts/offline-update.sh"
+    ],
+    "expected_outputs": {
+      "deployment_scripts": "2 deployment scripts created and executable",
+      "permissions": "Scripts have execute permissions"
+    }
+  },
+  "task_04_create_offline_documentation": {
+    "task_id": "04-04",
+    "title": "Create Offline Documentation",
+    "description": "Create comprehensive offline documentation for system operation",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "04-04-01",
+        "title": "Create offline operation guide",
+        "description": "Create comprehensive offline operation documentation",
+        "file_path": "/opt/ai-q/offline/documentation/offline-operation-guide.json",
+        "content": {
+          "title": "AI-Q Offline Operation Guide",
+          "version": "1.0.0",
+          "created": "2025-01-28T00:00:00Z",
+          "purpose": "Complete guide for operating AI-Q system without internet connectivity",
+          "sections": {
+            "system_overview": {
+              "title": "System Overview",
+              "description": "Complete overview of the AI-Q system components and architecture",
+              "components": [
+                "PostgreSQL database for data storage",
+                "Redis for caching and session management",
+                "Elasticsearch for search functionality",
+                "Weaviate for vector storage",
+                "MinIO for object storage",
+                "Gitea for Git repository management",
+                "NextCloud for file storage",
+                "Grafana for monitoring",
+                "Prometheus for metrics collection"
+              ]
+            },
+            "offline_deployment": {
+              "title": "Offline Deployment",
+              "description": "Step-by-step guide for deploying the system without internet",
+              "steps": [
+                "Verify all dependencies are cached locally",
+                "Run offline deployment script",
+                "Verify all services are running",
+                "Test system functionality"
+              ]
+            },
+            "system_operation": {
+              "title": "System Operation",
+              "description": "Daily operation procedures for the offline system",
+              "procedures": [
+                "Monitor system health and performance",
+                "Perform regular backups",
+                "Check log files for errors",
+                "Verify data integrity"
+              ]
+            },
+            "troubleshooting": {
+              "title": "Troubleshooting",
+              "description": "Common issues and solutions for offline operation",
+              "issues": [
+                {
+                  "issue": "Service not starting",
+                  "solution": "Check Docker logs and restart service"
+                },
+                {
+                  "issue": "Data corruption",
+                  "solution": "Restore from latest backup"
+                },
+                {
+                  "issue": "Performance issues",
+                  "solution": "Check resource usage and optimize"
+                }
+              ]
+            },
+            "update_procedures": {
+              "title": "Update Procedures",
+              "description": "How to update the system when internet is available",
+              "steps": [
+                "Connect to internet",
+                "Run offline update script",
+                "Verify updates applied correctly",
+                "Test system functionality"
+              ]
+            }
+          }
+        },
+        "verification": "Verify offline documentation created",
+        "expected_output": "Offline documentation created successfully"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/offline/documentation/",
+      "cat /opt/ai-q/offline/documentation/offline-operation-guide.json"
+    ],
+    "expected_outputs": {
+      "documentation": "Offline operation guide created in JSON format",
+      "content": "Comprehensive offline operation documentation"
+    }
+  },
+  "verification_and_testing": {
+    "verification_commands": [
+      "ls -la /opt/ai-q/offline/",
+      "ls -la /opt/ai-q/scripts/offline-*.sh",
+      "/opt/ai-q/scripts/offline-docker-download.sh",
+      "/opt/ai-q/scripts/offline-package-download.sh",
+      "docker images | grep ai-q",
+      "ls -la /opt/ai-q/offline/documentation/"
+    ],
+    "expected_outputs": {
+      "offline_structure": "Complete offline dependency structure with proper permissions",
+      "download_scripts": "All download scripts created and executable",
+      "docker_images": "Docker images downloaded and cached locally",
+      "packages": "All packages downloaded and cached locally",
+      "documentation": "Comprehensive offline documentation in JSON format",
+      "deployment_scripts": "Offline deployment and update scripts functional"
+    }
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Docker image download failures",
+        "symptoms": "Cannot download Docker images",
+        "solution": "Check internet connectivity and Docker Hub access",
+        "prevention": "Ensure stable internet connection during download"
+      },
+      {
+        "issue": "Package download failures",
+        "symptoms": "Cannot download packages",
+        "solution": "Check internet connectivity and package repository access",
+        "prevention": "Verify package repository availability"
+      },
+      {
+        "issue": "Offline deployment failures",
+        "symptoms": "Cannot deploy system offline",
+        "solution": "Verify all dependencies are cached locally",
+        "prevention": "Complete dependency download before going offline"
+      }
+    ],
+    "recovery_procedures": [
+      {
+        "procedure": "Re-download dependencies",
+        "commands": [
+          "/opt/ai-q/scripts/offline-docker-download.sh",
+          "/opt/ai-q/scripts/offline-package-download.sh"
+        ]
+      },
+      {
+        "procedure": "Offline deployment",
+        "commands": [
+          "/opt/ai-q/scripts/offline-deploy.sh"
+        ]
+      }
+    ]
+  },
+  "success_criteria": [
+    "✅ Complete offline dependency structure created with proper permissions",
+    "✅ Comprehensive download scripts implemented for all dependencies",
+    "✅ Offline deployment and update scripts functional",
+    "✅ Complete offline documentation in JSON format",
+    "✅ All Docker images cached locally",
+    "✅ All packages cached locally",
+    "✅ Offline operation procedures documented",
+    "✅ Update mechanisms implemented for when internet is available"
+  ],
+  "next_steps": [
+    "Test offline deployment procedures thoroughly",
+    "Validate dependency caching functionality",
+    "Test update mechanisms when internet is available",
+    "Integrate with self-hosted services",
+    "Prepare for versioning and rollback infrastructure"
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

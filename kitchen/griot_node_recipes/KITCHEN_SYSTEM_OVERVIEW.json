@@ -1,0 +1,354 @@
+{
+  "metadata": {
+    "title": "Kitchen Analogy System Overview",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T00:02:57Z",
+    "purpose": "Comprehensive guide to the kitchen analogy system for atomic, modular recipe execution",
+    "system_type": "Pantry-based ingredient management with intelligent caching",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "system_overview": {
+    "description": "The kitchen analogy system provides atomic, reusable ingredients and intelligent caching for optimal recipe execution",
+    "analogy": {
+      "pantry": "Central registry of atomic ingredients (tasks, modules, skills, tools, configs)",
+      "kitchen": "Runtime environment with orchestrator agent and cache management",
+      "chef": "User or node agent that executes recipes",
+      "ingredients": "Reusable, versioned components with caching",
+      "recipes": "Sequential instructions that reference pantry ingredients"
+    },
+    "benefits": [
+      "Atomic, reusable ingredients eliminate duplication",
+      "Intelligent caching improves performance and reliability",
+      "Modular design enables plug-and-play architecture",
+      "Comprehensive audit trail and validation",
+      "Support for distributed execution and agent delegation"
+    ]
+  },
+  "pantry_system": {
+    "description": "Central registry of atomic, reusable ingredients",
+    "location": "recipes/pantry/",
+    "structure": {
+      "tasks/": "Atomic, single-purpose actions",
+      "modules/": "Reusable logic blocks or service definitions",
+      "skills/": "Agent abilities or specialized functions",
+      "tools/": "External binaries, scripts, or APIs",
+      "configs/": "Reusable configuration templates or files",
+      "schemas/": "JSON schemas for ingredient validation"
+    },
+    "ingredient_properties": {
+      "registry_id": "Unique identifier for the ingredient",
+      "version": "Semantic versioning (major.minor.patch)",
+      "type": "task, module, skill, tool, or config",
+      "description": "Clear description of what the ingredient does",
+      "dependencies": "Other ingredients this depends on",
+      "caching": "Caching configuration and validation",
+      "signature": "Cryptographic signature for verification"
+    },
+    "caching_features": {
+      "enabled": true,
+      "strategies": {
+        "aggressive": "Cache everything with long TTL",
+        "conservative": "Cache only with explicit validation",
+        "smart": "Adaptive caching based on usage patterns"
+      },
+      "locations": {
+        "local": "Cache on local filesystem",
+        "shared": "Cache in shared network location",
+        "remote": "Cache in remote repository"
+      },
+      "validation": {
+        "signature": "Cryptographic signature verification",
+        "timestamp": "Time-based validation",
+        "content_hash": "Content hash verification",
+        "none": "No validation (not recommended)"
+      }
+    }
+  },
+  "kitchen_system": {
+    "description": "Runtime environment with orchestrator agent and cache management",
+    "location": "recipes/kitchen/",
+    "components": {
+      "orchestrator": {
+        "role": "Chef (user or node agent)",
+        "capabilities": [
+          "execute_recipes",
+          "delegate_tasks",
+          "manage_cache",
+          "modify_pantry"
+        ],
+        "responsibilities": [
+          "Load recipes and gather ingredients",
+          "Validate ingredients and dependencies",
+          "Execute recipes with proper error handling",
+          "Log all operations for auditability",
+          "Manage cache operations and cleanup"
+        ]
+      },
+      "cache_manager": {
+        "features": [
+          "cache_operations",
+          "validation",
+          "cleanup",
+          "index_management"
+        ],
+        "operations": {
+          "get": "Retrieve cached ingredient or result",
+          "put": "Store ingredient or result in cache",
+          "validate": "Verify cached item integrity",
+          "cleanup": "Remove expired or invalid items",
+          "index": "Maintain cache index for fast lookups"
+        }
+      }
+    }
+  },
+  "recipe_execution_flow": {
+    "description": "Step-by-step process for executing recipes using the kitchen system",
+    "steps": [
+      {
+        "step": 1,
+        "action": "Load Recipe",
+        "description": "Orchestrator loads recipe file and parses instructions",
+        "validation": "Verify recipe JSON syntax and structure"
+      },
+      {
+        "step": 2,
+        "action": "Gather Ingredients",
+        "description": "For each ingredient in recipe, check pantry and cache",
+        "process": [
+          "Check local cache first",
+          "Validate cached item if found",
+          "If not cached, retrieve from pantry",
+          "Store in cache for future use"
+        ]
+      },
+      {
+        "step": 3,
+        "action": "Validate Dependencies",
+        "description": "Ensure all ingredient dependencies are satisfied",
+        "checks": [
+          "Verify all required ingredients are available",
+          "Check version compatibility",
+          "Validate ingredient signatures",
+          "Resolve any dependency conflicts"
+        ]
+      },
+      {
+        "step": 4,
+        "action": "Execute Recipe",
+        "description": "Run recipe instructions using gathered ingredients",
+        "features": [
+          "Sequential execution of recipe steps",
+          "Error handling and rollback on failure",
+          "Progress logging and monitoring",
+          "Result validation and verification"
+        ]
+      },
+      {
+        "step": 5,
+        "action": "Cache Results",
+        "description": "Store recipe results for future use",
+        "benefits": [
+          "Faster subsequent executions",
+          "Reduced resource usage",
+          "Improved reliability",
+          "Better performance"
+        ]
+      },
+      {
+        "step": 6,
+        "action": "Log Operations",
+        "description": "Record all operations for auditability",
+        "information": [
+          "Ingredient usage and versions",
+          "Execution time and performance",
+          "Errors and resolutions",
+          "Cache hit/miss statistics"
+        ]
+      }
+    ]
+  },
+  "caching_strategies": {
+    "description": "Different caching strategies for different use cases",
+    "strategies": {
+      "aggressive": {
+        "description": "Cache everything with long TTL",
+        "use_case": "Stable, rarely-changing ingredients",
+        "ttl": "7-30 days",
+        "validation": "signature",
+        "benefits": "Maximum performance",
+        "risks": "May use stale data"
+      },
+      "conservative": {
+        "description": "Cache only with explicit validation",
+        "use_case": "Security-critical or frequently-changing ingredients",
+        "ttl": "1-24 hours",
+        "validation": "content_hash",
+        "benefits": "Maximum reliability",
+        "risks": "Lower performance"
+      },
+      "smart": {
+        "description": "Adaptive caching based on usage patterns",
+        "use_case": "General-purpose caching",
+        "ttl": "Adaptive (1 hour to 7 days)",
+        "validation": "timestamp",
+        "benefits": "Balanced performance and reliability",
+        "risks": "Complex configuration"
+      }
+    }
+  },
+  "example_usage": {
+    "description": "Practical examples of using the kitchen system",
+    "scenarios": {
+      "deploy_ollama_service": {
+        "recipe": "recipes/01-infrastructure/02-unified-docker-system-recipe.json",
+        "ingredients": [
+          "pantry/tasks/pull-docker-image.json",
+          "pantry/skills/run-docker-compose.json",
+          "pantry/tools/docker.json"
+        ],
+        "execution": [
+          "Orchestrator loads recipe",
+          "Gathers ingredients from pantry/cache",
+          "Validates Docker is available",
+          "Pulls Ollama image (cached if available)",
+          "Runs Docker Compose service",
+          "Caches successful result"
+        ]
+      },
+      "setup_monitoring_stack": {
+        "recipe": "recipes/01-infrastructure/05-monitoring-observability-recipe.json",
+        "ingredients": [
+          "pantry/modules/prometheus-config.json",
+          "pantry/modules/grafana-dashboards.json",
+          "pantry/tasks/configure-alerting.json"
+        ],
+        "execution": [
+          "Load monitoring recipe",
+          "Gather monitoring ingredients",
+          "Validate all dependencies",
+          "Deploy Prometheus and Grafana",
+          "Configure dashboards and alerts",
+          "Cache configuration for reuse"
+        ]
+      }
+    }
+  },
+  "best_practices": {
+    "ingredient_design": [
+      "Make ingredients atomic and single-purpose",
+      "Use clear, descriptive registry IDs",
+      "Include comprehensive documentation",
+      "Specify all dependencies explicitly",
+      "Use semantic versioning consistently"
+    ],
+    "caching_usage": [
+      "Choose appropriate caching strategy for each ingredient",
+      "Validate cached items before use",
+      "Monitor cache hit rates and performance",
+      "Clean up expired cache entries regularly",
+      "Use cache for expensive operations"
+    ],
+    "recipe_execution": [
+      "Execute recipes sequentially",
+      "Validate all ingredients before execution",
+      "Handle errors gracefully with rollback",
+      "Log all operations for auditability",
+      "Test recipes thoroughly before production use"
+    ],
+    "system_maintenance": [
+      "Regularly update pantry ingredients",
+      "Monitor cache performance and cleanup",
+      "Validate recipe dependencies",
+      "Backup pantry and cache data",
+      "Review and optimize caching strategies"
+    ]
+  },
+  "troubleshooting": {
+    "common_issues": {
+      "cache_misses": {
+        "symptoms": "Slow performance, repeated downloads",
+        "causes": [
+          "Invalid cache entries",
+          "Expired TTL",
+          "Network issues"
+        ],
+        "solutions": [
+          "Clear cache",
+          "Adjust TTL",
+          "Check network connectivity"
+        ]
+      },
+      "dependency_conflicts": {
+        "symptoms": "Recipe execution failures",
+        "causes": [
+          "Version incompatibilities",
+          "Missing dependencies"
+        ],
+        "solutions": [
+          "Update ingredient versions",
+          "Install missing dependencies"
+        ]
+      },
+      "validation_failures": {
+        "symptoms": "Ingredient rejection",
+        "causes": [
+          "Corrupted cache",
+          "Invalid signatures",
+          "Tampered files"
+        ],
+        "solutions": [
+          "Clear cache",
+          "Re-download ingredients",
+          "Verify sources"
+        ]
+      }
+    },
+    "debugging_tools": {
+      "cache_inspector": "View cache contents and statistics",
+      "ingredient_validator": "Validate ingredient integrity",
+      "dependency_resolver": "Resolve dependency conflicts",
+      "execution_logger": "Detailed execution logging"
+    }
+  },
+  "integration_with_recipes": {
+    "description": "How the kitchen system integrates with the recipe library",
+    "recipe_references": {
+      "ingredient_references": "Recipes reference pantry ingredients by registry ID and version",
+      "caching_integration": "All recipe executions use intelligent caching",
+      "audit_trail": "Complete audit trail of all recipe executions",
+      "performance_optimization": "Caching significantly improves recipe execution performance"
+    },
+    "benefits": [
+      "Faster recipe execution through caching",
+      "Reduced duplication through reusable ingredients",
+      "Better reliability through validation",
+      "Comprehensive audit trail",
+      "Modular, maintainable architecture"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "tool.pandas",
+  "type": "tool",
+  "name": "Pandas Data Tool",
+  "description": "Data manipulation and analysis tool for structured data",
+  "version": "1.5.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["data", "pandas", "analysis", "dataframe", "csv"],
+  "author": "data_team",
+  "created": "2025-07-08T00:07:47Z",
+  "updated": "2025-07-08T00:07:47Z",
+  "access_level": "public",
+  "usage": "Use for data manipulation, cleaning, and basic analysis",
+  "validation": {
+    "required_fields": ["operation", "data_source"],
+    "operations": ["read_csv", "read_json", "merge", "groupby", "filter", "sort"]
+  }
+} 

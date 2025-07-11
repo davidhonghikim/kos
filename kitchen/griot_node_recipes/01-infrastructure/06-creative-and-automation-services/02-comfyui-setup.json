@@ -1,0 +1,72 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-INFRA-COMFYUI-SETUP-002",
+    "title": "ComfyUI (Optional)",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T21:32:29Z",
+    "difficulty_level": "expert",
+    "total_tasks": 1
+  },
+  "recipe_overview": {
+    "description": "Deploys ComfyUI, a powerful and modular node-based interface for Stable Diffusion. This service is hardware-intensive and the recipe will check 'config/hardware_profile.json' for a compatible GPU. It also allows for connecting to a remote ComfyUI instance.",
+    "technology_stack": {
+      "image_generation": "Stable Diffusion",
+      "ui": "ComfyUI",
+      "orchestration": "Docker Compose"
+    },
+    "deliverables": [
+      "A running ComfyUI Docker container (if hardware is compatible).",
+      "Configuration for connecting to a local or remote ComfyUI API."
+    ]
+  },
+  "tasks": [
+    {
+      "id": "50-002",
+      "title": "Deploy ComfyUI Container",
+      "description": "Checks for a compatible GPU in 'config/hardware_profile.json'. If compatible, deploys the ComfyUI container. If not, logs a message and skips installation. Provides an option to configure a remote URL.",
+      "dependencies": [
+        "40-001"
+      ],
+      "estimated_time": "30 minutes",
+      "files_to_create": [
+        "docker/compose/comfyui.yml",
+        "config/creative_services/comfyui_config.yml"
+      ],
+      "acceptance_criteria": [
+        "If a compatible GPU is present, the ComfyUI container starts successfully.",
+        "If no compatible GPU is found, a clear message is logged and the setup is skipped.",
+        "The 'config/creative_services/comfyui_config.yml' is created, allowing a user to specify a remote_api_url."
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-Comfyui-Setup",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

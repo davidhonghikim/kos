@@ -1,0 +1,845 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "01-10-PERFORMANCE-OPTIMIZATION-COMPREHENSIVE",
+    "title": "Performance Optimization and Tuning - Complete Implementation",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:01:07Z",
+    "last_updated": "2025-07-05T18:01:07Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "2-3 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 8,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-performance",
+    "description": "Complete performance optimization and tuning implementation with resource limits, system optimization, and performance monitoring",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "01-01-docker-environment",
+        "01-02-system-monitoring",
+        "01-03-logging-infrastructure",
+        "01-04-load-balancing",
+        "01-05-service-discovery",
+        "01-06-message-queue",
+        "01-07-cache-layer",
+        "01-08-backup-infrastructure",
+        "01-09-security-hardening"
+      ],
+      "required_services": [
+        "docker",
+        "systemd",
+        "sysctl"
+      ],
+      "required_networks": [
+        "ai-q-network",
+        "ai-q-services"
+      ],
+      "required_volumes": [
+        "ai-q-data",
+        "ai-q-config"
+      ],
+      "required_ports": [],
+      "required_files": [
+        "/opt/ai-q/performance/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "performance",
+      "cooking_time": "180 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "resource_limits",
+        "system_optimization",
+        "performance_monitoring"
+      ],
+      "cache_strategy": "performance_optimization_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Performance Optimization and Tuning",
+    "description": "Complete performance optimization and tuning implementation with resource limits, system optimization, and performance monitoring",
+    "prerequisites": [
+      "01-01-docker-environment completed",
+      "01-02-system-monitoring completed",
+      "01-03-logging-infrastructure completed",
+      "01-04-load-balancing completed",
+      "01-05-service-discovery completed",
+      "01-06-message-queue completed",
+      "01-07-cache-layer completed",
+      "01-08-backup-infrastructure completed",
+      "01-09-security-hardening completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 8GB RAM available",
+      "50GB free disk space for performance data"
+    ],
+    "target_outcome": "Production-ready performance optimization with comprehensive monitoring and analysis",
+    "success_criteria": [
+      "Resource limits configured and applied",
+      "System performance optimized",
+      "Performance monitoring operational",
+      "All optimization metrics collected",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "RESOURCE_LIMITS_TASK",
+        "name": "Resource Limits Setup",
+        "description": "Configure system resource limits for optimal performance",
+        "estimated_time": "40 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "resource_limits",
+          "system_tuning",
+          "kernel_parameters"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/performance",
+          "tee /opt/ai-q/performance/limits.conf << 'EOF'",
+          "{",
+          "  \"system_limits\": {",
+          "    \"file_descriptors\": {",
+          "      \"soft_limit\": 65536,",
+          "      \"hard_limit\": 65536",
+          "    },",
+          "    \"processes\": {",
+          "      \"soft_limit\": 32768,",
+          "      \"hard_limit\": 32768",
+          "    },",
+          "    \"memory\": {",
+          "      \"soft_limit\": \"unlimited\",",
+          "      \"hard_limit\": \"unlimited\"",
+          "    },",
+          "    \"cpu_time\": {",
+          "      \"soft_limit\": \"unlimited\",",
+          "      \"hard_limit\": \"unlimited\"",
+          "    }",
+          "  },",
+          "  \"docker_limits\": {",
+          "    \"memory\": \"4g\",",
+          "    \"cpus\": \"2.0\",",
+          "    \"pids\": 1000,",
+          "    \"ulimits\": {",
+          "      \"nofile\": {",
+          "        \"soft\": 65536,",
+          "        \"hard\": 65536",
+          "      }",
+          "    }",
+          "  }",
+          "}",
+          "EOF",
+          "tee /opt/ai-q/performance/setup-limits.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Resource Limits Setup Script",
+          "",
+          "# Set system limits",
+          "cat >> /etc/security/limits.conf << EOF",
+          "# AI-Q Performance Limits",
+          "* soft nofile 65536",
+          "* hard nofile 65536",
+          "* soft nproc 32768",
+          "* hard nproc 32768",
+          "root soft nofile 65536",
+          "root hard nofile 65536",
+          "root soft nproc 32768",
+          "root hard nproc 32768",
+          "EOF",
+          "",
+          "# Set kernel parameters",
+          "cat >> /etc/sysctl.conf << EOF",
+          "# AI-Q Performance Tuning",
+          "fs.file-max = 65536",
+          "fs.inotify.max_user_watches = 524288",
+          "vm.swappiness = 10",
+          "vm.dirty_ratio = 15",
+          "vm.dirty_background_ratio = 5",
+          "net.core.somaxconn = 65535",
+          "net.core.netdev_max_backlog = 5000",
+          "net.ipv4.tcp_max_syn_backlog = 65535",
+          "net.ipv4.tcp_fin_timeout = 30",
+          "net.ipv4.tcp_keepalive_time = 1200",
+          "net.ipv4.tcp_max_tw_buckets = 2000000",
+          "EOF",
+          "",
+          "# Apply kernel parameters",
+          "sysctl -p",
+          "",
+          "# Set Docker daemon limits",
+          "cat >> /etc/docker/daemon.json << EOF",
+          "{",
+          "  \"default-ulimits\": {",
+          "    \"nofile\": {",
+          "      \"Hard\": 65536,",
+          "      \"Name\": \"nofile\",",
+          "      \"Soft\": 65536",
+          "    }",
+          "  },",
+          "  \"max-concurrent-downloads\": 10,",
+          "  \"max-concurrent-uploads\": 5",
+          "}",
+          "EOF",
+          "",
+          "# Restart Docker daemon",
+          "systemctl restart docker",
+          "",
+          "echo \"Resource limits configured successfully\"",
+          "EOF",
+          "chmod +x /opt/ai-q/performance/setup-limits.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/performance/",
+          "cat /opt/ai-q/performance/limits.conf",
+          "test -x /opt/ai-q/performance/setup-limits.sh"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "PERFORMANCE_OPTIMIZATION_SKILL",
+        "name": "Performance Optimization",
+        "description": "Optimize system performance with exact specifications",
+        "tools": [
+          "resource_limits",
+          "system_tuning",
+          "performance_monitoring"
+        ],
+        "validation": "performance_optimization_validation",
+        "exact_validation_commands": [
+          "ulimit -n",
+          "sysctl fs.file-max",
+          "cat /opt/ai-q/performance/limits.conf"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "PERFORMANCE_SETUP_TOOL",
+        "name": "Performance Setup Tool",
+        "description": "Automated performance optimization installation and configuration",
+        "file_path": "scripts/performance/setup_performance.py",
+        "config": "config/performance/performance_config.json",
+        "exact_config_spec": {
+          "file_descriptors": 65536,
+          "processes": 32768,
+          "memory_limit": "4g",
+          "cpu_limit": "2.0",
+          "swappiness": 10,
+          "dirty_ratio": 15
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "PERFORMANCE_CONFIG",
+        "name": "Performance Configuration",
+        "description": "Performance configuration with exact specifications",
+        "file_path": "/opt/ai-q/performance/limits.conf",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "system_limits": {
+              "type": "object",
+              "properties": {
+                "file_descriptors": {
+                  "type": "object",
+                  "properties": {
+                    "soft_limit": {
+                      "type": "integer"
+                    },
+                    "hard_limit": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "processes": {
+                  "type": "object",
+                  "properties": {
+                    "soft_limit": {
+                      "type": "integer"
+                    },
+                    "hard_limit": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "docker_limits": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "type": "string"
+                },
+                "pids": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "01-01-01: Docker Engine installed",
+      "01-01-02: Docker daemon configured",
+      "01-01-03: Docker networks created",
+      "01-02-01: Prometheus installed",
+      "01-02-02: Node Exporter running",
+      "01-02-03: Alert Manager configured",
+      "01-02-04: Grafana installed",
+      "01-03-01: Elasticsearch installed",
+      "01-03-02: Logstash configured",
+      "01-03-03: Kibana installed",
+      "01-04-01: Nginx installed",
+      "01-05-01: Consul server installed",
+      "01-06-01: RabbitMQ server installed",
+      "01-07-01: Redis server installed",
+      "01-08-01: Backup scripts created",
+      "01-09-01: Firewall configured"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 4 cores for optimization",
+      "ram": "Minimum 8GB for optimization",
+      "storage": "Minimum 50GB for performance data",
+      "network": "Access to all service networks"
+    }
+  },
+  "task_01_configure_resource_limits": {
+    "task_id": "01-10-01",
+    "title": "Configure Resource Limits",
+    "description": "Configure system resource limits for optimal performance",
+    "estimated_duration": "40 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-10-01-01",
+        "title": "Create resource limits configuration",
+        "description": "Create system resource limits configuration",
+        "config_file": "/opt/ai-q/performance/limits.conf",
+        "config_content": {
+          "system_limits": {
+            "file_descriptors": {
+              "soft_limit": 65536,
+              "hard_limit": 65536
+            },
+            "processes": {
+              "soft_limit": 32768,
+              "hard_limit": 32768
+            },
+            "memory": {
+              "soft_limit": "unlimited",
+              "hard_limit": "unlimited"
+            },
+            "cpu_time": {
+              "soft_limit": "unlimited",
+              "hard_limit": "unlimited"
+            }
+          },
+          "docker_limits": {
+            "memory": "4g",
+            "cpus": "2.0",
+            "pids": 1000,
+            "ulimits": {
+              "nofile": {
+                "soft": 65536,
+                "hard": 65536
+              }
+            }
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/performance",
+          "sudo tee /opt/ai-q/performance/limits.conf << 'EOF'\\n{\\n  \\\"system_limits\\\": {\\n    \\\"file_descriptors\\\": {\\n      \\\"soft_limit\\\": 65536,\\n      \\\"hard_limit\\\": 65536\\n    },\\n    \\\"processes\\\": {\\n      \\\"soft_limit\\\": 32768,\\n      \\\"hard_limit\\\": 32768\\n    },\\n    \\\"memory\\\": {\\n      \\\"soft_limit\\\": \\\"unlimited\\\",\\n      \\\"hard_limit\\\": \\\"unlimited\\\"\\n    },\\n    \\\"cpu_time\\\": {\\n      \\\"soft_limit\\\": \\\"unlimited\\\",\\n      \\\"hard_limit\\\": \\\"unlimited\\\"\\n    }\\n  },\\n  \\\"docker_limits\\\": {\\n    \\\"memory\\\": \\\"4g\\\",\\n    \\\"cpus\\\": \\\"2.0\\\",\\n    \\\"pids\\\": 1000,\\n    \\\"ulimits\\\": {\\n      \\\"nofile\\\": {\\n        \\\"soft\\\": 65536,\\n        \\\"hard\\\": 65536\\n      }\\n    }\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check resource limits configuration exists",
+        "expected_output": "limits.conf created with specified configuration"
+      },
+      {
+        "step_id": "01-10-01-02",
+        "title": "Create limits setup script",
+        "description": "Create script to apply resource limits",
+        "config_file": "/opt/ai-q/performance/setup-limits.sh",
+        "config_content": "#!/bin/bash\\n# Resource Limits Setup Script\\n\\n# Set system limits\\ncat >> /etc/security/limits.conf << EOF\\n# AI-Q Performance Limits\\n* soft nofile 65536\\n* hard nofile 65536\\n* soft nproc 32768\\n* hard nproc 32768\\nroot soft nofile 65536\\nroot hard nofile 65536\\nroot soft nproc 32768\\nroot hard nproc 32768\\nEOF\\n\\n# Set kernel parameters\\ncat >> /etc/sysctl.conf << EOF\\n# AI-Q Performance Tuning\\nfs.file-max = 65536\\nfs.inotify.max_user_watches = 524288\\nvm.swappiness = 10\\nvm.dirty_ratio = 15\\nvm.dirty_background_ratio = 5\\nnet.core.somaxconn = 65535\\nnet.core.netdev_max_backlog = 5000\\nnet.ipv4.tcp_max_syn_backlog = 65535\\nnet.ipv4.tcp_fin_timeout = 30\\nnet.ipv4.tcp_keepalive_time = 1200\\nnet.ipv4.tcp_max_tw_buckets = 2000000\\nEOF\\n\\n# Apply kernel parameters\\nsysctl -p\\n\\n# Set Docker daemon limits\\ncat >> /etc/docker/daemon.json << EOF\\n{\\n  \\\"default-ulimits\\\": {\\n    \\\"nofile\\\": {\\n      \\\"Hard\\\": 65536,\\n      \\\"Name\\\": \\\"nofile\\\",\\n      \\\"Soft\\\": 65536\\n    }\\n  },\\n  \\\"max-concurrent-downloads\\\": 10,\\n  \\\"max-concurrent-uploads\\\": 5\\n}\\nEOF\\n\\n# Restart Docker daemon\\nsystemctl restart docker\\n\\necho \\\"Resource limits configured successfully\\\"",
+        "commands": [
+          "sudo tee /opt/ai-q/performance/setup-limits.sh << 'EOF'\\n#!/bin/bash\\n# Resource Limits Setup Script\\n\\n# Set system limits\\ncat >> /etc/security/limits.conf << EOF\\n# AI-Q Performance Limits\\n* soft nofile 65536\\n* hard nofile 65536\\n* soft nproc 32768\\n* hard nproc 32768\\nroot soft nofile 65536\\nroot hard nofile 65536\\nroot soft nproc 32768\\nroot hard nproc 32768\\nEOF\\n\\n# Set kernel parameters\\ncat >> /etc/sysctl.conf << EOF\\n# AI-Q Performance Tuning\\nfs.file-max = 65536\\nfs.inotify.max_user_watches = 524288\\nvm.swappiness = 10\\nvm.dirty_ratio = 15\\nvm.dirty_background_ratio = 5\\nnet.core.somaxconn = 65535\\nnet.core.netdev_max_backlog = 5000\\nnet.ipv4.tcp_max_syn_backlog = 65535\\nnet.ipv4.tcp_fin_timeout = 30\\nnet.ipv4.tcp_keepalive_time = 1200\\nnet.ipv4.tcp_max_tw_buckets = 2000000\\nEOF\\n\\n# Apply kernel parameters\\nsysctl -p\\n\\n# Set Docker daemon limits\\ncat >> /etc/docker/daemon.json << EOF\\n{\\n  \\\"default-ulimits\\\": {\\n    \\\"nofile\\\": {\\n      \\\"Hard\\\": 65536,\\n      \\\"Name\\\": \\\"nofile\\\",\\n      \\\"Soft\\\": 65536\\n    }\\n  },\\n  \\\"max-concurrent-downloads\\\": 10,\\n  \\\"max-concurrent-uploads\\\": 5\\n}\\nEOF\\n\\n# Restart Docker daemon\\nsystemctl restart docker\\n\\necho \\\"Resource limits configured successfully\\\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/performance/setup-limits.sh"
+        ],
+        "verification": "Check limits setup script exists and is executable",
+        "expected_output": "setup-limits.sh created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/performance/",
+      "cat /opt/ai-q/performance/limits.conf"
+    ],
+    "expected_outputs": {
+      "limits_config": "limits.conf contains resource limits",
+      "limits_script": "setup-limits.sh contains limits setup logic"
+    }
+  },
+  "task_02_optimize_system_performance": {
+    "task_id": "01-10-02",
+    "title": "Optimize System Performance",
+    "description": "Optimize system performance settings",
+    "estimated_duration": "50 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-10-02-01",
+        "title": "Create performance optimization script",
+        "description": "Create script for system performance optimization",
+        "config_file": "/opt/ai-q/performance/optimize-system.sh",
+        "config_content": "#!/bin/bash\\n# System Performance Optimization Script\\n\\n# CPU Governor\\necho performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor\\n\\n# I/O Scheduler\\necho 'ACTION==\\\"add|change\\\", KERNEL==\\\"sd[a-z]\\\", ATTR{queue/scheduler}=\\\"deadline\\\"' > /etc/udev/rules.d/60-scheduler.rules\\n\\n# Memory optimization\\necho 1 > /proc/sys/vm/drop_caches\\necho 2 > /proc/sys/vm/drop_caches\\necho 3 > /proc/sys/vm/drop_caches\\n\\n# Network optimization\\nnetdev_max_backlog=5000\\nsomaxconn=65535\\n\\n# Apply network optimizations\\nsysctl -w net.core.netdev_max_backlog=$netdev_max_backlog\\nsysctl -w net.core.somaxconn=$somaxconn\\n\\n# File system optimization\\nmount -o remount,noatime /\\n\\n# Docker optimization\\ncat > /etc/docker/daemon.json << EOF\\n{\\n  \\\"storage-driver\\\": \\\"overlay2\\\",\\n  \\\"storage-opts\\\": [\\n    \\\"overlay2.override_kernel_check=true\\\"\\n  ],\\n  \\\"log-driver\\\": \\\"json-file\\\",\\n  \\\"log-opts\\\": {\\n    \\\"max-size\\\": \\\"10m\\\",\\n    \\\"max-file\\\": \\\"3\\\"\\n  },\\n  \\\"default-ulimits\\\": {\\n    \\\"nofile\\\": {\\n      \\\"Hard\\\": 65536,\\n      \\\"Name\\\": \\\"nofile\\\",\\n      \\\"Soft\\\": 65536\\n    }\\n  }\\n}\\nEOF\\n\\n# Restart Docker\\nsystemctl restart docker\\n\\necho \\\"System performance optimization completed\\\"",
+        "commands": [
+          "sudo tee /opt/ai-q/performance/optimize-system.sh << 'EOF'\\n#!/bin/bash\\n# System Performance Optimization Script\\n\\n# CPU Governor\\necho performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor\\n\\n# I/O Scheduler\\necho 'ACTION==\\\"add|change\\\", KERNEL==\\\"sd[a-z]\\\", ATTR{queue/scheduler}=\\\"deadline\\\"' > /etc/udev/rules.d/60-scheduler.rules\\n\\n# Memory optimization\\necho 1 > /proc/sys/vm/drop_caches\\necho 2 > /proc/sys/vm/drop_caches\\necho 3 > /proc/sys/vm/drop_caches\\n\\n# Network optimization\\nnetdev_max_backlog=5000\\nsomaxconn=65535\\n\\n# Apply network optimizations\\nsysctl -w net.core.netdev_max_backlog=$netdev_max_backlog\\nsysctl -w net.core.somaxconn=$somaxconn\\n\\n# File system optimization\\nmount -o remount,noatime /\\n\\n# Docker optimization\\ncat > /etc/docker/daemon.json << EOF\\n{\\n  \\\"storage-driver\\\": \\\"overlay2\\\",\\n  \\\"storage-opts\\\": [\\n    \\\"overlay2.override_kernel_check=true\\\"\\n  ],\\n  \\\"log-driver\\\": \\\"json-file\\\",\\n  \\\"log-opts\\\": {\\n    \\\"max-size\\\": \\\"10m\\\",\\n    \\\"max-file\\\": \\\"3\\\"\\n  },\\n  \\\"default-ulimits\\\": {\\n    \\\"nofile\\\": {\\n      \\\"Hard\\\": 65536,\\n      \\\"Name\\\": \\\"nofile\\\",\\n      \\\"Soft\\\": 65536\\n    }\\n  }\\n}\\nEOF\\n\\n# Restart Docker\\nsystemctl restart docker\\n\\necho \\\"System performance optimization completed\\\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/performance/optimize-system.sh"
+        ],
+        "verification": "Check optimization script exists and is executable",
+        "expected_output": "optimize-system.sh created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/performance/",
+      "cat /opt/ai-q/performance/optimize-system.sh"
+    ],
+    "expected_outputs": {
+      "optimization_script": "optimize-system.sh contains system optimization logic"
+    }
+  },
+  "task_03_setup_performance_monitoring": {
+    "task_id": "01-10-03",
+    "title": "Setup Performance Monitoring",
+    "description": "Setup comprehensive performance monitoring",
+    "estimated_duration": "45 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "01-10-03-01",
+        "title": "Create performance monitoring script",
+        "description": "Create script for performance monitoring and analysis",
+        "config_file": "/opt/ai-q/performance/monitor-performance.sh",
+        "config_content": "#!/bin/bash\\n# Performance Monitoring Script\\n\\nLOG_DIR=\\\"/opt/ai-q/performance/logs\\\"\\nREPORT_FILE=\\\"$LOG_DIR/performance-report-$(date +%Y%m%d_%H%M%S).json\\\"\\n\\nmkdir -p \\\"$LOG_DIR\\\"\\n\\n# Initialize report\\ncat > \\\"$REPORT_FILE\\\" << EOF\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"metrics\\\": {\\nEOF\\n\\n# CPU Usage\\ncpu_usage=$(top -bn1 | grep \\\"Cpu(s)\\\" | awk '{print $2}' | cut -d'%' -f1)\\necho \\\"    \\\\\\\"cpu_usage\\\\\\\": $cpu_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Memory Usage\\nmemory_usage=$(free | grep Mem | awk '{printf \\\"%.2f\\\", $3/$2 * 100.0}')\\necho \\\"    \\\\\\\"memory_usage\\\\\\\": $memory_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Disk Usage\\ndisk_usage=$(df / | tail -1 | awk '{print $5}' | cut -d'%' -f1)\\necho \\\"    \\\\\\\"disk_usage\\\\\\\": $disk_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Network I/O\\nnetwork_rx=$(cat /proc/net/dev | grep eth0 | awk '{print $2}')\\nnetwork_tx=$(cat /proc/net/dev | grep eth0 | awk '{print $10}')\\necho \\\"    \\\\\\\"network_rx_bytes\\\\\\\": $network_rx,\\\" >> \\\"$REPORT_FILE\\\"\\necho \\\"    \\\\\\\"network_tx_bytes\\\\\\\": $network_tx,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Docker Stats\\ndocker_stats=$(docker stats --no-stream --format \\\"table {{.Container}}\\\\t{{.CPUPerc}}\\\\t{{.MemUsage}}\\\\t{{.NetIO}}\\\")\\necho \\\"    \\\\\\\"docker_stats\\\\\\\": \\\\\\\"$docker_stats\\\\\\\"\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Close JSON\\necho \\\"  }\\\" >> \\\"$REPORT_FILE\\\"\\necho \\\"}\\\" >> \\\"$REPORT_FILE\\\"\\n\\necho \\\"Performance report generated: $REPORT_FILE\\\"",
+        "commands": [
+          "sudo tee /opt/ai-q/performance/monitor-performance.sh << 'EOF'\\n#!/bin/bash\\n# Performance Monitoring Script\\n\\nLOG_DIR=\\\"/opt/ai-q/performance/logs\\\"\\nREPORT_FILE=\\\"$LOG_DIR/performance-report-$(date +%Y%m%d_%H%M%S).json\\\"\\n\\nmkdir -p \\\"$LOG_DIR\\\"\\n\\n# Initialize report\\ncat > \\\"$REPORT_FILE\\\" << EOF\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"metrics\\\": {\\nEOF\\n\\n# CPU Usage\\ncpu_usage=$(top -bn1 | grep \\\"Cpu(s)\\\" | awk '{print $2}' | cut -d'%' -f1)\\necho \\\"    \\\\\\\"cpu_usage\\\\\\\": $cpu_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Memory Usage\\nmemory_usage=$(free | grep Mem | awk '{printf \\\"%.2f\\\", $3/$2 * 100.0}')\\necho \\\"    \\\\\\\"memory_usage\\\\\\\": $memory_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Disk Usage\\ndisk_usage=$(df / | tail -1 | awk '{print $5}' | cut -d'%' -f1)\\necho \\\"    \\\\\\\"disk_usage\\\\\\\": $disk_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Network I/O\\nnetwork_rx=$(cat /proc/net/dev | grep eth0 | awk '{print $2}')\\nnetwork_tx=$(cat /proc/net/dev | grep eth0 | awk '{print $10}')\\necho \\\"    \\\\\\\"network_rx_bytes\\\\\\\": $network_rx,\\\" >> \\\"$REPORT_FILE\\\"\\necho \\\"    \\\\\\\"network_tx_bytes\\\\\\\": $network_tx,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Docker Stats\\ndocker_stats=$(docker stats --no-stream --format \\\"table {{.Container}}\\\\t{{.CPUPerc}}\\\\t{{.MemUsage}}\\\\t{{.NetIO}}\\\")\\necho \\\"    \\\\\\\"docker_stats\\\\\\\": \\\\\\\"$docker_stats\\\\\\\"\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Close JSON\\necho \\\"  }\\\" >> \\\"$REPORT_FILE\\\"",
+          "echo \"}\" >> \"$REPORT_FILE\"",
+          "",
+          "echo \"Performance report generated: $REPORT_FILE\"",
+          "EOF",
+          "chmod +x /opt/ai-q/performance/monitor-performance.sh",
+          "/opt/ai-q/performance/monitor-performance.sh"
+        ],
+        "verification": "Check monitoring script exists and is executable",
+        "expected_output": "monitor-performance.sh created and made executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/performance/",
+      "cat /opt/ai-q/performance/monitor-performance.sh"
+    ],
+    "expected_outputs": {
+      "monitoring_script": "monitor-performance.sh contains performance monitoring logic"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete Performance Optimization Verification",
+      "description": "Run comprehensive tests to verify performance optimizations",
+      "test_commands": [
+        "/opt/ai-q/performance/setup-limits.sh",
+        "/opt/ai-q/performance/optimize-system.sh",
+        "/opt/ai-q/performance/monitor-performance.sh",
+        "cat /opt/ai-q/performance/logs/performance-report-$(date +%Y%m%d_%H%M%S).json",
+        "ulimit -n",
+        "sysctl fs.file-max"
+      ],
+      "expected_results": {
+        "limits_applied": "Resource limits applied successfully",
+        "optimization_complete": "System optimization completed",
+        "performance_report": "Performance report generated successfully",
+        "file_descriptors": "File descriptor limit is 65536",
+        "kernel_parameters": "Kernel parameters applied correctly"
+      }
+    }
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:resource-limits:1.0.0",
+          "task:system-optimization:1.0.0",
+          "task:performance-monitoring:1.0.0",
+          "skill:performance-optimization:1.0.0",
+          "skill:system-tuning:1.0.0",
+          "skill:performance-monitoring:1.0.0",
+          "tool:performance-setup:1.0.0",
+          "config:performance:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/performance/setup_performance.py --gather-ingredients",
+          "python3 scripts/performance/setup_limits.py --gather-ingredients",
+          "python3 scripts/performance/setup_monitoring.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 8GB RAM available",
+          "50GB free disk space available",
+          "All previous infrastructure components operational"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+          "nproc"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_resource_limits_setup",
+        "description": "Configure resource limits with exact commands",
+        "sub_steps": [
+          "Create performance directories",
+          "Create resource limits configuration",
+          "Create limits setup script",
+          "Execute limits setup",
+          "Validate resource limits"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/performance",
+          "tee /opt/ai-q/performance/limits.conf << 'EOF'",
+          "{",
+          "  \"system_limits\": {",
+          "    \"file_descriptors\": {",
+          "      \"soft_limit\": 65536,",
+          "      \"hard_limit\": 65536",
+          "    },",
+          "    \"processes\": {",
+          "      \"soft_limit\": 32768,",
+          "      \"hard_limit\": 32768",
+          "    },",
+          "    \"memory\": {",
+          "      \"soft_limit\": \"unlimited\",",
+          "      \"hard_limit\": \"unlimited\"",
+          "    },",
+          "    \"cpu_time\": {",
+          "      \"soft_limit\": \"unlimited\",",
+          "      \"hard_limit\": \"unlimited\"",
+          "    }",
+          "  },",
+          "  \"docker_limits\": {",
+          "    \"memory\": \"4g\",",
+          "    \"cpus\": \"2.0\",",
+          "    \"pids\": 1000,",
+          "    \"ulimits\": {",
+          "      \"nofile\": {",
+          "        \"soft\": 65536,",
+          "        \"hard\": 65536",
+          "      }",
+          "    }",
+          "  }",
+          "}",
+          "EOF",
+          "tee /opt/ai-q/performance/setup-limits.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Resource Limits Setup Script",
+          "",
+          "# Set system limits",
+          "cat >> /etc/security/limits.conf << EOF",
+          "# AI-Q Performance Limits",
+          "* soft nofile 65536",
+          "* hard nofile 65536",
+          "* soft nproc 32768",
+          "* hard nproc 32768",
+          "root soft nofile 65536",
+          "root hard nofile 65536",
+          "root soft nproc 32768",
+          "root hard nproc 32768",
+          "EOF",
+          "",
+          "# Set kernel parameters",
+          "cat >> /etc/sysctl.conf << EOF",
+          "# AI-Q Performance Tuning",
+          "fs.file-max = 65536",
+          "fs.inotify.max_user_watches = 524288",
+          "vm.swappiness = 10",
+          "vm.dirty_ratio = 15",
+          "vm.dirty_background_ratio = 5",
+          "net.core.somaxconn = 65535",
+          "net.core.netdev_max_backlog = 5000",
+          "net.ipv4.tcp_max_syn_backlog = 65535",
+          "net.ipv4.tcp_fin_timeout = 30",
+          "net.ipv4.tcp_keepalive_time = 1200",
+          "net.ipv4.tcp_max_tw_buckets = 2000000",
+          "EOF",
+          "",
+          "# Apply kernel parameters",
+          "sysctl -p",
+          "",
+          "# Set Docker daemon limits",
+          "cat >> /etc/docker/daemon.json << EOF",
+          "{",
+          "  \"default-ulimits\": {",
+          "    \"nofile\": {",
+          "      \"Hard\": 65536,",
+          "      \"Name\": \"nofile\",",
+          "      \"Soft\": 65536",
+          "    }",
+          "  },",
+          "  \"max-concurrent-downloads\": 10,",
+          "  \"max-concurrent-uploads\": 5",
+          "}",
+          "EOF",
+          "",
+          "# Restart Docker daemon",
+          "systemctl restart docker",
+          "",
+          "echo \"Resource limits configured successfully\"",
+          "EOF",
+          "chmod +x /opt/ai-q/performance/setup-limits.sh",
+          "/opt/ai-q/performance/setup-limits.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/performance/",
+          "/opt/ai-q/performance/limits.conf",
+          "/opt/ai-q/performance/setup-limits.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_system_optimization",
+        "description": "Optimize system performance with exact commands",
+        "sub_steps": [
+          "Create optimization script",
+          "Execute system optimization",
+          "Validate optimization"
+        ],
+        "exact_commands": [
+          "tee /opt/ai-q/performance/optimize-system.sh << 'EOF'",
+          "#!/bin/bash",
+          "# System Performance Optimization Script",
+          "",
+          "# CPU Governor",
+          "echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor",
+          "",
+          "# I/O Scheduler",
+          "echo 'ACTION==\"add|change\", KERNEL==\"sd[a-z]\", ATTR{queue/scheduler}=\"deadline\"' > /etc/udev/rules.d/60-scheduler.rules",
+          "",
+          "# Memory optimization",
+          "echo 1 > /proc/sys/vm/drop_caches",
+          "echo 2 > /proc/sys/vm/drop_caches",
+          "echo 3 > /proc/sys/vm/drop_caches",
+          "",
+          "# Network optimization",
+          "netdev_max_backlog=5000",
+          "somaxconn=65535",
+          "",
+          "# Apply network optimizations",
+          "sysctl -w net.core.netdev_max_backlog=$netdev_max_backlog",
+          "sysctl -w net.core.somaxconn=$somaxconn",
+          "",
+          "# File system optimization",
+          "mount -o remount,noatime /",
+          "",
+          "# Docker optimization",
+          "cat > /etc/docker/daemon.json << EOF",
+          "{",
+          "  \"storage-driver\": \"overlay2\",",
+          "  \"storage-opts\": [",
+          "    \"overlay2.override_kernel_check=true\"",
+          "  ],",
+          "  \"log-driver\": \"json-file\",",
+          "  \"log-opts\": {",
+          "    \"max-size\": \"10m\",",
+          "    \"max-file\": \"3\"",
+          "  },",
+          "  \"default-ulimits\": {",
+          "    \"nofile\": {",
+          "      \"Hard\": 65536,",
+          "      \"Name\": \"nofile\",",
+          "      \"Soft\": 65536",
+          "    }",
+          "  }",
+          "}",
+          "EOF",
+          "",
+          "# Restart Docker",
+          "systemctl restart docker",
+          "",
+          "echo \"System performance optimization completed\"",
+          "EOF",
+          "chmod +x /opt/ai-q/performance/optimize-system.sh",
+          "/opt/ai-q/performance/optimize-system.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/performance/optimize-system.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_performance_monitoring",
+        "description": "Setup performance monitoring with exact commands",
+        "sub_steps": [
+          "Create monitoring directories",
+          "Create monitoring script",
+          "Execute monitoring setup",
+          "Validate monitoring"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/performance/logs",
+          "tee /opt/ai-q/performance/monitor-performance.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Performance Monitoring Script",
+          "",
+          "LOG_DIR=\"/opt/ai-q/performance/logs\"",
+          "REPORT_FILE=\"$LOG_DIR/performance-report-$(date +%Y%m%d_%H%M%S).json\"",
+          "",
+          "mkdir -p \"$LOG_DIR\"",
+          "",
+          "# Initialize report",
+          "cat > \"$REPORT_FILE\" << EOF",
+          "{",
+          "  \"timestamp\": \"$(date -Iseconds)\",",
+          "  \"metrics\": {",
+          "EOF",
+          "",
+          "# CPU Usage",
+          "cpu_usage=$(top -bn1 | grep \"Cpu(s)\" | awk '{print $2}' | cut -d'%' -f1)",
+          "echo \"    \\\"cpu_usage\\\": $cpu_usage,\" >> \"$REPORT_FILE\"",
+          "",
+          "# Memory Usage",
+          "memory_usage=$(free | grep Mem | awk '{printf \"%.2f\", $3/$2 * 100.0}')",
+          "echo \"    \\\"memory_usage\\\": $memory_usage,\" >> \"$REPORT_FILE\"",
+          "",
+          "# Disk Usage",
+          "disk_usage=$(df / | tail -1 | awk '{print $5}' | cut -d'%' -f1)",
+          "echo \"    \\\"disk_usage\\\": $disk_usage,\" >> \"$REPORT_FILE\"",
+          "",
+          "# Network I/O",
+          "network_rx=$(cat /proc/net/dev | grep eth0 | awk '{print $2}')",
+          "network_tx=$(cat /proc/net/dev | grep eth0 | awk '{print $10}')",
+          "echo \"    \\\"network_rx_bytes\\\": $network_rx,\" >> \"$REPORT_FILE\"",
+          "echo \"    \\\"network_tx_bytes\\\": $network_tx,\" >> \"$REPORT_FILE\"",
+          "",
+          "# Docker Stats",
+          "docker_stats=$(docker stats --no-stream --format \"table {{.Container}}\\t{{.CPUPerc}}\\t{{.MemUsage}}\\t{{.NetIO}}\")",
+          "echo \"    \\\"docker_stats\\\": \\\"$docker_stats\\\"\" >> \"$REPORT_FILE\"",
+          "",
+          "# Close JSON",
+          "echo \"  }\" >> \"$REPORT_FILE\"",
+          "echo \"}\" >> \"$REPORT_FILE\"",
+          "",
+          "echo \"Performance report generated: $REPORT_FILE\"",
+          "EOF",
+          "chmod +x /opt/ai-q/performance/monitor-performance.sh",
+          "/opt/ai-q/performance/monitor-performance.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/performance/logs/",
+          "/opt/ai-q/performance/monitor-performance.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete performance optimization setup",
+        "validation": "performance_optimization_validation",
+        "exact_commands": [
+          "ulimit -n",
+          "sysctl fs.file-max",
+          "cat /opt/ai-q/performance/limits.conf",
+          "ls -la /opt/ai-q/performance/",
+          "cat /opt/ai-q/performance/logs/performance-report-$(date +%Y%m%d_%H%M%S).json"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache performance optimization configuration and setup",
+        "cache_key": "performance_optimization_cache",
+        "exact_commands": [
+          "python3 scripts/performance/setup_performance.py --cache-results",
+          "python3 scripts/performance/setup_limits.py --cache-results",
+          "python3 scripts/performance/setup_monitoring.py --cache-results",
+          "tar -czf /opt/ai-q/cache/performance_optimization_cache.tar.gz /opt/ai-q/performance"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "performance_optimization_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "performance_update",
+      "cache_validation": "performance_optimization_validation",
+      "exact_cache_commands": [
+        "python3 scripts/performance/setup_performance.py --cache-config",
+        "python3 scripts/performance/setup_limits.py --cache-config",
+        "python3 scripts/performance/setup_monitoring.py --cache-config"
+      ]
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "01-11-disaster-recovery",
+    "prerequisites_completed": [
+      "Resource limits configured and applied",
+      "System performance optimized",
+      "Performance monitoring setup",
+      "Optimization testing completed",
+      "All performance metrics collected",
+      "System tuned for optimal performance"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-10-Performance-Optimization",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

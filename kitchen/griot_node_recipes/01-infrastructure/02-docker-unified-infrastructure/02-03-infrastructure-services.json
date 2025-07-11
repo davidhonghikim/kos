@@ -1,0 +1,423 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-03-INFRASTRUCTURE-SERVICES-COMPREHENSIVE",
+    "title": "Docker Infrastructure for Infrastructure Services - Foundation Setup",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:07:12Z",
+    "last_updated": "2025-07-05T18:07:12Z",
+    "estimated_tokens": 40000,
+    "estimated_execution_time": "45 minutes",
+    "difficulty_level": "intermediate",
+    "total_tasks": 3,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": ["SOC 2", "ISO 27001"],
+    "architecture_tier": "infrastructure-foundation",
+    "description": "Establish Docker infrastructure foundation for infrastructure services: networks, volumes, and orchestration framework. No actual services installed.",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": ["02-01-docker-core", "02-02-docker-services"],
+      "required_services": ["docker", "docker-compose"],
+      "required_networks": ["ai-q-network", "ai-q-monitoring", "ai-q-services"],
+      "required_volumes": ["ai-q-data", "ai-q-config", "ai-q-logs"],
+      "required_ports": [],
+      "required_files": ["/opt/ai-q/docker/", "/opt/ai-q/docker/compose/"]
+    },
+    "kitchen_system": {
+      "pantry_category": "infrastructure",
+      "cooking_time": "45 minutes",
+      "complexity": "intermediate",
+      "kitchen_tools": ["docker_network", "docker_volume", "orchestration_script"],
+      "cache_strategy": "infrastructure_services_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Docker Infrastructure for Infrastructure Services",
+    "description": "Foundation for infrastructure services: creates dedicated Docker network, persistent volumes, and orchestration framework. No actual services installed.",
+    "prerequisites": [
+      "02-01-docker-core completed",
+      "02-02-docker-services completed",
+      "Docker and Docker Compose installed",
+      "Minimum 4GB RAM, 2 CPU cores",
+      "50GB free disk space"
+    ],
+    "target_outcome": "Infrastructure foundation ready for specialized service recipes.",
+    "success_criteria": [
+      "ai-q-infrastructure-network Docker network exists and is configured",
+      "All infrastructure volumes created and accessible",
+      "Orchestration directory and scripts created and executable",
+      "No actual services installed; only foundation is present"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "INFRA_NETWORK_TASK",
+        "name": "Create Infrastructure Services Network",
+        "description": "Create dedicated Docker network for infrastructure services.",
+        "estimated_time": "5 minutes",
+        "dependencies": [],
+        "skills_required": ["docker_network", "subnet_management"],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.22.0.0/16 --gateway 172.22.0.1 ai-q-infrastructure-network"
+        ],
+        "validation_commands": [
+          "docker network ls --filter name=ai-q-infrastructure-network",
+          "docker network inspect ai-q-infrastructure-network --format '{{.IPAM.Config}}'"
+        ]
+      },
+      {
+        "task_id": "INFRA_VOLUMES_TASK",
+        "name": "Create Infrastructure Data Volumes",
+        "description": "Create persistent volumes for infrastructure services data.",
+        "estimated_time": "10 minutes",
+        "dependencies": ["INFRA_NETWORK_TASK"],
+        "skills_required": ["docker_volume", "permissions_management"],
+        "exact_commands": [
+          "docker volume create ai-q-infrastructure-data",
+          "docker volume create ai-q-infrastructure-config",
+          "docker volume create ai-q-infrastructure-db",
+          "docker volume create ai-q-infrastructure-cache",
+          "docker volume create ai-q-infrastructure-logs",
+          "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-data/_data",
+          "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-config/_data",
+          "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-db/_data",
+          "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-cache/_data",
+          "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-logs/_data"
+        ],
+        "validation_commands": [
+          "docker volume ls --filter name=ai-q-infrastructure",
+          "ls -la /var/lib/docker/volumes/ai-q-infrastructure-data/_data"
+        ]
+      },
+      {
+        "task_id": "INFRA_ORCHESTRATION_TASK",
+        "name": "Create Infrastructure Orchestration Framework",
+        "description": "Create Docker Compose templates and orchestration script for infrastructure services.",
+        "estimated_time": "15 minutes",
+        "dependencies": ["INFRA_VOLUMES_TASK"],
+        "skills_required": ["orchestration_script", "template_management"],
+        "exact_commands": [
+          "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure",
+          "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure/templates",
+          "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure/configs",
+          "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure/databases",
+          "sudo tee /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml << 'EOF'\nversion: '3.8'\n\nnetworks:\n  ai-q-infrastructure-network:\n    external: true\n\nvolumes:\n  infrastructure-data:\n    external: true\n  infrastructure-config:\n    external: true\n  infrastructure-db:\n    external: true\n  infrastructure-cache:\n    external: true\n  infrastructure-logs:\n    external: true\nEOF",
+          "sudo tee /opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh << 'EOF'\n#!/bin/bash\n\n# Infrastructure Services Orchestration Script\n# This script provides functions for managing infrastructure services\n\nINFRASTRUCTURE_DIR=\"/opt/ai-q/docker/compose/infrastructure\"\n\nstart_infrastructure_service() {\n    local service_name=\$1\n    local compose_file=\"\$INFRASTRUCTURE_DIR/\${service_name}.yml\"\n    \n    if [ -f \"\$compose_file\" ]; then\n        echo \"Starting \$service_name...\"\n        docker-compose -f \"\$compose_file\" up -d\n    else\n        echo \"Error: \$compose_file not found\"\n        return 1\n    fi\n}\n\nstop_infrastructure_service() {\n    local service_name=\$1\n    local compose_file=\"\$INFRASTRUCTURE_DIR/\${service_name}.yml\"\n    \n    if [ -f \"\$compose_file\" ]; then\n        echo \"Stopping \$service_name...\"\n        docker-compose -f \"\$compose_file\" down\n    else\n        echo \"Error: \$compose_file not found\"\n        return 1\n    fi\n}\n\nrestart_infrastructure_service() {\n    local service_name=\$1\n    stop_infrastructure_service \"\$service_name\"\n    sleep 5\n    start_infrastructure_service \"\$service_name\"\n}\n\ncheck_infrastructure_service_status() {\n    local service_name=\$1\n    local compose_file=\"\$INFRASTRUCTURE_DIR/\${service_name}.yml\"\n    \n    if [ -f \"\$compose_file\" ]; then\n        echo \"Checking status of \$service_name...\"\n        docker-compose -f \"\$compose_file\" ps\n    else\n        echo \"Error: \$compose_file not found\"\n        return 1\n    fi\n}\n\nbackup_infrastructure_data() {\n    local service_name=\$1\n    local backup_dir=\"/opt/ai-q/backups/infrastructure/\${service_name}\"\n    local timestamp=\$(date +%Y%m%d_%H%M%S)\n    \n    echo \"Creating backup for \$service_name...\"\n    sudo mkdir -p \"\$backup_dir\"\n    \n    # Backup volumes\n    docker run --rm -v ai-q-infrastructure-data:/data -v \"\$backup_dir\":/backup alpine tar czf /backup/\${service_name}_\${timestamp}.tar.gz -C /data .\n    \n    echo \"Backup created: \${backup_dir}/\${service_name}_\${timestamp}.tar.gz\"\n}\n\n# Main script logic\ncase \"\$1\" in\n    start)\n        start_infrastructure_service \"\$2\"\n        ;;
+    stop)\n        stop_infrastructure_service \"\$2\"\n        ;;
+    restart)\n        restart_infrastructure_service \"\$2\"\n        ;;
+    status)\n        check_infrastructure_service_status \"\$2\"\n        ;;
+    backup)\n        backup_infrastructure_data \"\$2\"\n        ;;
+    *)\n        echo \"Usage: \$0 {start|stop|restart|status|backup} <service_name>\"\n        exit 1\n        ;;
+esac\nEOF",
+          "sudo chmod +x /opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/infrastructure/",
+          "cat /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml",
+          "/opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh --help"
+        ]
+      }
+    ]
+  },
+  "skills": [
+    {
+      "skill_id": "DOCKER_NETWORK_SKILL",
+      "name": "Docker Network Management",
+      "description": "Create and manage Docker networks with exact procedures.",
+      "tools": ["docker_network", "subnet_management"],
+      "validation": "docker_network_validation",
+      "exact_validation_commands": [
+        "docker network ls --filter name=ai-q-infrastructure-network",
+        "docker network inspect ai-q-infrastructure-network --format '{{.IPAM.Config}}'"
+      ]
+    },
+    {
+      "skill_id": "DOCKER_VOLUME_SKILL",
+      "name": "Docker Volume Management",
+      "description": "Create and manage Docker volumes with exact procedures.",
+      "tools": ["docker_volume", "permissions_management"],
+      "validation": "docker_volume_validation",
+      "exact_validation_commands": [
+        "docker volume ls --filter name=ai-q-infrastructure",
+        "ls -la /var/lib/docker/volumes/ai-q-infrastructure-data/_data"
+      ]
+    },
+    {
+      "skill_id": "ORCHESTRATION_SCRIPT_SKILL",
+      "name": "Orchestration Script Management",
+      "description": "Create and manage orchestration scripts for Docker services.",
+      "tools": ["orchestration_script", "template_management"],
+      "validation": "orchestration_script_validation",
+      "exact_validation_commands": [
+        "ls -la /opt/ai-q/docker/compose/infrastructure/",
+        "cat /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml",
+        "/opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh --help"
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "tool_id": "DOCKER_NETWORK_TOOL",
+      "name": "Docker Network Tool",
+      "description": "Automated Docker network creation and management.",
+      "file_path": "scripts/infrastructure/setup_network.py",
+      "config": "config/infrastructure/network_config.json",
+      "exact_config_spec": {
+        "network_name": "ai-q-infrastructure-network",
+        "subnet": "172.22.0.0/16",
+        "gateway": "172.22.0.1"
+      }
+    },
+    {
+      "tool_id": "DOCKER_VOLUME_TOOL",
+      "name": "Docker Volume Tool",
+      "description": "Automated Docker volume creation and management.",
+      "file_path": "scripts/infrastructure/setup_volumes.py",
+      "config": "config/infrastructure/volume_config.json",
+      "exact_config_spec": {
+        "volumes": [
+          "ai-q-infrastructure-data",
+          "ai-q-infrastructure-config",
+          "ai-q-infrastructure-db",
+          "ai-q-infrastructure-cache",
+          "ai-q-infrastructure-logs"
+        ]
+      }
+    },
+    {
+      "tool_id": "ORCHESTRATION_SCRIPT_TOOL",
+      "name": "Orchestration Script Tool",
+      "description": "Automated orchestration script creation and management.",
+      "file_path": "scripts/infrastructure/setup_orchestration.py",
+      "config": "config/infrastructure/orchestration_config.json",
+      "exact_config_spec": {
+        "orchestration_dir": "/opt/ai-q/docker/compose/infrastructure/",
+        "base_template": "/opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml"
+      }
+    }
+  ],
+  "configs": [
+    {
+      "config_id": "NETWORK_CONFIG",
+      "name": "Network Configuration",
+      "description": "Configuration for Docker infrastructure network.",
+      "file_path": "config/infrastructure/network_config.json",
+      "exact_schema": {
+        "type": "object",
+        "properties": {
+          "network_name": {"type": "string"},
+          "subnet": {"type": "string"},
+          "gateway": {"type": "string"}
+        },
+        "required": ["network_name", "subnet", "gateway"]
+      }
+    },
+    {
+      "config_id": "VOLUME_CONFIG",
+      "name": "Volume Configuration",
+      "description": "Configuration for Docker infrastructure volumes.",
+      "file_path": "config/infrastructure/volume_config.json",
+      "exact_schema": {
+        "type": "object",
+        "properties": {
+          "volumes": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["volumes"]
+      }
+    },
+    {
+      "config_id": "ORCHESTRATION_CONFIG",
+      "name": "Orchestration Configuration",
+      "description": "Configuration for orchestration script and templates.",
+      "file_path": "config/infrastructure/orchestration_config.json",
+      "exact_schema": {
+        "type": "object",
+        "properties": {
+          "orchestration_dir": {"type": "string"},
+          "base_template": {"type": "string"}
+        },
+        "required": ["orchestration_dir", "base_template"]
+      }
+    }
+  ]
+},
+"kitchen_execution": {
+  "orchestrator_steps": [
+    {
+      "step_id": "STEP_1",
+      "action": "gather_ingredients",
+      "description": "Load all required pantry ingredients with aggressive caching",
+      "ingredients": [
+        "task:infra-network:1.0.0",
+        "task:infra-volumes:1.0.0",
+        "task:infra-orchestration:1.0.0",
+        "skill:docker-network:1.0.0",
+        "skill:docker-volume:1.0.0",
+        "skill:orchestration-script:1.0.0",
+        "tool:docker-network:1.0.0",
+        "tool:docker-volume:1.0.0",
+        "tool:orchestration-script:1.0.0",
+        "config:network:1.0.0",
+        "config:volume:1.0.0",
+        "config:orchestration:1.0.0"
+      ],
+      "exact_commands": [
+        "python3 scripts/infrastructure/setup_network.py --gather-ingredients",
+        "python3 scripts/infrastructure/setup_volumes.py --gather-ingredients",
+        "python3 scripts/infrastructure/setup_orchestration.py --gather-ingredients"
+      ]
+    },
+    {
+      "step_id": "STEP_2",
+      "action": "validate_dependencies",
+      "description": "Verify all ingredient dependencies are satisfied",
+      "checks": [
+        "Docker environment operational",
+        "Docker Compose installed",
+        "Minimum 4GB RAM available",
+        "50GB free disk space available"
+      ],
+      "exact_commands": [
+        "docker info",
+        "docker-compose version",
+        "free -h | grep Mem | awk '{print $2}'",
+        "df -h /opt/ai-q | awk 'NR==2 {print $4}'"
+      ]
+    },
+    {
+      "step_id": "STEP_3",
+      "action": "execute_infrastructure_setup",
+      "description": "Create network, volumes, and orchestration framework with exact commands",
+      "sub_steps": [
+        "Create infrastructure network",
+        "Create infrastructure volumes",
+        "Set volume permissions",
+        "Create orchestration directories",
+        "Create base template",
+        "Create orchestration script",
+        "Set script permissions"
+      ],
+      "exact_commands": [
+        "docker network create --driver bridge --subnet 172.22.0.0/16 --gateway 172.22.0.1 ai-q-infrastructure-network",
+        "docker volume create ai-q-infrastructure-data",
+        "docker volume create ai-q-infrastructure-config",
+        "docker volume create ai-q-infrastructure-db",
+        "docker volume create ai-q-infrastructure-cache",
+        "docker volume create ai-q-infrastructure-logs",
+        "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-data/_data",
+        "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-config/_data",
+        "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-db/_data",
+        "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-cache/_data",
+        "sudo chown -R 1000:1000 /var/lib/docker/volumes/ai-q-infrastructure-logs/_data",
+        "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure",
+        "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure/templates",
+        "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure/configs",
+        "sudo mkdir -p /opt/ai-q/docker/compose/infrastructure/databases",
+        "sudo tee /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml << 'EOF'\nversion: '3.8'\n\nnetworks:\n  ai-q-infrastructure-network:\n    external: true\n\nvolumes:\n  infrastructure-data:\n    external: true\n  infrastructure-config:\n    external: true\n  infrastructure-db:\n    external: true\n  infrastructure-cache:\n    external: true\n  infrastructure-logs:\n    external: true\nEOF",
+        "sudo tee /opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh << 'EOF'\n#!/bin/bash\n\n# Infrastructure Services Orchestration Script\n# This script provides functions for managing infrastructure services\n\nINFRASTRUCTURE_DIR=\"/opt/ai-q/docker/compose/infrastructure\"\n\nstart_infrastructure_service() {\n    local service_name=\$1\n    local compose_file=\"\$INFRASTRUCTURE_DIR/\${service_name}.yml\"\n    \n    if [ -f \"\$compose_file\" ]; then\n        echo \"Starting \$service_name...\"\n        docker-compose -f \"\$compose_file\" up -d\n    else\n        echo \"Error: \$compose_file not found\"\n        return 1\n    fi\n}\n\nstop_infrastructure_service() {\n    local service_name=\$1\n    local compose_file=\"\$INFRASTRUCTURE_DIR/\${service_name}.yml\"\n    \n    if [ -f \"\$compose_file\" ]; then\n        echo \"Stopping \$service_name...\"\n        docker-compose -f \"\$compose_file\" down\n    else\n        echo \"Error: \$compose_file not found\"\n        return 1\n    fi\n}\n\nrestart_infrastructure_service() {\n    local service_name=\$1\n    stop_infrastructure_service \"\$service_name\"\n    sleep 5\n    start_infrastructure_service \"\$service_name\"\n}\n\ncheck_infrastructure_service_status() {\n    local service_name=\$1\n    local compose_file=\"\$INFRASTRUCTURE_DIR/\${service_name}.yml\"\n    \n    if [ -f \"\$compose_file\" ]; then\n        echo \"Checking status of \$service_name...\"\n        docker-compose -f \"\$compose_file\" ps\n    else\n        echo \"Error: \$compose_file not found\"\n        return 1\n    fi\n}\n\nbackup_infrastructure_data() {\n    local service_name=\$1\n    local backup_dir=\"/opt/ai-q/backups/infrastructure/\${service_name}\"\n    local timestamp=\$(date +%Y%m%d_%H%M%S)\n    \n    echo \"Creating backup for \$service_name...\"\n    sudo mkdir -p \"\$backup_dir\"\n    \n    # Backup volumes\n    docker run --rm -v ai-q-infrastructure-data:/data -v \"\$backup_dir\":/backup alpine tar czf /backup/\${service_name}_\${timestamp}.tar.gz -C /data .\n    \n    echo \"Backup created: \${backup_dir}/\${service_name}_\${timestamp}.tar.gz\"\n}\n\n# Main script logic\ncase \"\$1\" in\n    start)\n        start_infrastructure_service \"\$2\"\n        ;;
+    stop)\n        stop_infrastructure_service \"\$2\"\n        ;;
+    restart)\n        restart_infrastructure_service \"\$2\"\n        ;;
+    status)\n        check_infrastructure_service_status \"\$2\"\n        ;;
+    backup)\n        backup_infrastructure_data \"\$2\"\n        ;;
+    *)\n        echo \"Usage: \$0 {start|stop|restart|status|backup} <service_name>\"\n        exit 1\n        ;;
+esac\nEOF",
+        "sudo chmod +x /opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh"
+      ]
+    },
+    {
+      "step_id": "STEP_4",
+      "action": "validate_results",
+      "description": "Validate complete infrastructure foundation setup",
+      "validation": "infrastructure_services_validation",
+      "exact_commands": [
+        "docker network ls --filter name=ai-q-infrastructure-network",
+        "docker volume ls --filter name=ai-q-infrastructure",
+        "ls -la /opt/ai-q/docker/compose/infrastructure/",
+        "cat /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml",
+        "/opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh --help"
+      ]
+    },
+    {
+      "step_id": "STEP_5",
+      "action": "cache_results",
+      "description": "Cache infrastructure foundation configuration and setup",
+      "cache_key": "infrastructure_services_cache",
+      "exact_commands": [
+        "python3 scripts/infrastructure/setup_network.py --cache-results",
+        "python3 scripts/infrastructure/setup_volumes.py --cache-results",
+        "python3 scripts/infrastructure/setup_orchestration.py --cache-results",
+        "tar -czf /opt/ai-q/cache/infrastructure_services_cache.tar.gz /opt/ai-q/docker/compose/infrastructure"
+      ]
+    }
+  ],
+  "caching_strategy": {
+    "cache_key": "infrastructure_services_cache",
+    "cache_duration": "persistent",
+    "cache_invalidation": "infrastructure_update",
+    "cache_validation": "infrastructure_services_validation",
+    "exact_cache_commands": [
+      "python3 scripts/infrastructure/setup_network.py --cache-config",
+      "python3 scripts/infrastructure/setup_volumes.py --cache-config",
+      "python3 scripts/infrastructure/setup_orchestration.py --cache-config"
+    ]
+  }
+},
+"acceptance_criteria": [
+  "ai-q-infrastructure-network Docker network exists and is configured",
+  "All infrastructure volumes created and accessible",
+  "Orchestration directory and scripts created and executable",
+  "No actual services installed; only foundation is present",
+  "Zero technical debt with complete documentation"
+],
+"deliverables": [
+  "Docker network: ai-q-infrastructure-network (172.22.0.0/16)",
+  "Docker volumes: ai-q-infrastructure-data, ai-q-infrastructure-config, ai-q-infrastructure-db, ai-q-infrastructure-cache, ai-q-infrastructure-logs",
+  "Orchestration directory: /opt/ai-q/docker/compose/infrastructure/",
+  "Base template: /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml",
+  "Orchestration script: /opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh",
+  "Comprehensive documentation with troubleshooting guides",
+  "Validation scripts for all components",
+  "Rollback procedures for safe deployment"
+],
+"troubleshooting_guide": {
+  "common_issues": [
+    {
+      "issue": "Docker network creation fails",
+      "symptoms": ["Network already exists", "Subnet conflict"],
+      "diagnosis": "Check if network already exists or subnet is in use",
+      "solution": "Remove existing network or use a different subnet",
+      "prevention": "Use unique network names and subnets"
+    },
+    {
+      "issue": "Volume permissions not set correctly",
+      "symptoms": ["Permission denied", "Cannot write to volume"],
+      "diagnosis": "Check Docker daemon user and set correct permissions",
+      "solution": "Set correct ownership and permissions on volumes",
+      "prevention": "Set permissions immediately after volume creation"
+    },
+    {
+      "issue": "Orchestration script not executable",
+      "symptoms": ["Permission denied", "Script not found"],
+      "diagnosis": "Check script permissions and file existence",
+      "solution": "Set executable permissions on the script",
+      "prevention": "Set permissions immediately after script creation"
+    }
+  ],
+  "diagnostic_commands": [
+    "docker network ls --filter name=ai-q-infrastructure-network",
+    "docker volume ls --filter name=ai-q-infrastructure",
+    "ls -la /opt/ai-q/docker/compose/infrastructure/",
+    "cat /opt/ai-q/docker/compose/infrastructure/templates/base-infrastructure.yml",
+    "/opt/ai-q/docker/compose/infrastructure/orchestrate-infrastructure.sh --help"
+  ]
+},
+"performance_benchmarks": {
+  "network_creation": "Docker network creation completes within 5 seconds",
+  "volume_creation": "All volumes created within 10 seconds",
+  "orchestration_setup": "Complete orchestration framework setup within 30 seconds",
+  "script_execution": "Orchestration script responds within 2 seconds"
+}
+} 

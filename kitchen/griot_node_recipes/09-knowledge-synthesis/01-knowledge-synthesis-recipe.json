@@ -1,0 +1,593 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "09-KNOWLEDGE-SYNTHESIS",
+    "title": "Knowledge Synthesis System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "last_updated": "2025-07-06T16:11:00Z",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:11:00Z",
+    "estimated_tokens": 78000,
+    "estimated_execution_time": "5-6 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 40,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "98%",
+    "kitchen_system": {
+      "pantry_category": "knowledge_synthesis",
+      "cooking_time": "360 minutes",
+      "complexity": "advanced",
+      "kitchen_tools": [
+        "knowledge_graphs",
+        "entity_extraction",
+        "semantic_reasoning",
+        "insight_generation"
+      ],
+      "cache_strategy": "knowledge_synthesis_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "description": "Advanced knowledge synthesis system for intelligent relationship mapping, insight generation, and knowledge graph construction. This recipe implements comprehensive knowledge synthesis capabilities including entity extraction, relationship discovery, semantic reasoning, pattern recognition, and automated insight generation with visualization.",
+    "architectural_scope": "Complete knowledge synthesis platform with advanced knowledge graphs, relationship discovery, semantic reasoning, and intelligent insight generation",
+    "technology_stack": {
+      "knowledge_graphs": "Neo4j, RDF, SPARQL, GraphQL, property graphs",
+      "entity_extraction": "spaCy, NLTK, Stanford NLP, BERT, named entity recognition",
+      "relationship_discovery": "Graph algorithms, link prediction, similarity metrics",
+      "semantic_reasoning": "RDF reasoning, OWL ontologies, logical inference",
+      "pattern_recognition": "Machine learning, clustering, anomaly detection",
+      "insight_generation": "NLP, summarization, hypothesis generation, visualization",
+      "data_integration": "ETL pipelines, data fusion, schema mapping"
+    },
+    "deliverables": [
+      "Advanced knowledge graph construction and management",
+      "Intelligent entity extraction and relationship discovery",
+      "Semantic reasoning and logical inference capabilities",
+      "Pattern recognition and anomaly detection systems",
+      "Automated insight generation and hypothesis formation",
+      "Knowledge visualization and exploration tools",
+      "Multi-source data integration and fusion",
+      "Knowledge quality assessment and validation",
+      "Dynamic knowledge graph updates and evolution",
+      "Collaborative knowledge building and sharing"
+    ],
+    "success_criteria": [
+      "Knowledge graphs accurately representing complex relationships",
+      "Entity extraction achieving high precision and recall",
+      "Relationship discovery identifying meaningful connections",
+      "Semantic reasoning producing logical conclusions",
+      "Pattern recognition detecting significant insights",
+      "Automated insight generation providing actionable knowledge",
+      "Visualization tools enabling effective knowledge exploration",
+      "Data integration successfully combining multiple sources",
+      "Knowledge quality maintained through validation processes",
+      "Dynamic updates preserving knowledge graph integrity"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "KNOWLEDGE_GRAPH_TASK",
+        "name": "Knowledge Graph Infrastructure Setup",
+        "description": "Establish comprehensive knowledge graph infrastructure",
+        "estimated_time": "75 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "knowledge_graphs",
+          "neo4j",
+          "graph_algorithms"
+        ]
+      },
+      {
+        "task_id": "ENTITY_EXTRACTION_TASK",
+        "name": "Entity Extraction and Recognition",
+        "description": "Implement advanced entity extraction",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "KNOWLEDGE_GRAPH_TASK"
+        ],
+        "skills_required": [
+          "entity_extraction",
+          "named_entity_recognition",
+          "entity_linking"
+        ]
+      },
+      {
+        "task_id": "RELATIONSHIP_DISCOVERY_TASK",
+        "name": "Relationship Discovery and Mapping",
+        "description": "Create intelligent relationship discovery system",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "ENTITY_EXTRACTION_TASK"
+        ],
+        "skills_required": [
+          "relationship_discovery",
+          "link_prediction",
+          "similarity_metrics"
+        ]
+      },
+      {
+        "task_id": "SEMANTIC_REASONING_TASK",
+        "name": "Semantic Reasoning Engine",
+        "description": "Build semantic reasoning engine",
+        "estimated_time": "75 minutes",
+        "dependencies": [
+          "RELATIONSHIP_DISCOVERY_TASK"
+        ],
+        "skills_required": [
+          "semantic_reasoning",
+          "rdf_reasoning",
+          "owl_ontologies"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "KNOWLEDGE_GRAPHS_SKILL",
+        "name": "Knowledge Graphs",
+        "description": "Build and manage knowledge graphs",
+        "tools": [
+          "neo4j",
+          "rdf",
+          "sparql",
+          "graphql"
+        ],
+        "validation": "knowledge_graphs_validation"
+      },
+      {
+        "skill_id": "ENTITY_EXTRACTION_SKILL",
+        "name": "Entity Extraction",
+        "description": "Extract and recognize entities",
+        "tools": [
+          "spacy",
+          "nltk",
+          "bert",
+          "named_entity_recognition"
+        ],
+        "validation": "entity_extraction_validation"
+      },
+      {
+        "skill_id": "SEMANTIC_REASONING_SKILL",
+        "name": "Semantic Reasoning",
+        "description": "Perform semantic reasoning and inference",
+        "tools": [
+          "rdf_reasoning",
+          "owl_ontologies",
+          "logical_inference"
+        ],
+        "validation": "semantic_reasoning_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "KNOWLEDGE_SYNTHESIS_TOOL",
+        "name": "Knowledge Synthesis Engine",
+        "description": "Core knowledge synthesis system",
+        "file_path": "src/services/knowledge_synthesis/core.py",
+        "config": "config/knowledge_synthesis/synthesis_config.json"
+      },
+      {
+        "tool_id": "KNOWLEDGE_GRAPH_TOOL",
+        "name": "Knowledge Graph Engine",
+        "description": "Knowledge graph construction and management",
+        "file_path": "src/services/knowledge_synthesis/graph_engine.py",
+        "config": "config/knowledge_synthesis/graph_config.json"
+      },
+      {
+        "tool_id": "ENTITY_EXTRACTION_TOOL",
+        "name": "Entity Extraction Engine",
+        "description": "Entity extraction and recognition",
+        "file_path": "src/services/knowledge_synthesis/entity_extractor.py",
+        "config": "config/knowledge_synthesis/entity_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "KNOWLEDGE_SYNTHESIS_CONFIG",
+        "name": "Knowledge Synthesis Configuration",
+        "description": "Configuration for knowledge synthesis system",
+        "file_path": "config/knowledge_synthesis/synthesis_config.json",
+        "schema": "knowledge_synthesis_config_schema"
+      },
+      {
+        "config_id": "KNOWLEDGE_GRAPH_CONFIG",
+        "name": "Knowledge Graph Configuration",
+        "description": "Configuration for knowledge graphs",
+        "file_path": "config/knowledge_synthesis/graph_config.json",
+        "schema": "knowledge_graph_config_schema"
+      },
+      {
+        "config_id": "ENTITY_EXTRACTION_CONFIG",
+        "name": "Entity Extraction Configuration",
+        "description": "Configuration for entity extraction",
+        "file_path": "config/knowledge_synthesis/entity_config.json",
+        "schema": "entity_extraction_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "KNOWLEDGE_GRAPH_TASK",
+          "KNOWLEDGE_GRAPHS_SKILL",
+          "KNOWLEDGE_SYNTHESIS_TOOL"
+        ],
+        "description": "Gather knowledge synthesis architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "knowledge_synthesis_cache",
+        "description": "Check for existing knowledge synthesis cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "KNOWLEDGE_GRAPH_TASK",
+        "description": "Execute knowledge graph infrastructure task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "ENTITY_EXTRACTION_TASK",
+          "ENTITY_EXTRACTION_SKILL",
+          "KNOWLEDGE_GRAPH_TOOL"
+        ],
+        "description": "Gather entity extraction ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "ENTITY_EXTRACTION_TASK",
+        "description": "Execute entity extraction task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "RELATIONSHIP_DISCOVERY_TASK",
+          "SEMANTIC_REASONING_SKILL",
+          "ENTITY_EXTRACTION_TOOL"
+        ],
+        "description": "Gather relationship discovery ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "RELATIONSHIP_DISCOVERY_TASK",
+        "description": "Execute relationship discovery task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "SEMANTIC_REASONING_TASK",
+          "SEMANTIC_REASONING_SKILL"
+        ],
+        "description": "Gather semantic reasoning ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "SEMANTIC_REASONING_TASK",
+        "description": "Execute semantic reasoning task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "knowledge_synthesis_validation",
+        "description": "Validate complete knowledge synthesis system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "knowledge_synthesis_cache",
+        "description": "Cache knowledge synthesis configuration and models"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "knowledge_synthesis_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "knowledge_update",
+      "cache_validation": "knowledge_synthesis_validation"
+    }
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "operating_system": "Windows 10/11, macOS 12+, or Ubuntu 20.04 LTS+",
+      "memory": "32GB RAM minimum, 64GB recommended",
+      "storage": "500GB free space for knowledge graphs",
+      "cpu": "16 cores minimum, 32 cores recommended",
+      "network": "High-speed internet for model downloads"
+    },
+    "software_prerequisites": [
+      "Python 3.9+ with pip",
+      "Neo4j 5+ or equivalent graph database",
+      "PostgreSQL 15+ for metadata storage",
+      "Redis 7+ for caching and queues",
+      "Elasticsearch 8+ for full-text search",
+      "Docker and Docker Compose",
+      "Jupyter Notebooks for analysis"
+    ],
+    "knowledge_requirements": [
+      "Graph databases and knowledge representation",
+      "Natural language processing and entity extraction",
+      "Machine learning and pattern recognition",
+      "Semantic web technologies and ontologies",
+      "Data integration and ETL processes",
+      "Knowledge visualization and exploration",
+      "Quality assessment and validation methods",
+      "Collaborative knowledge management"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "10-001",
+      "title": "Knowledge Graph Infrastructure Setup",
+      "description": "Establish comprehensive knowledge graph infrastructure with Neo4j, RDF support, and advanced graph algorithms for relationship management.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2200,
+      "dependencies": [],
+      "category": "infrastructure",
+      "priority": "critical"
+    },
+    {
+      "task_id": "10-002",
+      "title": "Entity Extraction and Recognition",
+      "description": "Implement advanced entity extraction with named entity recognition, entity linking, and disambiguation across multiple domains.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2400,
+      "dependencies": [
+        "10-001"
+      ],
+      "category": "extraction",
+      "priority": "critical"
+    },
+    {
+      "task_id": "10-003",
+      "title": "Relationship Discovery and Mapping",
+      "description": "Create intelligent relationship discovery system with link prediction, similarity metrics, and automated relationship mapping.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2400,
+      "dependencies": [
+        "10-002"
+      ],
+      "category": "relationships",
+      "priority": "high"
+    },
+    {
+      "task_id": "10-004",
+      "title": "Semantic Reasoning Engine",
+      "description": "Build semantic reasoning engine with RDF reasoning, OWL ontologies, and logical inference capabilities.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2100,
+      "dependencies": [
+        "10-003"
+      ],
+      "category": "reasoning",
+      "priority": "high"
+    },
+    {
+      "task_id": "10-005",
+      "title": "Pattern Recognition System",
+      "description": "Implement advanced pattern recognition with machine learning, clustering algorithms, and anomaly detection.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2100,
+      "dependencies": [
+        "10-003"
+      ],
+      "category": "patterns",
+      "priority": "high"
+    },
+    {
+      "task_id": "10-006",
+      "title": "Insight Generation Engine",
+      "description": "Create automated insight generation system with hypothesis formation, trend analysis, and actionable knowledge extraction.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2400,
+      "dependencies": [
+        "10-004",
+        "10-005"
+      ],
+      "category": "insights",
+      "priority": "high"
+    },
+    {
+      "task_id": "10-007",
+      "title": "Knowledge Visualization Tools",
+      "description": "Develop comprehensive knowledge visualization tools with interactive exploration, graph visualization, and insight presentation.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "dependencies": [
+        "10-006"
+      ],
+      "category": "visualization",
+      "priority": "medium"
+    },
+    {
+      "task_id": "10-008",
+      "title": "Multi-Source Data Integration",
+      "description": "Implement comprehensive data integration with ETL pipelines, data fusion, and schema mapping across multiple sources.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2100,
+      "dependencies": [
+        "10-001"
+      ],
+      "category": "integration",
+      "priority": "medium"
+    },
+    {
+      "task_id": "10-009",
+      "title": "Knowledge Quality Assessment",
+      "description": "Create knowledge quality assessment system with validation, consistency checking, and quality metrics.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1600,
+      "dependencies": [
+        "10-008"
+      ],
+      "category": "quality",
+      "priority": "medium"
+    },
+    {
+      "task_id": "10-010",
+      "title": "Dynamic Knowledge Evolution",
+      "description": "Implement dynamic knowledge graph updates with incremental learning, conflict resolution, and knowledge evolution tracking.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "dependencies": [
+        "10-009"
+      ],
+      "category": "evolution",
+      "priority": "medium"
+    }
+  ],
+  "acceptance_criteria": [
+    "Knowledge graphs accurately representing complex relationships",
+    "Entity extraction achieving high precision and recall",
+    "Relationship discovery identifying meaningful connections",
+    "Semantic reasoning producing logical conclusions",
+    "Pattern recognition detecting significant insights",
+    "Automated insight generation providing actionable knowledge",
+    "Visualization tools enabling effective knowledge exploration",
+    "Data integration successfully combining multiple sources",
+    "Knowledge quality maintained through validation processes",
+    "Dynamic updates preserving knowledge graph integrity"
+  ],
+  "configuration": {
+    "knowledge_graph": {
+      "database": "neo4j",
+      "version": "5.0+",
+      "plugins": [
+        "apoc",
+        "graph-data-science"
+      ],
+      "indexing": "full_text_and_vector",
+      "backup": "automated"
+    },
+    "entity_extraction": {
+      "models": [
+        "spacy",
+        "bert",
+        "custom"
+      ],
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de"
+      ],
+      "domains": [
+        "general",
+        "scientific",
+        "technical",
+        "medical"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "relationship_discovery": {
+      "algorithms": [
+        "link_prediction",
+        "similarity",
+        "clustering"
+      ],
+      "metrics": [
+        "cosine",
+        "jaccard",
+        "euclidean"
+      ],
+      "threshold": 0.7,
+      "validation": "cross_reference"
+    },
+    "semantic_reasoning": {
+      "reasoner": "hermit",
+      "ontologies": [
+        "schema.org",
+        "foaf",
+        "custom"
+      ],
+      "inference_rules": "custom",
+      "consistency_checking": "enabled"
+    },
+    "pattern_recognition": {
+      "ml_models": [
+        "clustering",
+        "classification",
+        "anomaly_detection"
+      ],
+      "algorithms": [
+        "kmeans",
+        "dbscan",
+        "isolation_forest"
+      ],
+      "feature_extraction": "automated",
+      "model_evaluation": "cross_validation"
+    }
+  },
+  "validation_and_testing": {
+    "knowledge_graph_tests": [
+      "Graph consistency validation",
+      "Relationship accuracy verification",
+      "Query performance benchmarking",
+      "Scalability testing"
+    ],
+    "entity_extraction_tests": [
+      "Precision and recall measurement",
+      "Cross-domain performance",
+      "Multi-language support",
+      "Entity linking accuracy"
+    ],
+    "reasoning_tests": [
+      "Logical inference validation",
+      "Ontology consistency checking",
+      "Reasoning performance",
+      "Conclusion accuracy"
+    ]
+  },
+  "deployment_instructions": {
+    "setup_commands": [
+      "docker-compose up -d neo4j postgres redis elasticsearch",
+      "pip install -r requirements.txt",
+      "python manage.py migrate",
+      "python manage.py load_ontologies",
+      "python manage.py start_workers"
+    ],
+    "verification_commands": [
+      "curl -f http://localhost:7474/browser/",
+      "python manage.py test knowledge_synthesis",
+      "python manage.py validate_graph",
+      "python manage.py benchmark_performance"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Knowledge-Synthesis-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

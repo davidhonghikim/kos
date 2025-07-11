@@ -1,0 +1,801 @@
+{
+  "metadata": {
+    "title": "Production Deployment Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-06T12:58:00Z",
+    "purpose": "Implement comprehensive production deployment with enterprise deployment, scaling, and monitoring for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "deployment",
+    "priority": "HIGH",
+    "recipe_id": "21-production-deployment",
+    "kitchen_system": {
+      "pantry_category": "deployment",
+      "cooking_time": "300 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "infrastructure_as_code",
+        "deployment_pipeline",
+        "monitoring_system",
+        "scaling_system"
+      ],
+      "cache_strategy": "production_deployment_cache",
+      "orchestrator_priority": "high"
+    },
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "recipe_overview": {
+    "name": "Production Deployment System",
+    "description": "Implement production-ready deployment with enterprise scaling, monitoring, and high availability",
+    "prerequisites": [
+      "20-mobile-app-recipe.json completed",
+      "Cloud infrastructure and DevOps tools available",
+      "Production environment configured"
+    ],
+    "target_outcome": "Complete production deployment system with enterprise-grade reliability and scalability",
+    "success_criteria": [
+      "Enterprise-grade production deployment",
+      "Auto-scaling and load balancing",
+      "Comprehensive monitoring and alerting",
+      "High availability and disaster recovery",
+      "Security and compliance features",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "INFRASTRUCTURE_AS_CODE_TASK",
+        "name": "Infrastructure as Code Implementation",
+        "description": "Design and implement infrastructure automation",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "terraform",
+          "docker",
+          "kubernetes",
+          "infrastructure_automation"
+        ]
+      },
+      {
+        "task_id": "KUBERNETES_DEPLOYMENT_TASK",
+        "name": "Kubernetes Deployment Implementation",
+        "description": "Create comprehensive Kubernetes deployment",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "INFRASTRUCTURE_AS_CODE_TASK"
+        ],
+        "skills_required": [
+          "kubernetes",
+          "container_orchestration",
+          "service_mesh"
+        ]
+      },
+      {
+        "task_id": "CI_CD_PIPELINE_TASK",
+        "name": "CI/CD Pipeline Implementation",
+        "description": "Create comprehensive CI/CD pipeline",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "KUBERNETES_DEPLOYMENT_TASK"
+        ],
+        "skills_required": [
+          "ci_cd",
+          "automation",
+          "deployment_strategies"
+        ]
+      },
+      {
+        "task_id": "LOAD_BALANCING_TASK",
+        "name": "Load Balancing Implementation",
+        "description": "Create load balancing and traffic management",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "CI_CD_PIPELINE_TASK"
+        ],
+        "skills_required": [
+          "load_balancing",
+          "traffic_management",
+          "ssl_termination"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "INFRASTRUCTURE_AS_CODE_SKILL",
+        "name": "Infrastructure as Code",
+        "description": "Automate infrastructure provisioning and management",
+        "tools": [
+          "terraform",
+          "docker",
+          "kubernetes",
+          "cloud_providers"
+        ],
+        "validation": "infrastructure_as_code_validation"
+      },
+      {
+        "skill_id": "DEPLOYMENT_PIPELINE_SKILL",
+        "name": "Deployment Pipeline",
+        "description": "Manage CI/CD and deployment automation",
+        "tools": [
+          "ci_cd_pipeline",
+          "deployment_strategies",
+          "rollback_manager"
+        ],
+        "validation": "deployment_pipeline_validation"
+      },
+      {
+        "skill_id": "MONITORING_SYSTEM_SKILL",
+        "name": "Monitoring System",
+        "description": "Monitor and observe system performance",
+        "tools": [
+          "apm_system",
+          "infrastructure_monitor",
+          "alert_manager"
+        ],
+        "validation": "monitoring_system_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "PRODUCTION_DEPLOYMENT_TOOL",
+        "name": "Production Deployment Engine",
+        "description": "Core production deployment system",
+        "file_path": "src/services/deployment/core.py",
+        "config": "config/deployment/production_config.json"
+      },
+      {
+        "tool_id": "INFRASTRUCTURE_TOOL",
+        "name": "Infrastructure Engine",
+        "description": "Infrastructure automation and management",
+        "file_path": "src/services/deployment/infrastructure.py",
+        "config": "config/deployment/infrastructure_config.json"
+      },
+      {
+        "tool_id": "MONITORING_TOOL",
+        "name": "Monitoring Engine",
+        "description": "Monitoring and observability system",
+        "file_path": "src/services/deployment/monitoring.py",
+        "config": "config/deployment/monitoring_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "PRODUCTION_DEPLOYMENT_CONFIG",
+        "name": "Production Deployment Configuration",
+        "description": "Configuration for production deployment",
+        "file_path": "config/deployment/production_config.json",
+        "schema": "production_deployment_config_schema"
+      },
+      {
+        "config_id": "INFRASTRUCTURE_CONFIG",
+        "name": "Infrastructure Configuration",
+        "description": "Configuration for infrastructure automation",
+        "file_path": "config/deployment/infrastructure_config.json",
+        "schema": "infrastructure_config_schema"
+      },
+      {
+        "config_id": "MONITORING_CONFIG",
+        "name": "Monitoring Configuration",
+        "description": "Configuration for monitoring system",
+        "file_path": "config/deployment/monitoring_config.json",
+        "schema": "monitoring_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "INFRASTRUCTURE_AS_CODE_TASK",
+          "INFRASTRUCTURE_AS_CODE_SKILL",
+          "PRODUCTION_DEPLOYMENT_TOOL"
+        ],
+        "description": "Gather production deployment architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "production_deployment_cache",
+        "description": "Check for existing production deployment cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "INFRASTRUCTURE_AS_CODE_TASK",
+        "description": "Execute infrastructure as code task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "KUBERNETES_DEPLOYMENT_TASK",
+          "DEPLOYMENT_PIPELINE_SKILL",
+          "INFRASTRUCTURE_TOOL"
+        ],
+        "description": "Gather Kubernetes deployment ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "KUBERNETES_DEPLOYMENT_TASK",
+        "description": "Execute Kubernetes deployment task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "CI_CD_PIPELINE_TASK",
+          "MONITORING_SYSTEM_SKILL",
+          "MONITORING_TOOL"
+        ],
+        "description": "Gather CI/CD pipeline ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "CI_CD_PIPELINE_TASK",
+        "description": "Execute CI/CD pipeline task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "LOAD_BALANCING_TASK",
+          "INFRASTRUCTURE_AS_CODE_SKILL"
+        ],
+        "description": "Gather load balancing ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "LOAD_BALANCING_TASK",
+        "description": "Execute load balancing task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "production_deployment_validation",
+        "description": "Validate complete production deployment system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "production_deployment_cache",
+        "description": "Cache production deployment configuration and infrastructure"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "production_deployment_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "infrastructure_update",
+      "cache_validation": "production_deployment_validation"
+    }
+  },
+  "production_deployment_architecture": {
+    "infrastructure_as_code": {
+      "purpose": "Infrastructure automation and management",
+      "features": [
+        "Terraform infrastructure provisioning",
+        "Docker containerization",
+        "Kubernetes orchestration",
+        "Multi-cloud deployment support"
+      ],
+      "modular_components": [
+        "terraform-modules",
+        "docker-configs",
+        "kubernetes-manifests",
+        "cloud-providers"
+      ]
+    },
+    "deployment_pipeline": {
+      "purpose": "CI/CD deployment automation",
+      "features": [
+        "Automated build and deployment",
+        "Blue-green deployment strategy",
+        "Rollback and recovery procedures",
+        "Environment promotion workflows"
+      ],
+      "modular_components": [
+        "ci-cd-pipeline",
+        "deployment-strategies",
+        "rollback-manager",
+        "environment-manager"
+      ]
+    },
+    "monitoring_system": {
+      "purpose": "Comprehensive monitoring and observability",
+      "features": [
+        "Application performance monitoring",
+        "Infrastructure monitoring",
+        "Log aggregation and analysis",
+        "Alerting and notification system"
+      ],
+      "modular_components": [
+        "apm-system",
+        "infrastructure-monitor",
+        "log-aggregator",
+        "alert-manager"
+      ]
+    },
+    "scaling_system": {
+      "purpose": "Auto-scaling and load balancing",
+      "features": [
+        "Horizontal and vertical scaling",
+        "Load balancing and traffic management",
+        "Resource optimization",
+        "Performance tuning"
+      ],
+      "modular_components": [
+        "auto-scaler",
+        "load-balancer",
+        "resource-manager",
+        "performance-optimizer"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "21-001",
+      "title": "Create Infrastructure as Code",
+      "description": "Design and implement infrastructure automation with Terraform",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p infrastructure",
+        "mkdir -p infrastructure/terraform",
+        "mkdir -p infrastructure/docker",
+        "mkdir -p infrastructure/kubernetes"
+      ],
+      "files_to_create": [
+        "infrastructure/terraform/main.tf",
+        "infrastructure/terraform/variables.tf",
+        "infrastructure/terraform/outputs.tf",
+        "infrastructure/terraform/providers.tf",
+        "infrastructure/docker/Dockerfile",
+        "infrastructure/docker/docker-compose.yml"
+      ],
+      "acceptance_criteria": [
+        "Terraform configuration working",
+        "Docker containerization functional",
+        "Infrastructure provisioning operational",
+        "Multi-environment support working"
+      ]
+    },
+    {
+      "task_id": "21-002",
+      "title": "Implement Kubernetes Deployment",
+      "description": "Create comprehensive Kubernetes deployment configuration",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p infrastructure/kubernetes/base",
+        "mkdir -p infrastructure/kubernetes/overlays"
+      ],
+      "files_to_create": [
+        "infrastructure/kubernetes/base/deployment.yaml",
+        "infrastructure/kubernetes/base/service.yaml",
+        "infrastructure/kubernetes/base/configmap.yaml",
+        "infrastructure/kubernetes/base/secret.yaml",
+        "infrastructure/kubernetes/base/ingress.yaml",
+        "infrastructure/kubernetes/base/persistent-volume.yaml"
+      ],
+      "acceptance_criteria": [
+        "Kubernetes manifests working",
+        "Service configuration functional",
+        "Ingress setup operational",
+        "Storage configuration working"
+      ]
+    },
+    {
+      "task_id": "21-003",
+      "title": "Implement CI/CD Pipeline",
+      "description": "Create comprehensive CI/CD pipeline with automation",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p .github/workflows",
+        "mkdir -p scripts/deployment"
+      ],
+      "files_to_create": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/cd.yml",
+        ".github/workflows/deploy.yml",
+        "scripts/deployment/deploy.sh",
+        "scripts/deployment/rollback.sh",
+        "scripts/deployment/health-check.sh"
+      ],
+      "acceptance_criteria": [
+        "CI pipeline working",
+        "CD pipeline functional",
+        "Automated deployment operational",
+        "Rollback procedures working"
+      ]
+    },
+    {
+      "task_id": "21-004",
+      "title": "Implement Load Balancing",
+      "description": "Create load balancing and traffic management system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p infrastructure/load-balancer",
+        "mkdir -p infrastructure/nginx"
+      ],
+      "files_to_create": [
+        "infrastructure/load-balancer/nginx.conf",
+        "infrastructure/load-balancer/upstream.conf",
+        "infrastructure/nginx/nginx.conf",
+        "infrastructure/nginx/default.conf",
+        "infrastructure/nginx/ssl.conf"
+      ],
+      "acceptance_criteria": [
+        "Load balancer configuration working",
+        "Traffic distribution functional",
+        "SSL termination operational",
+        "Health checks working"
+      ]
+    },
+    {
+      "task_id": "21-005",
+      "title": "Implement Auto Scaling",
+      "description": "Create auto-scaling and resource management system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p infrastructure/scaling",
+        "mkdir -p infrastructure/monitoring"
+      ],
+      "files_to_create": [
+        "infrastructure/scaling/hpa.yaml",
+        "infrastructure/scaling/vpa.yaml",
+        "infrastructure/scaling/cluster-autoscaler.yaml",
+        "infrastructure/monitoring/prometheus.yaml",
+        "infrastructure/monitoring/grafana.yaml"
+      ],
+      "acceptance_criteria": [
+        "Horizontal pod autoscaling working",
+        "Vertical pod autoscaling functional",
+        "Cluster autoscaling operational",
+        "Resource optimization working"
+      ]
+    },
+    {
+      "task_id": "21-006",
+      "title": "Implement Monitoring System",
+      "description": "Create comprehensive monitoring and observability system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p infrastructure/monitoring/prometheus",
+        "mkdir -p infrastructure/monitoring/grafana"
+      ],
+      "files_to_create": [
+        "infrastructure/monitoring/prometheus/prometheus.yml",
+        "infrastructure/monitoring/prometheus/rules.yml",
+        "infrastructure/monitoring/grafana/dashboards/",
+        "infrastructure/monitoring/grafana/datasources/",
+        "infrastructure/monitoring/alertmanager.yml"
+      ],
+      "acceptance_criteria": [
+        "Prometheus monitoring working",
+        "Grafana dashboards functional",
+        "Alerting system operational",
+        "Metrics collection working"
+      ]
+    },
+    {
+      "task_id": "21-007",
+      "title": "Implement Logging System",
+      "description": "Create centralized logging and log analysis system",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p infrastructure/logging",
+        "mkdir -p infrastructure/elasticsearch"
+      ],
+      "files_to_create": [
+        "infrastructure/logging/fluentd.yml",
+        "infrastructure/logging/elasticsearch.yml",
+        "infrastructure/logging/kibana.yml",
+        "infrastructure/logging/logstash.yml",
+        "infrastructure/logging/filebeat.yml"
+      ],
+      "acceptance_criteria": [
+        "Log aggregation working",
+        "Elasticsearch setup functional",
+        "Kibana visualization operational",
+        "Log analysis working"
+      ]
+    },
+    {
+      "task_id": "21-008",
+      "title": "Implement Security Features",
+      "description": "Create security and compliance features",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/security",
+        "mkdir -p infrastructure/certificates"
+      ],
+      "files_to_create": [
+        "infrastructure/security/network-policy.yml",
+        "infrastructure/security/pod-security-policy.yml",
+        "infrastructure/security/rbac.yml",
+        "infrastructure/certificates/tls-secret.yml",
+        "infrastructure/certificates/ca-certificate.yml"
+      ],
+      "acceptance_criteria": [
+        "Network policies working",
+        "Pod security policies functional",
+        "RBAC configuration operational",
+        "TLS certificates working"
+      ]
+    },
+    {
+      "task_id": "21-009",
+      "title": "Implement Backup and Recovery",
+      "description": "Create backup and disaster recovery system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/backup",
+        "mkdir -p infrastructure/recovery"
+      ],
+      "files_to_create": [
+        "infrastructure/backup/backup-cronjob.yml",
+        "infrastructure/backup/backup-storage.yml",
+        "infrastructure/recovery/restore-script.sh",
+        "infrastructure/recovery/disaster-recovery.yml",
+        "infrastructure/recovery/backup-verification.yml"
+      ],
+      "acceptance_criteria": [
+        "Automated backup working",
+        "Backup storage functional",
+        "Recovery procedures operational",
+        "Disaster recovery working"
+      ]
+    },
+    {
+      "task_id": "21-010",
+      "title": "Implement Performance Optimization",
+      "description": "Create performance optimization and tuning system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/performance",
+        "mkdir -p infrastructure/caching"
+      ],
+      "files_to_create": [
+        "infrastructure/performance/redis.yml",
+        "infrastructure/performance/memcached.yml",
+        "infrastructure/caching/cdn-config.yml",
+        "infrastructure/performance/resource-limits.yml",
+        "infrastructure/performance/performance-tests.yml"
+      ],
+      "acceptance_criteria": [
+        "Caching system working",
+        "CDN configuration functional",
+        "Resource limits operational",
+        "Performance monitoring working"
+      ]
+    },
+    {
+      "task_id": "21-011",
+      "title": "Implement Environment Management",
+      "description": "Create multi-environment management system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/environments",
+        "mkdir -p infrastructure/configs"
+      ],
+      "files_to_create": [
+        "infrastructure/environments/dev/",
+        "infrastructure/environments/staging/",
+        "infrastructure/environments/production/",
+        "infrastructure/configs/environment-variables.yml",
+        "infrastructure/configs/feature-flags.yml"
+      ],
+      "acceptance_criteria": [
+        "Environment separation working",
+        "Configuration management functional",
+        "Feature flags operational",
+        "Environment promotion working"
+      ]
+    },
+    {
+      "task_id": "21-012",
+      "title": "Implement Testing Infrastructure",
+      "description": "Create testing infrastructure for deployment validation",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/testing",
+        "mkdir -p tests/deployment"
+      ],
+      "files_to_create": [
+        "infrastructure/testing/test-cluster.yml",
+        "infrastructure/testing/load-testing.yml",
+        "tests/deployment/deployment-tests.yml",
+        "tests/deployment/integration-tests.yml",
+        "tests/deployment/performance-tests.yml"
+      ],
+      "acceptance_criteria": [
+        "Test cluster working",
+        "Load testing functional",
+        "Deployment validation operational",
+        "Integration testing working"
+      ]
+    },
+    {
+      "task_id": "21-013",
+      "title": "Implement Documentation",
+      "description": "Create comprehensive deployment documentation",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/deployment",
+        "mkdir -p docs/operations"
+      ],
+      "files_to_create": [
+        "docs/deployment/README.md",
+        "docs/deployment/architecture.md",
+        "docs/deployment/deployment-guide.md",
+        "docs/operations/monitoring.md",
+        "docs/operations/troubleshooting.md",
+        "docs/operations/runbooks.md"
+      ],
+      "acceptance_criteria": [
+        "Deployment documentation complete",
+        "Operations guide functional",
+        "Troubleshooting guide operational",
+        "Runbooks working"
+      ]
+    },
+    {
+      "task_id": "21-014",
+      "title": "Implement Compliance and Auditing",
+      "description": "Create compliance and auditing system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/compliance",
+        "mkdir -p infrastructure/auditing"
+      ],
+      "files_to_create": [
+        "infrastructure/compliance/policy.yml",
+        "infrastructure/compliance/standards.yml",
+        "infrastructure/auditing/audit-log.yml",
+        "infrastructure/auditing/compliance-reports.yml",
+        "infrastructure/auditing/security-scanning.yml"
+      ],
+      "acceptance_criteria": [
+        "Compliance policies working",
+        "Audit logging functional",
+        "Security scanning operational",
+        "Compliance reporting working"
+      ]
+    },
+    {
+      "task_id": "21-015",
+      "title": "Implement Cost Optimization",
+      "description": "Create cost optimization and resource management",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p infrastructure/cost",
+        "mkdir -p infrastructure/optimization"
+      ],
+      "files_to_create": [
+        "infrastructure/cost/cost-monitoring.yml",
+        "infrastructure/cost/budget-alerts.yml",
+        "infrastructure/optimization/resource-optimization.yml",
+        "infrastructure/optimization/spot-instances.yml",
+        "infrastructure/optimization/cost-reports.yml"
+      ],
+      "acceptance_criteria": [
+        "Cost monitoring working",
+        "Budget alerts functional",
+        "Resource optimization operational",
+        "Cost reporting working"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "KUBERNETES_CLUSTER": "production-cluster",
+      "DOCKER_REGISTRY": "your-registry.com",
+      "MONITORING_ENDPOINT": "https://monitoring.aiq.com",
+      "BACKUP_STORAGE": "s3://aiq-backups"
+    },
+    "supported_platforms": {
+      "cloud": [
+        "aws",
+        "gcp",
+        "azure",
+        "on-premise"
+      ],
+      "orchestration": [
+        "kubernetes",
+        "docker-swarm",
+        "nomad"
+      ],
+      "monitoring": [
+        "prometheus",
+        "grafana",
+        "datadog",
+        "newrelic"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test infrastructure provisioning",
+      "Test deployment automation",
+      "Test monitoring configuration",
+      "Test security policies",
+      "Test backup procedures"
+    ],
+    "integration_tests": [
+      "Test end-to-end deployment",
+      "Test scaling operations",
+      "Test disaster recovery",
+      "Test monitoring and alerting"
+    ],
+    "performance_tests": [
+      "Load testing under production conditions",
+      "Scaling performance tests",
+      "Resource utilization tests",
+      "Cost optimization validation"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Cloud infrastructure access",
+      "Kubernetes cluster configured",
+      "Terraform and kubectl installed",
+      "CI/CD tools configured"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the infrastructure directory",
+      "2. Configure cloud provider credentials",
+      "3. Initialize Terraform: terraform init",
+      "4. Plan infrastructure: terraform plan",
+      "5. Apply infrastructure: terraform apply",
+      "6. Deploy applications: kubectl apply -k infrastructure/kubernetes/",
+      "7. Verify deployment: kubectl get pods"
+    ],
+    "verification": [
+      "Test all deployment components",
+      "Verify monitoring and alerting",
+      "Test scaling and load balancing",
+      "Confirm backup and recovery procedures"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

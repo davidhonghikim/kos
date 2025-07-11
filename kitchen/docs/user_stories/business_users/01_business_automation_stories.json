@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "title": "Business User - Business Automation User Stories",
+    "version": "1.0.0",
+    "created_by": "Q-Assist",
+    "creation_timestamp": "2025-07-08T12:30:00Z",
+    "category": "business_users",
+    "subcategory": "business_automation"
+  },
+  "user_stories": [
+    {
+      "id": "BA-001",
+      "title": "Customer Onboarding Automation",
+      "user": "Operations Manager",
+      "story": "As an operations manager, I want automated customer onboarding that can process applications, verify documents, and set up accounts so that I can reduce manual work and improve customer experience.",
+      "acceptance_criteria": [
+        "Automatically process customer applications",
+        "Verify identity documents and information",
+        "Set up customer accounts and profiles",
+        "Send welcome emails and onboarding materials",
+        "Track onboarding progress and completion"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "HIGH",
+      "ingredients_needed": ["application_processor", "document_verifier", "account_creator", "email_sender", "progress_tracker"]
+    },
+    {
+      "id": "BA-002",
+      "title": "Invoice Processing Automation",
+      "user": "Accounts Payable Specialist",
+      "story": "As an AP specialist, I want automated invoice processing that can extract data, validate information, and process payments so that I can handle high volumes efficiently.",
+      "acceptance_criteria": [
+        "Extract data from invoice images and PDFs",
+        "Validate invoice information against purchase orders",
+        "Route invoices for approval based on rules",
+        "Process payments automatically",
+        "Generate payment reports and reconciliations"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["invoice_parser", "data_validator", "approval_router", "payment_processor", "reconciliation_generator"]
+    },
+    {
+      "id": "BA-003",
+      "title": "Employee Onboarding Workflow",
+      "user": "HR Manager",
+      "story": "As an HR manager, I want automated employee onboarding that can handle paperwork, IT setup, and training scheduling so that I can ensure consistent onboarding experiences.",
+      "acceptance_criteria": [
+        "Process new hire paperwork automatically",
+        "Set up IT accounts and equipment",
+        "Schedule training sessions and orientations",
+        "Track onboarding completion status",
+        "Generate onboarding reports for management"
+      ],
+      "priority": "MEDIUM",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["paperwork_processor", "it_setup_manager", "scheduler", "completion_tracker", "report_generator"]
+    },
+    {
+      "id": "BA-004",
+      "title": "Sales Lead Management",
+      "user": "Sales Manager",
+      "story": "As a sales manager, I want automated lead management that can qualify leads, assign them to sales reps, and track follow-up activities so that I can improve conversion rates.",
+      "acceptance_criteria": [
+        "Automatically qualify leads based on criteria",
+        "Assign leads to appropriate sales representatives",
+        "Schedule follow-up activities and reminders",
+        "Track lead progression through sales funnel",
+        "Generate sales performance reports"
+      ],
+      "priority": "HIGH",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["lead_qualifier", "assignment_engine", "activity_scheduler", "funnel_tracker", "performance_analyzer"]
+    },
+    {
+      "id": "BA-005",
+      "title": "Inventory Management Automation",
+      "user": "Inventory Manager",
+      "story": "As an inventory manager, I want automated inventory management that can track stock levels, predict demand, and generate purchase orders so that I can optimize inventory levels.",
+      "acceptance_criteria": [
+        "Monitor real-time inventory levels",
+        "Predict demand based on historical data",
+        "Generate automatic purchase orders",
+        "Track supplier performance and delivery",
+        "Generate inventory reports and analytics"
+      ],
+      "priority": "MEDIUM",
+      "estimated_effort": "MEDIUM",
+      "ingredients_needed": ["inventory_tracker", "demand_predictor", "po_generator", "supplier_monitor", "analytics_reporter"]
+    }
+  ]
+} 

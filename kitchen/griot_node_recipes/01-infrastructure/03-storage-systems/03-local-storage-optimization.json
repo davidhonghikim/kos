@@ -1,0 +1,316 @@
+{
+  "metadata": {
+    "sub_recipe_id": "02-03-local-storage-optimization",
+    "title": "Local Storage Optimization - Complete Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-05T18:18:00Z",
+    "purpose": "Exact step-by-step local storage optimization implementation with zero ambiguity",
+    "total_tasks": 5,
+    "estimated_duration": "2-3 hours",
+    "complexity": "Intermediate",
+    "dependencies": [
+      "02-01-minio-enterprise-cluster"
+    ],
+    "components": [
+      "NVMe Optimization",
+      "Compression",
+      "Deduplication",
+      "Performance Tuning"
+    ],
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "prerequisites": {
+    "completed_tasks": [
+      "02-01-01: MinIO cluster architecture planned",
+      "02-01-02: SSL certificates generated",
+      "02-01-03: MinIO cluster deployed"
+    ],
+    "system_requirements": {
+      "cpu": "Minimum 8 cores for storage operations",
+      "ram": "Minimum 16GB for storage operations",
+      "storage": "Minimum 1TB NVMe SSD for optimization",
+      "network": "High-speed storage network"
+    }
+  },
+  "task_01_nvme_optimization": {
+    "task_id": "02-03-01",
+    "title": "NVMe Storage Optimization",
+    "description": "Optimize NVMe storage for maximum performance",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-03-01-01",
+        "title": "Detect NVMe devices",
+        "description": "Detect and identify NVMe storage devices",
+        "commands": [
+          "lsblk -d -o name,rota,size,type",
+          "nvme list",
+          "ls -la /dev/nvme*",
+          "sudo nvme smart-log /dev/nvme0n1"
+        ],
+        "verification": "Check NVMe devices detected",
+        "expected_output": "NVMe devices detected and accessible"
+      },
+      {
+        "step_id": "02-03-01-02",
+        "title": "Configure NVMe optimization",
+        "description": "Configure NVMe devices for optimal performance",
+        "config_file": "/opt/ai-q/storage/local/nvme-config.json",
+        "config_content": {
+          "nvme_optimization": {
+            "queue_depth": 1024,
+            "max_sectors": 512,
+            "read_ahead_kb": 4096,
+            "nr_requests": 128,
+            "scheduler": "none"
+          },
+          "performance_settings": {
+            "write_cache": true,
+            "read_cache": true,
+            "power_management": "performance"
+          }
+        },
+        "commands": [
+          "sudo mkdir -p /opt/ai-q/storage/local",
+          "sudo tee /opt/ai-q/storage/local/nvme-config.json << 'EOF'\\n{\\n  \\\"nvme_optimization\\\": {\\n    \\\"queue_depth\\\": 1024,\\n    \\\"max_sectors\\\": 512,\\n    \\\"read_ahead_kb\\\": 4096,\\n    \\\"nr_requests\\\": 128,\\n    \\\"scheduler\\\": \\\"none\\\"\\n  },\\n  \\\"performance_settings\\\": {\\n    \\\"write_cache\\\": true,\\n    \\\"read_cache\\\": true,\\n    \\\"power_management\\\": \\\"performance\\\"\\n  }\\n}\\nEOF",
+          "echo 'ACTION==\"add|change\", KERNEL==\"nvme[0-9]*\", ATTR{queue/scheduler}=\"none\"' | sudo tee /etc/udev/rules.d/60-nvme-scheduler.rules",
+          "echo 'ACTION==\"add|change\", KERNEL==\"nvme[0-9]*\", ATTR{queue/nr_requests}=\"128\"' | sudo tee -a /etc/udev/rules.d/60-nvme-scheduler.rules",
+          "sudo udevadm control --reload-rules",
+          "sudo udevadm trigger"
+        ],
+        "verification": "Check NVMe optimization configured",
+        "expected_output": "NVMe optimization configured successfully"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/storage/local/nvme-config.json",
+      "cat /sys/block/nvme0n1/queue/scheduler",
+      "cat /sys/block/nvme0n1/queue/nr_requests"
+    ],
+    "expected_outputs": {
+      "nvme_detected": "NVMe devices detected and accessible",
+      "optimization_configured": "NVMe optimization configured successfully"
+    }
+  },
+  "task_02_compression_setup": {
+    "task_id": "02-03-02",
+    "title": "Storage Compression Setup",
+    "description": "Setup LZ4 compression for local storage optimization",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-03-02-01",
+        "title": "Install compression tools",
+        "description": "Install LZ4 compression tools",
+        "commands": [
+          "sudo apt-get update",
+          "sudo apt-get install -y lz4 zstd",
+          "lz4 --version",
+          "zstd --version"
+        ],
+        "verification": "Check compression tools installed",
+        "expected_output": "LZ4 and Zstd compression tools installed"
+      },
+      {
+        "step_id": "02-03-02-02",
+        "title": "Create compression script",
+        "description": "Create script for automated compression",
+        "config_file": "/opt/ai-q/storage/local/compress-storage.sh",
+        "config_content": "#!/bin/bash\\n\\n# Local Storage Compression Script\\n\\nSTORAGE_DIR=\"/data/local-storage\"\\nCOMPRESSED_DIR=\"/data/compressed-storage\"\\n\\n# Create directories\\nmkdir -p \"$COMPRESSED_DIR\"\\n\\n# Compress files with LZ4\\nfind \"$STORAGE_DIR\" -type f -name \"*.log\" -exec lz4 -z {} {}.lz4 \\;\\nfind \"$STORAGE_DIR\" -type f -name \"*.txt\" -exec lz4 -z {} {}.lz4 \\;\\nfind \"$STORAGE_DIR\" -type f -name \"*.json\" -exec lz4 -z {} {}.lz4 \\;\\n\\n# Compress large files with Zstd\\nfind \"$STORAGE_DIR\" -type f -size +100M -exec zstd -z {} \\;\\n\\necho \"Compression completed successfully\"",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/local/compress-storage.sh << 'EOF'\\n#!/bin/bash\\n\\n# Local Storage Compression Script\\n\\nSTORAGE_DIR=\"/data/local-storage\"\\nCOMPRESSED_DIR=\"/data/compressed-storage\"\\n\\n# Create directories\\nmkdir -p \"$COMPRESSED_DIR\"\\n\\n# Compress files with LZ4\\nfind \"$STORAGE_DIR\" -type f -name \"*.log\" -exec lz4 -z {} {}.lz4 \\;\\nfind \"$STORAGE_DIR\" -type f -name \"*.txt\" -exec lz4 -z {} {}.lz4 \\;\\nfind \"$STORAGE_DIR\" -type f -name \"*.json\" -exec lz4 -z {} {}.lz4 \\;\\n\\n# Compress large files with Zstd\\nfind \"$STORAGE_DIR\" -type f -size +100M -exec zstd -z {} \\;\\n\\necho \"Compression completed successfully\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/storage/local/compress-storage.sh"
+        ],
+        "verification": "Check compression script created",
+        "expected_output": "Compression script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "lz4 --version",
+      "zstd --version",
+      "ls -la /opt/ai-q/storage/local/compress-storage.sh"
+    ],
+    "expected_outputs": {
+      "compression_tools": "LZ4 and Zstd compression tools installed",
+      "compression_script": "Compression script created and executable"
+    }
+  },
+  "task_03_deduplication_setup": {
+    "task_id": "02-03-03",
+    "title": "Storage Deduplication Setup",
+    "description": "Setup deduplication for local storage optimization",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-03-03-01",
+        "title": "Install deduplication tools",
+        "description": "Install tools for storage deduplication",
+        "commands": [
+          "sudo apt-get install -y rmlint jdupes",
+          "rmlint --version",
+          "jdupes --version"
+        ],
+        "verification": "Check deduplication tools installed",
+        "expected_output": "Deduplication tools installed successfully"
+      },
+      {
+        "step_id": "02-03-03-02",
+        "title": "Create deduplication script",
+        "description": "Create script for automated deduplication",
+        "config_file": "/opt/ai-q/storage/local/deduplicate-storage.sh",
+        "config_content": "#!/bin/bash\\n\\n# Local Storage Deduplication Script\\n\\nSTORAGE_DIR=\"/data/local-storage\"\\nDEDUP_LOG=\"/var/log/storage-dedup.log\"\\n\\n# Create deduplication log\\ntouch \"$DEDUP_LOG\"\\n\\n# Find and remove duplicate files\\nrmlint \"$STORAGE_DIR\" --output-format json > /tmp/duplicates.json\\n\\n# Process duplicates\\npython3 -c \"\\nimport json\\nwith open('/tmp/duplicates.json', 'r') as f:\\n    data = json.load(f)\\n    for file_info in data.get('files', []):\\n        if file_info.get('is_duplicate'):\\n            print(f'Removing duplicate: {file_info[\"path\"]}')\\n            import os\\n            os.remove(file_info['path'])\\n\"\\n\\necho \"Deduplication completed successfully\" >> \"$DEDUP_LOG\"",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/local/deduplicate-storage.sh << 'EOF'\\n#!/bin/bash\\n\\n# Local Storage Deduplication Script\\n\\nSTORAGE_DIR=\"/data/local-storage\"\\nDEDUP_LOG=\"/var/log/storage-dedup.log\"\\n\\n# Create deduplication log\\ntouch \"$DEDUP_LOG\"\\n\\n# Find and remove duplicate files\\nrmlint \"$STORAGE_DIR\" --output-format json > /tmp/duplicates.json\\n\\n# Process duplicates\\npython3 -c \"\\nimport json\\nwith open('/tmp/duplicates.json', 'r') as f:\\n    data = json.load(f)\\n    for file_info in data.get('files', []):\\n        if file_info.get('is_duplicate'):\\n            print(f'Removing duplicate: {file_info[\"path\"]}')\\n            import os\\n            os.remove(file_info['path'])\\n\"\\n\\necho \"Deduplication completed successfully\" >> \"$DEDUP_LOG\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/storage/local/deduplicate-storage.sh"
+        ],
+        "verification": "Check deduplication script created",
+        "expected_output": "Deduplication script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "rmlint --version",
+      "jdupes --version",
+      "ls -la /opt/ai-q/storage/local/deduplicate-storage.sh"
+    ],
+    "expected_outputs": {
+      "dedup_tools": "Deduplication tools installed successfully",
+      "dedup_script": "Deduplication script created and executable"
+    }
+  },
+  "task_04_performance_monitoring": {
+    "task_id": "02-03-04",
+    "title": "Storage Performance Monitoring",
+    "description": "Setup monitoring for local storage performance",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-03-04-01",
+        "title": "Create performance monitoring script",
+        "description": "Create script for storage performance monitoring",
+        "config_file": "/opt/ai-q/storage/local/monitor-performance.sh",
+        "config_content": "#!/bin/bash\\n\\n# Local Storage Performance Monitoring Script\\n\\nLOG_DIR=\"/opt/ai-q/storage/local/logs\"\\nREPORT_FILE=\"$LOG_DIR/performance-report-$(date +%Y%m%d_%H%M%S).json\"\\n\\nmkdir -p \"$LOG_DIR\"\\n\\n# Initialize report\\ncat > \"$REPORT_FILE\" << EOF\\n{\\n  \"timestamp\": \"$(date -Iseconds)\",\\n  \"storage_metrics\": {\\nEOF\\n\\n# Disk usage\\ndisk_usage=$(df /data | tail -1 | awk '{print $5}' | cut -d'%' -f1)\\necho \"    \\\"disk_usage_percent\\\": $disk_usage,\" >> \"$REPORT_FILE\"\\n\\n# I/O statistics\\nio_stats=$(iostat -x 1 1 | grep nvme0n1 | awk '{print $2, $3, $4, $5}')\\necho \"    \\\"io_stats\\\": \\\"$io_stats\\\",\" >> \"$REPORT_FILE\"\\n\\n# NVMe health\\nnvme_health=$(sudo nvme smart-log /dev/nvme0n1 | grep -E '(temperature|wear_level|data_units)' | head -3)\\necho \"    \\\"nvme_health\\\": \\\"$nvme_health\\\"\" >> \"$REPORT_FILE\"\\n\\n# Close JSON\\necho \"  }\" >> \"$REPORT_FILE\"\\necho \"}\" >> \"$REPORT_FILE\"\\n\\necho \"Performance report generated: $REPORT_FILE\"",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/local/monitor-performance.sh << 'EOF'\\n#!/bin/bash\\n\\n# Local Storage Performance Monitoring Script\\n\\nLOG_DIR=\"/opt/ai-q/storage/local/logs\"\\nREPORT_FILE=\"$LOG_DIR/performance-report-$(date +%Y%m%d_%H%M%S).json\"\\n\\nmkdir -p \"$LOG_DIR\"\\n\\n# Initialize report\\ncat > \"$REPORT_FILE\" << EOF\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"storage_metrics\\\": {\\nEOF\\n\\n# Disk usage\\ndisk_usage=$(df /data | tail -1 | awk '{print $5}' | cut -d'%' -f1)\\necho \\\"    \\\\\\\"disk_usage_percent\\\\\\\": $disk_usage,\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# I/O statistics\\nio_stats=$(iostat -x 1 1 | grep nvme0n1 | awk '{print $2, $3, $4, $5}')\\necho \\\"    \\\\\\\"io_stats\\\\\\\": \\\\\\\"$io_stats\\\\\\\",\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# NVMe health\\nnvme_health=$(sudo nvme smart-log /dev/nvme0n1 | grep -E '(temperature|wear_level|data_units)' | head -3)\\necho \\\"    \\\\\\\"nvme_health\\\\\\\": \\\\\\\"$nvme_health\\\\\\\"\\\" >> \\\"$REPORT_FILE\\\"\\n\\n# Close JSON\\necho \\\"  }\\\" >> \\\"$REPORT_FILE\\\"\\necho \\\"}\\\" >> \\\"$REPORT_FILE\\\"\\n\\necho \\\"Performance report generated: $REPORT_FILE\\\"\\nEOF",
+          "sudo chmod +x /opt/ai-q/storage/local/monitor-performance.sh"
+        ],
+        "verification": "Check performance monitoring script created",
+        "expected_output": "Performance monitoring script created and executable"
+      }
+    ],
+    "verification_commands": [
+      "ls -la /opt/ai-q/storage/local/monitor-performance.sh",
+      "ls -la /opt/ai-q/storage/local/logs/"
+    ],
+    "expected_outputs": {
+      "monitoring_script": "Performance monitoring script created and executable"
+    }
+  },
+  "task_05_optimization_verification": {
+    "task_id": "02-03-05",
+    "title": "Local Storage Optimization Verification",
+    "description": "Verify local storage optimization implementation",
+    "estimated_duration": "30 minutes",
+    "critical": true,
+    "steps": [
+      {
+        "step_id": "02-03-05-01",
+        "title": "Test storage performance",
+        "description": "Test local storage performance with benchmarks",
+        "commands": [
+          "dd if=/dev/zero of=/data/test-file bs=1M count=1024",
+          "dd if=/data/test-file of=/dev/null bs=1M",
+          "rm /data/test-file",
+          "fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --direct=1 --size=1G --numjobs=4"
+        ],
+        "verification": "Check storage performance benchmarks",
+        "expected_output": "Storage performance benchmarks completed"
+      },
+      {
+        "step_id": "02-03-05-02",
+        "title": "Create optimization report",
+        "description": "Create comprehensive optimization report",
+        "config_file": "/opt/ai-q/storage/local/optimization-report.json",
+        "config_content": "{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"nvme_optimization\\\": {\\n    \\\"scheduler\\\": \\\"$(cat /sys/block/nvme0n1/queue/scheduler)\\\",\\n    \\\"queue_depth\\\": \\\"$(cat /sys/block/nvme0n1/queue/nr_requests)\\\",\\n    \\\"read_ahead\\\": \\\"$(cat /sys/block/nvme0n1/queue/read_ahead_kb)\\\"\\n  },\\n  \\\"compression_tools\\\": {\\n    \\\"lz4_installed\\\": \\\"$(which lz4 > /dev/null && echo 'true' || echo 'false')\\\",\\n    \\\"zstd_installed\\\": \\\"$(which zstd > /dev/null && echo 'true' || echo 'false')\\\"\\n  },\\n  \\\"deduplication_tools\\\": {\\n    \\\"rmlint_installed\\\": \\\"$(which rmlint > /dev/null && echo 'true' || echo 'false')\\\",\\n    \\\"jdupes_installed\\\": \\\"$(which jdupes > /dev/null && echo 'true' || echo 'false')\\\"\\n  }\\n}",
+        "commands": [
+          "sudo tee /opt/ai-q/storage/local/optimization-report.json << 'EOF'\\n{\\n  \\\"timestamp\\\": \\\"$(date -Iseconds)\\\",\\n  \\\"nvme_optimization\\\": {\\n    \\\"scheduler\\\": \\\"$(cat /sys/block/nvme0n1/queue/scheduler)\\\",\\n    \\\"queue_depth\\\": \\\"$(cat /sys/block/nvme0n1/queue/nr_requests)\\\",\\n    \\\"read_ahead\\\": \\\"$(cat /sys/block/nvme0n1/queue/read_ahead_kb)\\\"\\n  },\\n  \\\"compression_tools\\\": {\\n    \\\"lz4_installed\\\": \\\"$(which lz4 > /dev/null && echo 'true' || echo 'false')\\\",\\n    \\\"zstd_installed\\\": \\\"$(which zstd > /dev/null && echo 'true' || echo 'false')\\\"\\n  },\\n  \\\"deduplication_tools\\\": {\\n    \\\"rmlint_installed\\\": \\\"$(which rmlint > /dev/null && echo 'true' || echo 'false')\\\",\\n    \\\"jdupes_installed\\\": \\\"$(which jdupes > /dev/null && echo 'true' || echo 'false')\\\"\\n  }\\n}\\nEOF"
+        ],
+        "verification": "Check optimization report created",
+        "expected_output": "Optimization report created with complete status"
+      }
+    ],
+    "verification_commands": [
+      "cat /opt/ai-q/storage/local/optimization-report.json",
+      "ls -la /opt/ai-q/storage/local/",
+      "cat /sys/block/nvme0n1/queue/scheduler"
+    ],
+    "expected_outputs": {
+      "performance_tests": "Storage performance benchmarks completed",
+      "optimization_report": "Optimization report created with complete status"
+    }
+  },
+  "verification_and_testing": {
+    "comprehensive_test": {
+      "title": "Complete Local Storage Optimization Verification",
+      "description": "Run comprehensive tests to verify local storage optimization",
+      "test_commands": [
+        "lsblk -d -o name,rota,size,type",
+        "cat /sys/block/nvme0n1/queue/scheduler",
+        "cat /sys/block/nvme0n1/queue/nr_requests",
+        "lz4 --version",
+        "zstd --version",
+        "rmlint --version",
+        "jdupes --version",
+        "ls -la /opt/ai-q/storage/local/",
+        "cat /opt/ai-q/storage/local/optimization-report.json"
+      ],
+      "expected_results": {
+        "nvme_detected": "NVMe devices detected and accessible",
+        "scheduler_optimized": "NVMe scheduler set to 'none'",
+        "queue_depth_optimized": "Queue depth optimized for performance",
+        "compression_tools": "LZ4 and Zstd compression tools installed",
+        "dedup_tools": "Deduplication tools installed",
+        "scripts_created": "All optimization scripts created and executable",
+        "optimization_complete": "Optimization report generated successfully"
+      }
+    }
+  },
+  "next_steps": {
+    "next_sub_recipe": "02-04-unified-storage-api",
+    "prerequisites_completed": [
+      "NVMe storage optimization configured",
+      "Compression tools installed and configured",
+      "Deduplication tools installed and configured",
+      "Performance monitoring setup",
+      "Local storage optimization verification completed successfully"
+    ],
+    "readiness_check": "All verification commands pass successfully"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

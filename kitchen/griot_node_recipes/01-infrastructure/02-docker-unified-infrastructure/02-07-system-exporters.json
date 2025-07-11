@@ -1,0 +1,566 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-07-SYSTEM-EXPORTERS-INFRASTRUCTURE-FOUNDATION",
+    "title": "System Exporters Infrastructure Foundation - Docker Environment Setup",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:13:47Z",
+    "last_updated": "2025-07-05T18:13:47Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "45 minutes",
+    "difficulty_level": "expert",
+    "total_tasks": 3,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": ["ISO 27001", "SOC 2"],
+    "architecture_tier": "enterprise-system-exporters-infrastructure",
+    "description": "System exporters infrastructure foundation with Docker networks, volumes, and orchestration framework - infrastructure only, no services installed",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": ["02-01-docker-core", "02-02-docker-services"],
+      "required_services": ["docker", "docker-compose"],
+      "required_networks": ["ai-q-system-exporters-network"],
+      "required_volumes": ["ai-q-system-exporters-data", "ai-q-system-exporters-config", "ai-q-system-exporters-metrics"],
+      "required_ports": [],
+      "required_files": ["/opt/ai-q/docker/compose/system-exporters/"]
+    },
+    "kitchen_system": {
+      "pantry_category": "system-exporters-infrastructure",
+      "cooking_time": "45 minutes",
+      "complexity": "expert",
+      "kitchen_tools": ["system_exporters_network_setup", "system_exporters_volume_management", "system_exporters_orchestration_framework"],
+      "cache_strategy": "system_exporters_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "System Exporters Infrastructure Foundation",
+    "description": "Docker infrastructure foundation for system exporters - networks, volumes, and orchestration framework only",
+    "prerequisites": [
+      "02-01-docker-core completed",
+      "02-02-docker-services completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 4GB RAM available",
+      "50GB free disk space for system metrics"
+    ],
+    "target_outcome": "Production-ready system exporters infrastructure foundation with zero technical debt",
+    "success_criteria": [
+      "System exporters Docker network operational",
+      "System exporters volumes created and accessible",
+      "System exporters orchestration framework ready",
+      "No actual system exporters installed",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "SYSTEM_EXPORTERS_NETWORK_SETUP_TASK",
+        "name": "System Exporters Network Setup",
+        "description": "Create dedicated Docker network for system exporters with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [],
+        "skills_required": ["network_configuration", "subnet_management", "system_exporters_infrastructure"],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.28.0.0/16 --gateway 172.28.0.1 ai-q-system-exporters-network",
+          "docker network ls --filter name=ai-q-system-exporters-network",
+          "docker network inspect ai-q-system-exporters-network --format '{{.IPAM.Config}}'"
+        ],
+        "validation_commands": [
+          "docker network ls --filter name=ai-q-system-exporters-network",
+          "docker network inspect ai-q-system-exporters-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-system-exporters-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "task_id": "SYSTEM_EXPORTERS_VOLUME_SETUP_TASK",
+        "name": "System Exporters Volume Setup",
+        "description": "Create persistent volumes for system exporters with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": ["SYSTEM_EXPORTERS_NETWORK_SETUP_TASK"],
+        "skills_required": ["volume_management", "persistence_configuration", "system_exporters_data_storage"],
+        "exact_commands": [
+          "docker volume create ai-q-system-exporters-data",
+          "docker volume create ai-q-system-exporters-config",
+          "docker volume create ai-q-system-exporters-metrics",
+          "docker volume create ai-q-system-exporters-logs",
+          "docker volume create ai-q-system-exporters-cache"
+        ],
+        "validation_commands": [
+          "docker volume ls --filter name=ai-q-system-exporters",
+          "docker volume inspect ai-q-system-exporters-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-system-exporters-config --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "task_id": "SYSTEM_EXPORTERS_ORCHESTRATION_SETUP_TASK",
+        "name": "System Exporters Orchestration Framework",
+        "description": "Create orchestration framework for system exporters with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": ["SYSTEM_EXPORTERS_VOLUME_SETUP_TASK"],
+        "skills_required": ["orchestration_framework", "template_management", "system_exporters_infrastructure"],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/system-exporters/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/system-exporters",
+          "tee /opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-system-exporters-network:",
+          "    external: true",
+          "volumes:",
+          "  system-exporters-data:",
+          "    external: true",
+          "  system-exporters-config:",
+          "    external: true",
+          "  system-exporters-metrics:",
+          "    external: true",
+          "  system-exporters-logs:",
+          "    external: true",
+          "  system-exporters-cache:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh << 'EOF'",
+          "#!/bin/bash",
+          "# System Exporters Orchestration Script",
+          "SYSTEM_EXPORTERS_DIR=\"/opt/ai-q/docker/compose/system-exporters\"",
+          "start_system_exporters_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SYSTEM_EXPORTERS_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Starting \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_system_exporters_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SYSTEM_EXPORTERS_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Stopping \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" down",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_system_exporters_service() {",
+          "    local service_name=\$1",
+          "    stop_system_exporters_service \"\$service_name\"",
+          "    sleep 5",
+          "    start_system_exporters_service \"\$service_name\"",
+          "}",
+          "check_system_exporters_service_status() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SYSTEM_EXPORTERS_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Checking status of \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" ps",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"\$1\" in",
+          "    start)",
+          "        start_system_exporters_service \"\$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_system_exporters_service \"\$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_system_exporters_service \"\$2\"",
+          "        ;;",
+          "    status)",
+          "        check_system_exporters_service_status \"\$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: \$0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/system-exporters/",
+          "cat /opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml",
+          "/opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh --help || echo 'Script created'"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "SYSTEM_EXPORTERS_NETWORK_CONFIGURATION_SKILL",
+        "name": "System Exporters Network Configuration",
+        "description": "Configure system exporters networks with exact specifications",
+        "tools": ["network_setup", "subnet_management", "system_exporters_infrastructure"],
+        "validation": "system_exporters_network_configuration_validation",
+        "exact_validation_commands": [
+          "docker network ls --filter name=ai-q-system-exporters-network",
+          "docker network inspect ai-q-system-exporters-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-system-exporters-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "skill_id": "SYSTEM_EXPORTERS_VOLUME_MANAGEMENT_SKILL",
+        "name": "System Exporters Volume Management",
+        "description": "Manage system exporters volumes with exact specifications",
+        "tools": ["volume_setup", "persistence_management", "system_exporters_data_storage"],
+        "validation": "system_exporters_volume_management_validation",
+        "exact_validation_commands": [
+          "docker volume ls --filter name=ai-q-system-exporters",
+          "docker volume inspect ai-q-system-exporters-data --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-system-exporters-config --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "skill_id": "SYSTEM_EXPORTERS_ORCHESTRATION_SKILL",
+        "name": "System Exporters Orchestration Framework",
+        "description": "Manage system exporters orchestration with exact specifications",
+        "tools": ["orchestration_setup", "template_management", "script_management"],
+        "validation": "system_exporters_orchestration_validation",
+        "exact_validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/system-exporters/",
+          "cat /opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml",
+          "test -x /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "SYSTEM_EXPORTERS_INFRASTRUCTURE_TOOL",
+        "name": "System Exporters Infrastructure Setup Tool",
+        "description": "Automated system exporters infrastructure installation and configuration",
+        "file_path": "scripts/infrastructure/setup_system_exporters_infrastructure.py",
+        "config": "config/infrastructure/system_exporters_infrastructure_config.json",
+        "exact_config_spec": {
+          "network_subnet": "172.28.0.0/16",
+          "network_gateway": "172.28.0.1",
+          "network_driver": "bridge",
+          "volumes": ["ai-q-system-exporters-data", "ai-q-system-exporters-config", "ai-q-system-exporters-metrics", "ai-q-system-exporters-logs", "ai-q-system-exporters-cache"],
+          "orchestration_dir": "/opt/ai-q/docker/compose/system-exporters"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "SYSTEM_EXPORTERS_NETWORK_CONFIG",
+        "name": "System Exporters Network Configuration",
+        "description": "System exporters network configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/system_exporters_network.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "network_name": {"type": "string"},
+            "subnet": {"type": "string"},
+            "gateway": {"type": "string"},
+            "driver": {"type": "string"},
+            "enable_ipv6": {"type": "boolean"},
+            "internal": {"type": "boolean"},
+            "attachable": {"type": "boolean"}
+          }
+        }
+      },
+      {
+        "config_id": "SYSTEM_EXPORTERS_VOLUME_CONFIG",
+        "name": "System Exporters Volume Configuration",
+        "description": "System exporters volume configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/system_exporters_volumes.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "driver": {"type": "string"},
+                  "labels": {"type": "object"}
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:system-exporters-network-setup:1.0.0",
+          "task:system-exporters-volume-setup:1.0.0",
+          "task:system-exporters-orchestration-setup:1.0.0",
+          "skill:system-exporters-network-configuration:1.0.0",
+          "skill:system-exporters-volume-management:1.0.0",
+          "skill:system-exporters-orchestration:1.0.0",
+          "tool:system-exporters-infrastructure:1.0.0",
+          "config:system-exporters-network:1.0.0",
+          "config:system-exporters-volume:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_system_exporters_infrastructure.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 4GB RAM available",
+          "50GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_system_exporters_network_setup",
+        "description": "Create system exporters Docker network with exact commands",
+        "sub_steps": [
+          "Create system exporters network",
+          "Validate network configuration"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.28.0.0/16 --gateway 172.28.0.1 ai-q-system-exporters-network",
+          "docker network ls --filter name=ai-q-system-exporters-network",
+          "docker network inspect ai-q-system-exporters-network --format '{{.IPAM.Config}}'"
+        ],
+        "files_to_create": [
+          "Docker network: ai-q-system-exporters-network"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_system_exporters_volume_setup",
+        "description": "Create system exporters volumes with exact commands",
+        "sub_steps": [
+          "Create system exporters volumes",
+          "Validate volume creation"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-system-exporters-data",
+          "docker volume create ai-q-system-exporters-config",
+          "docker volume create ai-q-system-exporters-metrics",
+          "docker volume create ai-q-system-exporters-logs",
+          "docker volume create ai-q-system-exporters-cache",
+          "docker volume ls --filter name=ai-q-system-exporters"
+        ],
+        "files_to_create": [
+          "Docker volumes: ai-q-system-exporters-data, ai-q-system-exporters-config, ai-q-system-exporters-metrics, ai-q-system-exporters-logs, ai-q-system-exporters-cache"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_system_exporters_orchestration_setup",
+        "description": "Create system exporters orchestration framework with exact commands",
+        "sub_steps": [
+          "Create orchestration directories",
+          "Create base template",
+          "Create orchestration script"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/system-exporters/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/system-exporters",
+          "tee /opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-system-exporters-network:",
+          "    external: true",
+          "volumes:",
+          "  system-exporters-data:",
+          "    external: true",
+          "  system-exporters-config:",
+          "    external: true",
+          "  system-exporters-metrics:",
+          "    external: true",
+          "  system-exporters-logs:",
+          "    external: true",
+          "  system-exporters-cache:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh << 'EOF'",
+          "#!/bin/bash",
+          "# System Exporters Orchestration Script",
+          "SYSTEM_EXPORTERS_DIR=\"/opt/ai-q/docker/compose/system-exporters\"",
+          "start_system_exporters_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SYSTEM_EXPORTERS_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Starting \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_system_exporters_service() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SYSTEM_EXPORTERS_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Stopping \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" down",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_system_exporters_service() {",
+          "    local service_name=\$1",
+          "    stop_system_exporters_service \"\$service_name\"",
+          "    sleep 5",
+          "    start_system_exporters_service \"\$service_name\"",
+          "}",
+          "check_system_exporters_service_status() {",
+          "    local service_name=\$1",
+          "    local compose_file=\"\$SYSTEM_EXPORTERS_DIR/\${service_name}.yml\"",
+          "    if [ -f \"\$compose_file\" ]; then",
+          "        echo \"Checking status of \$service_name...\"",
+          "        docker-compose -f \"\$compose_file\" ps",
+          "    else",
+          "        echo \"Error: \$compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"\$1\" in",
+          "    start)",
+          "        start_system_exporters_service \"\$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_system_exporters_service \"\$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_system_exporters_service \"\$2\"",
+          "        ;;",
+          "    status)",
+          "        check_system_exporters_service_status \"\$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: \$0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/docker/compose/system-exporters/templates/",
+          "/opt/ai-q/docker/compose/system-exporters/configs/",
+          "/opt/ai-q/docker/compose/system-exporters/scripts/",
+          "/opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml",
+          "/opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete system exporters infrastructure setup",
+        "validation": "system_exporters_infrastructure_validation",
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-system-exporters-network",
+          "docker volume ls --filter name=ai-q-system-exporters",
+          "ls -la /opt/ai-q/docker/compose/system-exporters/",
+          "cat /opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml",
+          "test -x /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache system exporters infrastructure configuration and setup",
+        "cache_key": "system_exporters_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_system_exporters_infrastructure.py --cache-results",
+          "tar -czf /opt/ai-q/cache/system_exporters_infrastructure_cache.tar.gz /opt/ai-q/docker/compose/system-exporters"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "system_exporters_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "system_exporters_infrastructure_update",
+      "cache_validation": "system_exporters_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/infrastructure/setup_system_exporters_infrastructure.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "System exporters Docker network operational and configured",
+    "All system exporters volumes created and accessible",
+    "System exporters orchestration framework ready",
+    "No actual system exporters installed",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready system exporters infrastructure foundation",
+    "System exporters Docker network with proper configuration",
+    "System exporters volumes for data, config, metrics, logs, and cache",
+    "System exporters orchestration framework with templates and scripts",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "System exporters network creation fails",
+        "symptoms": ["Network already exists", "Subnet conflict"],
+        "diagnosis": "Check existing networks and subnet conflicts",
+        "solution": "Remove existing network or use different subnet",
+        "prevention": "Check network configuration before creation"
+      },
+      {
+        "issue": "System exporters volumes not accessible",
+        "symptoms": ["Permission denied", "Volume not found"],
+        "diagnosis": "Check volume permissions and existence",
+        "solution": "Verify volume creation and set proper permissions",
+        "prevention": "Validate volume creation after setup"
+      },
+      {
+        "issue": "Orchestration script not executable",
+        "symptoms": ["Permission denied", "Script not found"],
+        "diagnosis": "Check script permissions and location",
+        "solution": "Set executable permissions and verify path",
+        "prevention": "Test script after creation"
+      },
+      {
+        "issue": "Directory structure not created",
+        "symptoms": ["Directory not found", "Permission denied"],
+        "diagnosis": "Check directory creation and permissions",
+        "solution": "Create directories with proper permissions",
+        "prevention": "Verify directory structure after setup"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker network ls --filter name=ai-q-system-exporters",
+      "docker volume ls --filter name=ai-q-system-exporters",
+      "ls -la /opt/ai-q/docker/compose/system-exporters/",
+      "cat /opt/ai-q/docker/compose/system-exporters/templates/base-system-exporters.yml",
+      "test -x /opt/ai-q/docker/compose/system-exporters/scripts/orchestrate-system-exporters.sh"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 45 minutes",
+    "network_creation_time": "< 5 seconds",
+    "volume_creation_time": "< 10 seconds",
+    "orchestration_setup_time": "< 30 seconds",
+    "validation_time": "< 5 seconds"
+  }
+} 

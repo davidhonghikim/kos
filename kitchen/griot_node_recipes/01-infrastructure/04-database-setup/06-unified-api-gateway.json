@@ -1,0 +1,175 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-UNIFIED-API-006",
+    "title": "Unified Database API Gateway",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 8000,
+    "estimated_execution_time": "3-4 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99%",
+    "compliance_standards": [],
+    "architecture_tier": "enterprise-api-gateway"
+  },
+  "recipe_overview": {
+    "description": "Deploy a unified API gateway to provide a single, consistent interface for interacting with the polyglot database backend. This gateway will handle request routing, authentication, rate limiting, and connection pooling, abstracting the complexity of the underlying database architecture from client applications.",
+    "technology_stack": {
+      "api_gateway": "Custom (e.g., FastAPI/Node.js) or off-the-shelf (e.g., Kong, Traefik)",
+      "language": "Python/FastAPI (example implementation)",
+      "orchestration": "Docker"
+    },
+    "deliverables": [
+      "A containerized API gateway service",
+      "Endpoints for interacting with PostgreSQL, Redis, Neo4j, Weaviate, and Elasticsearch",
+      "Centralized authentication and logging",
+      "Connection pooling management for backend databases"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-unified-api-006",
+      "title": "Unified Database API Gateway Implementation",
+      "description": "Deploy a unified API gateway to provide a single, consistent interface for interacting with the polyglot database backend. This gateway will handle request routing, authentication, rate limiting, and connection pooling, abstracting the complexity of the underlying database architecture from client applications.",
+      "category": "infrastructure",
+      "estimated_tokens": 8000,
+      "estimated_duration": "3-4 hours",
+      "difficulty_level": "advanced",
+      "prerequisites": {
+        "knowledge_required": [
+          "API gateway patterns",
+          "Microservices architecture",
+          "FastAPI/Python",
+          "Database connectivity"
+        ],
+        "tools_required": [
+          "Docker",
+          "Python 3.11+",
+          "FastAPI"
+        ],
+        "environment_setup": [
+          "All backend databases must be deployed and accessible"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "api_gateway/main.py",
+          "api_gateway/Dockerfile"
+        ],
+        "config_dependencies": [
+          "Endpoints and credentials for all backend databases"
+        ],
+        "environment_variables": [
+          "DB_USER",
+          "DB_PASSWORD",
+          "etc."
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "api_gateway/main.py - The main FastAPI application file",
+          "api_gateway/database.py - Database connection management logic",
+          "api_gateway/Dockerfile - Dockerfile for the gateway service"
+        ],
+        "files_modified": [
+          "docker-compose.yml - Add the API gateway service"
+        ],
+        "api_endpoints": [
+          "POST /query/sql - Route to PostgreSQL",
+          "GET /cache/{key} - Route to Redis",
+          "POST /query/graph - Route to Neo4j",
+          "POST /search/vector - Route to Weaviate",
+          "POST /search/fulltext - Route to Elasticsearch"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "03-database-postgresql-cluster-001",
+          "03-database-redis-cluster-002",
+          "03-database-neo4j-cluster-003",
+          "03-database-weaviate-cluster-004",
+          "03-database-elasticsearch-cluster-005"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task involves creating a simple API gateway using FastAPI in Python. The gateway will expose a set of endpoints that internally map to the various databases in the backend. This provides a clean abstraction layer for application developers.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "API Gateway Scaffolding",
+            "description": "Create the basic directory structure and files for the FastAPI gateway.",
+            "commands": [
+              "mkdir -p api_gateway",
+              "touch api_gateway/main.py api_gateway/database.py api_gateway/requirements.txt api_gateway/Dockerfile"
+            ],
+            "expected_output": "Directory and empty files for the API gateway are created.",
+            "troubleshooting": ""
+          },
+          {
+            "step": 2,
+            "title": "Develop Gateway Logic",
+            "description": "Implement the FastAPI endpoints and the logic to connect to backend databases. This is a conceptual step; the actual code would be extensive.",
+            "commands": [
+              "# Populate requirements.txt with fastapi, uvicorn, psycopg2-binary, redis, neo4j, weaviate-client, elasticsearch",
+              "# Write Python code in main.py to define API endpoints",
+              "# Write Python code in database.py to handle connections"
+            ],
+            "expected_output": "Python source code for the API gateway is written.",
+            "troubleshooting": "Connection issues to backend databases will be the most common problem. Ensure correct credentials and network reachability."
+          },
+          {
+            "step": 3,
+            "title": "Build and Deploy Gateway",
+            "description": "Build the Docker image for the gateway and add it to the main Docker Compose file to run it alongside the databases.",
+            "commands": [
+              "# Write a Dockerfile in api_gateway/",
+              "# Add the api_gateway service to docker-compose.yml",
+              "docker-compose up -d --build api-gateway"
+            ],
+            "expected_output": "The API gateway container is running and accessible.",
+            "troubleshooting": "Check Docker build logs for errors. Ensure the gateway container is on the same Docker network as the databases."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Gateway is running and all its endpoints are reachable.",
+          "Requests to the gateway are successfully routed to the correct backend database.",
+          "Authentication is enforced at the gateway level."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "06-Unified-Api-Gateway",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

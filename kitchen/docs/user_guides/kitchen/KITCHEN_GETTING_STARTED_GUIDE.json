@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "kOS Kitchen System - Getting Started Guide",
+    "version": "1.0.0",
+    "created_by": "Q-Assist",
+    "creation_timestamp": "2025-07-08T12:00:00Z",
+    "status": "ACTIVE",
+    "purpose": "Comprehensive getting started guide for new kOS kitchen system users"
+  },
+  "quick_start": {
+    "overview": "Get up and running with kOS kitchen system in 5 minutes",
+    "prerequisites": [
+      "Python 3.10 or higher",
+      "Git",
+      "Basic command line knowledge",
+      "Docker (optional, for containerized deployment)"
+    ],
+    "installation_steps": [
+      {
+        "step": 1,
+        "title": "Clone the Repository",
+        "command": "git clone https://github.com/your-org/ai-Q.git",
+        "description": "Clone the ai-Q repository to your local machine"
+      },
+      {
+        "step": 2,
+        "title": "Navigate to Kitchen Directory",
+        "command": "cd ai-Q/kitchen",
+        "description": "Change to the kitchen system directory"
+      },
+      {
+        "step": 3,
+        "title": "Install Dependencies",
+        "command": "pip install -r requirements.txt",
+        "description": "Install Python dependencies for the kitchen system"
+      },
+      {
+        "step": 4,
+        "title": "Initialize Kitchen System",
+        "command": "python core/kitchen_engine.py --init",
+        "description": "Initialize the kitchen system with default configuration"
+      },
+      {
+        "step": 5,
+        "title": "Start Kitchen System",
+        "command": "python core/kitchen_engine.py --start",
+        "description": "Start the kitchen system in development mode"
+      }
+    ]
+  },
+  "first_recipe": {
+    "title": "Creating Your First Recipe",
+    "description": "Learn how to create and execute your first recipe",
+    "example_recipe": {
+      "id": "hello_world",
+      "title": "Hello World Recipe",
+      "description": "A simple recipe that demonstrates basic functionality",
+      "ingredients": ["file_utils", "logger"],
+      "steps": [
+        {
+          "step": 1,
+          "action": "create_file",
+          "parameters": {
+            "path": "output/hello.txt",
+            "content": "Hello from kOS Kitchen!"
+          }
+        },
+        {
+          "step": 2,
+          "action": "log_message",
+          "parameters": {
+            "level": "INFO",
+            "message": "Hello World recipe completed successfully"
+          }
+        }
+      ]
+    },
+    "execution_steps": [
+      {
+        "step": 1,
+        "title": "Create Recipe File",
+        "description": "Create a JSON file with your recipe definition",
+        "file": "recipes/hello_world.json"
+      },
+      {
+        "step": 2,
+        "title": "Register Recipe",
+        "command": "python core/kitchen_engine.py --register-recipe recipes/hello_world.json",
+        "description": "Register the recipe with the kitchen system"
+      },
+      {
+        "step": 3,
+        "title": "Execute Recipe",
+        "command": "python core/kitchen_engine.py --execute hello_world",
+        "description": "Execute the hello world recipe"
+      },
+      {
+        "step": 4,
+        "title": "Check Results",
+        "description": "Verify the recipe executed successfully and check output files"
+      }
+    ]
+  },
+  "vault_setup": {
+    "title": "Setting Up Vault Integration",
+    "description": "Configure vault integration for secure credential management",
+    "authentication_methods": {
+      "none": {
+        "description": "No authentication required (development only)",
+        "setup": "No configuration required",
+        "use_case": "Local development and testing"
+      },
+      "api_key": {
+        "description": "Simple API key authentication",
+        "setup": [
+          "Generate API key",
+          "Add to vault configuration",
+          "Set vault_type to 'api_key'"
+        ],
+        "use_case": "Third-party service integration"
+      },
+      "env_file": {
+        "description": "Environment file-based credentials",
+        "setup": [
+          "Create .env file with credentials",
+          "Set vault_type to 'env_file'",
+          "Configure env_file_path in vault config"
+        ],
+        "use_case": "Local development, Docker containers"
+      },
+      "hashicorp_vault": {
+        "description": "Hashicorp Vault integration",
+        "setup": [
+          "Install and configure Hashicorp Vault",
+          "Set vault_type to 'hashicorp'",
+          "Configure vault_url and authentication method"
+        ],
+        "use_case": "Enterprise security requirements"
+      }
+    },
+    "configuration_example": {
+      "file": "config/vault_config.json",
+      "content": {
+        "vault_enabled": true,
+        "vault_type": "env_file",
+        "vault_config": {
+          "env_file_path": ".env",
+          "credential_prefix": "KITCHEN_"
+        },
+        "fallback_method": "none"
+      }
+    }
+  },
+  "ingredient_development": {
+    "title": "Developing Custom Ingredients",
+    "description": "Learn how to create custom ingredients for the kitchen system",
+    "ingredient_structure": {
+      "file": "pantry/ingredients/base/example_ingredient.py",
+      "template": {
+        "class_name": "ExampleIngredient",
+        "required_methods": [
+          "initialize()",
+          "execute()",
+          "validate()",
+          "cleanup()"
+        ],
+        "metadata": {
+          "id": "example_ingredient",
+          "title": "Example Ingredient",
+          "description": "A template ingredient for learning",
+          "version": "1.0.0",
+          "category": "base"
+        }
+      }
+    },
+    "development_steps": [
+      {
+        "step": 1,
+        "title": "Create Ingredient File",
+        "description": "Create a Python file with your ingredient implementation"
+      },
+      {
+        "step": 2,
+        "title": "Implement Required Methods",
+        "description": "Implement the required methods: initialize, execute, validate, cleanup"
+      },
+      {
+        "step": 3,
+        "title": "Add Metadata",
+        "description": "Add metadata including ID, title, description, and version"
+      },
+      {
+        "step": 4,
+        "title": "Test Ingredient",
+        "description": "Test your ingredient with unit tests and integration tests"
+      },
+      {
+        "step": 5,
+        "title": "Register Ingredient",
+        "description": "Register your ingredient with the pantry system"
+      }
+    ],
+    "best_practices": [
+      "Keep ingredients small and focused (≤250 lines)",
+      "Implement proper error handling",
+      "Add comprehensive logging",
+      "Include input validation",
+      "Write unit tests for all functionality",
+      "Document all parameters and return values"
+    ]
+  },
+  "recipe_creation": {
+    "title": "Creating Custom Recipes",
+    "description": "Learn how to create custom recipes for automation workflows",
+    "recipe_structure": {
+      "required_fields": [
+        "id (unique identifier)",
+        "title (human-readable name)",
+        "description (detailed description)",
+        "version (semantic versioning)",
+        "ingredients (required ingredients)",
+        "steps (execution steps)"
+      ],
+      "optional_fields": [
+        "tools (required tools)",
+        "constraints (execution constraints)",
+        "outputs (output specifications)",
+        "metadata (additional metadata)"
+      ]
+    },
+    "step_types": {
+      "action": {
+        "description": "Execute an ingredient action",
+        "parameters": {
+          "ingredient": "string (ingredient ID)",
+          "action": "string (action name)",
+          "parameters": "object (action parameters)"
+        }
+      },
+      "condition": {
+        "description": "Conditional execution based on criteria",
+        "parameters": {
+          "condition": "string (condition expression)",
+          "true_steps": "array (steps to execute if true)",
+          "false_steps": "array (steps to execute if false)"
+        }
+      },
+      "loop": {
+        "description": "Loop through items or repeat steps",
+        "parameters": {
+          "items": "array (items to iterate over)",
+          "steps": "array (steps to execute for each item)"
+        }
+      }
+    },
+    "creation_steps": [
+      {
+        "step": 1,
+        "title": "Define Recipe Requirements",
+        "description": "Identify what the recipe should accomplish and required ingredients"
+      },
+      {
+        "step": 2,
+        "title": "Design Recipe Flow",
+        "description": "Design the step-by-step flow of the recipe"
+      },
+      {
+        "step": 3,
+        "title": "Create Recipe JSON",
+        "description": "Create the recipe definition in JSON format"
+      },
+      {
+        "step": 4,
+        "title": "Validate Recipe",
+        "description": "Validate the recipe against the schema"
+      },
+      {
+        "step": 5,
+        "title": "Test Recipe",
+        "description": "Test the recipe in a safe environment"
+      },
+      {
+        "step": 6,
+        "title": "Deploy Recipe",
+        "description": "Deploy the recipe to production environment"
+      }
+    ]
+  },
+  "troubleshooting": {
+    "title": "Common Issues and Solutions",
+    "common_problems": [
+      {
+        "problem": "Recipe execution fails",
+        "symptoms": "Error messages, incomplete execution",
+        "solutions": [
+          "Check ingredient dependencies are installed",
+          "Verify recipe JSON syntax",
+          "Check ingredient permissions and access",
+          "Review execution logs for detailed errors"
+        ]
+      },
+      {
+        "problem": "Vault authentication fails",
+        "symptoms": "Authentication errors, credential issues",
+        "solutions": [
+          "Verify vault configuration",
+          "Check credential validity",
+          "Ensure vault service is running",
+          "Try fallback authentication method"
+        ]
+      },
+      {
+        "problem": "Ingredient not found",
+        "symptoms": "Ingredient loading errors",
+        "solutions": [
+          "Check ingredient is registered",
+          "Verify ingredient path and permissions",
+          "Check ingredient dependencies",
+          "Re-register ingredient if needed"
+        ]
+      },
+      {
+        "problem": "Performance issues",
+        "symptoms": "Slow execution, high resource usage",
+        "solutions": [
+          "Check system resources",
+          "Optimize recipe steps",
+          "Enable caching where appropriate",
+          "Review ingredient efficiency"
+        ]
+      }
+    ],
+    "debugging_tools": [
+      {
+        "tool": "Log Analysis",
+        "command": "python core/kitchen_engine.py --logs",
+        "description": "View system and execution logs"
+      },
+      {
+        "tool": "Recipe Validation",
+        "command": "python core/kitchen_engine.py --validate recipe.json",
+        "description": "Validate recipe syntax and structure"
+      },
+      {
+        "tool": "Ingredient Test",
+        "command": "python core/kitchen_engine.py --test-ingredient ingredient_id",
+        "description": "Test individual ingredient functionality"
+      },
+      {
+        "tool": "System Status",
+        "command": "python core/kitchen_engine.py --status",
+        "description": "Check system status and health"
+      }
+    ]
+  },
+  "next_steps": {
+    "title": "What's Next?",
+    "learning_path": [
+      {
+        "level": "Beginner",
+        "topics": [
+          "Basic recipe creation",
+          "Simple ingredient development",
+          "Vault configuration",
+          "System administration"
+        ]
+      },
+      {
+        "level": "Intermediate",
+        "topics": [
+          "Complex recipe workflows",
+          "Advanced ingredient development",
+          "Integration with external services",
+          "Performance optimization"
+        ]
+      },
+      {
+        "level": "Advanced",
+        "topics": [
+          "Custom ingredient frameworks",
+          "System architecture design",
+          "Security hardening",
+          "Production deployment"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "type": "Documentation",
+        "links": [
+          "API Reference Guide",
+          "System Architecture Documentation",
+          "User Stories Collection",
+          "Best Practices Guide"
+        ]
+      },
+      {
+        "type": "Examples",
+        "links": [
+          "Sample Recipes Repository",
+          "Ingredient Examples",
+          "Integration Examples",
+          "Deployment Examples"
+        ]
+      },
+      {
+        "type": "Community",
+        "links": [
+          "GitHub Discussions",
+          "Discord Community",
+          "Documentation Wiki",
+          "Issue Tracker"
+        ]
+      }
+    ]
+  }
+} 

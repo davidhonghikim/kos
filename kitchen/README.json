@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "title": "kOS Kitchen System",
+    "version": "1.0.0",
+    "created_by": "kOS Kitchen System",
+    "creation_timestamp": "2025-07-08T02:00:00Z",
+    "status": "ACTIVE",
+    "purpose": "Main documentation for the kOS kitchen system architecture and usage"
+  },
+  "system_overview": {
+    "description": "The kOS Kitchen System is a modular, scalable execution framework for AI agents and automation workflows. It provides a complete ecosystem for managing recipes, ingredients, and execution contexts.",
+    "architecture": "Nested kitchen structure with clear separation of concerns",
+    "metaphor": "Kitchen + Game Engine + Runtime OS for AI",
+    "design_principles": [
+      "Modular plug-and-play architecture",
+      "Registry-based component management",
+      "Context window protection and optimization",
+      "Deterministic execution and reproducibility",
+      "Self-hosting and cloud independence"
+    ]
+  },
+  "directory_structure": {
+    "kitchen/": {
+      "description": "Root kitchen system directory",
+      "core/": {
+        "description": "Core engine and execution components",
+        "kitchen_engine.py": "Main orchestration engine",
+        "operations/": "Modular operation implementations",
+        "__init__.py": "Core package initialization"
+      },
+      "pantry/": {
+        "description": "Ingredient library and management system",
+        "ingredients/": "Ingredient metadata and definitions",
+        "operations/": "Ingredient operation implementations",
+        "core/": "Pantry management components",
+        "README.json": "Pantry system documentation"
+      },
+      "recipes/": {
+        "description": "Recipe definitions and task specifications",
+        "01-infrastructure/": "Infrastructure recipes",
+        "02-ai-services/": "AI service recipes",
+        "03-intelligence/": "Intelligence and RAG recipes",
+        "examples/": "Example recipes and templates"
+      },
+      "schemas/": {
+        "description": "Data schemas and validation rules",
+        "recipe_schema.json": "Recipe validation schema",
+        "ingredient_schema.json": "Ingredient validation schema",
+        "context_schema.json": "Context validation schema"
+      },
+      "config/": {
+        "description": "Configuration files and settings",
+        "kitchen_config.json": "Main kitchen configuration",
+        "pantry_config.json": "Pantry system configuration",
+        "recipe_config.json": "Recipe system configuration"
+      }
+    }
+  },
+  "core_components": {
+    "kitchen_engine": {
+      "description": "Main orchestration engine for the kitchen system",
+      "responsibilities": [
+        "Recipe execution and management",
+        "Pantry ingredient access and loading",
+        "Context management and optimization",
+        "Error handling and recovery",
+        "System monitoring and logging"
+      ],
+      "usage": "Primary entry point for kitchen system operations"
+    },
+    "operation_registry": {
+      "description": "Dynamic operation discovery and loading system",
+      "responsibilities": [
+        "Discover operations from file system",
+        "Load operations on-demand",
+        "Manage operation metadata",
+        "Provide operation lookup services"
+      ],
+      "location": "kitchen/core/operations/registry.py"
+    },
+    "context_manager": {
+      "description": "Context management with window protection",
+      "responsibilities": [
+        "Build minimal execution contexts",
+        "Prune context after operations",
+        "Validate context size",
+        "Manage context dependencies"
+      ],
+      "location": "kitchen/core/operations/context_manager.py"
+    }
+  },
+  "pantry_system": {
+    "description": "Ingredient library and management system",
+    "ingredient_categories": {
+      "tools": "Utility operations and helper functions",
+      "skills": "Specialized capabilities and expertise",
+      "modules": "Reusable code components",
+      "tasks": "Atomic operations and workflows",
+      "configs": "Configuration templates",
+      "schemas": "Data structure definitions"
+    },
+    "features": [
+      "Dynamic ingredient discovery",
+      "Dependency tracking and resolution",
+      "Version management",
+      "Access control and security",
+      "Validation and testing"
+    ]
+  },
+  "recipe_system": {
+    "description": "Recipe definitions and execution system",
+    "recipe_structure": {
+      "id": "Unique recipe identifier",
+      "name": "Human-readable recipe name",
+      "description": "Detailed recipe description",
+      "steps": "Ordered list of execution steps",
+      "ingredients": "Required ingredients and dependencies",
+      "parameters": "Configurable parameters",
+      "output": "Expected output specification"
+    },
+    "execution_flow": [
+      "Recipe validation",
+      "Context building",
+      "Step execution",
+      "Result collection",
+      "Context pruning"
+    ]
+  },
+  "usage_examples": {
+    "basic_usage": {
+      "description": "Basic kitchen engine usage",
+      "code": "from kitchen.core import KitchenEngine\n\nengine = KitchenEngine()\nengine.start()\nresult = engine.execute_recipe('recipe.id', {'param': 'value'})\nengine.stop()"
+    },
+    "recipe_execution": {
+      "description": "Execute a recipe with parameters",
+      "code": "result = engine.execute_recipe('kos.recipe.setup.environment', {\n    'docker_version': 'latest',\n    'network_mode': 'bridge'\n})"
+    },
+    "status_check": {
+      "description": "Check kitchen system status",
+      "code": "status = engine.get_status()\nrecipes = engine.get_available_recipes()"
+    }
+  },
+  "development_guidelines": {
+    "code_standards": [
+      "Type hints and docstrings for all functions",
+      "Comprehensive error handling",
+      "Logging at appropriate levels",
+      "Unit tests for all components",
+      "Integration tests for workflows"
+    ],
+    "architecture_principles": [
+      "Single responsibility principle",
+      "Dependency injection",
+      "Interface segregation",
+      "Open/closed principle",
+      "Context window protection"
+    ],
+    "file_organization": [
+      "One operation per file",
+      "Clear directory structure",
+      "Consistent naming conventions",
+      "Proper package initialization"
+    ]
+  },
+  "integration": {
+    "kOS_system": "Integrates with kOS kernel and registry",
+    "griot_node": "Compatible with Griot node ecosystem",
+    "browser_extension": "Supports browser extension interface",
+    "external_apis": "RESTful API for external integration"
+  },
+  "success_criteria": {
+    "functional": [
+      "All recipes execute successfully",
+      "Pantry ingredients load correctly",
+      "Context management works efficiently",
+      "Error handling is robust",
+      "Performance meets requirements"
+    ],
+    "quality": [
+      "Code follows project standards",
+      "Comprehensive test coverage",
+      "Complete documentation",
+      "No technical debt",
+      "Scalable architecture"
+    ],
+    "integration": [
+      "Seamless kOS integration",
+      "Griot node compatibility",
+      "Browser extension support",
+      "External API functionality"
+    ]
+  },
+  "references": {
+    "kOS_design": "agents/blueprint/kitchen/",
+    "pantry_system": "kitchen/pantry/README.json",
+    "recipe_examples": "kitchen/recipes/examples/",
+    "integration_plan": "agents/LATEST/2025-07-07_22-46-17_kos_kitchen_integration_plan_v1.0.0_FINAL.json"
+  }
+} 

@@ -1,0 +1,977 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "04-MONITORING-OBSERVABILITY-COMPREHENSIVE",
+    "title": "Enterprise Monitoring and Observability - Complete Observability Stack",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:37:00Z",
+    "last_updated": "2025-07-06T16:37:00Z",
+    "estimated_tokens": 75000,
+    "estimated_execution_time": "3-4 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 6,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "SOC 2",
+      "ISO 27001"
+    ],
+    "architecture_tier": "enterprise-observability",
+    "description": "Master recipe orchestrating comprehensive monitoring and observability with exact specifications, atomic tasks, and zero technical debt",
+    "is_master_recipe": true,
+    "kitchen_system": {
+      "pantry_category": "monitoring_systems",
+      "cooking_time": "240 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "prometheus",
+        "grafana",
+        "alerting",
+        "log_aggregation"
+      ],
+      "cache_strategy": "monitoring_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Enterprise Monitoring and Observability",
+    "description": "Complete enterprise-grade monitoring and observability stack featuring Prometheus, Grafana, AlertManager, and centralized logging with exact configurations and intelligent alerting",
+    "prerequisites": [
+      "Ubuntu 22.04 LTS or Windows 11 with WSL2",
+      "Minimum 8GB RAM, 4 CPU cores",
+      "50GB free disk space for monitoring data",
+      "Docker Engine 24.0+ installed",
+      "Docker Compose 2.20+ installed",
+      "Network connectivity for monitoring services"
+    ],
+    "target_outcome": "Production-ready monitoring and observability system with zero technical debt",
+    "success_criteria": [
+      "All monitoring services operational with 99.99% uptime SLA",
+      "Metrics collection achieving sub-100ms response times",
+      "Alerting system with 100% notification delivery",
+      "Dashboard loading achieving sub-2 second response times",
+      "Log aggregation processing 100% of system logs",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "MONITORING_ARCHITECTURE_TASK",
+        "name": "Monitoring Architecture Setup",
+        "description": "Design and implement core monitoring architecture with exact specifications",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "monitoring_architecture",
+          "system_design",
+          "unified_management"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/monitoring/{prometheus,grafana,alertmanager,loki}",
+          "mkdir -p /opt/ai-q/config/monitoring/{prometheus,grafana,alertmanager}",
+          "mkdir -p /opt/ai-q/logs/monitoring",
+          "chmod 755 /opt/ai-q/monitoring",
+          "docker network create ai-q-monitoring --subnet=172.25.0.0/16"
+        ]
+      },
+      {
+        "task_id": "PROMETHEUS_DEPLOYMENT_TASK",
+        "name": "Prometheus Metrics Collection Deployment",
+        "description": "Deploy Prometheus with exact configurations and metrics collection",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "MONITORING_ARCHITECTURE_TASK"
+        ],
+        "skills_required": [
+          "prometheus_deployment",
+          "metrics_configuration",
+          "scraping_setup"
+        ],
+        "exact_commands": [
+          "docker run -d --name prometheus --network ai-q-monitoring -p 9090:9090 -v /opt/ai-q/config/monitoring/prometheus:/etc/prometheus -v /opt/ai-q/monitoring/prometheus:/prometheus prom/prometheus:v2.45.0 --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/etc/prometheus/console_libraries --web.console.templates=/etc/prometheus/consoles --storage.tsdb.retention.time=15d",
+          "sleep 30",
+          "curl -f http://localhost:9090/-/healthy",
+          "curl -f http://localhost:9090/api/v1/status/targets"
+        ]
+      },
+      {
+        "task_id": "GRAFANA_DEPLOYMENT_TASK",
+        "name": "Grafana Dashboard Deployment",
+        "description": "Deploy Grafana with exact configurations and dashboard setup",
+        "estimated_time": "60 minutes",
+        "dependencies": [
+          "PROMETHEUS_DEPLOYMENT_TASK"
+        ],
+        "skills_required": [
+          "grafana_deployment",
+          "dashboard_configuration",
+          "data_source_setup"
+        ],
+        "exact_commands": [
+          "docker run -d --name grafana --network ai-q-monitoring -p 3000:3000 -v /opt/ai-q/monitoring/grafana:/var/lib/grafana -v /opt/ai-q/config/monitoring/grafana:/etc/grafana/provisioning -e GF_SECURITY_ADMIN_PASSWORD=admin123 grafana/grafana:10.0.0",
+          "sleep 30",
+          "curl -f http://localhost:3000/api/health",
+          "curl -f http://localhost:3000/api/datasources"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "MONITORING_MANAGEMENT_SKILL",
+        "name": "Monitoring Management",
+        "description": "Manage enterprise monitoring systems with exact procedures",
+        "tools": [
+          "monitoring_engine",
+          "metrics_collection",
+          "alert_management"
+        ],
+        "validation": "monitoring_management_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9090/-/healthy",
+          "curl -f http://localhost:3000/api/health",
+          "curl -f http://localhost:9093/api/v1/status"
+        ]
+      },
+      {
+        "skill_id": "PROMETHEUS_CONFIGURATION_SKILL",
+        "name": "Prometheus Configuration",
+        "description": "Configure Prometheus with exact specifications",
+        "tools": [
+          "prometheus_cli",
+          "metrics_configuration",
+          "scraping_management"
+        ],
+        "validation": "prometheus_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:9090/api/v1/status/config",
+          "curl -f http://localhost:9090/api/v1/targets",
+          "docker exec prometheus promtool check config /etc/prometheus/prometheus.yml"
+        ]
+      },
+      {
+        "skill_id": "GRAFANA_CONFIGURATION_SKILL",
+        "name": "Grafana Configuration",
+        "description": "Configure Grafana with exact specifications",
+        "tools": [
+          "grafana_cli",
+          "dashboard_management",
+          "data_source_configuration"
+        ],
+        "validation": "grafana_configuration_validation",
+        "exact_validation_commands": [
+          "curl -f http://localhost:3000/api/datasources",
+          "curl -f http://localhost:3000/api/dashboards",
+          "curl -f http://localhost:3000/api/org"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "MONITORING_SYSTEMS_TOOL",
+        "name": "Monitoring Systems Engine",
+        "description": "Core monitoring systems orchestration",
+        "file_path": "src/services/monitoring/core.py",
+        "config": "config/monitoring/monitoring_config.json",
+        "exact_config_spec": {
+          "prometheus_version": "v2.45.0",
+          "grafana_version": "10.0.0",
+          "alertmanager_version": "v0.25.0",
+          "retention_days": 15,
+          "scrape_interval": "30s"
+        }
+      },
+      {
+        "tool_id": "PROMETHEUS_MANAGER_TOOL",
+        "name": "Prometheus Manager",
+        "description": "Prometheus metrics collection and management",
+        "file_path": "src/services/monitoring/prometheus_manager.py",
+        "config": "config/monitoring/prometheus_config.json",
+        "exact_config_spec": {
+          "port": 9090,
+          "retention_days": 15,
+          "scrape_interval": "30s",
+          "evaluation_interval": "30s",
+          "global_scrape_timeout": "10s"
+        }
+      },
+      {
+        "tool_id": "GRAFANA_MANAGER_TOOL",
+        "name": "Grafana Manager",
+        "description": "Grafana dashboard and data source management",
+        "file_path": "src/services/monitoring/grafana_manager.py",
+        "config": "config/monitoring/grafana_config.json",
+        "exact_config_spec": {
+          "port": 3000,
+          "admin_password": "admin123",
+          "auto_refresh": "30s",
+          "dashboard_auto_save": true,
+          "anonymous_access": false
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "MONITORING_CONFIG",
+        "name": "Monitoring Configuration",
+        "description": "Configuration for monitoring systems",
+        "file_path": "config/monitoring/monitoring_config.json",
+        "schema": "monitoring_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "prometheus_version": {
+              "type": "string",
+              "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "grafana_version": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "alertmanager_version": {
+              "type": "string",
+              "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            },
+            "scrape_interval": {
+              "type": "string",
+              "pattern": "^[0-9]+s$"
+            }
+          },
+          "required": [
+            "prometheus_version",
+            "grafana_version",
+            "alertmanager_version",
+            "retention_days",
+            "scrape_interval"
+          ]
+        }
+      },
+      {
+        "config_id": "PROMETHEUS_CONFIG",
+        "name": "Prometheus Configuration",
+        "description": "Configuration for Prometheus metrics collection",
+        "file_path": "config/monitoring/prometheus_config.json",
+        "schema": "prometheus_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535
+            },
+            "retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            },
+            "scrape_interval": {
+              "type": "string",
+              "pattern": "^[0-9]+s$"
+            },
+            "evaluation_interval": {
+              "type": "string",
+              "pattern": "^[0-9]+s$"
+            },
+            "global_scrape_timeout": {
+              "type": "string",
+              "pattern": "^[0-9]+s$"
+            }
+          },
+          "required": [
+            "port",
+            "retention_days",
+            "scrape_interval",
+            "evaluation_interval",
+            "global_scrape_timeout"
+          ]
+        }
+      },
+      {
+        "config_id": "GRAFANA_CONFIG",
+        "name": "Grafana Configuration",
+        "description": "Configuration for Grafana dashboards",
+        "file_path": "config/monitoring/grafana_config.json",
+        "schema": "grafana_config_schema",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535
+            },
+            "admin_password": {
+              "type": "string",
+              "minLength": 8
+            },
+            "auto_refresh": {
+              "type": "string",
+              "pattern": "^[0-9]+s$"
+            },
+            "dashboard_auto_save": {
+              "type": "boolean"
+            },
+            "anonymous_access": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "port",
+            "admin_password",
+            "auto_refresh",
+            "dashboard_auto_save",
+            "anonymous_access"
+          ]
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step": 1,
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:setup-monitoring:1.0.0",
+          "task:deploy-prometheus:1.0.0",
+          "task:deploy-grafana:1.0.0",
+          "task:deploy-alertmanager:1.0.0",
+          "task:deploy-cadvisor:1.0.0",
+          "task:deploy-loki:1.0.0",
+          "task:deploy-jaeger:1.0.0",
+          "task:configure-dashboards:1.0.0",
+          "task:configure-alerts:1.0.0",
+          "skill:manage-monitoring:1.0.0",
+          "skill:configure-prometheus:1.0.0",
+          "skill:configure-grafana:1.0.0",
+          "skill:configure-alerting:1.0.0",
+          "skill:manage-logs:1.0.0",
+          "skill:manage-tracing:1.0.0",
+          "tool:prometheus:2.48.0",
+          "tool:grafana:10.2.0",
+          "tool:alertmanager:0.26.0",
+          "tool:cadvisor:0.47.2",
+          "tool:loki:2.9.0",
+          "tool:jaeger:1.48.0",
+          "tool:node-exporter:1.6.0",
+          "config:monitoring-config:1.0.0",
+          "config:prometheus-config:1.0.0",
+          "config:grafana-config:1.0.0",
+          "config:alertmanager-config:1.0.0",
+          "config:loki-config:1.0.0",
+          "config:jaeger-config:1.0.0"
+        ]
+      },
+      {
+        "step": 2,
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "All ai-Q services running and accessible",
+          "Network connectivity between monitoring components",
+          "Storage available for monitoring data",
+          "SSL certificates available for secure communication",
+          "Notification channels configured (Slack, email)"
+        ]
+      },
+      {
+        "step": 3,
+        "action": "execute_monitoring_deployment",
+        "description": "Execute monitoring stack deployment with all components",
+        "sub_steps": [
+          "Deploy Prometheus metrics collection server",
+          "Deploy Grafana visualization platform",
+          "Deploy Alertmanager for alert routing",
+          "Deploy cAdvisor for container monitoring",
+          "Deploy Loki for log aggregation",
+          "Deploy Jaeger for distributed tracing",
+          "Configure dashboards and datasources",
+          "Configure alerting rules and notifications"
+        ]
+      },
+      {
+        "step": 4,
+        "action": "cache_results",
+        "description": "Cache successful deployment results for future use",
+        "cache_items": [
+          "Monitoring stack configurations",
+          "Dashboard configurations and templates",
+          "Alerting rules and notification settings",
+          "Prometheus targets and scrape configurations",
+          "Grafana datasource configurations",
+          "Loki and Jaeger configurations"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "ingredient_caching": "aggressive",
+      "result_caching": "aggressive",
+      "cache_validation": "content_hash",
+      "cache_ttl": 604800,
+      "cache_location": "local"
+    }
+  },
+  "tasks": [
+    {
+      "id": "05-monitoring-observability-001",
+      "title": "Comprehensive System Monitoring and Observability Implementation",
+      "description": "Implement a comprehensive monitoring and observability stack for the entire ai-Q system including infrastructure, applications, databases, AI/ML services, and self-hosted services using the kitchen analogy system. This recipe delivers Prometheus for metrics collection, Grafana for visualization, Alertmanager for alerting, cAdvisor for container monitoring, Loki for log aggregation, and Jaeger for distributed tracing with atomic, reusable ingredients and intelligent caching.",
+      "category": "observability",
+      "estimated_tokens": 12000,
+      "estimated_duration": "4-5 hours",
+      "difficulty_level": "expert",
+      "kitchen_system": {
+        "pantry_ingredients_used": [
+          "task:setup-monitoring:1.0.0",
+          "task:deploy-prometheus:1.0.0",
+          "task:deploy-grafana:1.0.0",
+          "task:deploy-alertmanager:1.0.0",
+          "task:deploy-cadvisor:1.0.0",
+          "task:deploy-loki:1.0.0",
+          "task:deploy-jaeger:1.0.0",
+          "task:configure-dashboards:1.0.0",
+          "task:configure-alerts:1.0.0",
+          "skill:manage-monitoring:1.0.0",
+          "skill:configure-prometheus:1.0.0",
+          "skill:configure-grafana:1.0.0",
+          "skill:configure-alerting:1.0.0",
+          "skill:manage-logs:1.0.0",
+          "skill:manage-tracing:1.0.0",
+          "tool:prometheus:2.48.0",
+          "tool:grafana:10.2.0",
+          "tool:alertmanager:0.26.0",
+          "tool:cadvisor:0.47.2",
+          "tool:loki:2.9.0",
+          "tool:jaeger:1.48.0",
+          "tool:node-exporter:1.6.0",
+          "config:monitoring-config:1.0.0",
+          "config:prometheus-config:1.0.0",
+          "config:grafana-config:1.0.0",
+          "config:alertmanager-config:1.0.0",
+          "config:loki-config:1.0.0",
+          "config:jaeger-config:1.0.0"
+        ],
+        "caching_benefits": [
+          "Monitoring configurations cached",
+          "Dashboard templates cached",
+          "Alerting rules cached",
+          "Prometheus targets cached",
+          "Grafana datasources cached"
+        ]
+      },
+      "prerequisites": {
+        "knowledge_required": [
+          "Prometheus Query Language (PromQL)",
+          "Grafana dashboard creation",
+          "Alertmanager configuration",
+          "Docker monitoring",
+          "System metrics",
+          "Kitchen analogy system"
+        ],
+        "tools_required": [
+          "Prometheus",
+          "Grafana",
+          "Alertmanager",
+          "cAdvisor",
+          "Node Exporter",
+          "Docker",
+          "Pantry system"
+        ],
+        "environment_setup": [
+          "All ai-Q services running and accessible",
+          "Network connectivity between monitoring components",
+          "Kitchen system operational"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "docker/compose/unified.yml",
+          "config/dynamic/dynamic-config.json",
+          "config/network/ip-config.json"
+        ],
+        "pantry_ingredients": [
+          "task:setup-monitoring:1.0.0",
+          "task:deploy-prometheus:1.0.0",
+          "task:deploy-grafana:1.0.0",
+          "task:deploy-alertmanager:1.0.0",
+          "task:deploy-cadvisor:1.0.0",
+          "task:deploy-loki:1.0.0",
+          "task:deploy-jaeger:1.0.0",
+          "task:configure-dashboards:1.0.0",
+          "task:configure-alerts:1.0.0",
+          "skill:manage-monitoring:1.0.0",
+          "skill:configure-prometheus:1.0.0",
+          "skill:configure-grafana:1.0.0",
+          "skill:configure-alerting:1.0.0",
+          "skill:manage-logs:1.0.0",
+          "skill:manage-tracing:1.0.0",
+          "tool:prometheus:2.48.0",
+          "tool:grafana:10.2.0",
+          "tool:alertmanager:0.26.0",
+          "tool:cadvisor:0.47.2",
+          "tool:loki:2.9.0",
+          "tool:jaeger:1.48.0",
+          "tool:node-exporter:1.6.0",
+          "config:monitoring-config:1.0.0",
+          "config:prometheus-config:1.0.0",
+          "config:grafana-config:1.0.0",
+          "config:alertmanager-config:1.0.0",
+          "config:loki-config:1.0.0",
+          "config:jaeger-config:1.0.0"
+        ],
+        "config_dependencies": [
+          "Network configuration",
+          "Service endpoints",
+          "Authentication credentials"
+        ],
+        "environment_variables": [
+          "PROMETHEUS_PORT",
+          "GRAFANA_PORT",
+          "ALERTMANAGER_PORT",
+          "LOKI_PORT",
+          "JAEGER_PORT",
+          "SLACK_WEBHOOK_URL",
+          "EMAIL_SMTP_SERVER"
+        ],
+        "external_services": [
+          "Slack",
+          "Email",
+          "PagerDuty"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "docker/compose/monitoring.yml - Monitoring stack services",
+          "config/prometheus/prometheus.yml - Prometheus configuration",
+          "config/prometheus/rules/system.rules.yml - System alerting rules",
+          "config/prometheus/rules/ai-ml.rules.yml - AI/ML service alerting rules",
+          "config/alertmanager/config.yml - Alertmanager notification routing",
+          "config/grafana/dashboards/system-overview.json - System overview dashboard",
+          "config/grafana/dashboards/ai-ml-services.json - AI/ML services dashboard",
+          "config/grafana/dashboards/databases.json - Database performance dashboard",
+          "config/grafana/dashboards/containers.json - Container resource dashboard",
+          "config/grafana/dashboards/network.json - Network traffic dashboard",
+          "config/grafana/datasources/prometheus.yml - Prometheus datasource",
+          "config/grafana/datasources/loki.yml - Loki datasource",
+          "config/loki/loki-config.yml - Loki configuration",
+          "config/jaeger/jaeger-config.yml - Jaeger configuration",
+          "scripts/monitoring-setup.sh - Automated monitoring setup script",
+          "scripts/monitoring-health-check.sh - Monitoring health check script",
+          "docs/monitoring/architecture.json - Monitoring architecture documentation"
+        ],
+        "files_modified": [
+          "docker/compose/unified.yml - Add monitoring services",
+          "config/dynamic/dynamic-config.json - Add monitoring ports"
+        ],
+        "api_endpoints": [
+          "GET /monitoring/health - Overall monitoring stack health",
+          "GET /monitoring/metrics - System metrics summary",
+          "GET /monitoring/alerts - Active alerts status",
+          "POST /monitoring/alert-test - Test alert delivery"
+        ],
+        "configuration_updates": [
+          "Monitoring ports",
+          "Alert thresholds",
+          "Dashboard configurations"
+        ],
+        "cached_results": [
+          "Monitoring stack configurations",
+          "Dashboard configurations and templates",
+          "Alerting rules and notification settings",
+          "Prometheus targets and scrape configurations",
+          "Grafana datasource configurations",
+          "Loki and Jaeger configurations"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "01-core-infrastructure",
+          "02-unified-docker-system"
+        ],
+        "optional_tasks": [
+          "03-storage-systems",
+          "04-database-setup"
+        ],
+        "blocked_tasks": [],
+        "pantry_dependencies": [
+          "task:setup-monitoring:1.0.0",
+          "task:deploy-prometheus:1.0.0",
+          "task:deploy-grafana:1.0.0",
+          "task:deploy-alertmanager:1.0.0",
+          "task:deploy-cadvisor:1.0.0",
+          "task:deploy-loki:1.0.0",
+          "task:deploy-jaeger:1.0.0",
+          "task:configure-dashboards:1.0.0",
+          "task:configure-alerts:1.0.0",
+          "skill:manage-monitoring:1.0.0",
+          "skill:configure-prometheus:1.0.0",
+          "skill:configure-grafana:1.0.0",
+          "skill:configure-alerting:1.0.0",
+          "skill:manage-logs:1.0.0",
+          "skill:manage-tracing:1.0.0",
+          "tool:prometheus:2.48.0",
+          "tool:grafana:10.2.0",
+          "tool:alertmanager:0.26.0",
+          "tool:cadvisor:0.47.2",
+          "tool:loki:2.9.0",
+          "tool:jaeger:1.48.0",
+          "tool:node-exporter:1.6.0",
+          "config:monitoring-config:1.0.0",
+          "config:prometheus-config:1.0.0",
+          "config:grafana-config:1.0.0",
+          "config:alertmanager-config:1.0.0",
+          "config:loki-config:1.0.0",
+          "config:jaeger-config:1.0.0"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task implements a comprehensive monitoring and observability stack that provides complete visibility into the ai-Q system using the kitchen analogy system. The stack includes metrics collection (Prometheus), visualization (Grafana), alerting (Alertmanager), container monitoring (cAdvisor), log aggregation (Loki), and distributed tracing (Jaeger). All components are integrated with pre-built dashboards and alerting rules for proactive system management with atomic, reusable ingredients and intelligent caching.",
+        "kitchen_execution_flow": [
+          {
+            "step": 1,
+            "action": "gather_ingredients",
+            "description": "Load all required pantry ingredients with aggressive caching",
+            "ingredients": [
+              "task:setup-monitoring:1.0.0",
+              "task:deploy-prometheus:1.0.0",
+              "task:deploy-grafana:1.0.0",
+              "task:deploy-alertmanager:1.0.0",
+              "task:deploy-cadvisor:1.0.0",
+              "task:deploy-loki:1.0.0",
+              "task:deploy-jaeger:1.0.0",
+              "task:configure-dashboards:1.0.0",
+              "task:configure-alerts:1.0.0",
+              "skill:manage-monitoring:1.0.0",
+              "skill:configure-prometheus:1.0.0",
+              "skill:configure-grafana:1.0.0",
+              "skill:configure-alerting:1.0.0",
+              "skill:manage-logs:1.0.0",
+              "skill:manage-tracing:1.0.0",
+              "tool:prometheus:2.48.0",
+              "tool:grafana:10.2.0",
+              "tool:alertmanager:0.26.0",
+              "tool:cadvisor:0.47.2",
+              "tool:loki:2.9.0",
+              "tool:jaeger:1.48.0",
+              "tool:node-exporter:1.6.0",
+              "config:monitoring-config:1.0.0",
+              "config:prometheus-config:1.0.0",
+              "config:grafana-config:1.0.0",
+              "config:alertmanager-config:1.0.0",
+              "config:loki-config:1.0.0",
+              "config:jaeger-config:1.0.0"
+            ]
+          },
+          {
+            "step": 2,
+            "action": "validate_dependencies",
+            "description": "Verify all ingredient dependencies are satisfied",
+            "checks": [
+              "All ai-Q services running and accessible",
+              "Network connectivity between monitoring components",
+              "Storage available for monitoring data",
+              "SSL certificates available for secure communication",
+              "Notification channels configured (Slack, email)"
+            ]
+          },
+          {
+            "step": 3,
+            "action": "execute_monitoring_deployment",
+            "description": "Execute monitoring stack deployment with all components",
+            "sub_steps": [
+              "Deploy Prometheus metrics collection server",
+              "Deploy Grafana visualization platform",
+              "Deploy Alertmanager for alert routing",
+              "Deploy cAdvisor for container monitoring",
+              "Deploy Loki for log aggregation",
+              "Deploy Jaeger for distributed tracing",
+              "Configure dashboards and datasources",
+              "Configure alerting rules and notifications"
+            ]
+          },
+          {
+            "step": 4,
+            "action": "cache_results",
+            "description": "Cache successful deployment results for future use",
+            "cache_items": [
+              "Monitoring stack configurations",
+              "Dashboard configurations and templates",
+              "Alerting rules and notification settings",
+              "Prometheus targets and scrape configurations",
+              "Grafana datasource configurations",
+              "Loki and Jaeger configurations"
+            ]
+          }
+        ],
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Create Monitoring Stack Docker Compose",
+            "description": "Create a comprehensive Docker Compose file for all monitoring services using pantry ingredients",
+            "kitchen_commands": [
+              "# Use pantry ingredient to create monitoring compose file",
+              "task:create-monitoring-compose:1.0.0 --config=config/monitoring-config:1.0.0",
+              "",
+              "# Create monitoring compose file",
+              "cat > docker/compose/monitoring.yml << 'EOF'",
+              "name: ai-q-monitoring",
+              "",
+              "services:",
+              "  # Prometheus Metrics Collection",
+              "  prometheus:",
+              "    image: prom/prometheus:v2.48.0",
+              "    container_name: ai-q-prometheus",
+              "    command:",
+              "      - '--config.file=/etc/prometheus/prometheus.yml'",
+              "      - '--storage.tsdb.path=/prometheus'",
+              "      - '--web.console.libraries=/etc/prometheus/console_libraries'",
+              "      - '--web.console.templates=/etc/prometheus/consoles'",
+              "      - '--storage.tsdb.retention.time=30d'",
+              "      - '--web.enable-lifecycle'",
+              "    volumes:",
+              "      - ai-q-prometheus-data:/prometheus",
+              "      - ../../config/prometheus:/etc/prometheus",
+              "    ports:",
+              "      - \"${PROMETHEUS_PORT:-9090}:9090\"",
+              "    networks:",
+              "      - ai-q-network",
+              "    restart: unless-stopped",
+              "    healthcheck:",
+              "      test: [\"CMD-SHELL\", \"wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1\"]",
+              "      interval: 30s",
+              "      timeout: 10s",
+              "      retries: 3",
+              "",
+              "  # Grafana Visualization",
+              "  grafana:",
+              "    image: grafana/grafana:10.2.0",
+              "    container_name: ai-q-grafana",
+              "    environment:",
+              "      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}",
+              "      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource",
+              "    volumes:",
+              "      - ai-q-grafana-data:/var/lib/grafana",
+              "      - ../../config/grafana/provisioning:/etc/grafana/provisioning",
+              "    ports:",
+              "      - \"${GRAFANA_PORT:-3001}:3000\"",
+              "    networks:",
+              "      - ai-q-network",
+              "    restart: unless-stopped",
+              "    healthcheck:",
+              "      test: [\"CMD-SHELL\", \"curl -f http://localhost:3000/api/health || exit 1\"]",
+              "      interval: 30s",
+              "      timeout: 10s",
+              "      retries: 3",
+              "",
+              "  # Alertmanager Alerting",
+              "  alertmanager:",
+              "    image: prom/alertmanager:v0.26.0",
+              "    container_name: ai-q-alertmanager",
+              "    command:",
+              "      - '--config.file=/etc/alertmanager/config.yml'",
+              "      - '--storage.path=/alertmanager'",
+              "    volumes:",
+              "      - ai-q-alertmanager-data:/alertmanager",
+              "      - ../../config/alertmanager:/etc/alertmanager",
+              "    ports:",
+              "      - \"${ALERTMANAGER_PORT:-9093}:9093\"",
+              "    networks:",
+              "      - ai-q-network",
+              "    restart: unless-stopped",
+              "    healthcheck:",
+              "      test: [\"CMD-SHELL\", \"wget --no-verbose --tries=1 --spider http://localhost:9093/-/healthy || exit 1\"]",
+              "      interval: 30s",
+              "      timeout: 10s",
+              "      retries: 3",
+              "",
+              "  # cAdvisor Container Monitoring",
+              "  cadvisor:",
+              "    image: gcr.io/cadvisor/cadvisor:v0.47.2",
+              "    container_name: ai-q-cadvisor",
+              "    privileged: true",
+              "    ports:",
+              "      - \"${CADVISOR_PORT:-8081}:8080\"",
+              "    volumes:",
+              "      - /:/rootfs:ro",
+              "      - /var/run:/var/run:ro",
+              "      - /sys:/sys:ro",
+              "      - /var/lib/docker/:/var/lib/docker:ro",
+              "      - /dev/disk/:/dev/disk:ro",
+              "    networks:",
+              "      - ai-q-network",
+              "    restart: unless-stopped",
+              "    healthcheck:",
+              "      test: [\"CMD-SHELL\", \"curl -f http://localhost:8080/healthz || exit 1\"]",
+              "      interval: 30s",
+              "      timeout: 10s",
+              "      retries: 3",
+              "",
+              "  # Loki Log Aggregation",
+              "  loki:",
+              "    image: grafana/loki:2.9.0",
+              "    container_name: ai-q-loki",
+              "    command: -config.file=/etc/loki/local-config.yaml",
+              "    volumes:",
+              "      - ai-q-loki-data:/loki",
+              "      - ../../config/loki:/etc/loki",
+              "    ports:",
+              "      - \"${LOKI_PORT:-3100}:3100\"",
+              "    networks:",
+              "      - ai-q-network",
+              "    restart: unless-stopped",
+              "    healthcheck:",
+              "      test: [\"CMD-SHELL\", \"curl -f http://localhost:3100/ready || exit 1\"]",
+              "      interval: 30s",
+              "      timeout: 10s",
+              "      retries: 3",
+              "",
+              "  # Jaeger Distributed Tracing",
+              "  jaeger:",
+              "    image: jaegertracing/all-in-one:1.48.0",
+              "    container_name: ai-q-jaeger",
+              "    environment:",
+              "      - COLLECTOR_OTLP_ENABLED=true",
+              "    volumes:",
+              "      - ../../config/jaeger:/etc/jaeger",
+              "    ports:",
+              "      - \"${JAEGER_PORT:-16686}:16686\"",
+              "      - \"14268:14268\"",
+              "      - \"14250:14250\"",
+              "    networks:",
+              "      - ai-q-network",
+              "    restart: unless-stopped",
+              "    healthcheck:",
+              "      test: [\"CMD-SHELL\", \"curl -f http://localhost:16686/api/services || exit 1\"]",
+              "      interval: 30s",
+              "      timeout: 10s",
+              "      retries: 3",
+              "",
+              "volumes:",
+              "  ai-q-prometheus-data:",
+              "  ai-q-grafana-data:",
+              "  ai-q-alertmanager-data:",
+              "  ai-q-loki-data:",
+              "",
+              "networks:",
+              "  ai-q-network:",
+              "    external: true",
+              "EOF"
+            ],
+            "expected_output": "Comprehensive monitoring Docker Compose file created with all services",
+            "troubleshooting": "Verify all image versions are available and network configuration is correct",
+            "caching_benefit": "Monitoring compose configuration cached for reuse"
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "All monitoring services (Prometheus, Grafana, Alertmanager, cAdvisor, Loki, Jaeger) are running and healthy",
+          "Prometheus is collecting metrics from all system components including databases, AI/ML services, and infrastructure",
+          "Grafana dashboards are displaying system metrics, container resources, and service health",
+          "Alertmanager is configured with notification channels and can send test alerts",
+          "Log aggregation is working with Loki and Promtail collecting container and system logs",
+          "Distributed tracing is available through Jaeger for application performance monitoring",
+          "Kitchen system integration providing atomic, reusable monitoring ingredients"
+        ],
+        "performance_requirements": [
+          "Prometheus metrics collection completes within 15 seconds",
+          "Grafana dashboard queries respond within 3 seconds",
+          "Alert notifications are delivered within 30 seconds",
+          "Log search queries in Grafana complete within 5 seconds",
+          "System resource overhead from monitoring is less than 10%",
+          "Cache hit rate > 80% for frequently accessed monitoring data"
+        ],
+        "security_requirements": [
+          "All monitoring endpoints are secured with authentication",
+          "Sensitive metrics and logs are properly filtered",
+          "Alert notifications are encrypted in transit",
+          "Access to monitoring dashboards is role-based",
+          "Audit logging is enabled for all monitoring operations"
+        ],
+        "integration_requirements": [
+          "Monitoring stack integrates with existing ai-Q services",
+          "Custom metrics are exposed by all application components",
+          "Health checks are implemented for all monitored services",
+          "Monitoring data is persisted across container restarts",
+          "Backup and restore procedures are available for monitoring data",
+          "Kitchen system providing atomic, reusable monitoring ingredients"
+        ],
+        "code_quality_requirements": [
+          "All configuration files properly validated and formatted",
+          "Deployment scripts include comprehensive error handling",
+          "Documentation complete with architecture diagrams",
+          "Automated testing covering all deployment scenarios",
+          "Configuration management follows infrastructure-as-code principles"
+        ]
+      }
+    }
+  ],
+  "global_configuration": {
+    "monitoring_ports": {
+      "prometheus": 9090,
+      "grafana": 3001,
+      "alertmanager": 9093,
+      "cadvisor": 8081,
+      "loki": 3100,
+      "jaeger": 16686
+    },
+    "retention_policies": {
+      "prometheus_metrics": "30d",
+      "grafana_dashboards": "permanent",
+      "alertmanager_alerts": "7d",
+      "loki_logs": "30d",
+      "jaeger_traces": "7d"
+    },
+    "alerting_configuration": {
+      "slack_channel": "#ai-q-alerts",
+      "email_recipients": [
+        "admin@ai-q.local"
+      ],
+      "critical_escalation": "PagerDuty",
+      "alert_grouping": true,
+      "repeat_interval": "1h"
+    },
+    "kitchen_system": {
+      "caching_strategy": "aggressive",
+      "cache_ttl": 604800,
+      "cache_validation": "content_hash",
+      "cache_location": "local"
+    }
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "05-Monitoring-Observability-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

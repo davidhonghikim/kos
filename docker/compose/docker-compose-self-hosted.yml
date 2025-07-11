@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # Gitea Git Server
+  gitea:
+    image: gitea/gitea:1.21.0
+    container_name: ai-q-gitea
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    ports:
+      - "3002:3000"
+      - "222:22"
+    volumes:
+      - /opt/ai-q/self-hosted/gitea:/data
+      - /opt/ai-q/self-hosted/configs/gitea-app.ini:/data/gitea/conf/app.ini
+    networks:
+      - ai-q-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # NextCloud File Storage
+  nextcloud:
+    image: nextcloud:25.0.0
+    container_name: ai-q-nextcloud
+    restart: unless-stopped
+    environment:
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=admin123
+    ports:
+      - "8080:80"
+    volumes:
+      - /opt/ai-q/self-hosted/nextcloud:/var/www/html
+      - /opt/ai-q/self-hosted/configs/nextcloud-config.php:/var/www/html/config/config.php
+    networks:
+      - ai-q-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Admin Panel
+  admin-panel:
+    build:
+      context: /opt/ai-q/self-hosted/admin-panel
+      dockerfile: Dockerfile
+    container_name: ai-q-admin-panel
+    restart: unless-stopped
+    ports:
+      - "9000:80"
+    networks:
+      - ai-q-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Local Docker Registry
+  registry:
+    image: registry:2.8.2
+    container_name: ai-q-registry
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - /opt/ai-q/data/registry:/var/lib/registry
+    networks:
+      - ai-q-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/v2/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ai-q-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 

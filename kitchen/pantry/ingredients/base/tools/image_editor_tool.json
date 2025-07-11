@@ -1,0 +1,23 @@
+{
+  "id": "tool.image_editor",
+  "type": "tool",
+  "name": "Image Editor",
+  "description": "Modular image editing operations for resizing and applying filters",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": ["pillow"],
+  "tags": ["image", "editing", "resize", "filter", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for image editing operations in recipes",
+  "operations": {
+    "resize_image": "Resize images to specified dimensions",
+    "apply_filter": "Apply filters (BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, SHARPEN)"
+  },
+  "validation": {
+    "required_fields": ["operation", "image_path", "output_path"],
+    "operations": ["resize", "filter"]
+  }
+} 

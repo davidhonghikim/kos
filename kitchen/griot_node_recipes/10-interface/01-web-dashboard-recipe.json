@@ -1,0 +1,586 @@
+{
+  "metadata": {
+    "title": "Web Dashboard Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "last_updated": "2025-07-06T12:11:00Z",
+    "purpose": "Implement comprehensive web dashboard with complete web interface and user experience for AI-Q Knowledge Library System",
+    "estimated_tokens": 85000,
+    "category": "interface",
+    "priority": "HIGH",
+    "recipe_id": "19-web-dashboard",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "recipe_overview": {
+    "name": "Web Dashboard System",
+    "description": "Implement production-ready web dashboard with modern UI/UX, responsive design, and comprehensive user interface",
+    "prerequisites": [
+      "18-semantic-search-recipe.json completed",
+      "Node.js 18+ and modern web technologies available",
+      "Design system and UI components ready"
+    ],
+    "target_outcome": "Complete web dashboard system with modern interface and excellent user experience",
+    "success_criteria": [
+      "Modern, responsive web interface",
+      "Comprehensive dashboard with all system features",
+      "Real-time updates and notifications",
+      "User-friendly navigation and workflows",
+      "Accessibility and performance optimization",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "web_dashboard_architecture": {
+    "frontend_framework": {
+      "purpose": "Modern frontend framework and architecture",
+      "features": [
+        "React/Next.js application",
+        "TypeScript for type safety",
+        "Component-based architecture",
+        "State management with Redux/Zustand"
+      ],
+      "modular_components": [
+        "app-framework",
+        "component-library",
+        "state-manager",
+        "routing-system"
+      ]
+    },
+    "ui_components": {
+      "purpose": "Comprehensive UI component library",
+      "features": [
+        "Design system with consistent styling",
+        "Reusable UI components",
+        "Responsive design patterns",
+        "Accessibility compliance"
+      ],
+      "modular_components": [
+        "component-library",
+        "design-system",
+        "theme-manager",
+        "accessibility-helper"
+      ]
+    },
+    "dashboard_features": {
+      "purpose": "Core dashboard functionality",
+      "features": [
+        "Multi-panel dashboard layout",
+        "Real-time data visualization",
+        "Interactive charts and graphs",
+        "Customizable widgets"
+      ],
+      "modular_components": [
+        "dashboard-layout",
+        "data-visualization",
+        "widget-system",
+        "layout-manager"
+      ]
+    },
+    "user_experience": {
+      "purpose": "Excellent user experience and workflows",
+      "features": [
+        "Intuitive navigation and workflows",
+        "Search and discovery interface",
+        "Content management interface",
+        "User preferences and settings"
+      ],
+      "modular_components": [
+        "navigation-system",
+        "workflow-manager",
+        "search-interface",
+        "preferences-manager"
+      ]
+    }
+  },
+  "implementation_steps": [
+    {
+      "task_id": "19-001",
+      "title": "Create Web Dashboard Architecture",
+      "description": "Design and implement the core web dashboard architecture with modern frontend framework",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npx create-next-app@latest web-dashboard --typescript --tailwind --eslint",
+        "cd web-dashboard",
+        "npm install @reduxjs/toolkit react-redux",
+        "mkdir -p src/components",
+        "mkdir -p src/pages",
+        "mkdir -p src/hooks",
+        "mkdir -p src/utils"
+      ],
+      "files_to_create": [
+        "src/app/layout.tsx",
+        "src/app/page.tsx",
+        "src/components/Layout.tsx",
+        "src/components/Navigation.tsx",
+        "src/hooks/useAppState.ts",
+        "src/utils/constants.ts"
+      ],
+      "acceptance_criteria": [
+        "Next.js application structure created",
+        "TypeScript configuration working",
+        "Tailwind CSS setup functional",
+        "Basic routing operational"
+      ]
+    },
+    {
+      "task_id": "19-002",
+      "title": "Implement Design System",
+      "description": "Create comprehensive design system with consistent styling and components",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install @headlessui/react @heroicons/react",
+        "mkdir -p src/components/ui",
+        "mkdir -p src/styles"
+      ],
+      "files_to_create": [
+        "src/styles/globals.css",
+        "src/styles/tailwind.config.js",
+        "src/components/ui/Button.tsx",
+        "src/components/ui/Card.tsx",
+        "src/components/ui/Input.tsx",
+        "src/components/ui/Modal.tsx",
+        "src/components/ui/Dropdown.tsx"
+      ],
+      "acceptance_criteria": [
+        "Design system components created",
+        "Consistent styling applied",
+        "UI components functional",
+        "Theme system working"
+      ]
+    },
+    {
+      "task_id": "19-003",
+      "title": "Implement Dashboard Layout",
+      "description": "Create responsive dashboard layout with navigation and panels",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/components/dashboard",
+        "mkdir -p src/components/layout"
+      ],
+      "files_to_create": [
+        "src/components/dashboard/Dashboard.tsx",
+        "src/components/dashboard/Sidebar.tsx",
+        "src/components/dashboard/Header.tsx",
+        "src/components/dashboard/Content.tsx",
+        "src/components/layout/Grid.tsx",
+        "src/components/layout/Panel.tsx",
+        "src/components/layout/Container.tsx"
+      ],
+      "acceptance_criteria": [
+        "Dashboard layout working",
+        "Responsive design functional",
+        "Navigation operational",
+        "Panel system working"
+      ]
+    },
+    {
+      "task_id": "19-004",
+      "title": "Implement Data Visualization",
+      "description": "Create comprehensive data visualization components",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install recharts d3 chart.js",
+        "mkdir -p src/components/charts",
+        "mkdir -p src/components/visualization"
+      ],
+      "files_to_create": [
+        "src/components/charts/LineChart.tsx",
+        "src/components/charts/BarChart.tsx",
+        "src/components/charts/PieChart.tsx",
+        "src/components/charts/Heatmap.tsx",
+        "src/components/visualization/DataTable.tsx",
+        "src/components/visualization/Metrics.tsx",
+        "src/components/visualization/Timeline.tsx"
+      ],
+      "acceptance_criteria": [
+        "Chart components working",
+        "Data visualization functional",
+        "Interactive charts operational",
+        "Real-time updates working"
+      ]
+    },
+    {
+      "task_id": "19-005",
+      "title": "Implement Search Interface",
+      "description": "Create comprehensive search and discovery interface",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/components/search",
+        "mkdir -p src/components/discovery"
+      ],
+      "files_to_create": [
+        "src/components/search/SearchBar.tsx",
+        "src/components/search/SearchResults.tsx",
+        "src/components/search/SearchFilters.tsx",
+        "src/components/search/SearchSuggestions.tsx",
+        "src/components/discovery/DiscoveryPanel.tsx",
+        "src/components/discovery/Recommendations.tsx",
+        "src/components/discovery/Trends.tsx"
+      ],
+      "acceptance_criteria": [
+        "Search interface working",
+        "Search results display functional",
+        "Filters and suggestions operational",
+        "Discovery features working"
+      ]
+    },
+    {
+      "task_id": "19-006",
+      "title": "Implement Content Management",
+      "description": "Create content management interface and workflows",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/components/content",
+        "mkdir -p src/components/editor"
+      ],
+      "files_to_create": [
+        "src/components/content/ContentList.tsx",
+        "src/components/content/ContentDetail.tsx",
+        "src/components/content/ContentUpload.tsx",
+        "src/components/content/ContentPreview.tsx",
+        "src/components/editor/TextEditor.tsx",
+        "src/components/editor/ImageEditor.tsx",
+        "src/components/editor/MediaPlayer.tsx"
+      ],
+      "acceptance_criteria": [
+        "Content management working",
+        "Content editing functional",
+        "File upload operational",
+        "Content preview working"
+      ]
+    },
+    {
+      "task_id": "19-007",
+      "title": "Implement User Management",
+      "description": "Create user management and authentication interface",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "npm install next-auth",
+        "mkdir -p src/components/auth",
+        "mkdir -p src/components/user"
+      ],
+      "files_to_create": [
+        "src/components/auth/LoginForm.tsx",
+        "src/components/auth/RegisterForm.tsx",
+        "src/components/auth/PasswordReset.tsx",
+        "src/components/user/UserProfile.tsx",
+        "src/components/user/UserSettings.tsx",
+        "src/components/user/UserPreferences.tsx",
+        "src/components/user/UserActivity.tsx"
+      ],
+      "acceptance_criteria": [
+        "Authentication interface working",
+        "User profile management functional",
+        "Settings and preferences operational",
+        "User activity tracking working"
+      ]
+    },
+    {
+      "task_id": "19-008",
+      "title": "Implement API Integration",
+      "description": "Create API integration and data fetching layer",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install axios swr",
+        "mkdir -p src/services/api",
+        "mkdir -p src/hooks/api"
+      ],
+      "files_to_create": [
+        "src/services/api/client.ts",
+        "src/services/api/auth.ts",
+        "src/services/api/content.ts",
+        "src/services/api/search.ts",
+        "src/hooks/api/useAuth.ts",
+        "src/hooks/api/useContent.ts",
+        "src/hooks/api/useSearch.ts"
+      ],
+      "acceptance_criteria": [
+        "API client working",
+        "Data fetching functional",
+        "Error handling operational",
+        "Caching and optimization working"
+      ]
+    },
+    {
+      "task_id": "19-009",
+      "title": "Implement State Management",
+      "description": "Create comprehensive state management system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/store",
+        "mkdir -p src/store/slices"
+      ],
+      "files_to_create": [
+        "src/store/index.ts",
+        "src/store/slices/authSlice.ts",
+        "src/store/slices/contentSlice.ts",
+        "src/store/slices/searchSlice.ts",
+        "src/store/slices/uiSlice.ts",
+        "src/store/slices/userSlice.ts"
+      ],
+      "acceptance_criteria": [
+        "Redux store working",
+        "State slices functional",
+        "State persistence operational",
+        "State synchronization working"
+      ]
+    },
+    {
+      "task_id": "19-010",
+      "title": "Implement Real-time Features",
+      "description": "Create real-time updates and notifications system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install socket.io-client",
+        "mkdir -p src/components/notifications",
+        "mkdir -p src/services/realtime"
+      ],
+      "files_to_create": [
+        "src/components/notifications/NotificationCenter.tsx",
+        "src/components/notifications/NotificationItem.tsx",
+        "src/components/notifications/Toast.tsx",
+        "src/services/realtime/socket.ts",
+        "src/services/realtime/notifications.ts",
+        "src/hooks/useNotifications.ts"
+      ],
+      "acceptance_criteria": [
+        "Real-time updates working",
+        "Notifications functional",
+        "WebSocket connection operational",
+        "Real-time data sync working"
+      ]
+    },
+    {
+      "task_id": "19-011",
+      "title": "Implement Performance Optimization",
+      "description": "Create performance optimization and caching system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/utils/performance",
+        "mkdir -p src/components/optimized"
+      ],
+      "files_to_create": [
+        "src/utils/performance/lazyLoad.ts",
+        "src/utils/performance/memoization.ts",
+        "src/utils/performance/caching.ts",
+        "src/components/optimized/LazyImage.tsx",
+        "src/components/optimized/VirtualList.tsx",
+        "src/components/optimized/InfiniteScroll.tsx"
+      ],
+      "acceptance_criteria": [
+        "Lazy loading working",
+        "Memoization functional",
+        "Caching operational",
+        "Performance monitoring working"
+      ]
+    },
+    {
+      "task_id": "19-012",
+      "title": "Implement Accessibility",
+      "description": "Create comprehensive accessibility features",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/utils/accessibility",
+        "mkdir -p src/components/accessible"
+      ],
+      "files_to_create": [
+        "src/utils/accessibility/a11y.ts",
+        "src/utils/accessibility/keyboard.ts",
+        "src/utils/accessibility/screenReader.ts",
+        "src/components/accessible/SkipLink.tsx",
+        "src/components/accessible/FocusTrap.tsx",
+        "src/components/accessible/Announcer.tsx"
+      ],
+      "acceptance_criteria": [
+        "Keyboard navigation working",
+        "Screen reader support functional",
+        "Focus management operational",
+        "WCAG compliance working"
+      ]
+    },
+    {
+      "task_id": "19-013",
+      "title": "Implement Testing",
+      "description": "Create comprehensive testing framework for web dashboard",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "npm install @testing-library/react @testing-library/jest-dom",
+        "mkdir -p src/__tests__",
+        "mkdir -p src/__tests__/components"
+      ],
+      "files_to_create": [
+        "src/__tests__/setup.ts",
+        "src/__tests__/components/Dashboard.test.tsx",
+        "src/__tests__/components/Search.test.tsx",
+        "src/__tests__/components/Charts.test.tsx",
+        "src/__tests__/utils/api.test.ts",
+        "jest.config.js"
+      ],
+      "acceptance_criteria": [
+        "Component testing working",
+        "Integration testing functional",
+        "API testing operational",
+        "Test coverage adequate"
+      ]
+    },
+    {
+      "task_id": "19-014",
+      "title": "Implement Documentation",
+      "description": "Create comprehensive documentation for web dashboard",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p docs/web-dashboard",
+        "mkdir -p examples/web-dashboard"
+      ],
+      "files_to_create": [
+        "docs/web-dashboard/README.json",
+        "docs/web-dashboard/architecture.json",
+        "docs/web-dashboard/components.json",
+        "docs/web-dashboard/api.json",
+        "docs/web-dashboard/deployment.json",
+        "examples/web-dashboard/usage.json"
+      ],
+      "acceptance_criteria": [
+        "Complete documentation created",
+        "Component documentation functional",
+        "API documentation operational",
+        "Deployment guide working"
+      ]
+    },
+    {
+      "task_id": "19-015",
+      "title": "Implement Deployment",
+      "description": "Create deployment configuration and build system",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p .github/workflows",
+        "mkdir -p scripts"
+      ],
+      "files_to_create": [
+        "next.config.js",
+        "package.json",
+        ".github/workflows/deploy.yml",
+        "scripts/build.sh",
+        "scripts/deploy.sh",
+        "Dockerfile"
+      ],
+      "acceptance_criteria": [
+        "Build system working",
+        "Deployment pipeline functional",
+        "Docker configuration operational",
+        "CI/CD setup working"
+      ]
+    }
+  ],
+  "configuration": {
+    "environment_variables": {
+      "NEXT_PUBLIC_API_URL": "http://localhost:8000",
+      "NEXT_PUBLIC_WS_URL": "ws://localhost:8000",
+      "NEXTAUTH_SECRET": "your-nextauth-secret",
+      "NEXTAUTH_URL": "http://localhost:3000"
+    },
+    "supported_features": {
+      "frameworks": [
+        "next.js",
+        "react",
+        "typescript"
+      ],
+      "styling": [
+        "tailwind",
+        "css-modules",
+        "styled-components"
+      ],
+      "state": [
+        "redux",
+        "zustand",
+        "context"
+      ],
+      "testing": [
+        "jest",
+        "testing-library",
+        "cypress"
+      ]
+    }
+  },
+  "validation_and_testing": {
+    "unit_tests": [
+      "Test component rendering",
+      "Test user interactions",
+      "Test API integration",
+      "Test state management",
+      "Test accessibility features"
+    ],
+    "integration_tests": [
+      "Test end-to-end workflows",
+      "Test real-time features",
+      "Test responsive design",
+      "Test cross-browser compatibility"
+    ],
+    "performance_tests": [
+      "Page load time tests",
+      "Bundle size optimization",
+      "Memory usage tests",
+      "Lighthouse performance scores"
+    ]
+  },
+  "deployment_instructions": {
+    "prerequisites": [
+      "Node.js 18+ installed",
+      "Backend API running",
+      "Database configured",
+      "Environment variables set"
+    ],
+    "installation_steps": [
+      "1. Clone the repository and navigate to the web-dashboard directory",
+      "2. Install dependencies: npm install",
+      "3. Copy environment variables: cp .env.example .env.local",
+      "4. Update environment variables with your configuration",
+      "5. Run development server: npm run dev",
+      "6. Run tests: npm test",
+      "7. Build for production: npm run build"
+    ],
+    "verification": [
+      "Test all dashboard features",
+      "Verify responsive design",
+      "Test accessibility compliance",
+      "Confirm real-time updates"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

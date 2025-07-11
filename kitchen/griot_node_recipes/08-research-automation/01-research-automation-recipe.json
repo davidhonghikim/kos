@@ -1,0 +1,559 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "08-RESEARCH-AUTOMATION",
+    "title": "Research Automation System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "last_updated": "2025-07-06T16:11:00Z",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:11:00Z",
+    "estimated_tokens": 82000,
+    "estimated_execution_time": "5-6 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 45,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "98%",
+    "kitchen_system": {
+      "pantry_category": "research_automation",
+      "cooking_time": "360 minutes",
+      "complexity": "advanced",
+      "kitchen_tools": [
+        "web_scraping",
+        "academic_integration",
+        "source_validation",
+        "synthesis_engine"
+      ],
+      "cache_strategy": "research_automation_cache",
+      "orchestrator_priority": "high"
+    }
+  },
+  "recipe_overview": {
+    "description": "Advanced research automation system for automated knowledge gathering, literature review, source validation, and intelligent synthesis. This recipe implements comprehensive research capabilities including web scraping, academic database integration, source credibility assessment, automated synthesis, and intelligent archiving with metadata extraction.",
+    "architectural_scope": "Complete research automation platform with web scraping, academic integration, source validation, intelligent synthesis, and automated archiving capabilities",
+    "technology_stack": {
+      "web_scraping": "Scrapy, Selenium, Playwright, BeautifulSoup",
+      "academic_databases": "PubMed, arXiv, IEEE, ACM, Google Scholar APIs",
+      "source_validation": "Credibility scoring, fact-checking, cross-referencing",
+      "synthesis_engine": "NLP, summarization, relationship extraction, knowledge graphs",
+      "archiving": "ArchiveBox, Wayback Machine, local storage with metadata",
+      "ai_integration": "OpenAI GPT, local LLMs, embedding models, vector search",
+      "data_processing": "Pandas, NumPy, spaCy, NLTK for text analysis"
+    },
+    "deliverables": [
+      "Automated web scraping with intelligent content extraction",
+      "Academic database integration with API connectors",
+      "Source credibility assessment and validation system",
+      "Intelligent content synthesis and summarization",
+      "Automated literature review and gap analysis",
+      "Knowledge graph construction and relationship mapping",
+      "Comprehensive archiving with metadata preservation",
+      "Research workflow automation and scheduling",
+      "Citation management and bibliography generation",
+      "Research analytics and trend analysis"
+    ],
+    "success_criteria": [
+      "Web scraping functional across diverse content types",
+      "Academic database APIs integrated and operational",
+      "Source validation system accurately assessing credibility",
+      "Synthesis engine producing high-quality summaries",
+      "Automated archiving preserving all research materials",
+      "Knowledge graphs accurately mapping relationships",
+      "Research workflows automated and scheduled",
+      "Citation management system operational",
+      "Analytics providing meaningful research insights",
+      "Performance benchmarks met under research load"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "WEB_SCRAPING_TASK",
+        "name": "Web Scraping Infrastructure Setup",
+        "description": "Establish comprehensive web scraping infrastructure",
+        "estimated_time": "75 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "web_scraping",
+          "proxy_management",
+          "content_extraction"
+        ]
+      },
+      {
+        "task_id": "ACADEMIC_INTEGRATION_TASK",
+        "name": "Academic Database Integration",
+        "description": "Integrate major academic databases and APIs",
+        "estimated_time": "60 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "api_integration",
+          "academic_databases",
+          "authentication"
+        ]
+      },
+      {
+        "task_id": "SOURCE_VALIDATION_TASK",
+        "name": "Source Validation System",
+        "description": "Implement comprehensive source validation",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "WEB_SCRAPING_TASK",
+          "ACADEMIC_INTEGRATION_TASK"
+        ],
+        "skills_required": [
+          "credibility_scoring",
+          "fact_checking",
+          "cross_referencing"
+        ]
+      },
+      {
+        "task_id": "SYNTHESIS_ENGINE_TASK",
+        "name": "Intelligent Synthesis Engine",
+        "description": "Create advanced content synthesis engine",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "SOURCE_VALIDATION_TASK"
+        ],
+        "skills_required": [
+          "nlp_processing",
+          "summarization",
+          "knowledge_graphs"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "WEB_SCRAPING_SKILL",
+        "name": "Web Scraping",
+        "description": "Scrape and extract content from web sources",
+        "tools": [
+          "scrapy",
+          "selenium",
+          "playwright",
+          "beautifulsoup"
+        ],
+        "validation": "web_scraping_validation"
+      },
+      {
+        "skill_id": "ACADEMIC_INTEGRATION_SKILL",
+        "name": "Academic Integration",
+        "description": "Integrate with academic databases and APIs",
+        "tools": [
+          "pubmed_api",
+          "arxiv_api",
+          "ieee_api",
+          "google_scholar"
+        ],
+        "validation": "academic_integration_validation"
+      },
+      {
+        "skill_id": "SOURCE_VALIDATION_SKILL",
+        "name": "Source Validation",
+        "description": "Validate and assess source credibility",
+        "tools": [
+          "credibility_scorer",
+          "fact_checker",
+          "cross_referencer"
+        ],
+        "validation": "source_validation_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "RESEARCH_AUTOMATION_TOOL",
+        "name": "Research Automation Engine",
+        "description": "Core research automation system",
+        "file_path": "src/services/research/core.py",
+        "config": "config/research/automation_config.json"
+      },
+      {
+        "tool_id": "WEB_SCRAPING_TOOL",
+        "name": "Web Scraping Engine",
+        "description": "Web scraping and content extraction",
+        "file_path": "src/services/research/scraping_engine.py",
+        "config": "config/research/scraping_config.json"
+      },
+      {
+        "tool_id": "SYNTHESIS_ENGINE_TOOL",
+        "name": "Synthesis Engine",
+        "description": "Content synthesis and knowledge graphs",
+        "file_path": "src/services/research/synthesis_engine.py",
+        "config": "config/research/synthesis_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "RESEARCH_AUTOMATION_CONFIG",
+        "name": "Research Automation Configuration",
+        "description": "Configuration for research automation system",
+        "file_path": "config/research/automation_config.json",
+        "schema": "research_automation_config_schema"
+      },
+      {
+        "config_id": "WEB_SCRAPING_CONFIG",
+        "name": "Web Scraping Configuration",
+        "description": "Configuration for web scraping",
+        "file_path": "config/research/scraping_config.json",
+        "schema": "web_scraping_config_schema"
+      },
+      {
+        "config_id": "SYNTHESIS_CONFIG",
+        "name": "Synthesis Configuration",
+        "description": "Configuration for content synthesis",
+        "file_path": "config/research/synthesis_config.json",
+        "schema": "synthesis_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "WEB_SCRAPING_TASK",
+          "WEB_SCRAPING_SKILL",
+          "RESEARCH_AUTOMATION_TOOL"
+        ],
+        "description": "Gather research automation architecture ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "research_automation_cache",
+        "description": "Check for existing research automation cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "WEB_SCRAPING_TASK",
+        "description": "Execute web scraping infrastructure task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "ACADEMIC_INTEGRATION_TASK",
+          "ACADEMIC_INTEGRATION_SKILL",
+          "WEB_SCRAPING_TOOL"
+        ],
+        "description": "Gather academic integration ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "ACADEMIC_INTEGRATION_TASK",
+        "description": "Execute academic integration task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "SOURCE_VALIDATION_TASK",
+          "SOURCE_VALIDATION_SKILL"
+        ],
+        "description": "Gather source validation ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "SOURCE_VALIDATION_TASK",
+        "description": "Execute source validation task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "SYNTHESIS_ENGINE_TASK",
+          "SOURCE_VALIDATION_SKILL",
+          "SYNTHESIS_ENGINE_TOOL"
+        ],
+        "description": "Gather synthesis engine ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "SYNTHESIS_ENGINE_TASK",
+        "description": "Execute synthesis engine task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation": "research_automation_validation",
+        "description": "Validate complete research automation system"
+      },
+      {
+        "step_id": "STEP_11",
+        "action": "cache_results",
+        "cache_key": "research_automation_cache",
+        "description": "Cache research automation configuration and data"
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "research_automation_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "data_update",
+      "cache_validation": "research_automation_validation"
+    }
+  },
+  "prerequisites": {
+    "system_requirements": {
+      "operating_system": "Windows 10/11, macOS 12+, or Ubuntu 20.04 LTS+",
+      "memory": "16GB RAM minimum, 32GB recommended",
+      "storage": "500GB free space for research data",
+      "cpu": "8 cores minimum, 16 cores recommended",
+      "network": "High-speed internet for web scraping and API access"
+    },
+    "software_prerequisites": [
+      "Python 3.9+ with pip",
+      "Node.js 18+ for web scraping tools",
+      "PostgreSQL 15+ for research database",
+      "Redis 7+ for caching and queues",
+      "Elasticsearch 8+ for full-text search",
+      "Docker and Docker Compose",
+      "Git 2.35+ for version control"
+    ],
+    "knowledge_requirements": [
+      "Web scraping techniques and tools",
+      "Academic database APIs and access",
+      "Natural language processing",
+      "Information retrieval and search",
+      "Data validation and quality assessment",
+      "Knowledge graph construction",
+      "Research methodology and synthesis",
+      "Citation management and standards"
+    ]
+  },
+  "tasks": [
+    {
+      "task_id": "08-001",
+      "title": "Web Scraping Infrastructure Setup",
+      "description": "Establish comprehensive web scraping infrastructure with multiple engines, proxy management, rate limiting, and intelligent content extraction capabilities.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2200,
+      "dependencies": [],
+      "category": "infrastructure",
+      "priority": "critical"
+    },
+    {
+      "task_id": "08-002",
+      "title": "Academic Database Integration",
+      "description": "Integrate major academic databases and APIs including PubMed, arXiv, IEEE, ACM, and Google Scholar with authentication and rate limiting.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "dependencies": [],
+      "category": "integration",
+      "priority": "critical"
+    },
+    {
+      "task_id": "08-003",
+      "title": "Source Validation System",
+      "description": "Implement comprehensive source validation with credibility scoring, fact-checking algorithms, and cross-referencing capabilities.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2400,
+      "dependencies": [
+        "08-001",
+        "08-002"
+      ],
+      "category": "validation",
+      "priority": "high"
+    },
+    {
+      "task_id": "08-004",
+      "title": "Intelligent Synthesis Engine",
+      "description": "Create advanced content synthesis engine with NLP, summarization, relationship extraction, and knowledge graph construction.",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 2400,
+      "dependencies": [
+        "08-003"
+      ],
+      "category": "synthesis",
+      "priority": "high"
+    },
+    {
+      "task_id": "08-005",
+      "title": "Automated Literature Review",
+      "description": "Implement automated literature review system with gap analysis, trend identification, and research direction recommendations.",
+      "estimated_time": "75 minutes",
+      "estimated_tokens": 2100,
+      "dependencies": [
+        "08-004"
+      ],
+      "category": "analysis",
+      "priority": "high"
+    },
+    {
+      "task_id": "08-006",
+      "title": "Knowledge Graph Construction",
+      "description": "Build dynamic knowledge graph system with relationship mapping, entity extraction, and semantic reasoning capabilities.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1900,
+      "dependencies": [
+        "08-004"
+      ],
+      "category": "knowledge",
+      "priority": "medium"
+    },
+    {
+      "task_id": "08-007",
+      "title": "Comprehensive Archiving System",
+      "description": "Create automated archiving system with metadata preservation, version control, and intelligent storage optimization.",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 1800,
+      "dependencies": [
+        "08-001"
+      ],
+      "category": "archiving",
+      "priority": "medium"
+    },
+    {
+      "task_id": "08-008",
+      "title": "Research Workflow Automation",
+      "description": "Implement automated research workflows with scheduling, task management, and progress tracking capabilities.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1600,
+      "dependencies": [
+        "08-005"
+      ],
+      "category": "automation",
+      "priority": "medium"
+    },
+    {
+      "task_id": "08-009",
+      "title": "Citation Management System",
+      "description": "Develop comprehensive citation management with bibliography generation, format standardization, and reference tracking.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1600,
+      "dependencies": [
+        "08-002"
+      ],
+      "category": "management",
+      "priority": "medium"
+    },
+    {
+      "task_id": "08-010",
+      "title": "Research Analytics Dashboard",
+      "description": "Create research analytics dashboard with trend analysis, productivity metrics, and research insights visualization.",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 1600,
+      "dependencies": [
+        "08-008"
+      ],
+      "category": "analytics",
+      "priority": "low"
+    }
+  ],
+  "acceptance_criteria": [
+    "Web scraping functional across diverse content types",
+    "Academic database APIs integrated and operational",
+    "Source validation system accurately assessing credibility",
+    "Synthesis engine producing high-quality summaries",
+    "Automated archiving preserving all research materials",
+    "Knowledge graphs accurately mapping relationships",
+    "Research workflows automated and scheduled",
+    "Citation management system operational",
+    "Analytics providing meaningful research insights",
+    "Performance benchmarks met under research load"
+  ],
+  "configuration": {
+    "scraping_settings": {
+      "engines": [
+        "scrapy",
+        "selenium",
+        "playwright"
+      ],
+      "concurrent_requests": 16,
+      "download_delay": 1,
+      "user_agent_rotation": true,
+      "proxy_management": "enabled"
+    },
+    "academic_apis": {
+      "pubmed": {
+        "base_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
+        "api_key": "required",
+        "rate_limit": "3 requests/second"
+      },
+      "arxiv": {
+        "base_url": "http://export.arxiv.org/api/",
+        "rate_limit": "1 request/3 seconds"
+      },
+      "ieee": {
+        "base_url": "https://ieeexplore.ieee.org/gateway/ipsSearch.jsp",
+        "api_key": "required"
+      }
+    },
+    "validation_settings": {
+      "credibility_threshold": 0.7,
+      "fact_checking": "enabled",
+      "cross_referencing": "enabled",
+      "source_diversity": "required"
+    },
+    "synthesis_settings": {
+      "summary_length": "medium",
+      "relationship_extraction": "enabled",
+      "knowledge_graph": "dynamic",
+      "quality_threshold": 0.8
+    }
+  },
+  "validation_and_testing": {
+    "scraping_tests": [
+      "Content extraction accuracy",
+      "Rate limiting compliance",
+      "Error handling and recovery",
+      "Proxy rotation functionality"
+    ],
+    "validation_tests": [
+      "Credibility scoring accuracy",
+      "Fact-checking reliability",
+      "Cross-referencing completeness",
+      "Source diversity validation"
+    ],
+    "synthesis_tests": [
+      "Summary quality assessment",
+      "Relationship extraction accuracy",
+      "Knowledge graph consistency",
+      "Synthesis coherence validation"
+    ]
+  },
+  "deployment_instructions": {
+    "setup_commands": [
+      "pip install -r requirements.txt",
+      "docker-compose up -d postgres redis elasticsearch",
+      "python manage.py migrate",
+      "python manage.py collectstatic",
+      "celery -A research_automation worker -l info"
+    ],
+    "verification_commands": [
+      "curl -f http://localhost:8000/api/research/health",
+      "python manage.py test research_automation",
+      "celery -A research_automation inspect active"
+    ]
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Research-Automation-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

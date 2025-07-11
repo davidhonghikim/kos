@@ -1,0 +1,307 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-07-05T21:38:07Z",
+  "created_by": "Claude Sonnet 4 - Infrastructure Specialist",
+  "title": "Persistent Data Volumes & Storage Management",
+  "description": "Comprehensive persistent data volume system for off-grid deployment with intelligent caching and backup strategies",
+  "purpose": "Ensure all data persists across container restarts, system reboots, and deployments with comprehensive backup and recovery capabilities",
+  "overview": {
+    "objective": "Implement enterprise-grade persistent data management with intelligent caching, versioning, and disaster recovery",
+    "key_features": [
+      "Persistent data volumes for all services",
+      "Intelligent Docker image caching system",
+      "Automated backup and restore procedures",
+      "Version control for all data and configurations",
+      "Off-grid deployment capabilities",
+      "Self-hosted services for complete independence"
+    ],
+    "architecture": {
+      "data_tiers": [
+        "Hot Storage: Active data in containers",
+        "Warm Storage: Frequently accessed backups",
+        "Cold Storage: Long-term archival data",
+        "Cache Storage: Docker images and temporary data"
+      ],
+      "persistence_strategies": [
+        "Volume mounts for container data",
+        "Bind mounts for configuration files",
+        "Named volumes for service data",
+        "Network storage for shared data"
+      ]
+    }
+  },
+  "recipes": [
+    {
+      "recipe_id": "01-volume-structure-design",
+      "title": "Volume Structure Design & Implementation",
+      "description": "Design and implement comprehensive volume structure for all services",
+      "estimated_duration": "4 hours",
+      "complexity": "Advanced",
+      "dependencies": [],
+      "tasks": [
+        "Define volume hierarchy and naming conventions",
+        "Create volume directories and permissions",
+        "Implement volume monitoring and alerts",
+        "Setup volume backup procedures"
+      ]
+    },
+    {
+      "recipe_id": "02-docker-caching-system",
+      "title": "Docker Image Caching & Version Control",
+      "description": "Implement intelligent Docker image caching with version control and rollback capabilities",
+      "estimated_duration": "6 hours",
+      "complexity": "Advanced",
+      "dependencies": [
+        "01-volume-structure-design"
+      ],
+      "tasks": [
+        "Deploy local Docker registry",
+        "Implement image versioning system",
+        "Create cache update mechanisms",
+        "Design rollback procedures for images"
+      ]
+    },
+    {
+      "recipe_id": "03-backup-and-restore",
+      "title": "Automated Backup & Restore System",
+      "description": "Create comprehensive backup and restore procedures for all data and configurations",
+      "estimated_duration": "5 hours",
+      "complexity": "Advanced",
+      "dependencies": [
+        "01-volume-structure-design"
+      ],
+      "tasks": [
+        "Implement automated backup procedures",
+        "Create data validation and integrity checks",
+        "Setup backup monitoring and alerts",
+        "Design disaster recovery procedures"
+      ]
+    },
+    {
+      "recipe_id": "04-off-grid-deployment",
+      "title": "Off-Grid Deployment Framework",
+      "description": "Design system for deployment without internet connectivity with local update mechanisms",
+      "estimated_duration": "4 hours",
+      "complexity": "Advanced",
+      "dependencies": [
+        "02-docker-caching-system"
+      ],
+      "tasks": [
+        "Package all dependencies locally",
+        "Create offline installation procedures",
+        "Implement local update mechanisms",
+        "Design cache synchronization for connected environments"
+      ]
+    },
+    {
+      "recipe_id": "05-self-hosted-services",
+      "title": "Self-Hosted Services Integration",
+      "description": "Deploy self-hosted Git, NAS, and admin panel for complete off-grid operation",
+      "estimated_duration": "6 hours",
+      "complexity": "Advanced",
+      "dependencies": [
+        "01-volume-structure-design"
+      ],
+      "tasks": [
+        "Deploy Gitea for self-hosted Git",
+        "Setup NextCloud for file storage",
+        "Create web-based admin panel",
+        "Implement service integration"
+      ]
+    },
+    {
+      "recipe_id": "06-versioning-and-rollback",
+      "title": "Versioning & Rollback Infrastructure",
+      "description": "Implement comprehensive versioning and rollback capabilities for all system components",
+      "estimated_duration": "5 hours",
+      "complexity": "Advanced",
+      "dependencies": [
+        "05-self-hosted-services"
+      ],
+      "tasks": [
+        "Setup configuration versioning",
+        "Implement automated rollback triggers",
+        "Create rollback testing procedures",
+        "Design rollback monitoring and alerts"
+      ]
+    }
+  ],
+  "volume_structure": {
+    "base_directory": "/opt/ai-q",
+    "data_directories": {
+      "data": {
+        "path": "/opt/ai-q/data",
+        "purpose": "Main application data storage",
+        "services": [
+          "postgresql",
+          "redis",
+          "elasticsearch",
+          "weaviate",
+          "minio"
+        ]
+      },
+      "cache": {
+        "path": "/opt/ai-q/cache",
+        "purpose": "Temporary data and Docker image cache",
+        "services": [
+          "docker_registry",
+          "redis_cache",
+          "elasticsearch_cache"
+        ]
+      },
+      "backups": {
+        "path": "/opt/ai-q/backups",
+        "purpose": "Automated backup storage",
+        "retention": "30 days for daily backups, 1 year for weekly backups"
+      },
+      "archives": {
+        "path": "/opt/ai-q/archives",
+        "purpose": "Long-term archival storage",
+        "retention": "7 years for compliance and disaster recovery"
+      },
+      "config": {
+        "path": "/opt/ai-q/config",
+        "purpose": "Configuration files and settings",
+        "versioning": "Git-based version control"
+      },
+      "logs": {
+        "path": "/opt/ai-q/logs",
+        "purpose": "Application and system logs",
+        "retention": "90 days with log rotation"
+      }
+    }
+  },
+  "service_volumes": {
+    "postgresql": {
+      "data_volume": "/opt/ai-q/data/postgresql",
+      "config_volume": "/opt/ai-q/config/postgresql",
+      "backup_volume": "/opt/ai-q/backups/postgresql",
+      "persistence": "Required for database integrity"
+    },
+    "redis": {
+      "data_volume": "/opt/ai-q/data/redis",
+      "config_volume": "/opt/ai-q/config/redis",
+      "backup_volume": "/opt/ai-q/backups/redis",
+      "persistence": "Required for cache data"
+    },
+    "elasticsearch": {
+      "data_volume": "/opt/ai-q/data/elasticsearch",
+      "config_volume": "/opt/ai-q/config/elasticsearch",
+      "backup_volume": "/opt/ai-q/backups/elasticsearch",
+      "persistence": "Required for search indices"
+    },
+    "weaviate": {
+      "data_volume": "/opt/ai-q/data/weaviate",
+      "config_volume": "/opt/ai-q/config/weaviate",
+      "backup_volume": "/opt/ai-q/backups/weaviate",
+      "persistence": "Required for vector database"
+    },
+    "minio": {
+      "data_volume": "/opt/ai-q/data/minio",
+      "config_volume": "/opt/ai-q/config/minio",
+      "backup_volume": "/opt/ai-q/backups/minio",
+      "persistence": "Required for object storage"
+    },
+    "git_server": {
+      "data_volume": "/opt/ai-q/data/gitea",
+      "config_volume": "/opt/ai-q/config/gitea",
+      "backup_volume": "/opt/ai-q/backups/gitea",
+      "persistence": "Required for repositories"
+    },
+    "nas": {
+      "data_volume": "/opt/ai-q/data/nextcloud",
+      "config_volume": "/opt/ai-q/config/nextcloud",
+      "backup_volume": "/opt/ai-q/backups/nextcloud",
+      "persistence": "Required for file storage"
+    }
+  },
+  "backup_strategy": {
+    "frequency": {
+      "incremental": "Every 6 hours",
+      "daily": "Every day at 2:00 AM",
+      "weekly": "Every Sunday at 3:00 AM",
+      "monthly": "First day of each month at 4:00 AM"
+    },
+    "retention": {
+      "incremental": "7 days",
+      "daily": "30 days",
+      "weekly": "12 weeks",
+      "monthly": "7 years"
+    },
+    "validation": {
+      "integrity_check": "SHA256 checksums",
+      "restore_test": "Weekly automated restore tests",
+      "backup_monitoring": "Real-time backup status monitoring"
+    }
+  },
+  "performance_targets": {
+    "data_persistence": "100% data retention across restarts",
+    "backup_speed": "< 30 minutes for full system backup",
+    "restore_speed": "< 60 minutes for full system restore",
+    "cache_efficiency": "90%+ cache hit rate",
+    "storage_utilization": "< 80% of available storage"
+  },
+  "security_considerations": {
+    "data_encryption": "AES-256 encryption for sensitive data",
+    "access_control": "Role-based access control for all volumes",
+    "audit_logging": "Comprehensive audit trails for data access",
+    "backup_security": "Encrypted backup storage with key management"
+  },
+  "monitoring_and_alerting": {
+    "volume_monitoring": "Real-time volume usage and health monitoring",
+    "backup_monitoring": "Automated backup success/failure alerts",
+    "performance_monitoring": "Storage performance metrics and alerts",
+    "capacity_monitoring": "Storage capacity planning and alerts"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      "Volume permission problems",
+      "Backup failures",
+      "Cache corruption",
+      "Storage space issues"
+    ],
+    "recovery_procedures": [
+      "Volume repair procedures",
+      "Backup restoration",
+      "Cache rebuilding",
+      "Storage expansion"
+    ]
+  },
+  "next_steps": [
+    "Execute recipes in order starting with volume structure design",
+    "Validate each component before proceeding to next",
+    "Test backup and restore procedures thoroughly",
+    "Verify off-grid deployment capabilities"
+  ],
+  "metadata": {
+    "title": "Untitled Recipe",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-07T14:50:22.707528Z",
+    "last_updated": "2025-07-07T14:50:22.707528Z",
+    "creation_timestamp": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-DATABASE-BACKUP-RECOVERY-007",
+    "title": "Comprehensive Database Backup and Recovery System",
+    "version": "1.0.0",
+    "created_by": "Gemini",
+    "creation_date": "2025-07-05T00:00:00Z",
+    "last_updated": "2025-07-05T00:00:00Z",
+    "estimated_tokens": 9000,
+    "estimated_execution_time": "4-5 hours",
+    "difficulty_level": "expert",
+    "total_tasks": 1,
+    "agent_autonomy_level": "98%",
+    "success_rate_target": "99.9%",
+    "compliance_standards": [
+      "SOC 2",
+      "ISO 27001"
+    ],
+    "architecture_tier": "enterprise-operations"
+  },
+  "recipe_overview": {
+    "description": "Implement a robust, automated backup and disaster recovery system for the entire polyglot database infrastructure. This recipe coordinates backups across PostgreSQL, Redis, Neo4j, Weaviate, and Elasticsearch, ensuring data consistency and providing reliable point-in-time recovery capabilities.",
+    "technology_stack": {
+      "backup_tools": "pgBackRest, Redis RDB/AOF, Neo4j-Admin backup, Weaviate backup module, Elasticsearch snapshots",
+      "storage": "S3-compatible object storage (e.g., MinIO)",
+      "scripting": "Bash/Python",
+      "scheduling": "Cron"
+    },
+    "deliverables": [
+      "Automated, scheduled backups for all databases",
+      "A centralized script to orchestrate the backup process",
+      "Documented procedures for restoring each database from a backup",
+      "Integration with an S3-compatible backend for storing backup archives"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "03-database-backup-recovery-007",
+      "title": "Comprehensive Database Backup and Recovery System Implementation",
+      "description": "Implement a robust, automated backup and disaster recovery system for the entire polyglot database infrastructure. This recipe coordinates backups across PostgreSQL, Redis, Neo4j, Weaviate, and Elasticsearch, ensuring data consistency and providing reliable point-in-time recovery capabilities.",
+      "category": "operations",
+      "estimated_tokens": 9000,
+      "estimated_duration": "4-5 hours",
+      "difficulty_level": "expert",
+      "prerequisites": {
+        "knowledge_required": [
+          "Database backup/restore procedures for each specific database",
+          "Scripting",
+          "Object storage"
+        ],
+        "tools_required": [
+          "pgBackRest",
+          "redis-cli",
+          "neo4j-admin",
+          "curl",
+          "aws-cli"
+        ],
+        "environment_setup": [
+          "All databases running",
+          "S3 bucket available and credentials configured"
+        ]
+      },
+      "inputs": {
+        "files_to_read": [
+          "scripts/backup/orchestrator.sh"
+        ],
+        "config_dependencies": [
+          "Database credentials",
+          "S3 bucket details"
+        ],
+        "environment_variables": [
+          "S3_ACCESS_KEY",
+          "S3_SECRET_KEY"
+        ]
+      },
+      "outputs": {
+        "files_created": [
+          "scripts/backup/orchestrator.sh - Main script to run all database backups",
+          "scripts/backup/postgres_backup.sh - PostgreSQL backup script",
+          "scripts/backup/redis_backup.sh - Redis backup script",
+          "scripts/backup/neo4j_backup.sh - Neo4j backup script",
+          "scripts/backup/weaviate_backup.sh - Weaviate backup script",
+          "scripts/backup/elastic_backup.sh - Elasticsearch backup script",
+          "docs/DisasterRecovery.md - Step-by-step restoration guide"
+        ],
+        "files_modified": [
+          "crontab - A new cron job to schedule the backup orchestrator"
+        ]
+      },
+      "dependencies": {
+        "required_tasks": [
+          "02-storage-systems-recipe.json",
+          "03-database-postgresql-cluster-001",
+          "03-database-redis-cluster-002",
+          "03-database-neo4j-cluster-003",
+          "03-database-weaviate-cluster-004",
+          "03-database-elasticsearch-cluster-005"
+        ]
+      },
+      "detailed_instructions": {
+        "overview": "This task involves creating a set of scripts to handle the backup for each database technology. A master script, `orchestrator.sh`, will call each of these individual scripts in sequence. The backups will be pushed to a central S3-compatible object store.",
+        "step_by_step_guide": [
+          {
+            "step": 1,
+            "title": "Develop Individual Backup Scripts",
+            "description": "Create a separate shell script for each database to perform its specific backup procedure.",
+            "commands": [
+              "# Example for PostgreSQL using pgBackRest",
+              "echo 'pgbackrest --stanza=main --type=full backup' > scripts/backup/postgres_backup.sh",
+              "# Example for Redis using redis-cli",
+              "echo 'redis-cli --rdb /data/backup.rdb && aws s3 cp /data/backup.rdb s3://backups/redis/' > scripts/backup/redis_backup.sh",
+              "# Create similar scripts for Neo4j, Weaviate, and Elasticsearch"
+            ],
+            "expected_output": "Individual backup scripts for each database are created.",
+            "troubleshooting": "Test each script individually to ensure it successfully creates a backup."
+          },
+          {
+            "step": 2,
+            "title": "Create Backup Orchestrator",
+            "description": "Write a master script that calls the individual backup scripts and includes logging.",
+            "commands": [
+              "cat > scripts/backup/orchestrator.sh << 'EOF'",
+              "#!/bin/bash",
+              "set -e",
+              "LOG_FILE=/logs/backup.log",
+              "echo 'Starting full database backup...' | tee -a $LOG_FILE",
+              "bash scripts/backup/postgres_backup.sh | tee -a $LOG_FILE",
+              "bash scripts/backup/redis_backup.sh | tee -a $LOG_FILE",
+              "bash scripts/backup/neo4j_backup.sh | tee -a $LOG_FILE",
+              "bash scripts/backup/weaviate_backup.sh | tee -a $LOG_FILE",
+              "bash scripts/backup/elastic_backup.sh | tee -a $LOG_FILE",
+              "echo 'Full database backup completed.' | tee -a $LOG_FILE",
+              "EOF",
+              "chmod +x scripts/backup/*.sh"
+            ],
+            "expected_output": "An executable orchestrator script is created.",
+            "troubleshooting": "Ensure all paths and permissions are correct."
+          },
+          {
+            "step": 3,
+            "title": "Schedule Automated Backups",
+            "description": "Add a cron job to run the backup orchestrator script on a nightly schedule.",
+            "commands": [
+              "# Add to system's crontab to run daily at 2 AM",
+              "echo '0 2 * * * /path/to/scripts/backup/orchestrator.sh' | crontab -"
+            ],
+            "expected_output": "Cron job is scheduled.",
+            "troubleshooting": "Verify cron daemon is running and the user has permission to run crontab."
+          }
+        ]
+      },
+      "acceptance_criteria": {
+        "functional_requirements": [
+          "Automated backups run successfully on schedule.",
+          "Backups for all databases are consistently stored in the S3 bucket.",
+          "Restore procedures are documented and tested."
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "07-Backup-Recovery",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

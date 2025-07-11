@@ -1,0 +1,304 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "03-MCP-SERVER-FRAMEWORK-001",
+    "title": "MCP Server Framework Implementation",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-01-28T15:00:00Z",
+    "last_updated": "2025-01-28T15:00:00Z",
+    "difficulty_level": "expert",
+    "total_tasks": 8,
+    "estimated_time": "4-5 hours"
+  },
+  "recipe_overview": {
+    "description": "Implement a comprehensive Model Context Protocol (MCP) server framework that provides tool registry, discovery, execution, and management capabilities for AI agent integration.",
+    "technology_stack": {
+      "language": "TypeScript",
+      "runtime": "Node.js",
+      "protocol": "Model Context Protocol v1.0",
+      "communication": "WebSocket, HTTP/2",
+      "database": "PostgreSQL",
+      "cache": "Redis"
+    },
+    "deliverables": [
+      "MCP server framework with full protocol support",
+      "Tool registry and discovery system",
+      "Tool execution engine with context management",
+      "Security and authentication layer",
+      "Error handling and logging infrastructure"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "MCP-001",
+      "title": "Create MCP Server Core Framework",
+      "description": "Build the core MCP server framework with protocol handling and message routing",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/mcp/server",
+        "mkdir -p src/mcp/protocol",
+        "mkdir -p src/mcp/types",
+        "mkdir -p src/mcp/utils"
+      ],
+      "files_to_create": [
+        "src/mcp/server/mcp-server.ts",
+        "src/mcp/server/message-handler.ts",
+        "src/mcp/server/connection-manager.ts",
+        "src/mcp/protocol/mcp-protocol.ts",
+        "src/mcp/types/mcp-types.ts",
+        "src/mcp/utils/protocol-utils.ts"
+      ],
+      "acceptance_criteria": [
+        "MCP server starts and accepts connections",
+        "Protocol messages are properly parsed and routed",
+        "Connection management handles multiple clients",
+        "Error handling provides meaningful feedback"
+      ]
+    },
+    {
+      "id": "MCP-002",
+      "title": "Implement Tool Registry System",
+      "description": "Create a comprehensive tool registry for discovering and managing available tools",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/mcp/registry",
+        "mkdir -p src/mcp/registry/tools"
+      ],
+      "files_to_create": [
+        "src/mcp/registry/tool-registry.ts",
+        "src/mcp/registry/tool-discovery.ts",
+        "src/mcp/registry/tool-validator.ts",
+        "src/mcp/registry/tool-metadata.ts"
+      ],
+      "acceptance_criteria": [
+        "Tool registry can register and unregister tools",
+        "Tool discovery returns complete tool information",
+        "Tool validation ensures compatibility",
+        "Tool metadata is properly managed"
+      ]
+    },
+    {
+      "id": "MCP-003",
+      "title": "Build Tool Execution Engine",
+      "description": "Implement the tool execution engine with context management and result handling",
+      "estimated_time": "60 minutes",
+      "estimated_tokens": 3000,
+      "commands": [
+        "mkdir -p src/mcp/execution",
+        "mkdir -p src/mcp/execution/context"
+      ],
+      "files_to_create": [
+        "src/mcp/execution/tool-executor.ts",
+        "src/mcp/execution/context-manager.ts",
+        "src/mcp/execution/result-handler.ts",
+        "src/mcp/execution/error-handler.ts",
+        "src/mcp/execution/context/execution-context.ts"
+      ],
+      "acceptance_criteria": [
+        "Tool execution works with proper context passing",
+        "Results are properly formatted and returned",
+        "Error handling provides detailed error information",
+        "Context management preserves state correctly"
+      ]
+    },
+    {
+      "id": "MCP-004",
+      "title": "Implement Security and Authentication",
+      "description": "Add security layer with authentication, authorization, and access control",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/mcp/security",
+        "mkdir -p src/mcp/security/auth"
+      ],
+      "files_to_create": [
+        "src/mcp/security/authentication.ts",
+        "src/mcp/security/authorization.ts",
+        "src/mcp/security/access-control.ts",
+        "src/mcp/security/encryption.ts",
+        "src/mcp/security/auth/jwt-handler.ts"
+      ],
+      "acceptance_criteria": [
+        "Authentication prevents unauthorized access",
+        "Authorization controls tool access permissions",
+        "Access control enforces security policies",
+        "Encryption protects sensitive data"
+      ]
+    },
+    {
+      "id": "MCP-005",
+      "title": "Create Resource Management System",
+      "description": "Implement resource management for handling tool resources and lifecycle",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p src/mcp/resources"
+      ],
+      "files_to_create": [
+        "src/mcp/resources/resource-manager.ts",
+        "src/mcp/resources/resource-lifecycle.ts",
+        "src/mcp/resources/resource-monitor.ts"
+      ],
+      "acceptance_criteria": [
+        "Resource management handles tool lifecycle",
+        "Resource monitoring provides usage metrics",
+        "Resource cleanup prevents memory leaks",
+        "Resource allocation is efficient"
+      ]
+    },
+    {
+      "id": "MCP-006",
+      "title": "Implement Streaming Response Support",
+      "description": "Add support for streaming responses and real-time data flow",
+      "estimated_time": "45 minutes",
+      "estimated_tokens": 2500,
+      "commands": [
+        "mkdir -p src/mcp/streaming"
+      ],
+      "files_to_create": [
+        "src/mcp/streaming/stream-manager.ts",
+        "src/mcp/streaming/response-stream.ts",
+        "src/mcp/streaming/stream-handler.ts"
+      ],
+      "acceptance_criteria": [
+        "Streaming responses work correctly",
+        "Real-time data flow is maintained",
+        "Stream management handles multiple streams",
+        "Error handling works with streams"
+      ]
+    },
+    {
+      "id": "MCP-007",
+      "title": "Add Logging and Monitoring",
+      "description": "Implement comprehensive logging and monitoring for the MCP server",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p src/mcp/monitoring"
+      ],
+      "files_to_create": [
+        "src/mcp/monitoring/logger.ts",
+        "src/mcp/monitoring/metrics.ts",
+        "src/mcp/monitoring/health-check.ts"
+      ],
+      "acceptance_criteria": [
+        "Logging captures all important events",
+        "Metrics provide performance insights",
+        "Health checks monitor server status",
+        "Monitoring data is accessible via API"
+      ]
+    },
+    {
+      "id": "MCP-008",
+      "title": "Create MCP Server Configuration",
+      "description": "Set up configuration management and deployment for the MCP server",
+      "estimated_time": "30 minutes",
+      "estimated_tokens": 2000,
+      "commands": [
+        "mkdir -p config/mcp",
+        "mkdir -p docker/mcp"
+      ],
+      "files_to_create": [
+        "config/mcp/mcp-server-config.json",
+        "config/mcp/tool-registry-config.json",
+        "docker/mcp/Dockerfile",
+        "docker/mcp/docker-compose.yml",
+        "scripts/mcp-server-start.sh"
+      ],
+      "acceptance_criteria": [
+        "Configuration is properly structured",
+        "Docker deployment works correctly",
+        "Server startup script functions properly",
+        "Configuration validation prevents errors"
+      ]
+    }
+  ],
+  "dependencies": {
+    "infrastructure": [
+      "01-core-infrastructure-recipe.json",
+      "06-api-gateway-recipe.json",
+      "07-authentication-security-recipe.json"
+    ],
+    "external_packages": [
+      "ws (WebSocket)",
+      "express (HTTP server)",
+      "pg (PostgreSQL)",
+      "redis (Redis cache)",
+      "jsonwebtoken (JWT)",
+      "winston (Logging)"
+    ]
+  },
+  "testing_requirements": {
+    "unit_tests": [
+      "MCP protocol compliance tests",
+      "Tool registry functionality tests",
+      "Tool execution engine tests",
+      "Security and authentication tests"
+    ],
+    "integration_tests": [
+      "End-to-end MCP server tests",
+      "Tool integration tests",
+      "Multi-client connection tests",
+      "Performance and scalability tests"
+    ]
+  },
+  "security_considerations": {
+    "authentication": [
+      "JWT-based authentication",
+      "API key validation",
+      "Certificate-based authentication",
+      "Multi-factor authentication support"
+    ],
+    "authorization": [
+      "Role-based access control",
+      "Tool-specific permissions",
+      "Resource access control",
+      "Audit logging"
+    ]
+  },
+  "performance_requirements": {
+    "response_times": [
+      "Tool discovery: < 100ms",
+      "Tool execution: < 500ms",
+      "Connection establishment: < 200ms",
+      "Error responses: < 50ms"
+    ],
+    "scalability": [
+      "Support 100+ concurrent connections",
+      "Handle 1000+ tool executions per minute",
+      "Maintain performance under load",
+      "Efficient resource utilization"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default step - needs implementation",
+      "command": "echo 'Step needs implementation'",
+      "expected_output": "Step completed",
+      "error_handling": "Continue on error"
+    }
+  ],
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Mcp-Server-Framework",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  }
+}

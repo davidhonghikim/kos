@@ -1,0 +1,561 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "11-QUALITY-ASSURANCE",
+    "title": "Quality Assurance System - Universal Digital Twin System",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-06T16:14:00Z",
+    "last_updated": "2025-07-06T16:14:00Z",
+    "estimated_tokens": 85000,
+    "estimated_execution_time": "6-8 hours",
+    "difficulty_level": "advanced",
+    "total_tasks": 50,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "98%",
+    "kitchen_system": {
+      "pantry_category": "quality_assurance",
+      "cooking_time": "480 minutes",
+      "complexity": "advanced",
+      "kitchen_tools": [
+        "code_quality",
+        "testing_frameworks",
+        "security_scanning",
+        "performance_monitoring"
+      ],
+      "cache_strategy": "quality_assurance_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "description": "Comprehensive quality assurance system for automated code quality analysis, security scanning, performance testing, and continuous monitoring. This recipe implements enterprise-grade quality assurance including static analysis, dynamic testing, security vulnerability assessment, performance benchmarking, and automated quality gates.",
+    "architectural_scope": "Complete quality assurance platform with automated testing, security scanning, performance monitoring, and quality gates",
+    "technology_stack": {
+      "static_analysis": "SonarQube, CodeClimate, ESLint, Pylint, Black, isort",
+      "security_scanning": "OWASP ZAP, Bandit, Safety, npm audit, Snyk",
+      "testing_frameworks": "Jest, PyTest, Selenium, Playwright, Cypress",
+      "performance_testing": "JMeter, Artillery, K6, Lighthouse, WebPageTest",
+      "monitoring": "Prometheus, Grafana, ELK Stack, New Relic, DataDog",
+      "quality_gates": "Automated quality checks, CI/CD integration, reporting"
+    },
+    "deliverables": [
+      "Automated code quality analysis and reporting",
+      "Comprehensive security vulnerability scanning",
+      "Performance testing and benchmarking",
+      "Automated testing with high coverage",
+      "Quality gates and CI/CD integration",
+      "Real-time monitoring and alerting",
+      "Compliance and audit reporting",
+      "Automated code review and suggestions",
+      "Performance optimization recommendations",
+      "Security compliance validation"
+    ],
+    "success_criteria": [
+      "Code quality scores above 90%",
+      "Security vulnerabilities identified and reported",
+      "Performance benchmarks established and monitored",
+      "Automated testing achieving 95%+ coverage",
+      "Quality gates preventing poor code from deployment",
+      "Real-time monitoring providing actionable insights",
+      "Compliance reports generated automatically",
+      "Automated code reviews identifying issues",
+      "Performance optimization recommendations implemented",
+      "Security compliance validated and documented"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "CODE_QUALITY_TASK",
+        "name": "Code Quality Analysis Setup",
+        "description": "Set up comprehensive code quality analysis tools",
+        "estimated_time": "90 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "static_analysis",
+          "code_review",
+          "quality_metrics"
+        ]
+      },
+      {
+        "task_id": "SECURITY_SCANNING_TASK",
+        "name": "Security Vulnerability Scanning",
+        "description": "Implement comprehensive security scanning",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "CODE_QUALITY_TASK"
+        ],
+        "skills_required": [
+          "security_analysis",
+          "vulnerability_assessment",
+          "compliance"
+        ]
+      },
+      {
+        "task_id": "TESTING_FRAMEWORK_TASK",
+        "name": "Automated Testing Framework",
+        "description": "Set up comprehensive automated testing",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "SECURITY_SCANNING_TASK"
+        ],
+        "skills_required": [
+          "test_automation",
+          "coverage_analysis",
+          "ci_cd"
+        ]
+      },
+      {
+        "task_id": "PERFORMANCE_MONITORING_TASK",
+        "name": "Performance Monitoring System",
+        "description": "Implement performance monitoring and testing",
+        "estimated_time": "90 minutes",
+        "dependencies": [
+          "TESTING_FRAMEWORK_TASK"
+        ],
+        "skills_required": [
+          "performance_testing",
+          "monitoring",
+          "optimization"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "CODE_QUALITY_SKILL",
+        "name": "Code Quality Analysis",
+        "description": "Analyze code quality and provide recommendations",
+        "tools": [
+          "sonarqube",
+          "codeclimate",
+          "eslint",
+          "pylint"
+        ],
+        "validation": "code_quality_validation"
+      },
+      {
+        "skill_id": "SECURITY_SCANNING_SKILL",
+        "name": "Security Scanning",
+        "description": "Scan for security vulnerabilities and compliance",
+        "tools": [
+          "owasp_zap",
+          "bandit",
+          "snyk",
+          "npm_audit"
+        ],
+        "validation": "security_scanning_validation"
+      },
+      {
+        "skill_id": "TESTING_AUTOMATION_SKILL",
+        "name": "Testing Automation",
+        "description": "Automate testing with high coverage",
+        "tools": [
+          "jest",
+          "pytest",
+          "selenium",
+          "playwright"
+        ],
+        "validation": "testing_automation_validation"
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "QUALITY_ASSURANCE_TOOL",
+        "name": "Quality Assurance Engine",
+        "description": "Core quality assurance orchestration system",
+        "file_path": "src/services/quality/core.py",
+        "config": "config/quality/assurance_config.json"
+      },
+      {
+        "tool_id": "CODE_QUALITY_TOOL",
+        "name": "Code Quality Analyzer",
+        "description": "Code quality analysis and reporting",
+        "file_path": "src/services/quality/code_analyzer.py",
+        "config": "config/quality/code_config.json"
+      },
+      {
+        "tool_id": "SECURITY_SCANNER_TOOL",
+        "name": "Security Scanner",
+        "description": "Security vulnerability scanning",
+        "file_path": "src/services/quality/security_scanner.py",
+        "config": "config/quality/security_config.json"
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "QUALITY_ASSURANCE_CONFIG",
+        "name": "Quality Assurance Configuration",
+        "description": "Configuration for quality assurance system",
+        "file_path": "config/quality/assurance_config.json",
+        "schema": "quality_assurance_config_schema"
+      },
+      {
+        "config_id": "CODE_QUALITY_CONFIG",
+        "name": "Code Quality Configuration",
+        "description": "Configuration for code quality analysis",
+        "file_path": "config/quality/code_config.json",
+        "schema": "code_quality_config_schema"
+      },
+      {
+        "config_id": "SECURITY_CONFIG",
+        "name": "Security Configuration",
+        "description": "Configuration for security scanning",
+        "file_path": "config/quality/security_config.json",
+        "schema": "security_config_schema"
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "CODE_QUALITY_TASK",
+          "CODE_QUALITY_SKILL",
+          "QUALITY_ASSURANCE_TOOL"
+        ],
+        "description": "Gather code quality analysis ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "check_cache",
+        "cache_key": "quality_assurance_cache",
+        "description": "Check for existing quality assurance cache"
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_task",
+        "task": "CODE_QUALITY_TASK",
+        "description": "Execute code quality analysis task"
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "SECURITY_SCANNING_TASK",
+          "SECURITY_SCANNING_SKILL",
+          "SECURITY_SCANNER_TOOL"
+        ],
+        "description": "Gather security scanning ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_task",
+        "task": "SECURITY_SCANNING_TASK",
+        "description": "Execute security scanning task"
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "TESTING_FRAMEWORK_TASK",
+          "TESTING_AUTOMATION_SKILL"
+        ],
+        "description": "Gather testing framework ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "execute_task",
+        "task": "TESTING_FRAMEWORK_TASK",
+        "description": "Execute testing framework task"
+      },
+      {
+        "step_id": "STEP_8",
+        "action": "gather_ingredients",
+        "ingredients": [
+          "PERFORMANCE_MONITORING_TASK"
+        ],
+        "description": "Gather performance monitoring ingredients from pantry"
+      },
+      {
+        "step_id": "STEP_9",
+        "action": "execute_task",
+        "task": "PERFORMANCE_MONITORING_TASK",
+        "description": "Execute performance monitoring task"
+      },
+      {
+        "step_id": "STEP_10",
+        "action": "validate_results",
+        "validation_criteria": [
+          "Code quality scores above 90%",
+          "Security vulnerabilities identified",
+          "Testing coverage above 95%",
+          "Performance benchmarks established"
+        ],
+        "description": "Validate quality assurance results"
+      }
+    ]
+  },
+  "caching_strategy": {
+    "cache_key": "quality_assurance_cache",
+    "cache_components": [
+      "code_quality_reports",
+      "security_scan_results",
+      "test_coverage_reports",
+      "performance_benchmarks"
+    ],
+    "invalidation_triggers": [
+      "code_changes",
+      "dependency_updates",
+      "security_patches",
+      "performance_regressions"
+    ],
+    "cache_duration": "24 hours",
+    "validation_mechanism": "quality_assurance_validation"
+  },
+  "implementation_steps": [
+    {
+      "task_id": "11-001",
+      "title": "Quality Assurance Infrastructure Setup",
+      "description": "Set up comprehensive quality assurance infrastructure with exact specifications and atomic operations",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "mkdir -p src/services/quality",
+        "mkdir -p config/quality",
+        "mkdir -p /opt/ai-q/quality/{reports,cache,config}",
+        "chmod 755 /opt/ai-q/quality"
+      ],
+      "files_to_create": [
+        "src/services/quality/__init__.py",
+        "src/services/quality/code_analyzer.py",
+        "src/services/quality/security_scanner.py",
+        "src/services/quality/performance_monitor.py",
+        "src/services/quality/quality_gates.py",
+        "config/quality/code_analysis_config.json",
+        "config/quality/security_config.json",
+        "config/quality/performance_config.json"
+      ],
+      "acceptance_criteria": [
+        "All directory structures created with correct permissions",
+        "Quality analysis base classes defined with exact interfaces",
+        "Configuration system supports all quality tools with validation",
+        "Type definitions for all quality operations with exact specifications",
+        "Quality gates can handle multiple analysis types with atomic operations"
+      ]
+    },
+    {
+      "task_id": "11-002",
+      "title": "SonarQube Installation and Configuration",
+      "description": "Install and configure SonarQube with exact database setup and quality profiles",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name sonarqube --network ai-q-network -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -v /opt/ai-q/quality/sonarqube:/opt/sonarqube/data sonarqube:10.0.0",
+        "docker run -d --name postgres-sonar --network ai-q-network -e POSTGRES_DB=sonar -e POSTGRES_USER=sonar -e POSTGRES_PASSWORD=sonar123 -v /opt/ai-q/quality/postgres:/var/lib/postgresql/data postgres:15.0"
+      ],
+      "files_to_create": [
+        "config/quality/sonarqube/sonar.properties",
+        "config/quality/sonarqube/quality-profiles/",
+        "config/quality/sonarqube/quality-gates/",
+        "scripts/quality/sonarqube-setup.sh"
+      ],
+      "acceptance_criteria": [
+        "SonarQube accessible at http://localhost:9000 with admin/admin credentials",
+        "PostgreSQL database operational with sonar database created",
+        "Quality profiles imported for Python, JavaScript, and TypeScript",
+        "Quality gates configured with exact thresholds",
+        "SonarQube scanner can analyze code and generate reports"
+      ]
+    },
+    {
+      "task_id": "11-003",
+      "title": "Security Scanning Implementation",
+      "description": "Implement comprehensive security scanning with OWASP ZAP, Bandit, and dependency analysis",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "pip install bandit safety",
+        "npm install -g snyk",
+        "docker run -d --name owasp-zap --network ai-q-network -p 8080:8080 -p 8090:8090 owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.key=zap123"
+      ],
+      "files_to_create": [
+        "config/quality/security/bandit.yaml",
+        "config/quality/security/safety.json",
+        "config/quality/security/zap.conf",
+        "scripts/quality/security-scan.sh"
+      ],
+      "acceptance_criteria": [
+        "Bandit can scan Python code and generate security reports",
+        "Safety can check Python dependencies for vulnerabilities",
+        "Snyk can scan Node.js dependencies for security issues",
+        "OWASP ZAP can perform automated security testing",
+        "All security tools integrated into CI/CD pipeline"
+      ]
+    },
+    {
+      "task_id": "11-004",
+      "title": "Automated Testing Framework Setup",
+      "description": "Set up comprehensive automated testing with Jest, PyTest, and Selenium with exact configurations",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "npm install --save-dev jest @testing-library/react @testing-library/jest-dom",
+        "pip install pytest pytest-cov pytest-html selenium",
+        "mkdir -p tests/{unit,integration,e2e}",
+        "mkdir -p /opt/ai-q/quality/test-reports"
+      ],
+      "files_to_create": [
+        "jest.config.js",
+        "pytest.ini",
+        "tests/conftest.py",
+        "tests/unit/__init__.py",
+        "tests/integration/__init__.py",
+        "tests/e2e/__init__.py",
+        "config/quality/testing/jest.config.json",
+        "config/quality/testing/pytest.config.json"
+      ],
+      "acceptance_criteria": [
+        "Jest can run JavaScript/TypeScript tests with coverage reporting",
+        "PyTest can run Python tests with coverage and HTML reports",
+        "Selenium can run end-to-end browser tests",
+        "Test coverage reports generated in /opt/ai-q/quality/test-reports",
+        "All test frameworks integrated into CI/CD pipeline"
+      ]
+    },
+    {
+      "task_id": "11-005",
+      "title": "Performance Monitoring Implementation",
+      "description": "Implement performance monitoring with Prometheus, Grafana, and benchmarking tools",
+      "estimated_time": "90 minutes",
+      "estimated_tokens": 3000,
+      "exact_commands": [
+        "docker run -d --name prometheus-qa --network ai-q-monitoring -p 9091:9090 -v /opt/ai-q/quality/prometheus:/etc/prometheus prom/prometheus:v2.45.0",
+        "docker run -d --name grafana-qa --network ai-q-monitoring -p 3001:3000 -v /opt/ai-q/quality/grafana:/var/lib/grafana grafana/grafana:10.0.0",
+        "npm install --save-dev lighthouse",
+        "pip install locust"
+      ],
+      "files_to_create": [
+        "config/quality/performance/prometheus.yml",
+        "config/quality/performance/grafana/dashboards/",
+        "config/quality/performance/lighthouse.config.js",
+        "config/quality/performance/locustfile.py"
+      ],
+      "acceptance_criteria": [
+        "Prometheus collecting performance metrics from all services",
+        "Grafana dashboards showing performance KPIs",
+        "Lighthouse can generate performance reports for web applications",
+        "Locust can perform load testing with configurable scenarios",
+        "Performance benchmarks stored and trended over time"
+      ]
+    }
+  ],
+  "acceptance_criteria": [
+    "Code quality scores above 90% across all projects",
+    "Security vulnerabilities identified and reported with severity levels",
+    "Performance benchmarks established and monitored with alerts",
+    "Automated testing achieving 95%+ coverage for all code",
+    "Quality gates preventing poor code from deployment with exact thresholds",
+    "Real-time monitoring providing actionable insights and alerts",
+    "Compliance reports generated automatically for all standards",
+    "Automated code reviews identifying issues with suggested fixes",
+    "Performance optimization recommendations implemented and validated",
+    "Security compliance validated and documented with audit trails"
+  ],
+  "deliverables": [
+    "Production-ready quality assurance system with exact configurations",
+    "Comprehensive code quality analysis with SonarQube and custom rules",
+    "Security scanning infrastructure with OWASP ZAP and dependency analysis",
+    "Automated testing framework with high coverage and reporting",
+    "Performance monitoring system with benchmarking and optimization",
+    "Quality gates integrated into CI/CD pipeline with exact thresholds",
+    "Real-time monitoring and alerting with actionable insights",
+    "Compliance reporting system with audit trails and documentation",
+    "Automated code review system with AI-powered suggestions",
+    "Performance optimization engine with automated recommendations"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "SonarQube fails to start",
+        "symptoms": "SonarQube container exits with memory errors",
+        "diagnosis": "Insufficient memory allocation for Elasticsearch",
+        "solution": "Increase Docker memory limit: docker run -m 4g --name sonarqube ...",
+        "prevention": "Always allocate sufficient memory for SonarQube (minimum 4GB)"
+      },
+      {
+        "issue": "Security scans timeout",
+        "symptoms": "OWASP ZAP scans take too long or fail",
+        "diagnosis": "Large codebase or slow network connectivity",
+        "solution": "Configure scan timeouts and parallel execution: zap-baseline.py -t http://target -c config/zap.conf",
+        "prevention": "Set appropriate timeouts and use incremental scanning"
+      },
+      {
+        "issue": "Test coverage below threshold",
+        "symptoms": "Quality gates fail due to low test coverage",
+        "diagnosis": "Missing test cases or incorrect coverage configuration",
+        "solution": "Add missing test cases and verify coverage configuration",
+        "prevention": "Maintain high test coverage standards from project start"
+      }
+    ],
+    "performance_optimization": [
+      {
+        "optimization": "Parallel test execution",
+        "description": "Run tests in parallel to reduce execution time",
+        "implementation": "Configure pytest-xdist and Jest parallel execution",
+        "expected_improvement": "50-70% reduction in test execution time"
+      },
+      {
+        "optimization": "Caching test results",
+        "description": "Cache test results to avoid redundant execution",
+        "implementation": "Use Jest cache and pytest-cov caching",
+        "expected_improvement": "30-40% faster subsequent test runs"
+      },
+      {
+        "optimization": "Incremental security scanning",
+        "description": "Scan only changed files to reduce scan time",
+        "implementation": "Configure differential scanning in security tools",
+        "expected_improvement": "60-80% reduction in security scan time"
+      }
+    ]
+  },
+  "performance_benchmarks": {
+    "quality_analysis_targets": {
+      "code_quality_score": "> 90%",
+      "security_scan_time": "< 10 minutes",
+      "test_execution_time": "< 5 minutes",
+      "coverage_report_generation": "< 30 seconds"
+    },
+    "monitoring_targets": {
+      "alert_response_time": "< 30 seconds",
+      "dashboard_load_time": "< 2 seconds",
+      "report_generation_time": "< 1 minute",
+      "quality_gate_evaluation": "< 10 seconds"
+    },
+    "compliance_targets": {
+      "audit_report_accuracy": "> 99%",
+      "compliance_check_time": "< 5 minutes",
+      "documentation_completeness": "100%",
+      "regulatory_standard_coverage": "100%"
+    }
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "01-Quality-Assurance-Recipe",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}

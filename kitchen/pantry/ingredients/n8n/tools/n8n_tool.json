@@ -1,0 +1,29 @@
+{
+  "id": "tool.n8n",
+  "type": "tool",
+  "name": "n8n Tool",
+  "description": "Comprehensive n8n workflow automation operations for task orchestration and automation",
+  "version": "1.0.0",
+  "category": "tools",
+  "dependencies": [],
+  "tags": ["n8n", "workflow", "automation", "orchestration", "integration", "modular"],
+  "author": "system",
+  "created": "2025-07-08T03:00:00Z",
+  "updated": "2025-07-08T03:00:00Z",
+  "access_level": "public",
+  "usage": "Use for n8n workflow automation tasks in recipes",
+  "operations": {
+    "execute_workflow": "Execute n8n workflows",
+    "create_workflow": "Create new n8n workflows",
+    "update_workflow": "Update existing workflows",
+    "delete_workflow": "Delete workflows",
+    "get_workflows": "List all available workflows",
+    "get_executions": "Get workflow execution history",
+    "trigger_webhook": "Trigger workflows via webhook",
+    "get_credentials": "Manage workflow credentials"
+  },
+  "validation": {
+    "required_fields": ["operation", "workflow_id"],
+    "operations": ["execute_workflow", "create_workflow", "update_workflow", "delete_workflow", "get_workflows", "get_executions", "trigger_webhook", "get_credentials"]
+  }
+} 

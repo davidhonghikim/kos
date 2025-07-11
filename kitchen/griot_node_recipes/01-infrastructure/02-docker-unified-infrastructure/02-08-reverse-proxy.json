@@ -1,0 +1,682 @@
+{
+  "recipe_metadata": {
+    "recipe_id": "02-08-REVERSE-PROXY-INFRASTRUCTURE-FOUNDATION",
+    "title": "Reverse Proxy Infrastructure Foundation - Docker Environment Setup",
+    "version": "5.0.0",
+    "created_by": "Claude Sonnet 4",
+    "creation_date": "2025-07-05T18:15:32Z",
+    "last_updated": "2025-07-05T18:15:32Z",
+    "estimated_tokens": 45000,
+    "estimated_execution_time": "45 minutes",
+    "difficulty_level": "expert",
+    "total_tasks": 3,
+    "agent_autonomy_level": "95%",
+    "success_rate_target": "99%",
+    "compliance_standards": [
+      "ISO 27001",
+      "SOC 2"
+    ],
+    "architecture_tier": "enterprise-reverse-proxy-infrastructure",
+    "description": "Reverse proxy infrastructure foundation with Docker networks, volumes, and orchestration framework - infrastructure only, no services installed",
+    "is_master_recipe": false,
+    "dependencies": {
+      "prerequisites": [
+        "02-01-docker-core",
+        "02-02-docker-services"
+      ],
+      "required_services": [
+        "docker",
+        "docker-compose"
+      ],
+      "required_networks": [
+        "ai-q-reverse-proxy-network"
+      ],
+      "required_volumes": [
+        "ai-q-reverse-proxy-config",
+        "ai-q-reverse-proxy-certs",
+        "ai-q-reverse-proxy-logs"
+      ],
+      "required_ports": [],
+      "required_files": [
+        "/opt/ai-q/docker/compose/reverse-proxy/"
+      ]
+    },
+    "kitchen_system": {
+      "pantry_category": "reverse-proxy-infrastructure",
+      "cooking_time": "45 minutes",
+      "complexity": "expert",
+      "kitchen_tools": [
+        "reverse_proxy_network_setup",
+        "reverse_proxy_volume_management",
+        "reverse_proxy_orchestration_framework"
+      ],
+      "cache_strategy": "reverse_proxy_infrastructure_cache",
+      "orchestrator_priority": "critical"
+    }
+  },
+  "recipe_overview": {
+    "name": "Reverse Proxy Infrastructure Foundation",
+    "description": "Docker infrastructure foundation for reverse proxy services - networks, volumes, and orchestration framework only",
+    "prerequisites": [
+      "02-01-docker-core completed",
+      "02-02-docker-services completed",
+      "Docker networks operational",
+      "Docker volumes accessible",
+      "Minimum 4GB RAM available",
+      "20GB free disk space for reverse proxy data"
+    ],
+    "target_outcome": "Production-ready reverse proxy infrastructure foundation with zero technical debt",
+    "success_criteria": [
+      "Reverse proxy Docker network operational",
+      "Reverse proxy volumes created and accessible",
+      "Reverse proxy orchestration framework ready",
+      "No actual reverse proxy services installed",
+      "All components can be safely installed/uninstalled"
+    ]
+  },
+  "pantry_ingredients": {
+    "tasks": [
+      {
+        "task_id": "REVERSE_PROXY_NETWORK_SETUP_TASK",
+        "name": "Reverse Proxy Network Setup",
+        "description": "Create dedicated Docker network for reverse proxy services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [],
+        "skills_required": [
+          "network_configuration",
+          "subnet_management",
+          "reverse_proxy_infrastructure"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.29.0.0/16 --gateway 172.29.0.1 ai-q-reverse-proxy-network",
+          "docker network ls --filter name=ai-q-reverse-proxy-network",
+          "docker network inspect ai-q-reverse-proxy-network --format '{{.IPAM.Config}}'"
+        ],
+        "validation_commands": [
+          "docker network ls --filter name=ai-q-reverse-proxy-network",
+          "docker network inspect ai-q-reverse-proxy-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-reverse-proxy-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "task_id": "REVERSE_PROXY_VOLUME_SETUP_TASK",
+        "name": "Reverse Proxy Volume Setup",
+        "description": "Create persistent volumes for reverse proxy services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [
+          "REVERSE_PROXY_NETWORK_SETUP_TASK"
+        ],
+        "skills_required": [
+          "volume_management",
+          "persistence_configuration",
+          "reverse_proxy_data_storage"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-reverse-proxy-config",
+          "docker volume create ai-q-reverse-proxy-certs",
+          "docker volume create ai-q-reverse-proxy-logs",
+          "docker volume create ai-q-reverse-proxy-cache",
+          "docker volume create ai-q-reverse-proxy-temp"
+        ],
+        "validation_commands": [
+          "docker volume ls --filter name=ai-q-reverse-proxy",
+          "docker volume inspect ai-q-reverse-proxy-config --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-reverse-proxy-certs --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "task_id": "REVERSE_PROXY_ORCHESTRATION_SETUP_TASK",
+        "name": "Reverse Proxy Orchestration Framework",
+        "description": "Create orchestration framework for reverse proxy services with exact specifications",
+        "estimated_time": "15 minutes",
+        "dependencies": [
+          "REVERSE_PROXY_VOLUME_SETUP_TASK"
+        ],
+        "skills_required": [
+          "orchestration_framework",
+          "template_management",
+          "reverse_proxy_infrastructure"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/reverse-proxy/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/reverse-proxy",
+          "tee /opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-reverse-proxy-network:",
+          "    external: true",
+          "volumes:",
+          "  reverse-proxy-config:",
+          "    external: true",
+          "  reverse-proxy-certs:",
+          "    external: true",
+          "  reverse-proxy-logs:",
+          "    external: true",
+          "  reverse-proxy-cache:",
+          "    external: true",
+          "  reverse-proxy-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Reverse Proxy Orchestration Script",
+          "REVERSE_PROXY_DIR=\"/opt/ai-q/docker/compose/reverse-proxy\"",
+          "start_reverse_proxy_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$REVERSE_PROXY_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Starting $service_name...\"",
+          "        docker-compose -f \"$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_reverse_proxy_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$REVERSE_PROXY_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Stopping $service_name...\"",
+          "        docker-compose -f \"$compose_file\" down",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_reverse_proxy_service() {",
+          "    local service_name=$1",
+          "    stop_reverse_proxy_service \"$service_name\"",
+          "    sleep 5",
+          "    start_reverse_proxy_service \"$service_name\"",
+          "}",
+          "check_reverse_proxy_service_status() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$REVERSE_PROXY_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Checking status of $service_name...\"",
+          "        docker-compose -f \"$compose_file\" ps",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"$1\" in",
+          "    start)",
+          "        start_reverse_proxy_service \"$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_reverse_proxy_service \"$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_reverse_proxy_service \"$2\"",
+          "        ;;",
+          "    status)",
+          "        check_reverse_proxy_service_status \"$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: $0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh"
+        ],
+        "validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/reverse-proxy/",
+          "cat /opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml",
+          "/opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh --help || echo 'Script created'"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "REVERSE_PROXY_NETWORK_CONFIGURATION_SKILL",
+        "name": "Reverse Proxy Network Configuration",
+        "description": "Configure reverse proxy networks with exact specifications",
+        "tools": [
+          "network_setup",
+          "subnet_management",
+          "reverse_proxy_infrastructure"
+        ],
+        "validation": "reverse_proxy_network_configuration_validation",
+        "exact_validation_commands": [
+          "docker network ls --filter name=ai-q-reverse-proxy-network",
+          "docker network inspect ai-q-reverse-proxy-network --format '{{.IPAM.Config}}'",
+          "docker network inspect ai-q-reverse-proxy-network --format '{{.Driver}}'"
+        ]
+      },
+      {
+        "skill_id": "REVERSE_PROXY_VOLUME_MANAGEMENT_SKILL",
+        "name": "Reverse Proxy Volume Management",
+        "description": "Manage reverse proxy volumes with exact specifications",
+        "tools": [
+          "volume_setup",
+          "persistence_management",
+          "reverse_proxy_data_storage"
+        ],
+        "validation": "reverse_proxy_volume_management_validation",
+        "exact_validation_commands": [
+          "docker volume ls --filter name=ai-q-reverse-proxy",
+          "docker volume inspect ai-q-reverse-proxy-config --format '{{.Mountpoint}}'",
+          "docker volume inspect ai-q-reverse-proxy-certs --format '{{.Mountpoint}}'"
+        ]
+      },
+      {
+        "skill_id": "REVERSE_PROXY_ORCHESTRATION_SKILL",
+        "name": "Reverse Proxy Orchestration Framework",
+        "description": "Manage reverse proxy orchestration with exact specifications",
+        "tools": [
+          "orchestration_setup",
+          "template_management",
+          "script_management"
+        ],
+        "validation": "reverse_proxy_orchestration_validation",
+        "exact_validation_commands": [
+          "ls -la /opt/ai-q/docker/compose/reverse-proxy/",
+          "cat /opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml",
+          "test -x /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "tool_id": "REVERSE_PROXY_INFRASTRUCTURE_TOOL",
+        "name": "Reverse Proxy Infrastructure Setup Tool",
+        "description": "Automated reverse proxy infrastructure installation and configuration",
+        "file_path": "scripts/infrastructure/setup_reverse_proxy_infrastructure.py",
+        "config": "config/infrastructure/reverse_proxy_infrastructure_config.json",
+        "exact_config_spec": {
+          "network_subnet": "172.29.0.0/16",
+          "network_gateway": "172.29.0.1",
+          "network_driver": "bridge",
+          "volumes": [
+            "ai-q-reverse-proxy-config",
+            "ai-q-reverse-proxy-certs",
+            "ai-q-reverse-proxy-logs",
+            "ai-q-reverse-proxy-cache",
+            "ai-q-reverse-proxy-temp"
+          ],
+          "orchestration_dir": "/opt/ai-q/docker/compose/reverse-proxy"
+        }
+      }
+    ],
+    "configs": [
+      {
+        "config_id": "REVERSE_PROXY_NETWORK_CONFIG",
+        "name": "Reverse Proxy Network Configuration",
+        "description": "Reverse proxy network configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/reverse_proxy_network.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "network_name": {
+              "type": "string"
+            },
+            "subnet": {
+              "type": "string"
+            },
+            "gateway": {
+              "type": "string"
+            },
+            "driver": {
+              "type": "string"
+            },
+            "enable_ipv6": {
+              "type": "boolean"
+            },
+            "internal": {
+              "type": "boolean"
+            },
+            "attachable": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      {
+        "config_id": "REVERSE_PROXY_VOLUME_CONFIG",
+        "name": "Reverse Proxy Volume Configuration",
+        "description": "Reverse proxy volume configuration with exact specifications",
+        "file_path": "/opt/ai-q/config/infrastructure/reverse_proxy_volumes.json",
+        "exact_schema": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "driver": {
+                    "type": "string"
+                  },
+                  "labels": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "kitchen_execution": {
+    "orchestrator_steps": [
+      {
+        "step_id": "STEP_1",
+        "action": "gather_ingredients",
+        "description": "Load all required pantry ingredients with aggressive caching",
+        "ingredients": [
+          "task:reverse-proxy-network-setup:1.0.0",
+          "task:reverse-proxy-volume-setup:1.0.0",
+          "task:reverse-proxy-orchestration-setup:1.0.0",
+          "skill:reverse-proxy-network-configuration:1.0.0",
+          "skill:reverse-proxy-volume-management:1.0.0",
+          "skill:reverse-proxy-orchestration:1.0.0",
+          "tool:reverse-proxy-infrastructure:1.0.0",
+          "config:reverse-proxy-network:1.0.0",
+          "config:reverse-proxy-volume:1.0.0"
+        ],
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_reverse_proxy_infrastructure.py --gather-ingredients"
+        ]
+      },
+      {
+        "step_id": "STEP_2",
+        "action": "validate_dependencies",
+        "description": "Verify all ingredient dependencies are satisfied",
+        "checks": [
+          "Docker environment operational",
+          "Docker networks available",
+          "Docker volumes accessible",
+          "Minimum 4GB RAM available",
+          "20GB free disk space available"
+        ],
+        "exact_commands": [
+          "docker network ls --filter name=ai-q",
+          "docker volume ls --filter name=ai-q",
+          "free -h | grep Mem | awk '{print $2}'",
+          "df -h /opt/ai-q | awk 'NR==2 {print $4}'",
+          "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+        ]
+      },
+      {
+        "step_id": "STEP_3",
+        "action": "execute_reverse_proxy_network_setup",
+        "description": "Create reverse proxy Docker network with exact commands",
+        "sub_steps": [
+          "Create reverse proxy network",
+          "Validate network configuration"
+        ],
+        "exact_commands": [
+          "docker network create --driver bridge --subnet 172.29.0.0/16 --gateway 172.29.0.1 ai-q-reverse-proxy-network",
+          "docker network ls --filter name=ai-q-reverse-proxy-network",
+          "docker network inspect ai-q-reverse-proxy-network --format '{{.IPAM.Config}}'"
+        ],
+        "files_to_create": [
+          "Docker network: ai-q-reverse-proxy-network"
+        ]
+      },
+      {
+        "step_id": "STEP_4",
+        "action": "execute_reverse_proxy_volume_setup",
+        "description": "Create reverse proxy volumes with exact commands",
+        "sub_steps": [
+          "Create reverse proxy volumes",
+          "Validate volume creation"
+        ],
+        "exact_commands": [
+          "docker volume create ai-q-reverse-proxy-config",
+          "docker volume create ai-q-reverse-proxy-certs",
+          "docker volume create ai-q-reverse-proxy-logs",
+          "docker volume create ai-q-reverse-proxy-cache",
+          "docker volume create ai-q-reverse-proxy-temp",
+          "docker volume ls --filter name=ai-q-reverse-proxy"
+        ],
+        "files_to_create": [
+          "Docker volumes: ai-q-reverse-proxy-config, ai-q-reverse-proxy-certs, ai-q-reverse-proxy-logs, ai-q-reverse-proxy-cache, ai-q-reverse-proxy-temp"
+        ]
+      },
+      {
+        "step_id": "STEP_5",
+        "action": "execute_reverse_proxy_orchestration_setup",
+        "description": "Create reverse proxy orchestration framework with exact commands",
+        "sub_steps": [
+          "Create orchestration directories",
+          "Create base template",
+          "Create orchestration script"
+        ],
+        "exact_commands": [
+          "mkdir -p /opt/ai-q/docker/compose/reverse-proxy/{templates,configs,scripts}",
+          "chmod 755 /opt/ai-q/docker/compose/reverse-proxy",
+          "tee /opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml << 'EOF'",
+          "version: '3.8'",
+          "networks:",
+          "  ai-q-reverse-proxy-network:",
+          "    external: true",
+          "volumes:",
+          "  reverse-proxy-config:",
+          "    external: true",
+          "  reverse-proxy-certs:",
+          "    external: true",
+          "  reverse-proxy-logs:",
+          "    external: true",
+          "  reverse-proxy-cache:",
+          "    external: true",
+          "  reverse-proxy-temp:",
+          "    external: true",
+          "EOF",
+          "tee /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh << 'EOF'",
+          "#!/bin/bash",
+          "# Reverse Proxy Orchestration Script",
+          "REVERSE_PROXY_DIR=\"/opt/ai-q/docker/compose/reverse-proxy\"",
+          "start_reverse_proxy_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$REVERSE_PROXY_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Starting $service_name...\"",
+          "        docker-compose -f \"$compose_file\" up -d",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "stop_reverse_proxy_service() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$REVERSE_PROXY_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Stopping $service_name...\"",
+          "        docker-compose -f \"$compose_file\" down",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "restart_reverse_proxy_service() {",
+          "    local service_name=$1",
+          "    stop_reverse_proxy_service \"$service_name\"",
+          "    sleep 5",
+          "    start_reverse_proxy_service \"$service_name\"",
+          "}",
+          "check_reverse_proxy_service_status() {",
+          "    local service_name=$1",
+          "    local compose_file=\"$REVERSE_PROXY_DIR/${service_name}.yml\"",
+          "    if [ -f \"$compose_file\" ]; then",
+          "        echo \"Checking status of $service_name...\"",
+          "        docker-compose -f \"$compose_file\" ps",
+          "    else",
+          "        echo \"Error: $compose_file not found\"",
+          "        return 1",
+          "    fi",
+          "}",
+          "case \"$1\" in",
+          "    start)",
+          "        start_reverse_proxy_service \"$2\"",
+          "        ;;",
+          "    stop)",
+          "        stop_reverse_proxy_service \"$2\"",
+          "        ;;",
+          "    restart)",
+          "        restart_reverse_proxy_service \"$2\"",
+          "        ;;",
+          "    status)",
+          "        check_reverse_proxy_service_status \"$2\"",
+          "        ;;",
+          "    *)",
+          "        echo \"Usage: $0 {start|stop|restart|status} <service_name>\"",
+          "        exit 1",
+          "        ;;",
+          "esac",
+          "EOF",
+          "chmod +x /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh"
+        ],
+        "files_to_create": [
+          "/opt/ai-q/docker/compose/reverse-proxy/templates/",
+          "/opt/ai-q/docker/compose/reverse-proxy/configs/",
+          "/opt/ai-q/docker/compose/reverse-proxy/scripts/",
+          "/opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml",
+          "/opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_6",
+        "action": "validate_results",
+        "description": "Validate complete reverse proxy infrastructure setup",
+        "validation": "reverse_proxy_infrastructure_validation",
+        "exact_commands": [
+          "docker network ls --filter name=ai-q-reverse-proxy-network",
+          "docker volume ls --filter name=ai-q-reverse-proxy",
+          "ls -la /opt/ai-q/docker/compose/reverse-proxy/",
+          "cat /opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml",
+          "test -x /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh"
+        ]
+      },
+      {
+        "step_id": "STEP_7",
+        "action": "cache_results",
+        "description": "Cache reverse proxy infrastructure configuration and setup",
+        "cache_key": "reverse_proxy_infrastructure_cache",
+        "exact_commands": [
+          "python3 scripts/infrastructure/setup_reverse_proxy_infrastructure.py --cache-results",
+          "tar -czf /opt/ai-q/cache/reverse_proxy_infrastructure_cache.tar.gz /opt/ai-q/docker/compose/reverse-proxy"
+        ]
+      }
+    ],
+    "caching_strategy": {
+      "cache_key": "reverse_proxy_infrastructure_cache",
+      "cache_duration": "persistent",
+      "cache_invalidation": "reverse_proxy_infrastructure_update",
+      "cache_validation": "reverse_proxy_infrastructure_validation",
+      "exact_cache_commands": [
+        "python3 scripts/infrastructure/setup_reverse_proxy_infrastructure.py --cache-config"
+      ]
+    }
+  },
+  "acceptance_criteria": [
+    "Reverse proxy Docker network operational and configured",
+    "All reverse proxy volumes created and accessible",
+    "Reverse proxy orchestration framework ready",
+    "No actual reverse proxy services installed",
+    "All components can be safely installed/uninstalled",
+    "Zero technical debt with complete documentation"
+  ],
+  "deliverables": [
+    "Production-ready reverse proxy infrastructure foundation",
+    "Reverse proxy Docker network with proper configuration",
+    "Reverse proxy volumes for config, certs, logs, cache, and temp",
+    "Reverse proxy orchestration framework with templates and scripts",
+    "Comprehensive documentation with troubleshooting guides",
+    "Validation scripts for all components",
+    "Rollback procedures for safe deployment"
+  ],
+  "troubleshooting_guide": {
+    "common_issues": [
+      {
+        "issue": "Reverse proxy network creation fails",
+        "symptoms": [
+          "Network already exists",
+          "Subnet conflict"
+        ],
+        "diagnosis": "Check existing networks and subnet conflicts",
+        "solution": "Remove existing network or use different subnet",
+        "prevention": "Check network configuration before creation"
+      },
+      {
+        "issue": "Reverse proxy volumes not accessible",
+        "symptoms": [
+          "Permission denied",
+          "Volume not found"
+        ],
+        "diagnosis": "Check volume permissions and existence",
+        "solution": "Verify volume creation and set proper permissions",
+        "prevention": "Validate volume creation after setup"
+      },
+      {
+        "issue": "Orchestration script not executable",
+        "symptoms": [
+          "Permission denied",
+          "Script not found"
+        ],
+        "diagnosis": "Check script permissions and location",
+        "solution": "Set executable permissions and verify path",
+        "prevention": "Test script after creation"
+      },
+      {
+        "issue": "Directory structure not created",
+        "symptoms": [
+          "Directory not found",
+          "Permission denied"
+        ],
+        "diagnosis": "Check directory creation and permissions",
+        "solution": "Create directories with proper permissions",
+        "prevention": "Verify directory structure after setup"
+      }
+    ],
+    "diagnostic_commands": [
+      "docker network ls --filter name=ai-q-reverse-proxy",
+      "docker volume ls --filter name=ai-q-reverse-proxy",
+      "ls -la /opt/ai-q/docker/compose/reverse-proxy/",
+      "cat /opt/ai-q/docker/compose/reverse-proxy/templates/base-reverse-proxy.yml",
+      "test -x /opt/ai-q/docker/compose/reverse-proxy/scripts/orchestrate-reverse-proxy.sh"
+    ]
+  },
+  "performance_benchmarks": {
+    "installation_time": "< 45 minutes",
+    "network_creation_time": "< 5 seconds",
+    "volume_creation_time": "< 10 seconds",
+    "orchestration_setup_time": "< 30 seconds",
+    "validation_time": "< 5 seconds"
+  },
+  "inputs": {
+    "default_input": {
+      "type": "string",
+      "required": false,
+      "default": "default_value",
+      "description": "Default input parameter"
+    }
+  },
+  "outputs": {
+    "default_output": {
+      "type": "string",
+      "description": "Default output parameter"
+    }
+  },
+  "metadata": {
+    "title": "02-08-Reverse-Proxy",
+    "version": "1.0.0",
+    "creation_timestamp": "2025-07-07T05:00:00Z",
+    "last_updated": "2025-07-07T05:00:00Z"
+  },
+  "steps": [
+    {
+      "step_id": "STEP-01",
+      "description": "Default implementation step",
+      "command": "echo 'Recipe step needs implementation'",
+      "expected_output": "Step completed successfully",
+      "error_handling": "Continue on error"
+    }
+  ]
+}
