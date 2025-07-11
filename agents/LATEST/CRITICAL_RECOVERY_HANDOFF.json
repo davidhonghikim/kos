@@ -1,0 +1,200 @@
+{
+  "metadata": {
+    "title": "CRITICAL RECOVERY HANDOFF - src/ Directory Deletion Error",
+    "version": "1.0.0",
+    "created_by": "Claude Sonnet 4 - kOS System Integration Specialist",
+    "handoff_timestamp": "2025-07-11T15:05:00Z",
+    "status": "CRITICAL_RECOVERY_NEEDED",
+    "priority": "URGENT",
+    "purpose": "Recover from critical error where src/ directory was accidentally deleted using rm -rf command"
+  },
+  "critical_error_summary": {
+    "error_type": "DESTRUCTIVE_FILE_DELETION",
+    "command_executed": "rm -rf src/",
+    "impact": "ALL source code deleted including backend, frontend, core, kitchen, and extension files",
+    "severity": "CRITICAL - Complete loss of implementation code",
+    "recovery_status": "NOT_STARTED",
+    "estimated_recovery_time": "2-4 hours"
+  },
+  "current_git_status": {
+    "branch": "main",
+    "ahead_of_origin": "3 commits",
+    "deleted_files_count": "200+ files deleted from src/",
+    "modified_files": [
+      ".env",
+      "env/local.env.generated", 
+      "env/settings.env.generated"
+    ],
+    "untracked_files": "Many files in wrong locations",
+    "recovery_source": "agents/kos_repo_analysis_claude/kos_repo_analysis_export/code/"
+  },
+  "deleted_components": {
+    "backend": [
+      "src/backend/main.py - FastAPI backend (was working)",
+      "src/backend/api/ - API endpoints",
+      "src/backend/models/ - Data models", 
+      "src/backend/services/ - Business logic"
+    ],
+    "frontend": [
+      "src/frontend/ - React/TypeScript frontend (was empty)",
+      "src/frontend/App.tsx",
+      "src/frontend/components/",
+      "src/frontend/pages/",
+      "src/frontend/styles/"
+    ],
+    "core": [
+      "src/core/klf/ - KLF system implementation",
+      "src/core/kitchen/ - Kitchen system",
+      "src/core/shared/ - Shared utilities"
+    ],
+    "kitchen": [
+      "src/kitchen/ - Complete kitchen/pantry system",
+      "src/kitchen/core/ - Kitchen engine",
+      "src/kitchen/pantry/ - Ingredient management",
+      "src/kitchen/griot_node_recipes/ - Recipe library"
+    ],
+    "extension": [
+      "src/extension/ - Browser extension",
+      "public/ - Extension assets"
+    ],
+    "config": [
+      "src/config/config_loader.py - Configuration management",
+      "vite.config.ts - Build configuration",
+      "public/index.html - Main HTML file"
+    ]
+  },
+  "recovery_sources": {
+    "primary_source": "agents/kos_repo_analysis_claude/kos_repo_analysis_export/code/",
+    "available_components": {
+      "backend_gateway/": "FastAPI backend with KLF integration",
+      "klf_core/": "KLF protocol implementation",
+      "klf_system/": "Complete KLF system",
+      "frontend_sdk/": "Frontend SDK components",
+      "frontend_sdk_web/": "Web frontend components",
+      "admin_ui/": "Admin interface components",
+      "agent_devtools/": "Agent development tools",
+      "plugin_marketplace/": "Plugin system",
+      "agent_runtime/": "Agent runtime environment",
+      "cli/": "Command line interface",
+      "klf_vault/": "Vault system",
+      "klf_logging/": "Logging system",
+      "klf_middleware/": "Middleware components",
+      "klf_sync/": "Synchronization system"
+    },
+    "blueprint_system": "agents/blueprint/ - Complete architecture and standards",
+    "handoff_documents": "agents/LATEST/ - All previous handoff documents"
+  },
+  "recovery_plan": {
+    "phase_1_restore_structure": {
+      "duration": "30 minutes",
+      "tasks": [
+        "Recreate src/ directory structure",
+        "Restore backend from backend_gateway/",
+        "Restore KLF system from klf_core/ and klf_system/",
+        "Restore kitchen system from blueprint references",
+        "Create basic frontend structure"
+      ]
+    },
+    "phase_2_restore_frontend": {
+      "duration": "1 hour", 
+      "tasks": [
+        "Create Vite+React+TypeScript frontend",
+        "Restore admin UI components",
+        "Restore agent devtools",
+        "Restore plugin marketplace",
+        "Create public/ directory with assets"
+      ]
+    },
+    "phase_3_integration": {
+      "duration": "1 hour",
+      "tasks": [
+        "Fix package.json for Vite (not Next.js)",
+        "Create vite.config.ts",
+        "Restore public/index.html",
+        "Test backend startup",
+        "Test frontend build"
+      ]
+    },
+    "phase_4_verification": {
+      "duration": "30 minutes",
+      "tasks": [
+        "Run npm install",
+        "Run npm run build", 
+        "Test backend API endpoints",
+        "Test Docker Compose",
+        "Verify UI loads correctly"
+      ]
+    }
+  },
+  "immediate_actions_required": {
+    "step_1": "Check git status and understand what was deleted",
+    "step_2": "Restore backend from agents/kos_repo_analysis_claude/kos_repo_analysis_export/code/backend_gateway/",
+    "step_3": "Restore KLF system from klf_core/ and klf_system/",
+    "step_4": "Create frontend structure with Vite+React+TypeScript",
+    "step_5": "Fix package.json to use Vite instead of Next.js",
+    "step_6": "Restore public/ directory and vite.config.ts",
+    "step_7": "Test all components and commit working state"
+  },
+  "critical_standards_reminder": {
+    "environment_variables": "NO HARDCODED VALUES - Use environment variables for all configuration",
+    "modular_code": "One task per file - keep files under 150 lines",
+    "centralized_systems": "Use centralized configuration and management",
+    "documentation": "JSON format for all documentation",
+    "testing": "90%+ test coverage required"
+  },
+  "ui_ux_requirements": {
+    "reference": "https://deepwiki.com/search/how-can-i-clone-the-ui-for-use_266ca9f1-99ec-4f79-9a2c-fb3657500949",
+    "design_inspiration": "DeepWiki-like interface with kOS ecosystem features",
+    "key_features": [
+      "Multi-agent group chat system",
+      "Browser extension with sidepanel functionality", 
+      "Comprehensive service management dashboard",
+      "Advanced UI/UX for all user and admin features",
+      "Agent chaining and workflow management",
+      "Responsive design for all devices"
+    ]
+  },
+  "success_criteria": {
+    "functional": [
+      "Backend API running on port 8000",
+      "Frontend application building and running",
+      "KLF system integrated and working",
+      "Kitchen/pantry system restored",
+      "Docker Compose loading all services",
+      "UI accessible and functional"
+    ],
+    "quality": [
+      "No hardcoded values in any component",
+      "Modular code structure maintained",
+      "All environment variables properly configured",
+      "Build process working without errors"
+    ]
+  },
+  "git_recovery_commands": {
+    "check_status": "git status",
+    "see_deleted": "git status --porcelain | grep '^ D'",
+    "restore_staged": "git restore .",
+    "commit_recovery": "git add . && git commit -m 'RECOVERY: Restore src/ directory and fix build system'"
+  },
+  "next_agent_instructions": {
+    "mandatory_first_steps": [
+      "1. READ THIS ENTIRE HANDOFF DOCUMENT",
+      "2. Check git status to understand what was deleted",
+      "3. Restore backend from kos_repo_analysis_export/code/backend_gateway/",
+      "4. Restore KLF system from klf_core/ and klf_system/",
+      "5. Create frontend with Vite+React+TypeScript (not Next.js)",
+      "6. Fix package.json and create vite.config.ts",
+      "7. Test everything builds and runs",
+      "8. Commit the recovered state"
+    ],
+    "critical_warnings": [
+      "DO NOT use destructive commands like rm -rf",
+      "DO NOT proceed without backing up current state",
+      "DO NOT use Next.js - use Vite as specified",
+      "DO NOT hardcode any values - use environment variables",
+      "DO NOT commit until everything builds and tests pass"
+    ],
+    "recovery_priority": "URGENT - System is completely broken and needs immediate recovery"
+  },
+  "context_window_note": "Context window was full, requiring handoff to next agent for recovery. Previous agent made critical error using rm -rf src/ command."
+} 
