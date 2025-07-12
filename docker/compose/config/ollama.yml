@@ -4,18 +4,18 @@ services:
   # Ollama LLM Service
   ollama:
     image: ollama/ollama:latest
-    container_name: ai-q-ollama
+    container_name: kos-ollama
     restart: unless-stopped
     ports:
       - "11000:11434"
     volumes:
-      - /opt/ai-q/data/ollama/models:/root/.ollama/models
-      - /opt/ai-q/data/ollama/config:/root/.ollama
+      - /opt/kos/data/ollama/models:/root/.ollama/models
+      - /opt/kos/data/ollama/config:/root/.ollama
     environment:
       - OLLAMA_HOST=0.0.0.0
       - OLLAMA_ORIGINS=*
     networks:
-      - ai-q-network
+      - kos-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
       interval: 30s
@@ -30,7 +30,7 @@ services:
               capabilities: [gpu]
 
 networks:
-  ai-q-network:
+  kos-network:
     driver: bridge
     ipam:
       config:

@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../chatdemon"
+		},
+		{
+			"path": "../griot"
 		}
 	],
 	"settings": {}

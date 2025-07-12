@@ -4,16 +4,16 @@
   "description": "kOS (Kind AI Operating System) - Universal digital twin with multi-modal AI support, agent-proof task system, and enterprise-grade scalability",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "setup": "npm install && npm run build",
-    "clean": "rm -rf .next out dist node_modules/.cache"
+    "clean": "rm -rf dist node_modules/.cache"
   },
   "keywords": [
     "kos",
@@ -47,7 +47,6 @@
     "npm": ">=9.0.0"
   },
   "dependencies": {
-    "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.3.3",
@@ -87,7 +86,8 @@
     "@types/ws": "8.5.10",
     "@types/fs-extra": "11.0.4",
     "eslint": "8.56.0",
-    "eslint-config-next": "14.1.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.8",
     "@typescript-eslint/eslint-plugin": "6.19.1",
     "@typescript-eslint/parser": "6.19.1",
     "eslint-plugin-react": "7.33.2",

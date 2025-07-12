@@ -4,13 +4,13 @@ services:
   # OpenWebUI Service
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: ai-q-openwebui
+    container_name: kos-openwebui
     restart: unless-stopped
     ports:
       - "${OPENWEBUI_PORT:-3000}:8080"
     volumes:
-      - /opt/ai-q/data/openwebui/data:/app/backend/data
-      - /opt/ai-q/data/openwebui/config:/app/backend/config
+      - /opt/kos/data/openwebui/data:/app/backend/data
+      - /opt/kos/data/openwebui/config:/app/backend/config
     environment:
       - OLLAMA_BASE_URL=http://${AIQ_EXTERNAL_ADDRESS:-192.168.1.180}:${OLLAMA_PORT:-11000}
       - WEBUI_SECRET_KEY=your-super-secret-openwebui-key-change-in-production
@@ -19,7 +19,7 @@ services:
       - ENABLE_SIGNUP=true
       - ENABLE_LOGIN_FORM=true
     networks:
-      - ai-q-network
+      - kos-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/models"]
       interval: 30s
@@ -29,7 +29,7 @@ services:
       - ollama
 
 networks:
-  ai-q-network:
+  kos-network:
     driver: bridge
     ipam:
       config:

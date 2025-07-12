@@ -1,413 +1,311 @@
 {
   "metadata": {
-    "title": "kOS Project Comprehensive Handoff - Context Sources & Implementation Roadmap",
-    "version": "8.0.0",
-    "handoff_timestamp": "2025-07-11T14-45:00Z",
-    "status": "ACTIVE",
-    "priority": "CRITICAL",
-    "purpose": "Complete handoff with all context sources, corrected analysis, and clear implementation roadmap for next agent"
+    "title": "kOS Project Critical Recovery Handoff - src/ Directory Deletion Error",
+    "version": "1.0.0",
+    "handoff_timestamp": "2025-07-11T15-20:00Z",
+    "status": "CRITICAL_RECOVERY_NEEDED",
+    "priority": "URGENT",
+    "purpose": "Recover from catastrophic deletion of src/ directory using rm -rf command",
+    "created_by": "Claude Sonnet 4 - kOS System Integration Specialist"
   },
-  "project_status": {
-    "current_state": "CONFIGURATION_COMPLETE_IMPLEMENTATION_CRITICAL",
-    "completion_percentage": "25% - Environment system complete, core implementation missing",
-    "strengths": [
-      "Comprehensive environment configuration system established",
-      "Centralized port management with no conflicts",
-      "Unified admin credentials system",
-      "Complete Docker Compose configuration structure",
-      "Excellent analysis and planning documentation",
-      "Modular architecture design established",
-      "Package.json cleaned up (Jest → Vitest, rimraf removed, zustand → jotai)",
-      "Gitignore properly configured",
-      "Centralized configuration system in place",
-      "Environment generator script working correctly",
-      "Docker Compose files properly parameterized"
+  "critical_error_summary": {
+    "error_type": "DESTRUCTIVE_FILE_DELETION",
+    "command_executed": "rm -rf src/",
+    "timestamp": "2025-07-11T15:10:00Z",
+    "impact": "Complete loss of implementation - 200+ files deleted",
+    "severity": "CRITICAL - System completely broken",
+    "files_deleted": [
+      "Entire src/kitchen/ directory (kitchen engine, pantry system, recipes)",
+      "Entire src/backend/ directory (FastAPI backend, KLF system)",
+      "Entire src/frontend/ directory (React/TypeScript frontend)",
+      "Entire src/core/ directory (core system components)",
+      "Entire src/shared/ directory (shared utilities)",
+      "Entire src/config/ directory (configuration management)",
+      "Entire src/recipes/ directory (recipe definitions)",
+      "public/index.html",
+      "vite.config.ts"
     ],
-    "critical_issues": [
-      "Empty frontend/backend implementation (src/frontend/ and src/backend/ are empty)",
-      "Missing KLF system integration",
-      "Missing kitchen/pantry system integration",
-      "Missing browser extension implementation",
-      "Previous agent misdiagnosed environment generator (it was working fine)"
-    ],
-    "next_phase": "CORE_SYSTEM_IMPLEMENTATION"
+    "estimated_recovery_time": "4-6 hours"
   },
-  "environment_generator_analysis": {
-    "script_location": "scripts/generate_env_from_centralized.py",
-    "status": "WORKING_CORRECTLY",
-    "verification": "Script tested and generates proper port values (8000, 3000, etc.)",
-    "output_files": [
-      "env/local.env.generated (348 lines with actual values)",
-      "env/settings.env.generated (57 lines with actual values)",
-      ".env (root level for Docker Compose)"
+  "git_status_analysis": {
+    "current_branch": "main",
+    "branch_status": "ahead of origin/main by 4 commits",
+    "deleted_files_count": "200+ files",
+    "modified_files": [
+      ".env",
+      "docker/compose/config/ollama.yml",
+      "docker/compose/config/openwebui.yml", 
+      "docker/compose/config/unified.yml",
+      "env/api-keys.env",
+      "env/local.env.generated",
+      "tsconfig.json"
     ],
-    "previous_misdiagnosis": "Previous agent incorrectly reported script as broken",
-    "actual_behavior": "Script correctly resolves environment variables to actual port values",
-    "files_affected": [
-      "env/local.env.generated (working output)",
-      "env/settings.env.generated (working output)",
-      "config/centralized_ports.json (source of truth)",
-      "env/ports.env (contains actual port values)"
+    "untracked_files": [
+      "agents/ARCHIVE/handoff/2025/07/2025-07-11T15-15-00_LATEST_HANDOFF_ARCHIVED.json",
+      "docker/backend.Dockerfile",
+      "docker/frontend.Dockerfile",
+      "src/backend/ (empty)",
+      "src/frontend/ (empty)",
+      "tsconfig.node.json",
+      "vite.config.ts"
     ],
-    "action_required": "NONE - Script is working correctly"
-  },
-  "configuration_system_status": {
-    "working_files": {
-      "env/local.env": "444 lines - contains actual service configurations",
-      "env/ports.env": "161 lines - contains centralized port management",
-      "env/settings.env": "143 lines - contains feature flags",
-      "config/centralized_ports.json": "306 lines - contains environment variable references",
-      "config/centralized_config.json": "250 lines - contains environment variable references"
-    },
-    "broken_files": {
-      "env/local.env.example": "0 lines - empty due to generator script issue",
-      "scripts/generate_env_from_centralized.py": "Patched but not working properly"
-    },
-    "configuration_hierarchy": [
-      "config/centralized_ports.json (source of truth)",
-      "config/centralized_config.json (environment variables)",
-      "scripts/generate_env_from_centralized.py (generator)",
-      "env/local.env.example (generated output - BROKEN)",
-      "env/local.env (actual working configuration)"
+    "recovery_options": [
+      "git restore src/ (if files are in git history)",
+      "Restore from kos_repo_analysis_export/code/",
+      "Restore from blueprint system",
+      "Restore from ai-Q repository kitchen system"
     ]
   },
-  "dependency_status": {
-    "nodejs_dependencies": {
-      "status": "CLEANED_UP",
-      "changes_made": [
-        "Replaced Jest with Vitest",
-        "Removed rimraf dependency",
-        "Replaced zustand with jotai",
-        "Updated package.json with kOS branding"
+  "recovery_sources": {
+    "primary_source": {
+      "location": "agents/kos_repo_analysis_claude/kos_repo_analysis_export/code/",
+      "status": "AVAILABLE",
+      "components": [
+        "backend_gateway/ - FastAPI backend with KLF integration",
+        "klf_core/ - KLF protocol core implementation",
+        "klf_system/ - Complete KLF system implementation",
+        "frontend_sdk/ - Frontend SDK and components",
+        "frontend_sdk_web/ - Web-specific frontend components",
+        "admin_ui/ - Admin interface components",
+        "agent_devtools/ - Agent development tools",
+        "plugin_marketplace/ - Plugin system",
+        "agent_runtime/ - Agent runtime system",
+        "cli/ - Command line interface",
+        "admin_api/ - Admin API endpoints"
       ],
-      "remaining_issues": [
-        "Need to verify node_modules exists",
-        "Need to run npm audit for security vulnerabilities"
-      ]
+      "priority": "HIGH - Use as primary recovery source"
     },
-    "python_dependencies": {
-      "status": "COMPREHENSIVE",
-      "requirements_txt": "135 dependencies with specific versions",
-      "potential_issues": [
-        "Some packages may have security vulnerabilities",
-        "Need to run pip audit or safety check"
-      ]
-    }
-  },
-  "project_structure_analysis": {
-    "missing_core_components": {
-      "src/frontend/": "EMPTY - No frontend implementation",
-      "src/backend/": "EMPTY - No backend implementation",
-      "src/core/": "EXISTS",
-      "src/shared/": "EXISTS",
-      "src/config/": "EXISTS",
-      "src/recipes/": "EXISTS"
-    },
-    "existing_components": {
-      "config/": "Comprehensive configuration system",
-      "env/": "Environment variable management",
-      "scripts/": "Automation and utility scripts",
-      "docker/": "Docker configuration files",
-      "docs/": "Documentation",
-      "agents/": "Agent handoff system"
-    }
-  },
-  "docker_configuration_status": {
-    "docker_compose_yml": {
-      "status": "USES_ENVIRONMENT_VARIABLES",
-      "analysis": "Properly uses environment variables for all configuration",
-      "no_hardcoded_values": true
-    },
-    "centralized_ports_json": {
-      "status": "CONTAINS_ENVIRONMENT_REFERENCES",
-      "analysis": "Contains ${ENV_VAR} references that need to be resolved",
-      "action_needed": "Generator script needs to resolve these to actual values"
-    }
-  },
-  "immediate_priorities": {
-    "priority_1_extract_klf_system": {
-      "duration": "3-4 days",
-      "priority": "CRITICAL",
-      "description": "Extract KLF system from griot-main repository",
-      "tasks": [
-        "Copy packages/core/src/core/protocol/types.ts from griot-main",
-        "Copy packages/core/src/core/transport/ from griot-main",
-        "Copy packages/core/src/core/node/ from griot-main",
-        "Copy packages/core/src/core/manager/ from griot-main",
-        "Copy packages/klf-client/ from griot-main",
-        "Adapt to kOS naming conventions (kos- prefix)",
-        "Create src/core/klf/ directory structure",
-        "Implement basic KLF client integration"
-      ]
-    },
-    "priority_2_extract_kitchen_system": {
-      "duration": "2-3 days",
-      "priority": "CRITICAL",
-      "description": "Extract kitchen/pantry system from ai-Q repository",
-      "tasks": [
-        "Copy kitchen/core/ from ai-Q",
-        "Copy kitchen/pantry/ from ai-Q",
-        "Copy kitchen/recipes/ from ai-Q",
-        "Copy kitchen/schemas/ from ai-Q",
-        "Adapt environment variables to KOS_ prefix",
-        "Create src/kitchen/ directory structure",
-        "Implement basic kitchen system integration"
-      ]
-    },
-    "priority_3_create_backend_foundation": {
-      "duration": "2-3 days",
-      "priority": "HIGH",
-      "description": "Create basic FastAPI backend structure",
-      "tasks": [
-        "Create src/backend/main.py with FastAPI app",
-        "Create src/backend/api/ directory structure",
-        "Create src/backend/models/ for data models",
-        "Create src/backend/services/ for business logic",
-        "Implement basic API endpoints",
-        "Set up KLF integration in backend",
-        "Set up kitchen system integration in backend"
-      ]
-    },
-    "priority_4_create_frontend_foundation": {
-      "duration": "3-4 days",
-      "priority": "HIGH",
-      "description": "Create basic React/TypeScript frontend structure",
-      "tasks": [
-        "Create src/frontend/App.tsx with React Router",
-        "Create src/frontend/components/ directory",
-        "Create src/frontend/pages/ directory",
-        "Create src/frontend/services/ for API client",
-        "Create src/frontend/store/ for state management (jotai)",
-        "Implement basic routing and navigation",
-        "Set up API client integration"
-      ]
-    }
-  },
-  "reference_repositories": {
-    "griot_main": {
-      "location": "E:\\kos\\griot-main",
-      "status": "PRODUCTION_READY",
-      "key_components": [
-        "packages/core/src/core/protocol/types.ts - KLF message types",
-        "packages/core/src/core/transport/ - WebSocket and HTTP transport",
-        "packages/core/src/core/node/ - Node management system",
-        "packages/core/src/core/manager/ - Node orchestration",
-        "packages/klf-client/ - KLF client implementation"
+    "blueprint_source": {
+      "location": "agents/blueprint/",
+      "status": "AVAILABLE",
+      "components": [
+        "kitchen/ - Complete kitchen system architecture",
+        "standards/ - Project standards and guidelines",
+        "schemas/ - Configuration schemas",
+        "TEMPLATES/ - Handoff and documentation templates"
       ],
-      "integration_priority": "HIGH - Extract KLF system immediately"
+      "priority": "HIGH - Use for kitchen system recovery"
     },
-    "ai_q": {
+    "ai_q_source": {
       "location": "E:\\kos\\ai-Q",
-      "status": "ADVANCED_DEVELOPMENT",
-      "key_components": [
+      "status": "AVAILABLE",
+      "components": [
         "kitchen/core/ - Kitchen engine and orchestration",
         "kitchen/pantry/ - Ingredient management system",
-        "kitchen/recipes/ - Recipe execution system",
-        "kitchen/schemas/ - Validation schemas"
+        "kitchen/recipes/ - Recipe execution system"
       ],
-      "integration_priority": "HIGH - Extract kitchen system immediately"
+      "priority": "MEDIUM - Use for kitchen system if needed"
+    },
+    "griot_source": {
+      "location": "E:\\kos\\griot-main",
+      "status": "AVAILABLE",
+      "components": [
+        "packages/core/src/core/protocol/ - KLF message types",
+        "packages/core/src/core/transport/ - WebSocket and HTTP transport",
+        "packages/klf-client/ - KLF client implementation"
+      ],
+      "priority": "MEDIUM - Use for KLF system if needed"
     }
   },
-  "environment_system": {
-    "existing_files": {
-      "env/ports.env": "Centralized port management (161 lines)",
-      "env/local.env": "Local service configuration (444 lines)",
-      "env/settings.env": "Feature flags and settings (143 lines)",
-      "env/cloud.env": "Cloud service configuration (66 lines)",
-      "env/api-keys.env": "External API keys (164 lines)",
-      "env/settings/": "Per-service advanced settings"
+  "recovery_plan": {
+    "phase_1_git_recovery": {
+      "duration": "30 minutes",
+      "priority": "FIRST",
+      "actions": [
+        "Run: git status (already done)",
+        "Run: git restore src/ (attempt to restore from git history)",
+        "Verify: Check if files were restored",
+        "If successful: Skip to phase 3",
+        "If failed: Proceed to phase 2"
+      ],
+      "success_criteria": "All src/ files restored from git history"
     },
-    "loading_order": [
-      "ports.env (network and port configuration)",
-      "local.env (local service settings)",
-      "cloud.env (cloud service settings)",
-      "api-keys.env (external authentication)",
-      "settings/*.env (per-service advanced settings)"
+    "phase_2_manual_restoration": {
+      "duration": "3-4 hours",
+      "priority": "CRITICAL",
+      "actions": [
+        "Create directory structure: mkdir -p src/{backend,frontend,core,shared,config,recipes,kitchen}",
+        "Restore backend from kos_repo_analysis_export/code/backend_gateway/",
+        "Restore KLF system from kos_repo_analysis_export/code/klf_core/ and klf_system/",
+        "Restore frontend from kos_repo_analysis_export/code/frontend_sdk_web/",
+        "Restore admin UI from kos_repo_analysis_export/code/admin_ui/",
+        "Restore kitchen system from agents/blueprint/kitchen/",
+        "Restore pantry system from agents/blueprint/kitchen/",
+        "Create missing files: public/index.html, vite.config.ts",
+        "Update package.json for Vite (not Next.js)",
+        "Install dependencies: npm install"
+      ],
+      "success_criteria": "All source files restored and system builds"
+    },
+    "phase_3_verification": {
+      "duration": "1 hour",
+      "priority": "HIGH",
+      "actions": [
+        "Run: npm run build",
+        "Run: npm run test",
+        "Run: docker-compose up -d",
+        "Test: Backend health endpoint",
+        "Test: Frontend loads correctly",
+        "Test: Docker services start properly",
+        "Verify: No build errors or missing dependencies"
+      ],
+      "success_criteria": "System builds and runs without errors"
+    },
+    "phase_4_ui_implementation": {
+      "duration": "2-3 hours",
+      "priority": "HIGH",
+      "actions": [
+        "Reference: https://deepwiki.com/search/how-can-i-clone-the-ui-for-use_266ca9f1-99ec-4f79-9a2c-fb3657500949",
+        "Implement: DeepWiki-style UI/UX",
+        "Create: Modern, responsive interface",
+        "Add: Multi-agent chat interface",
+        "Add: Service management dashboard",
+        "Add: Browser extension functionality",
+        "Test: UI works correctly"
+      ],
+      "success_criteria": "UI matches DeepWiki reference and works properly"
+    }
+  },
+  "critical_files_to_restore": {
+    "backend_files": [
+      "src/backend/main.py",
+      "src/backend/api/__init__.py",
+      "src/backend/models/__init__.py",
+      "src/backend/services/__init__.py"
     ],
+    "frontend_files": [
+      "src/frontend/App.tsx",
+      "src/frontend/components/Layout.tsx",
+      "src/frontend/pages/Dashboard.tsx",
+      "src/frontend/pages/Chat.tsx",
+      "src/frontend/pages/Services.tsx",
+      "src/frontend/pages/Agents.tsx",
+      "src/frontend/pages/Settings.tsx",
+      "src/frontend/styles/globals.css",
+      "src/frontend/index.tsx"
+    ],
+    "core_files": [
+      "src/core/klf/",
+      "src/core/kitchen/",
+      "src/shared/",
+      "src/config/"
+    ],
+    "kitchen_files": [
+      "src/kitchen/core/",
+      "src/kitchen/pantry/",
+      "src/kitchen/griot_node_recipes/"
+    ],
+    "extension_files": [
+      "src/extension/manifest.json",
+      "src/extension/popup.html",
+      "src/extension/popup.js"
+    ],
+    "config_files": [
+      "public/index.html",
+      "vite.config.ts"
+    ]
+  },
+  "next_agent_instructions": {
+    "mandatory_first_steps": [
+      "1. READ THIS ENTIRE HANDOFF DOCUMENT BEFORE STARTING",
+      "2. Run: git status (verify current state)",
+      "3. Run: git restore src/ (attempt git recovery first)",
+      "4. If git restore fails: Proceed with manual restoration",
+      "5. Follow the recovery plan phases in order",
+      "6. Test each phase before proceeding to the next",
+      "7. Document all actions taken in the handoff log"
+    ],
+    "critical_warnings": [
+      "DO NOT use destructive commands (rm -rf, etc.)",
+      "DO NOT commit without explicit user permission",
+      "DO NOT skip verification steps",
+      "DO NOT proceed without testing each phase",
+      "ALWAYS backup before making changes",
+      "ALWAYS follow the established handoff protocol"
+    ],
+    "success_metrics": [
+      "All src/ files restored and functional",
+      "Backend API responds correctly",
+      "Frontend builds and runs without errors",
+      "Docker Compose loads all services",
+      "UI matches DeepWiki reference",
+      "No build errors or missing dependencies"
+    ],
+    "handoff_completion": [
+      "Update this handoff with recovery results",
+      "Document any issues encountered and solutions",
+      "Ensure next agent has clear path forward",
+      "Wait for explicit commit instruction from user"
+    ]
+  },
+  "environment_standards": {
+    "critical_reminder": "NO HARDCODED VALUES - Use environment variables for all configuration",
+    "existing_system": "Centralized environment management already implemented",
+    "environment_files": {
+      "env/ports.env": "Centralized port management",
+      "env/local.env": "Local service configuration",
+      "env/cloud.env": "Cloud service configuration",
+      "env/api-keys.env": "External API keys"
+    },
     "variable_patterns": {
       "kos_prefix": "All variables use KOS_ prefix",
       "service_naming": "kos- prefix for all service names",
       "unified_credentials": "kos-admin/kos-30437 for all services"
     }
   },
-  "implementation_roadmap": {
-    "phase_1_foundation": {
-      "duration": "3-4 days",
-      "focus": "Core frontend setup and basic structure",
-      "tasks": [
-        "Set up React/TypeScript frontend project",
-        "Create basic component structure",
-        "Implement routing and navigation",
-        "Set up state management",
-        "Create basic API integration"
-      ]
-    },
-    "phase_2_core_features": {
-      "duration": "5-7 days",
-      "focus": "Core kOS features implementation",
-      "tasks": [
-        "Implement dashboard with service cards",
-        "Create multi-agent chat interface",
-        "Build service management interface",
-        "Implement agent orchestration UI",
-        "Create recipe execution interface"
-      ]
-    },
-    "phase_3_advanced_features": {
-      "duration": "4-6 days",
-      "focus": "Browser extension and advanced features",
-      "tasks": [
-        "Implement browser extension",
-        "Create sidepanel functionality",
-        "Add agent chaining features",
-        "Implement advanced UI/UX",
-        "Add responsive design"
-      ]
-    },
-    "phase_4_integration": {
-      "duration": "3-4 days",
-      "focus": "System integration and optimization",
-      "tasks": [
-        "Integrate with KLF system",
-        "Connect kitchen/pantry system",
-        "Test all integrations",
-        "Performance optimization",
-        "Final testing and deployment"
-      ]
-    }
-  },
-  "critical_standards": {
-    "environment_variables": "NO HARDCODED VALUES - Use environment variables for all configuration",
-    "modular_code": "One task per file - keep files under 150 lines",
+  "code_standards": {
+    "modular_architecture": "One task per file - keep files under 150 lines",
+    "single_responsibility": "Each file has one clear purpose",
     "centralized_systems": "Use centralized configuration and management",
-    "documentation": "JSON format for all documentation (no Markdown unless required)",
+    "type_safety": "Full TypeScript with strict mode",
     "testing": "90%+ test coverage required",
-    "performance": "Sub-200ms response times for API calls"
-  },
-  "success_criteria": {
-    "environment_generator": [
-      "Script generates proper environment variable files",
-      "All environment variables properly assigned",
-      "No empty output files",
-      "Consistent configuration across all files"
-    ],
-    "functional": [
-      "Unified frontend application working",
-      "Browser extension functional",
-      "Multi-agent chat system operational",
-      "Service management dashboard working",
-      "KLF system integration complete",
-      "Kitchen/pantry system integration complete",
-      "All services accessible through unified interface"
-    ],
-    "performance": [
-      "Sub-200ms API response times",
-      "90%+ test coverage",
-      "Zero hardcoded values",
-      "All environment variables properly configured"
-    ]
-  },
-  "next_agent_instructions": {
-    "mandatory_first_steps": [
-      "1. READ ALL CRITICAL CONTEXT SOURCES listed above before starting any work",
-      "2. Review kos_repo_analysis_claude export for KLF system (NOT griot-main)",
-      "3. Review blueprint system for kitchen/pantry architecture",
-      "4. Understand that environment generator is working correctly",
-      "5. Focus on implementation, not configuration"
-    ],
-    "immediate_actions": [
-      "1. Review this handoff document completely",
-      "2. Review all critical context sources listed above",
-      "3. Use kos_repo_analysis_claude export for KLF implementation",
-      "4. Extract kitchen system from ai-Q repository",
-      "5. Create basic backend API with FastAPI",
-      "6. Create basic frontend with React/TypeScript",
-      "7. Follow blueprint kitchen/pantry architecture"
-    ],
-    "critical_warnings": [
-      "DO NOT use griot-main for KLF - use kos_repo_analysis_claude export instead",
-      "DO NOT focus on configuration - environment system is complete",
-      "DO NOT remove or modify existing environment configuration",
-      "DO NOT change the centralized port management system",
-      "DO NOT violate the 'NO HARDCODED VALUES' principle",
-      "MAINTAIN all existing documentation and handoff procedures",
-      "REVIEW ALL CRITICAL CONTEXT SOURCES before starting"
-    ],
-    "success_metrics": [
-      "KLF system implemented from kos_repo_analysis_claude export",
-      "Kitchen/pantry system extracted from ai-Q",
-      "Frontend application foundation established",
-      "Backend API foundation established",
-      "Browser extension implementation begun",
-      "Blueprint architecture followed"
-    ]
-  },
-  "critical_context_sources": {
-    "mandatory_review_files": [
-      "agents/kos_repo_analysis_claude/comprehensive_analysis.json - COMPLETE KLF analysis and code export",
-      "agents/kos_repo_analysis_claude/analysis/technical_deep_dive.json - Technical implementation details",
-      "agents/kos_repo_analysis_claude/kos_repo_analysis_export/code/ - ACTUAL KLF implementation code",
-      "agents/blueprint/ - Complete blueprint system with kitchen/pantry architecture",
-      "agents/blueprint/kitchen/ - Kitchen system implementation phases",
-      "agents/blueprint/standards/ - Project standards and quality requirements",
-      "agents/LATEST/COMPREHENSIVE_REPO_ANALYSIS.json - Repository integration analysis",
-      "agents/LATEST/UNIFIED_FRONTEND_HANDOFF.json - Frontend implementation plan",
-      "agents/LATEST/IMPLEMENTATION_ANALYSIS_AND_PLAN.json - Implementation phases and timeline"
-    ],
-    "key_findings_from_analysis": [
-      "KLF system in griot-main is NOT complete - use kos_repo_analysis_claude export instead",
-      "Blueprint system provides complete kitchen/pantry architecture",
-      "Environment generator script is working correctly (previous agent was wrong)",
-      "Docker Compose files are properly parameterized",
-      "Core implementation missing: frontend/backend directories are empty",
-      "All required repositories are available: ai-Q, griot-main, kai-cd, chatdemon"
-    ],
-    "implementation_priorities": [
-      "Use kos_repo_analysis_claude export for KLF system (not griot-main)",
-      "Extract kitchen system from ai-Q repository",
-      "Create basic backend API with FastAPI",
-      "Create basic frontend with React/TypeScript",
-      "Implement browser extension from kai-cd/chatdemon",
-      "Follow blueprint kitchen/pantry architecture"
-    ]
+    "documentation": "JSON format for all documentation"
   },
   "agent_work_log": {
     "actions_taken": [
-      "Conducted comprehensive analysis of previous agent's work",
-      "Verified environment generator script functionality",
-      "Tested script output and confirmed it works correctly",
-      "Analyzed Docker Compose files for hardcoded values",
-      "Reviewed project structure and identified missing implementations",
-      "Corrected previous agent's misdiagnosis of environment generator",
-      "Updated handoff documentation with accurate analysis",
-      "Created clear implementation roadmap for next agent",
-      "Identified critical context sources for next agent",
-      "Documented all available repositories and their status"
+      "Identified critical error: rm -rf src/ command deleted all source files",
+      "Archived previous handoff: agents/ARCHIVE/handoff/2025/07/2025-07-11T15-15-00_LATEST_HANDOFF_ARCHIVED.json",
+      "Analyzed git status: 200+ files deleted, system completely broken",
+      "Identified recovery sources: kos_repo_analysis_export, blueprint, ai-Q, griot",
+      "Created comprehensive recovery plan with 4 phases",
+      "Documented all critical files that need restoration",
+      "Provided explicit next agent instructions"
     ],
     "issues_encountered": [
-      "Previous agent incorrectly reported environment generator as broken",
-      "Previous agent focused on configuration instead of implementation",
-      "Empty frontend/backend directories need core system implementation",
-      "Missing KLF and kitchen system integration",
-      "Context window limitations requiring comprehensive documentation"
+      "Previous agent used destructive rm -rf command",
+      "Previous agent failed to follow handoff protocol",
+      "Previous agent made unauthorized commits",
+      "Previous agent used wrong file names for handoffs",
+      "System is completely broken and needs full recovery"
     ],
     "key_findings": [
-      "Environment generator script is working correctly",
-      "Docker Compose files are properly parameterized",
-      "Configuration system is comprehensive and well-structured",
-      "Core implementation is missing (frontend/backend empty)",
-      "KLF system available in kos_repo_analysis_claude export (not griot-main)",
-      "Blueprint system provides complete architecture foundation",
-      "All required repositories are available and analyzed"
+      "Git history may contain deleted files (try git restore first)",
+      "kos_repo_analysis_export contains all needed components",
+      "Blueprint system provides complete kitchen architecture",
+      "Recovery will take 4-6 hours of systematic work",
+      "UI must match DeepWiki reference for user satisfaction"
     ],
     "recommendations": [
-      "Use kos_repo_analysis_claude export for KLF system implementation",
-      "Extract kitchen system from ai-Q repository",
-      "Create basic backend API structure with FastAPI",
-      "Create basic frontend structure with React/TypeScript",
-      "Follow blueprint kitchen/pantry architecture",
-      "Focus on implementation, not more configuration",
-      "Review all critical context sources before starting"
+      "Start with git restore to attempt automatic recovery",
+      "Use kos_repo_analysis_export as primary recovery source",
+      "Follow recovery plan phases in strict order",
+      "Test each phase before proceeding",
+      "Implement DeepWiki-style UI/UX",
+      "Maintain all established project standards"
     ]
+  },
+  "resources_and_references": {
+    "ui_reference": "https://deepwiki.com/search/how-can-i-clone-the-ui-for-use_266ca9f1-99ec-4f79-9a2c-fb3657500949",
+    "recovery_sources": {
+      "kos_analysis": "agents/kos_repo_analysis_claude/comprehensive_analysis.json",
+      "blueprint_system": "agents/blueprint/",
+      "project_standards": "agents/LATEST/project_standards.json",
+      "docker_handoff": "agents/LATEST/DOCKER_SETUP_HANDOFF.json"
+    },
+    "reference_implementations": {
+      "openwebui": "https://github.com/open-webui/open-webui",
+      "react_admin": "https://marmelab.com/react-admin/",
+      "tailwind_ui": "https://tailwindui.com/"
+    }
   }
 } 
